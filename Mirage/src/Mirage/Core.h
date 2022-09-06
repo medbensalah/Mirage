@@ -2,11 +2,20 @@
 
 #ifdef MRG_PLATFORM_WINDOWS
     #ifdef MRG_BUILD_DLL
-        #define MIRAGE_API __declspec(dllexport)
+        #define MIRAGE_CLASS class __declspec(dllexport)
     #else
-        #define  MIRAGE_API __declspec(dllimport)
+        #define  MIRAGE_CLASS class __declspec(dllimport)
     #endif
 #else
-#error MIRAGE SUPPORTS WINDOWS ONLY!!!
+    #error MIRAGE SUPPORTS WINDOWS ONLY!!!
 #endif
 
+#ifdef MRG_ENABLE_ASSERTS
+    #define MRG_CORE_ASSERT(x, ...) { if(!(x)) { MRG_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+    #define MRG_ASSERT(x, ...) { if(!(x)) { MRG_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+#else
+    #define MRG_CORE_ASSERT(x, ...)
+    #define MRG_ASSERT(x, ...)
+#endif
+
+#define BIT(x) (1 << x)

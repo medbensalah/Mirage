@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -9,11 +9,15 @@
       <Configuration>Release</Configuration>
       <Platform>x64</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Dist|x64">
+      <Configuration>Dist</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{9A7728C3-8619-5399-6FD4-66ED5B15DAE9}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{93d9c2dc-2c1c-4cc4-afe2-11d08ed93029}</ProjectGuid>
     <RootNamespace>Mirage</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
@@ -21,20 +25,23 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
-  </ImportGroup>
-  <ImportGroup Label="Shared">
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
@@ -42,58 +49,458 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
-    <IntDir>$(SolutionDir)bin-int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\bin\Debug-windows-x86_64\Mirage\</OutDir>
+    <IntDir>..\bin-int\Debug-windows-x86_64\Mirage\</IntDir>
+    <TargetName>Mirage</TargetName>
+    <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\$(ProjectName)\</OutDir>
-    <IntDir>$(SolutionDir)bin-int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\bin\Release-windows-x86_64\Mirage\</OutDir>
+    <IntDir>..\bin-int\Release-windows-x86_64\Mirage\</IntDir>
+    <TargetName>Mirage</TargetName>
+    <TargetExt>.dll</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>..\bin\Dist-windows-x86_64\Mirage\</OutDir>
+    <IntDir>..\bin-int\Dist-windows-x86_64\Mirage\</IntDir>
+    <TargetName>Mirage</TargetName>
+    <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>MrgPch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>MRG_BUILD_DLL;MRG_PLATFORM_WINDOWS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <PreprocessorDefinitions>MRG_PLATFORM_WINDOWS;MRG_BUILD_DLL;MRG_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ImportLibrary>..\bin\Debug-windows-x86_64\Mirage\Mirage.lib</ImportLibrary>
     </Link>
+    <PostBuildEvent>
+      <Command>IF EXIST ..\bin\Debug-windows-x86_64\Mirage\Mirage.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\Mirage\Mirage.dll ..\bin\Debug-windows-x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\Mirage\Mirage.dll ..\bin\Debug-windows-x86_64\Sandbox &gt; nul)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>MrgPch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>MRG_PLATFORM_WINDOWS;MRG_BUILD_DLL;MRG_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>MRG_BUILD_DLL;MRG_PLATFORM_WINDOWS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <LanguageStandard_C>stdc17</LanguageStandard_C>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ImportLibrary>..\bin\Release-windows-x86_64\Mirage\Mirage.lib</ImportLibrary>
     </Link>
+    <PostBuildEvent>
+      <Command>IF EXIST ..\bin\Release-windows-x86_64\Mirage\Mirage.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\Mirage\Mirage.dll ..\bin\Release-windows-x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\Mirage\Mirage.dll ..\bin\Release-windows-x86_64\Sandbox &gt; nul)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-  </ItemGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>MrgPch.h</PrecompiledHeaderFile>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>MRG_PLATFORM_WINDOWS;MRG_BUILD_DLL;MRG_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ImportLibrary>..\bin\Dist-windows-x86_64\Mirage\Mirage.lib</ImportLibrary>
+    </Link>
+    <PostBuildEvent>
+      <Command>IF EXIST ..\bin\Dist-windows-x86_64\Mirage\Mirage.dll\ (xcopy /Q /E /Y /I ..\bin\Dist-windows-x86_64\Mirage\Mirage.dll ..\bin\Dist-windows-x86_64\Sandbox &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Dist-windows-x86_64\Mirage\Mirage.dll ..\bin\Dist-windows-x86_64\Sandbox &gt; nul)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Mirage.h" />
     <ClInclude Include="src\Mirage\Application.h" />
     <ClInclude Include="src\Mirage\Core.h" />
     <ClInclude Include="src\Mirage\EntryPoint.h" />
+    <ClInclude Include="src\Mirage\Events\ApplicationEvent.h" />
+    <ClInclude Include="src\Mirage\Events\Event.h" />
+    <ClInclude Include="src\Mirage\Events\KeyEvent.h" />
+    <ClInclude Include="src\Mirage\Events\MouseEvent.h" />
+    <ClInclude Include="src\Mirage\Log.h" />
+    <ClInclude Include="src\Mirage\Window.h" />
+    <ClInclude Include="src\MrgPch.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
+    <ClInclude Include="vendor\GLFW\deps\getopt.h" />
+    <ClInclude Include="vendor\GLFW\deps\glad\glad.h" />
+    <ClInclude Include="vendor\GLFW\deps\KHR\khrplatform.h" />
+    <ClInclude Include="vendor\GLFW\deps\linmath.h" />
+    <ClInclude Include="vendor\GLFW\deps\mingw\dinput.h" />
+    <ClInclude Include="vendor\GLFW\deps\mingw\xinput.h" />
+    <ClInclude Include="vendor\GLFW\deps\mingw\_mingw_dxhelper.h" />
+    <ClInclude Include="vendor\GLFW\deps\nuklear.h" />
+    <ClInclude Include="vendor\GLFW\deps\nuklear_glfw_gl2.h" />
+    <ClInclude Include="vendor\GLFW\deps\stb_image_write.h" />
+    <ClInclude Include="vendor\GLFW\deps\tinycthread.h" />
+    <ClInclude Include="vendor\GLFW\deps\vs2008\stdint.h" />
+    <ClInclude Include="vendor\GLFW\deps\vulkan\vk_platform.h" />
+    <ClInclude Include="vendor\GLFW\deps\vulkan\vulkan.h" />
+    <ClInclude Include="vendor\GLFW\deps\vulkan\vulkan_core.h" />
+    <ClInclude Include="vendor\GLFW\include\GLFW\glfw3.h" />
+    <ClInclude Include="vendor\GLFW\include\GLFW\glfw3native.h" />
+    <ClInclude Include="vendor\GLFW\src\cocoa_joystick.h" />
+    <ClInclude Include="vendor\GLFW\src\cocoa_platform.h" />
+    <ClInclude Include="vendor\GLFW\src\egl_context.h" />
+    <ClInclude Include="vendor\GLFW\src\glx_context.h" />
+    <ClInclude Include="vendor\GLFW\src\internal.h" />
+    <ClInclude Include="vendor\GLFW\src\linux_joystick.h" />
+    <ClInclude Include="vendor\GLFW\src\mappings.h" />
+    <ClInclude Include="vendor\GLFW\src\nsgl_context.h" />
+    <ClInclude Include="vendor\GLFW\src\null_joystick.h" />
+    <ClInclude Include="vendor\GLFW\src\null_platform.h" />
+    <ClInclude Include="vendor\GLFW\src\osmesa_context.h" />
+    <ClInclude Include="vendor\GLFW\src\posix_thread.h" />
+    <ClInclude Include="vendor\GLFW\src\posix_time.h" />
+    <ClInclude Include="vendor\GLFW\src\wgl_context.h" />
+    <ClInclude Include="vendor\GLFW\src\win32_joystick.h" />
+    <ClInclude Include="vendor\GLFW\src\win32_platform.h" />
+    <ClInclude Include="vendor\GLFW\src\wl_platform.h" />
+    <ClInclude Include="vendor\GLFW\src\x11_platform.h" />
+    <ClInclude Include="vendor\GLFW\src\xkb_unicode.h" />
+    <ClInclude Include="vendor\spdLog\bench\utils.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\async.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\async_logger-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\async_logger.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\cfg\argv.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\cfg\env.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\cfg\helpers-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\cfg\helpers.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\common-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\common.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\backtracer-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\backtracer.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\circular_q.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\console_globals.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\file_helper-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\file_helper.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\fmt_helper.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\log_msg-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\log_msg.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\log_msg_buffer-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\log_msg_buffer.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\mpmc_blocking_q.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\null_mutex.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\os-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\os.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\periodic_worker-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\periodic_worker.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\registry-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\registry.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\synchronous_factory.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\tcp_client-windows.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\tcp_client.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\thread_pool-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\thread_pool.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\udp_client-windows.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\udp_client.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\details\windows_include.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\fmt\bin_to_hex.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\fmt\bundled\args.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\fmt\bundled\chrono.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\fmt\bundled\color.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\fmt\bundled\compile.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\fmt\bundled\core.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\fmt\bundled\format-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\fmt\bundled\format.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\fmt\bundled\locale.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\fmt\bundled\os.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\fmt\bundled\ostream.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\fmt\bundled\printf.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\fmt\bundled\ranges.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\fmt\bundled\xchar.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\fmt\chrono.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\fmt\compile.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\fmt\fmt.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\fmt\ostr.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\fmt\ranges.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\fmt\xchar.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\formatter.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\fwd.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\logger-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\logger.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\pattern_formatter-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\pattern_formatter.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\android_sink.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\ansicolor_sink-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\ansicolor_sink.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\base_sink-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\base_sink.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\basic_file_sink-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\basic_file_sink.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\daily_file_sink.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\dist_sink.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\dup_filter_sink.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\hourly_file_sink.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\mongo_sink.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\msvc_sink.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\null_sink.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\ostream_sink.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\qt_sinks.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\ringbuffer_sink.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\rotating_file_sink-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\rotating_file_sink.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\sink-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\sink.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\stdout_color_sinks-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\stdout_color_sinks.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\stdout_sinks-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\stdout_sinks.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\syslog_sink.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\systemd_sink.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\tcp_sink.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\udp_sink.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\wincolor_sink-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\wincolor_sink.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\sinks\win_eventlog_sink.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\spdlog-inl.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\spdlog.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\stopwatch.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\tweakme.h" />
+    <ClInclude Include="vendor\spdLog\include\spdlog\version.h" />
+    <ClInclude Include="vendor\spdLog\tests\catch.hpp" />
+    <ClInclude Include="vendor\spdLog\tests\includes.h" />
+    <ClInclude Include="vendor\spdLog\tests\test_sink.h" />
+    <ClInclude Include="vendor\spdLog\tests\utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Mirage\Application.cpp" />
+    <ClCompile Include="src\Mirage\Log.cpp" />
+    <ClCompile Include="src\MrgPch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
+    <ClCompile Include="vendor\GLFW\deps\getopt.c" />
+    <ClCompile Include="vendor\GLFW\deps\glad.c" />
+    <ClCompile Include="vendor\GLFW\deps\tinycthread.c" />
+    <ClCompile Include="vendor\GLFW\examples\boing.c" />
+    <ClCompile Include="vendor\GLFW\examples\gears.c" />
+    <ClCompile Include="vendor\GLFW\examples\heightmap.c" />
+    <ClCompile Include="vendor\GLFW\examples\offscreen.c" />
+    <ClCompile Include="vendor\GLFW\examples\particles.c" />
+    <ClCompile Include="vendor\GLFW\examples\sharing.c" />
+    <ClCompile Include="vendor\GLFW\examples\simple.c" />
+    <ClCompile Include="vendor\GLFW\examples\splitview.c" />
+    <ClCompile Include="vendor\GLFW\examples\wave.c" />
+    <ClCompile Include="vendor\GLFW\src\cocoa_time.c" />
+    <ClCompile Include="vendor\GLFW\src\context.c" />
+    <ClCompile Include="vendor\GLFW\src\egl_context.c" />
+    <ClCompile Include="vendor\GLFW\src\glx_context.c" />
+    <ClCompile Include="vendor\GLFW\src\init.c" />
+    <ClCompile Include="vendor\GLFW\src\input.c" />
+    <ClCompile Include="vendor\GLFW\src\linux_joystick.c" />
+    <ClCompile Include="vendor\GLFW\src\monitor.c" />
+    <ClCompile Include="vendor\GLFW\src\null_init.c" />
+    <ClCompile Include="vendor\GLFW\src\null_joystick.c" />
+    <ClCompile Include="vendor\GLFW\src\null_monitor.c" />
+    <ClCompile Include="vendor\GLFW\src\null_window.c" />
+    <ClCompile Include="vendor\GLFW\src\osmesa_context.c" />
+    <ClCompile Include="vendor\GLFW\src\posix_thread.c" />
+    <ClCompile Include="vendor\GLFW\src\posix_time.c" />
+    <ClCompile Include="vendor\GLFW\src\vulkan.c" />
+    <ClCompile Include="vendor\GLFW\src\wgl_context.c" />
+    <ClCompile Include="vendor\GLFW\src\win32_init.c" />
+    <ClCompile Include="vendor\GLFW\src\win32_joystick.c" />
+    <ClCompile Include="vendor\GLFW\src\win32_monitor.c" />
+    <ClCompile Include="vendor\GLFW\src\win32_thread.c" />
+    <ClCompile Include="vendor\GLFW\src\win32_time.c" />
+    <ClCompile Include="vendor\GLFW\src\win32_window.c" />
+    <ClCompile Include="vendor\GLFW\src\window.c" />
+    <ClCompile Include="vendor\GLFW\src\wl_init.c" />
+    <ClCompile Include="vendor\GLFW\src\wl_monitor.c" />
+    <ClCompile Include="vendor\GLFW\src\wl_window.c" />
+    <ClCompile Include="vendor\GLFW\src\x11_init.c" />
+    <ClCompile Include="vendor\GLFW\src\x11_monitor.c" />
+    <ClCompile Include="vendor\GLFW\src\x11_window.c" />
+    <ClCompile Include="vendor\GLFW\src\xkb_unicode.c" />
+    <ClCompile Include="vendor\GLFW\tests\clipboard.c" />
+    <ClCompile Include="vendor\GLFW\tests\cursor.c" />
+    <ClCompile Include="vendor\GLFW\tests\empty.c" />
+    <ClCompile Include="vendor\GLFW\tests\events.c" />
+    <ClCompile Include="vendor\GLFW\tests\gamma.c" />
+    <ClCompile Include="vendor\GLFW\tests\glfwinfo.c" />
+    <ClCompile Include="vendor\GLFW\tests\icon.c" />
+    <ClCompile Include="vendor\GLFW\tests\iconify.c" />
+    <ClCompile Include="vendor\GLFW\tests\inputlag.c" />
+    <ClCompile Include="vendor\GLFW\tests\joysticks.c" />
+    <ClCompile Include="vendor\GLFW\tests\monitors.c" />
+    <ClCompile Include="vendor\GLFW\tests\msaa.c" />
+    <ClCompile Include="vendor\GLFW\tests\opacity.c" />
+    <ClCompile Include="vendor\GLFW\tests\reopen.c" />
+    <ClCompile Include="vendor\GLFW\tests\tearing.c" />
+    <ClCompile Include="vendor\GLFW\tests\threads.c" />
+    <ClCompile Include="vendor\GLFW\tests\timeout.c" />
+    <ClCompile Include="vendor\GLFW\tests\title.c" />
+    <ClCompile Include="vendor\GLFW\tests\vulkan.c" />
+    <ClCompile Include="vendor\GLFW\tests\windows.c" />
+    <ClCompile Include="vendor\spdLog\bench\async_bench.cpp" />
+    <ClCompile Include="vendor\spdLog\bench\bench.cpp" />
+    <ClCompile Include="vendor\spdLog\bench\formatter-bench.cpp" />
+    <ClCompile Include="vendor\spdLog\bench\latency.cpp" />
+    <ClCompile Include="vendor\spdLog\example\example.cpp" />
+    <ClCompile Include="vendor\spdLog\src\async.cpp" />
+    <ClCompile Include="vendor\spdLog\src\cfg.cpp" />
+    <ClCompile Include="vendor\spdLog\src\color_sinks.cpp" />
+    <ClCompile Include="vendor\spdLog\src\file_sinks.cpp" />
+    <ClCompile Include="vendor\spdLog\src\fmt.cpp" />
+    <ClCompile Include="vendor\spdLog\src\spdlog.cpp" />
+    <ClCompile Include="vendor\spdLog\src\stdout_sinks.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\main.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\test_async.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\test_backtrace.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\test_cfg.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\test_create_dir.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\test_daily_logger.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\test_dup_filter.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\test_errors.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\test_eventlog.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\test_file_helper.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\test_file_logging.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\test_fmt_helper.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\test_macros.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\test_misc.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\test_mpmc_q.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\test_pattern_formatter.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\test_registry.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\test_stdout_api.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\test_stopwatch.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\test_systemd.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\test_time_point.cpp" />
+    <ClCompile Include="vendor\spdLog\tests\utils.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">
+      <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="vendor\GLFW\.appveyor.yml" />
+    <Content Include="vendor\GLFW\.gitattributes" />
+    <Content Include="vendor\GLFW\.gitignore" />
+    <Content Include="vendor\GLFW\.travis.yml" />
+    <Content Include="vendor\GLFW\CMakeLists.txt" />
+    <Content Include="vendor\GLFW\CMake\amd64-mingw32msvc.cmake" />
+    <Content Include="vendor\GLFW\CMake\GenerateMappings.cmake" />
+    <Content Include="vendor\GLFW\CMake\i586-mingw32msvc.cmake" />
+    <Content Include="vendor\GLFW\CMake\i686-pc-mingw32.cmake" />
+    <Content Include="vendor\GLFW\CMake\i686-w64-mingw32.cmake" />
+    <Content Include="vendor\GLFW\CMake\MacOSXBundleInfo.plist.in" />
+    <Content Include="vendor\GLFW\CMake\modules\FindEpollShim.cmake" />
+    <Content Include="vendor\GLFW\CMake\modules\FindOSMesa.cmake" />
+    <Content Include="vendor\GLFW\CMake\modules\FindVulkan.cmake" />
+    <Content Include="vendor\GLFW\CMake\modules\FindWaylandProtocols.cmake" />
+    <Content Include="vendor\GLFW\CMake\modules\FindXKBCommon.cmake" />
+    <Content Include="vendor\GLFW\CMake\x86_64-w64-mingw32.cmake" />
+    <Content Include="vendor\GLFW\cmake_uninstall.cmake.in" />
+    <Content Include="vendor\GLFW\docs\build.dox" />
+    <Content Include="vendor\GLFW\docs\CMakeLists.txt" />
+    <Content Include="vendor\GLFW\docs\compat.dox" />
+    <Content Include="vendor\GLFW\docs\compile.dox" />
+    <Content Include="vendor\GLFW\docs\context.dox" />
+    <Content Include="vendor\GLFW\docs\CONTRIBUTING.md" />
+    <Content Include="vendor\GLFW\docs\Doxyfile.in" />
+    <Content Include="vendor\GLFW\docs\DoxygenLayout.xml" />
+    <Content Include="vendor\GLFW\docs\extra.css" />
+    <Content Include="vendor\GLFW\docs\extra.less" />
+    <Content Include="vendor\GLFW\docs\footer.html" />
+    <Content Include="vendor\GLFW\docs\header.html" />
+    <Content Include="vendor\GLFW\docs\input.dox" />
+    <Content Include="vendor\GLFW\docs\internal.dox" />
+    <Content Include="vendor\GLFW\docs\intro.dox" />
+    <Content Include="vendor\GLFW\docs\main.dox" />
+    <Content Include="vendor\GLFW\docs\monitor.dox" />
+    <Content Include="vendor\GLFW\docs\moving.dox" />
+    <Content Include="vendor\GLFW\docs\news.dox" />
+    <Content Include="vendor\GLFW\docs\quick.dox" />
+    <Content Include="vendor\GLFW\docs\spaces.svg" />
+    <Content Include="vendor\GLFW\docs\vulkan.dox" />
+    <Content Include="vendor\GLFW\docs\window.dox" />
+    <Content Include="vendor\GLFW\examples\CMakeLists.txt" />
+    <Content Include="vendor\GLFW\examples\glfw.icns" />
+    <Content Include="vendor\GLFW\examples\glfw.ico" />
+    <Content Include="vendor\GLFW\examples\glfw.rc" />
+    <Content Include="vendor\GLFW\LICENSE.md" />
+    <Content Include="vendor\GLFW\premake5.lua" />
+    <Content Include="vendor\GLFW\README.md" />
+    <Content Include="vendor\GLFW\src\CMakeLists.txt" />
+    <Content Include="vendor\GLFW\src\cocoa_init.m" />
+    <Content Include="vendor\GLFW\src\cocoa_joystick.m" />
+    <Content Include="vendor\GLFW\src\cocoa_monitor.m" />
+    <Content Include="vendor\GLFW\src\cocoa_window.m" />
+    <Content Include="vendor\GLFW\src\glfw3.pc.in" />
+    <Content Include="vendor\GLFW\src\glfw3Config.cmake.in" />
+    <Content Include="vendor\GLFW\src\glfw_config.h.in" />
+    <Content Include="vendor\GLFW\src\mappings.h.in" />
+    <Content Include="vendor\GLFW\src\nsgl_context.m" />
+    <Content Include="vendor\GLFW\tests\CMakeLists.txt" />
+    <Content Include="vendor\spdLog\.clang-format" />
+    <Content Include="vendor\spdLog\.clang-tidy" />
+    <Content Include="vendor\spdLog\.git" />
+    <Content Include="vendor\spdLog\.gitattributes" />
+    <Content Include="vendor\spdLog\.gitignore" />
+    <Content Include="vendor\spdLog\.travis.yml" />
+    <Content Include="vendor\spdLog\appveyor.yml" />
+    <Content Include="vendor\spdLog\bench\CMakeLists.txt" />
+    <Content Include="vendor\spdLog\CMakeLists.txt" />
+    <Content Include="vendor\spdLog\cmake\ide.cmake" />
+    <Content Include="vendor\spdLog\cmake\pch.h.in" />
+    <Content Include="vendor\spdLog\cmake\spdlog.pc.in" />
+    <Content Include="vendor\spdLog\cmake\spdlogConfig.cmake.in" />
+    <Content Include="vendor\spdLog\cmake\spdlogCPack.cmake" />
+    <Content Include="vendor\spdLog\cmake\utils.cmake" />
+    <Content Include="vendor\spdLog\cmake\version.rc.in" />
+    <Content Include="vendor\spdLog\example\CMakeLists.txt" />
+    <Content Include="vendor\spdLog\include\spdlog\fmt\bundled\fmt.license.rst" />
+    <Content Include="vendor\spdLog\INSTALL" />
+    <Content Include="vendor\spdLog\LICENSE" />
+    <Content Include="vendor\spdLog\logos\jetbrains-variant-4.svg" />
+    <Content Include="vendor\spdLog\README.md" />
+    <Content Include="vendor\spdLog\scripts\extract_version.py" />
+    <Content Include="vendor\spdLog\scripts\format.sh" />
+    <Content Include="vendor\spdLog\tests\catch.license" />
+    <Content Include="vendor\spdLog\tests\CMakeLists.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,0 +1,3 @@
+[submodule "Mirage/vendor/spdLog"]
+	path = Mirage/vendor/spdLog
+	url = https://github.com/gabime/spdlog

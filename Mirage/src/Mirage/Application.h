@@ -1,15 +1,22 @@
 ﻿#pragma once
+
 #include "Core.h"
+#include "Window.h"
 
 namespace Mirage
 {
-    class MIRAGE_API Application
+    MIRAGE_CLASS Application
     {
     public:
         Application();
         virtual ~Application();
 
         void Run();
+
+    private:
+        std::unique_ptr<Window> m_Windows;
+
+        bool m_Running = true;
     };
 
     /* Define in client */

@@ -1,39 +1,48 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Mirage">
+      <UniqueIdentifier>{9A7728C3-8619-5399-6FD4-66ED5B15DAE9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Mirage\Events">
+      <UniqueIdentifier>{3E522C2B-AA12-A861-734D-F1DEDFCCEC3D}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Mirage.h" />
     <ClInclude Include="src\Mirage\Application.h">
-      <Filter>Header Files</Filter>
+      <Filter>Mirage</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\Core.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Mirage.h">
-      <Filter>Header Files</Filter>
+      <Filter>Mirage</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\EntryPoint.h">
-      <Filter>Header Files</Filter>
+      <Filter>Mirage</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\Events\ApplicationEvent.h">
+      <Filter>Mirage\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Events\Event.h">
+      <Filter>Mirage\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Events\KeyEvent.h">
+      <Filter>Mirage\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Events\MouseEvent.h">
+      <Filter>Mirage\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Log.h">
+      <Filter>Mirage</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MrgPch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Mirage\Application.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Mirage</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
+    <ClCompile Include="src\Mirage\Log.cpp">
+      <Filter>Mirage</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MrgPch.cpp" />
   </ItemGroup>
 </Project>

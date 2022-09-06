@@ -6,9 +6,11 @@ extern Mirage::Application* Mirage::CreateApplication();
 
 int main(int argc, char** argv)
 {
-	Mirage::Application* app = Mirage::CreateApplication();
-	app->Run();
-	delete app;
+    Mirage::Log::Init();
+
+    Mirage::Application* app = Mirage::CreateApplication();
+    app->Run();
+    delete app;
 }
 
 #endif
