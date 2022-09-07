@@ -10,12 +10,10 @@ public:
 
     void OnUpdate() override
     {
-        MRG_INFO("Example layer :: Update");
     }
 
     void OnEvent(Mirage::Event& event) override
     {
-        MRG_TRACE(event);
     }
 };
 
@@ -25,6 +23,7 @@ public:
     Sandbox()
     {
         PushLayer(new ExampleLayer());
+        PushOverlay(new Mirage::ImGuiLayer());
     }
 
     ~Sandbox()

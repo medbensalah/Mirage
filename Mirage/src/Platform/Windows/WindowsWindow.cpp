@@ -5,6 +5,8 @@
 #include "Mirage/Events/KeyEvent.h"
 #include "Mirage/Events/MouseEvent.h"
 
+#include <glad/glad.h>
+
 namespace Mirage
 {
     static bool s_GLFWInitialized = false;
@@ -44,13 +46,17 @@ namespace Mirage
             int success = glfwInit();
             MRG_CORE_ASSERT(success, "GLFW initialization Failed!");
             glfwSetErrorCallback(GLFWErrorCallback);
-            
+
             s_GLFWInitialized = true;
         }
 
         m_Window = glfwCreateWindow((int)m_Data.Width, (int)m_Data.Height, m_Data.Title.c_str(), NULL, NULL);
 
         glfwMakeContextCurrent(m_Window);
+
+        int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+        MRG_CORE_ASSERT(status, "Glad initialization Failed!");
+
         glfwSetWindowUserPointer(m_Window, &m_Data);
         SetVSync(true);
 
@@ -98,6 +104,14 @@ namespace Mirage
                     break;
                 }
             }
+        });
+
+        glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int character)
+        {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            
+            KeyTypedEvent event(character);
+            data.EventCallback(event);
         });
 
         glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods)

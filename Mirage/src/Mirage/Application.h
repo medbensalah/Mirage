@@ -21,13 +21,19 @@ namespace Mirage
         void PushLayer(Layer* layer);
         void PushOverlay(Layer* overlay);
 
+        inline Window& GetWindow() { return *m_Window; }
+
+        inline static Application& Get() { return *s_Instance; }
+        
     private:
         bool OnWindowClosed(WindowCloseEvent& e);
 
         LayerStack m_LayerStack;
-        
-        std::unique_ptr<Window> m_Windows;
+
+        std::unique_ptr<Window> m_Window;
         bool m_Running = true;
+
+        static Application* s_Instance;
     };
 
     /* Define in client */

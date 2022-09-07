@@ -7,8 +7,14 @@
     <Filter Include="Mirage\Events">
       <UniqueIdentifier>{3E522C2B-AA12-A861-734D-F1DEDFCCEC3D}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Mirage\ImGui">
+      <UniqueIdentifier>{44B8F694-301B-8639-D9A0-BEEFC5E251BC}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Platform">
       <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\OpenGL">
+      <UniqueIdentifier>{1E7D2C1D-8A08-9AE1-9319-1DD6FF23F6E1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Platform\Windows">
       <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
@@ -37,6 +43,9 @@
     <ClInclude Include="src\Mirage\Events\MouseEvent.h">
       <Filter>Mirage\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\ImGui\ImGuiLayer.h">
+      <Filter>Mirage\ImGui</Filter>
+    </ClInclude>
     <ClInclude Include="src\Mirage\Layer.h">
       <Filter>Mirage</Filter>
     </ClInclude>
@@ -50,6 +59,12 @@
       <Filter>Mirage</Filter>
     </ClInclude>
     <ClInclude Include="src\MrgPch.h" />
+    <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h">
+      <Filter>Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\imgui_impl_opengl3_loader.h">
+      <Filter>Platform\OpenGL</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
       <Filter>Platform\Windows</Filter>
     </ClInclude>
@@ -57,6 +72,9 @@
   <ItemGroup>
     <ClCompile Include="src\Mirage\Application.cpp">
       <Filter>Mirage</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\ImGui\ImGuiLayer.cpp">
+      <Filter>Mirage\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Mirage\Layer.cpp">
       <Filter>Mirage</Filter>
@@ -68,6 +86,9 @@
       <Filter>Mirage</Filter>
     </ClCompile>
     <ClCompile Include="src\MrgPch.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp">
+      <Filter>Platform\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
       <Filter>Platform\Windows</Filter>
     </ClCompile>

@@ -5,7 +5,7 @@
 namespace Mirage
 {
     /* events are currently blocking
-     * TODO Dispatch into a bufferf
+     * TODO Dispatch into a buffer
      */
 
     enum class EventType
@@ -24,6 +24,7 @@ namespace Mirage
 
         KeyPressed,
         KeyReleased,
+        KeyTyped,
 
         MouseButtonPressed,
         MouseButtonReleased,
@@ -71,12 +72,14 @@ namespace Mirage
 
     public:
         EventDispatcher(Event& event)
-            : m_Event(event) {}
+            : m_Event(event)
+        {
+        }
 
-        template<typename T>
+        template <typename T>
         bool Dispatch(EventFn<T> func)
         {
-            if(m_Event.GetEventType() == T::GetStaticType())
+            if (m_Event.GetEventType() == T::GetStaticType())
             {
                 m_Event.Handled = func(*(T*)&m_Event);
                 return true;

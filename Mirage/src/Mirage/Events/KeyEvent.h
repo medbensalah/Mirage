@@ -6,6 +6,7 @@ namespace Mirage
 {
     MIRAGE_CLASS KeyEvent : public Event
     {
+    public:
         inline int GetKeyCode() const { return m_KeyCode; }
 
         EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
@@ -39,7 +40,7 @@ namespace Mirage
     private:
         int m_RepeatCount;
     };
-
+    
     MIRAGE_CLASS KeyReleasedEvent : public KeyEvent
     {
     public:
@@ -57,4 +58,23 @@ namespace Mirage
 
         EVENT_CLASS_TYPE(KeyReleased)
     };
+
+    MIRAGE_CLASS KeyTypedEvent : public KeyEvent
+    {
+        public:
+        KeyTypedEvent(int keycode)
+            : KeyEvent(keycode)
+        {
+        }
+
+        std::string ToString() const override
+        {
+            std::stringstream ss;
+            ss << "Event: (" << GetName() << ") Key: '" << m_KeyCode;
+            return ss.str();
+        }
+
+        EVENT_CLASS_TYPE(KeyTyped)
+    };
+
 }
