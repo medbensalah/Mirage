@@ -2,8 +2,6 @@
 
 #include "Mirage/Core.h"
 
-#include "Mirage/Log.h"
-
 namespace Mirage
 {
     /* events are currently blocking

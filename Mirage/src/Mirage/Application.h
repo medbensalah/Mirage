@@ -2,6 +2,7 @@
 
 #include "Core.h"
 #include "Window.h"
+#include "Events/ApplicationEvent.h"
 
 namespace Mirage
 {
@@ -13,7 +14,11 @@ namespace Mirage
 
         void Run();
 
+        void OnEvent(Event& e);
+        
     private:
+bool OnWindowClosed(WindowCloseEvent& e);
+        
         std::unique_ptr<Window> m_Windows;
 
         bool m_Running = true;

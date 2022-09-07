@@ -7,6 +7,12 @@
     <Filter Include="Mirage\Events">
       <UniqueIdentifier>{3E522C2B-AA12-A861-734D-F1DEDFCCEC3D}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Windows">
+      <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Mirage.h" />
@@ -34,7 +40,13 @@
     <ClInclude Include="src\Mirage\Log.h">
       <Filter>Mirage</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\Window.h">
+      <Filter>Mirage</Filter>
+    </ClInclude>
     <ClInclude Include="src\MrgPch.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Mirage\Application.cpp">
@@ -44,5 +56,8 @@
       <Filter>Mirage</Filter>
     </ClCompile>
     <ClCompile Include="src\MrgPch.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

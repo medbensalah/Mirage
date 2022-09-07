@@ -72,10 +72,10 @@ namespace Mirage
 
         int m_Button;
     };
-    MIRAGE_CLASS MouseButtonPressed : public MouseButtonEvent
+    MIRAGE_CLASS MouseButtonPressedEvent : public MouseButtonEvent
     {
     public:
-        MouseButtonPressed(int button)
+        MouseButtonPressedEvent(int button)
             : MouseButtonEvent(button)
         {
         }
@@ -89,10 +89,10 @@ namespace Mirage
 
         EVENT_CLASS_TYPE(MouseButtonPressed);
     };
-    MIRAGE_CLASS MouseButtonReleased : public MouseButtonEvent
+    MIRAGE_CLASS MouseButtonReleasedEvent : public MouseButtonEvent
     {
     public:
-        MouseButtonReleased(int button)
+        MouseButtonReleasedEvent(int button)
             : MouseButtonEvent(button)
         {
         }
