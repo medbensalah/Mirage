@@ -1,7 +1,9 @@
 ﻿#pragma once
 
 #include "Core.h"
+
 #include "Window.h"
+#include "LayerStack.h"
 #include "Events/ApplicationEvent.h"
 
 namespace Mirage
@@ -15,12 +17,16 @@ namespace Mirage
         void Run();
 
         void OnEvent(Event& e);
-        
+
+        void PushLayer(Layer* layer);
+        void PushOverlay(Layer* overlay);
+
     private:
-bool OnWindowClosed(WindowCloseEvent& e);
+        bool OnWindowClosed(WindowCloseEvent& e);
+
+        LayerStack m_LayerStack;
         
         std::unique_ptr<Window> m_Windows;
-
         bool m_Running = true;
     };
 

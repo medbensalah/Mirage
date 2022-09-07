@@ -84,6 +84,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions>/MDd %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -110,6 +111,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/MD %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -137,6 +139,7 @@
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <AdditionalOptions>/MD %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -160,6 +163,8 @@
     <ClInclude Include="src\Mirage\Events\Event.h" />
     <ClInclude Include="src\Mirage\Events\KeyEvent.h" />
     <ClInclude Include="src\Mirage\Events\MouseEvent.h" />
+    <ClInclude Include="src\Mirage\Layer.h" />
+    <ClInclude Include="src\Mirage\LayerStack.h" />
     <ClInclude Include="src\Mirage\Log.h" />
     <ClInclude Include="src\Mirage\Window.h" />
     <ClInclude Include="src\MrgPch.h" />
@@ -167,6 +172,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Mirage\Application.cpp" />
+    <ClCompile Include="src\Mirage\Layer.cpp" />
+    <ClCompile Include="src\Mirage\LayerStack.cpp" />
     <ClCompile Include="src\Mirage\Log.cpp" />
     <ClCompile Include="src\MrgPch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

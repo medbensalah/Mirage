@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Statistic">
+    <option name="excludedDirectories">
+      <list>
+        <option value="$PROJECT_DIR$/.git" />
+        <option value="$PROJECT_DIR$/.idea" />
+        <option value="$PROJECT_DIR$/.vs" />
+        <option value="$PROJECT_DIR$/bin" />
+        <option value="$PROJECT_DIR$/bin-int" />
+        <option value="$PROJECT_DIR$/vendor" />
+        <option value="$PROJECT_DIR$/Mirage/vendor" />
+      </list>
+    </option>
+  </component>
+</project>

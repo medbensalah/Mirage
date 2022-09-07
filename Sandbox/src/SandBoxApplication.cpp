@@ -1,19 +1,38 @@
 #include <Mirage.h>
 
-class Sandbox : public Mirage::Application {
+class ExampleLayer : public Mirage::Layer
+{
 public:
-	Sandbox()
-	{
+    ExampleLayer()
+        : Layer("Example")
+    {
+    }
 
-	}
+    void OnUpdate() override
+    {
+        MRG_INFO("Example layer :: Update");
+    }
 
-	~Sandbox()
-	{
+    void OnEvent(Mirage::Event& event) override
+    {
+        MRG_TRACE(event);
+    }
+};
 
-	}
+class Sandbox : public Mirage::Application
+{
+public:
+    Sandbox()
+    {
+        PushLayer(new ExampleLayer());
+    }
+
+    ~Sandbox()
+    {
+    }
 };
 
 Mirage::Application* Mirage::CreateApplication()
 {
-	return new Sandbox();
+    return new Sandbox();
 }
