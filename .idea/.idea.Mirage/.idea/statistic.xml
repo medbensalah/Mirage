@@ -10,6 +10,7 @@
         <option value="$PROJECT_DIR$/bin-int" />
         <option value="$PROJECT_DIR$/vendor" />
         <option value="$PROJECT_DIR$/Mirage/vendor" />
+        <option value="$PROJECT_DIR$/Mirage/src/Platform/OpenGL" />
       </list>
     </option>
   </component>

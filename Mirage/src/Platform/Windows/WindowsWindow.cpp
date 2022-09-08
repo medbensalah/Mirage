@@ -7,6 +7,9 @@
 
 #include <glad/glad.h>
 
+#include "Mirage/KeyCodes.h"
+#include "Mirage/MouseButtonCodes.h"
+
 namespace Mirage
 {
     static bool s_GLFWInitialized = false;
@@ -37,7 +40,7 @@ namespace Mirage
         m_Data.Width = properties.Width;
         m_Data.Height = properties.Height;
 
-        MRG_CORE_INFO("Creating window {0} with size ({1}, {2})", properties.Title, properties.Width,
+        MRG_CORE_INFO("Creating window \"{0}\" with size ({1}, {2})", properties.Title, properties.Width,
                       properties.Height);
 
         if (!s_GLFWInitialized)
@@ -87,19 +90,19 @@ namespace Mirage
             {
             case GLFW_PRESS:
                 {
-                    KeyPressedEvent event(key, 0);
+                    KeyPressedEvent event(GLFW_KEY_TO_MRG_KEY(key), 0);
                     data.EventCallback(event);
                     break;
                 }
             case GLFW_RELEASE:
-                {
-                    KeyReleasedEvent event(key);
+                {                    
+                    KeyReleasedEvent event(GLFW_KEY_TO_MRG_KEY(key));
                     data.EventCallback(event);
                     break;
                 }
             case GLFW_REPEAT:
                 {
-                    KeyPressedEvent event(key, 1);
+                    KeyPressedEvent event(GLFW_KEY_TO_MRG_KEY(key), 1);
                     data.EventCallback(event);
                     break;
                 }
@@ -109,8 +112,8 @@ namespace Mirage
         glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int character)
         {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-            
             KeyTypedEvent event(character);
+
             data.EventCallback(event);
         });
 
@@ -122,13 +125,13 @@ namespace Mirage
             {
             case GLFW_PRESS:
                 {
-                    MouseButtonPressedEvent event(button);
+                    MouseButtonPressedEvent event(GLFW_BTN_TO_MRG_BTN(button));
                     data.EventCallback(event);
                     break;
                 }
             case GLFW_RELEASE:
                 {
-                    MouseButtonReleasedEvent event(button);
+                    MouseButtonReleasedEvent event(GLFW_BTN_TO_MRG_BTN(button));
                     data.EventCallback(event);
                     break;
                 }

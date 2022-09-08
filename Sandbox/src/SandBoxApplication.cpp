@@ -10,10 +10,17 @@ public:
 
     void OnUpdate() override
     {
+        // if(Mirage::Input::IsKeyPressed(Mirage::MRG_Key_Tab))
+        //     MRG_INFO("Tab key is pressed (poll)!");
     }
 
     void OnEvent(Mirage::Event& event) override
     {
+        // if(event.GetEventType() == Mirage::EventType::KeyTyped)
+        // {
+        //     Mirage::KeyTypedEvent& e = (Mirage::KeyTypedEvent&)event;
+        //     MRG_TRACE("{0}", (char)e.GetKeyCode());
+        // }
     }
 };
 

@@ -153,6 +153,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Mirage.h" />
+    <ClInclude Include="src\Mirage\MouseButtonCodes.h" />
     <ClInclude Include="src\Mirage\Application.h" />
     <ClInclude Include="src\Mirage\Core.h" />
     <ClInclude Include="src\Mirage\EntryPoint.h" />
@@ -161,6 +162,8 @@
     <ClInclude Include="src\Mirage\Events\KeyEvent.h" />
     <ClInclude Include="src\Mirage\Events\MouseEvent.h" />
     <ClInclude Include="src\Mirage\ImGui\ImGuiLayer.h" />
+    <ClInclude Include="src\Mirage\Input.h" />
+    <ClInclude Include="src\Mirage\KeyCodes.h" />
     <ClInclude Include="src\Mirage\Layer.h" />
     <ClInclude Include="src\Mirage\LayerStack.h" />
     <ClInclude Include="src\Mirage\Log.h" />
@@ -168,6 +171,7 @@
     <ClInclude Include="src\MrgPch.h" />
     <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
     <ClInclude Include="src\Platform\OpenGL\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
@@ -180,6 +184,7 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
   </ItemGroup>
   <ItemGroup>

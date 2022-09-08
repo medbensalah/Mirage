@@ -4,6 +4,8 @@
 
 #include <glad/glad.h>
 
+#include "Input.h"
+
 namespace Mirage
 {
 #define Bind_event_FN(x) std::bind(x, this, std::placeholders::_1)
@@ -40,8 +42,7 @@ namespace Mirage
     {
         EventDispatcher dispatcher(e);
         dispatcher.Dispatch<WindowCloseEvent>(Bind_event_FN(&Application::OnWindowClosed));
-     //   MRG_CORE_TRACE(e);
-
+        
         for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
         {
             (*--it)->OnEvent(e);

@@ -40,7 +40,7 @@ namespace Mirage
     private:
         int m_RepeatCount;
     };
-    
+
     MIRAGE_CLASS KeyReleasedEvent : public KeyEvent
     {
     public:
@@ -52,7 +52,7 @@ namespace Mirage
         std::string ToString() const override
         {
             std::stringstream ss;
-            ss << "Event: (" << GetName() << ") Key: '" << m_KeyCode;
+            ss << "Event: (" << GetName() << ") Key: '" << m_KeyCode << "'";
             return ss.str();
         }
 
@@ -61,7 +61,7 @@ namespace Mirage
 
     MIRAGE_CLASS KeyTypedEvent : public KeyEvent
     {
-        public:
+    public:
         KeyTypedEvent(int keycode)
             : KeyEvent(keycode)
         {
@@ -70,11 +70,10 @@ namespace Mirage
         std::string ToString() const override
         {
             std::stringstream ss;
-            ss << "Event: (" << GetName() << ") Key: '" << m_KeyCode;
+            ss << "Event: (" << GetName() << ") Key: '" << m_KeyCode << "'";
             return ss.str();
         }
 
         EVENT_CLASS_TYPE(KeyTyped)
     };
-
 }

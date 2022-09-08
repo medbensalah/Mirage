@@ -6,7 +6,8 @@
 
 //Temporary
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include "Mirage/KeyCodes.h"
+#include "Mirage/MouseButtonCodes.h"
 
 namespace Mirage
 {
@@ -115,42 +116,42 @@ namespace Mirage
 
         //Temporary: Change to mirage mapping
 
-        io.KeyMap[ImGuiKey_Tab] = GLFW_KEY_TAB;
-        io.KeyMap[ImGuiKey_LeftArrow] = GLFW_KEY_LEFT;
-        io.KeyMap[ImGuiKey_RightArrow] = GLFW_KEY_RIGHT;
-        io.KeyMap[ImGuiKey_UpArrow] = GLFW_KEY_UP;
-        io.KeyMap[ImGuiKey_DownArrow] = GLFW_KEY_DOWN;
-        io.KeyMap[ImGuiKey_PageUp] = GLFW_KEY_PAGE_UP;
-        io.KeyMap[ImGuiKey_PageDown] = GLFW_KEY_PAGE_DOWN;
-        io.KeyMap[ImGuiKey_Home] = GLFW_KEY_HOME;
-        io.KeyMap[ImGuiKey_End] = GLFW_KEY_END;
-        io.KeyMap[ImGuiKey_Insert] = GLFW_KEY_INSERT;
-        io.KeyMap[ImGuiKey_Delete] = GLFW_KEY_DELETE;
-        io.KeyMap[ImGuiKey_Backspace] = GLFW_KEY_BACKSPACE;
-        io.KeyMap[ImGuiKey_Space] = GLFW_KEY_SPACE;
-        io.KeyMap[ImGuiKey_Enter] = GLFW_KEY_ENTER;
-        io.KeyMap[ImGuiKey_KeypadEnter] = GLFW_KEY_ENTER;
-        io.KeyMap[ImGuiKey_KeyPadEnter] = GLFW_KEY_ENTER;
-        io.KeyMap[ImGuiKey_Escape] = GLFW_KEY_ESCAPE;
+        io.KeyMap[ImGuiKey_Tab]         = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_TAB);
+        io.KeyMap[ImGuiKey_LeftArrow]   = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_LEFT);
+        io.KeyMap[ImGuiKey_RightArrow]  = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_RIGHT);
+        io.KeyMap[ImGuiKey_UpArrow]     = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_UP);
+        io.KeyMap[ImGuiKey_DownArrow]   = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_DOWN);
+        io.KeyMap[ImGuiKey_PageUp]      = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_PAGE_UP);
+        io.KeyMap[ImGuiKey_PageDown]    = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_PAGE_DOWN);
+        io.KeyMap[ImGuiKey_Home]        = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_HOME);
+        io.KeyMap[ImGuiKey_End]         = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_END);
+        io.KeyMap[ImGuiKey_Insert]      = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_INSERT);
+        io.KeyMap[ImGuiKey_Delete]      = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_DELETE);
+        io.KeyMap[ImGuiKey_Backspace]   = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_BACKSPACE);
+        io.KeyMap[ImGuiKey_Space]       = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_SPACE);
+        io.KeyMap[ImGuiKey_Enter]       = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_ENTER);
+        io.KeyMap[ImGuiKey_KeypadEnter] = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_ENTER);
+        io.KeyMap[ImGuiKey_KeyPadEnter] = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_ENTER);
+        io.KeyMap[ImGuiKey_Escape]      = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_ESCAPE);
 
         if (PRIMARYLANGID(HIWORD(GetKeyboardLayout(0))) == LANG_FRENCH)
         {
-            io.KeyMap[ImGuiKey_A] = GLFW_KEY_Q;
-            io.KeyMap[ImGuiKey_C] = GLFW_KEY_C;
-            io.KeyMap[ImGuiKey_V] = GLFW_KEY_V;
-            io.KeyMap[ImGuiKey_X] = GLFW_KEY_X;
-            io.KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
-            io.KeyMap[ImGuiKey_Z] = GLFW_KEY_W;
+            io.KeyMap[ImGuiKey_A] = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_Q);
+            io.KeyMap[ImGuiKey_C] = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_C);
+            io.KeyMap[ImGuiKey_V] = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_V);
+            io.KeyMap[ImGuiKey_X] = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_X);
+            io.KeyMap[ImGuiKey_Y] = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_Y);
+            io.KeyMap[ImGuiKey_Z] = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_W);
         }
         else
         {
             MRG_CORE_ERROR("Keyboard layout not supported, Falling Back to English layout");
-            io.KeyMap[ImGuiKey_A] = GLFW_KEY_A;
-            io.KeyMap[ImGuiKey_C] = GLFW_KEY_C;
-            io.KeyMap[ImGuiKey_V] = GLFW_KEY_V;
-            io.KeyMap[ImGuiKey_X] = GLFW_KEY_X;
-            io.KeyMap[ImGuiKey_Y] = GLFW_KEY_Y;
-            io.KeyMap[ImGuiKey_Z] = GLFW_KEY_Z;
+            io.KeyMap[ImGuiKey_A] = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_A);
+            io.KeyMap[ImGuiKey_C] = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_C);
+            io.KeyMap[ImGuiKey_V] = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_V);
+            io.KeyMap[ImGuiKey_X] = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_X);
+            io.KeyMap[ImGuiKey_Y] = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_Y);
+            io.KeyMap[ImGuiKey_Z] = GLFW_KEY_TO_MRG_KEY(GLFW_KEY_Z);
         }
 
         ImGui_ImplOpenGL3_Init("#version 410");
@@ -233,10 +234,10 @@ namespace Mirage
         ImGuiIO& io = ImGui::GetIO();
         io.KeysDown[event.GetKeyCode()] = true;
 
-        io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
-        io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
-        io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
-        io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
+        io.KeyCtrl = io.KeysDown[MRG_Key_LeftControl] || io.KeysDown[MRG_Key_RightControl];
+        io.KeyShift = io.KeysDown[MRG_Key_LeftShift] || io.KeysDown[MRG_Key_RightShift];
+        io.KeyAlt = io.KeysDown[MRG_Key_LeftAlt] || io.KeysDown[MRG_Key_RightAlt];
+        io.KeySuper = io.KeysDown[MRG_Key_LeftSuper] || io.KeysDown[MRG_Key_RightSuper];
 
         return false;
     }
@@ -246,10 +247,10 @@ namespace Mirage
         ImGuiIO& io = ImGui::GetIO();
         io.KeysDown[event.GetKeyCode()] = false;
 
-        io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
-        io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
-        io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
-        io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
+        io.KeyCtrl = io.KeysDown[MRG_Key_LeftControl] || io.KeysDown[MRG_Key_RightControl];
+        io.KeyShift = io.KeysDown[MRG_Key_LeftShift] || io.KeysDown[MRG_Key_RightShift];
+        io.KeyAlt = io.KeysDown[MRG_Key_LeftAlt] || io.KeysDown[MRG_Key_RightAlt];
+        io.KeySuper = io.KeysDown[MRG_Key_LeftSuper] || io.KeysDown[MRG_Key_RightSuper];
 
         return false;
     }
@@ -258,10 +259,9 @@ namespace Mirage
     {
         ImGuiIO& io = ImGui::GetIO();
 
-        int keycode = event.GetKeyCode();
-        MRG_CORE_INFO(event);
-        if (keycode > 0 && keycode < 0x10000)
-            io.AddInputCharacter((unsigned short)keycode);
+        int keyCode = event.GetKeyCode();
+        if (keyCode > 0 && keyCode < 0x10000)
+            io.AddInputCharacter((unsigned short)keyCode);
 
         return false;
     }
