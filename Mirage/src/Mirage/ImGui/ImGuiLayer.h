@@ -14,24 +14,14 @@ namespace Mirage
         ImGuiLayer();
         ~ImGuiLayer();
 
-        void OnAttach() override;
-        void OnDetach() override;
-        void OnUpdate() override;
-        void OnEvent(Event& event) override;
+        virtual void OnAttach() override;
+        virtual void OnDetach() override;
+        virtual void OnImGuiRender() override;
+        
+        void Begin();
+        void End();
         
     private:
-        bool OnMouseButtonPressed(MouseButtonPressedEvent& event);
-        bool OnMouseButtonReleased(MouseButtonReleasedEvent& event);
-        bool OnMouseMoved(MouseMoveEvent& event);
-        bool OnMouseScroll(MouseScrollEvent& event);
-        
-        bool OnKeyPressed(KeyPressedEvent& event);
-        bool OnKeyReleased(KeyReleasedEvent& event);
-        bool OnKeyTyped(KeyTypedEvent& event);
-
-        bool OnWindowResize(WindowResizeEvent& event);
-            
-        
         float m_Time = 0.0f;
     };
 }

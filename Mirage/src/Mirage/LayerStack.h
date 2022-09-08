@@ -17,11 +17,13 @@ namespace Mirage
         void PushOverlay(Layer* overlay);
         void PopOverlay(Layer* overlay);
 
+        inline int GetSize() { return m_Layers.size(); }
+
         std::vector<Layer*>::iterator begin() { return m_Layers.begin(); }
         std::vector<Layer*>::iterator end() { return m_Layers.end(); }
 
     private:
         std::vector<Layer*> m_Layers;
-        std::vector<Layer*>::iterator m_LayerInsert;
+        unsigned int m_LayerInsertIndex = 0;
     };
 }

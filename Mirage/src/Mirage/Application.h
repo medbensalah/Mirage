@@ -6,6 +6,8 @@
 #include "LayerStack.h"
 #include "Events/ApplicationEvent.h"
 
+#include "Mirage/ImGui/ImGuiLayer.h"
+
 namespace Mirage
 {
     MIRAGE_CLASS Application
@@ -31,6 +33,7 @@ namespace Mirage
         LayerStack m_LayerStack;
 
         std::unique_ptr<Window> m_Window;
+        ImGuiLayer* m_ImGuiLayer;
         bool m_Running = true;
 
         static Application* s_Instance;

@@ -19,6 +19,9 @@ namespace Mirage
 
         m_Window = std::unique_ptr<Window>(Window::Create());
         m_Window->SetEventCallbackFn(Bind_event_FN(&Application::OnEvent));
+
+        m_ImGuiLayer = new ImGuiLayer();
+        PushOverlay(m_ImGuiLayer);
     }
 
     Application::~Application()
@@ -42,7 +45,7 @@ namespace Mirage
     {
         EventDispatcher dispatcher(e);
         dispatcher.Dispatch<WindowCloseEvent>(Bind_event_FN(&Application::OnWindowClosed));
-        
+
         for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
         {
             (*--it)->OnEvent(e);
@@ -62,6 +65,16 @@ namespace Mirage
             {
                 layer->OnUpdate();
             }
+
+            
+            m_ImGuiLayer->Begin();
+
+            for (Layer* layer : m_LayerStack)
+            {
+                layer->OnImGuiRender();
+            }
+            
+            m_ImGuiLayer->End();
 
             m_Window->OnUpdate();
         }

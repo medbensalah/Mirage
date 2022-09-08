@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Event.h"
+#include "Mirage/MouseButtonCodes.h"
 
 //TODO change mouse coordinates to vect2
 
