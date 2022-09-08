@@ -80,7 +80,7 @@
       <PrecompiledHeaderFile>MrgPch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>MRG_PLATFORM_WINDOWS;MRG_BUILD_DLL;GLFW_INCLUDE_NONE;MRG_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -103,7 +103,7 @@
       <PrecompiledHeaderFile>MrgPch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>MRG_PLATFORM_WINDOWS;MRG_BUILD_DLL;GLFW_INCLUDE_NONE;MRG_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -130,7 +130,7 @@
       <PrecompiledHeaderFile>MrgPch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>MRG_PLATFORM_WINDOWS;MRG_BUILD_DLL;GLFW_INCLUDE_NONE;MRG_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\ImGui;vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -153,7 +153,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Mirage.h" />
-    <ClInclude Include="src\Mirage\MouseButtonCodes.h" />
     <ClInclude Include="src\Mirage\Application.h" />
     <ClInclude Include="src\Mirage\Core.h" />
     <ClInclude Include="src\Mirage\EntryPoint.h" />
@@ -167,6 +166,7 @@
     <ClInclude Include="src\Mirage\Layer.h" />
     <ClInclude Include="src\Mirage\LayerStack.h" />
     <ClInclude Include="src\Mirage\Log.h" />
+    <ClInclude Include="src\Mirage\MouseButtonCodes.h" />
     <ClInclude Include="src\Mirage\Window.h" />
     <ClInclude Include="src\MrgPch.h" />
     <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h" />
@@ -176,6 +176,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Mirage\Application.cpp" />
+    <ClCompile Include="src\Mirage\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Mirage\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Mirage\Layer.cpp" />
     <ClCompile Include="src\Mirage\LayerStack.cpp" />

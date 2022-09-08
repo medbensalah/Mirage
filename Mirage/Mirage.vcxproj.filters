@@ -46,6 +46,12 @@
     <ClInclude Include="src\Mirage\ImGui\ImGuiLayer.h">
       <Filter>Mirage\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\Input.h">
+      <Filter>Mirage</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\KeyCodes.h">
+      <Filter>Mirage</Filter>
+    </ClInclude>
     <ClInclude Include="src\Mirage\Layer.h">
       <Filter>Mirage</Filter>
     </ClInclude>
@@ -53,6 +59,9 @@
       <Filter>Mirage</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\Log.h">
+      <Filter>Mirage</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\MouseButtonCodes.h">
       <Filter>Mirage</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\Window.h">
@@ -64,6 +73,9 @@
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\imgui_impl_opengl3_loader.h">
       <Filter>Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsInput.h">
+      <Filter>Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
       <Filter>Platform\Windows</Filter>
@@ -88,6 +100,9 @@
     <ClCompile Include="src\MrgPch.cpp" />
     <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp">
       <Filter>Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
+      <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
       <Filter>Platform\Windows</Filter>
