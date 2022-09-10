@@ -1,5 +1,7 @@
 #include <Mirage.h>
 
+#include "ImGui/imgui.h"
+
 class ExampleLayer : public Mirage::Layer
 {
 public:
@@ -12,6 +14,13 @@ public:
     {
         // if(Mirage::Input::IsKeyPressed(Mirage::MRG_Key_Tab))
         //     MRG_INFO("Tab key is pressed (poll)!");
+    }
+
+    void OnImGuiRender() override
+    {
+        ImGui::Begin("Test");
+        ImGui::Text("Hello World!");
+        ImGui::End();
     }
 
     void OnEvent(Mirage::Event& event) override

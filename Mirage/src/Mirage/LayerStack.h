@@ -17,7 +17,7 @@ namespace Mirage
         void PushOverlay(Layer* overlay);
         void PopOverlay(Layer* overlay);
 
-        inline int GetSize() { return m_Layers.size(); }
+        inline int GetSize() { return (int)m_Layers.size(); }
 
         std::vector<Layer*>::iterator begin() { return m_Layers.begin(); }
         std::vector<Layer*>::iterator end() { return m_Layers.end(); }

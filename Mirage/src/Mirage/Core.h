@@ -1,10 +1,14 @@
 ﻿#pragma once
 
 #ifdef MRG_PLATFORM_WINDOWS
-    #ifdef MRG_BUILD_DLL
-        #define MIRAGE_CLASS class __declspec(dllexport)
+    #if MRG_DYNAMIC_LINK
+        #ifdef MRG_BUILD_DLL
+            #define MIRAGE_CLASS class __declspec(dllexport)
+        #else
+            #define  MIRAGE_CLASS class __declspec(dllimport)
+        #endif
     #else
-        #define  MIRAGE_CLASS class __declspec(dllimport)
+        #define MIRAGE_CLASS class
     #endif
 #else
     #error MIRAGE SUPPORTS WINDOWS ONLY!!!
