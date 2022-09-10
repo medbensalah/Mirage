@@ -5,10 +5,10 @@
 #include "Mirage/Events/KeyEvent.h"
 #include "Mirage/Events/MouseEvent.h"
 
-#include <glad/glad.h>
-
 #include "Mirage/KeyCodes.h"
 #include "Mirage/MouseButtonCodes.h"
+
+#include "Platform/OpenGL/OpenGLContext.h"
 
 namespace Mirage
 {
@@ -40,9 +40,12 @@ namespace Mirage
         m_Data.Width = properties.Width;
         m_Data.Height = properties.Height;
 
-        MRG_CORE_INFO("Creating window \"{0}\" with size ({1}, {2})", properties.Title, properties.Width,
-                      properties.Height);
-
+        MRG_CORE_INFO("Creating window \"{0}\" with size ({1}, {2})",
+                      properties.Title,
+                      properties.Width,
+                      properties.Height
+        );
+        
         if (!s_GLFWInitialized)
         {
             // TODO: glfwTerminate on system shutdown
@@ -54,11 +57,8 @@ namespace Mirage
         }
 
         m_Window = glfwCreateWindow((int)m_Data.Width, (int)m_Data.Height, m_Data.Title.c_str(), NULL, NULL);
-
-        glfwMakeContextCurrent(m_Window);
-
-        int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-        MRG_CORE_ASSERT(status, "Glad initialization Failed!");
+        m_Context = new OpenGLContext(m_Window);
+        m_Context->Init();
 
         glfwSetWindowUserPointer(m_Window, &m_Data);
         SetVSync(true);
@@ -95,7 +95,7 @@ namespace Mirage
                     break;
                 }
             case GLFW_RELEASE:
-                {                    
+                {
                     KeyReleasedEvent event(GLFW_KEY_TO_MRG_KEY(key));
                     data.EventCallback(event);
                     break;
@@ -163,7 +163,7 @@ namespace Mirage
     void WindowsWindow::OnUpdate()
     {
         glfwPollEvents();
-        glfwSwapBuffers(m_Window);
+        m_Context->SwapBuffers();
     }
 
     void WindowsWindow::SetVSync(bool enabled)

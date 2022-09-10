@@ -36,6 +36,9 @@ namespace Mirage
         ImGuiLayer* m_ImGuiLayer;
         bool m_Running = true;
 
+        unsigned int m_VertexArray, m_VertexBuffer, m_IndexBuffer;
+
+        
         static Application* s_Instance;
     };
 

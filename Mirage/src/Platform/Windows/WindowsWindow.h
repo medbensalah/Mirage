@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Mirage/Window.h"
+#include "Mirage/Renderer/Graphicscontext.h"
 
 #include <GLFW/glfw3.h>
 
@@ -28,7 +29,8 @@ namespace Mirage
         virtual void Shutdown();
 
         GLFWwindow* m_Window;
-
+        GraphicsContext* m_Context;
+        
         struct WindowData
         {
             std::string Title;
