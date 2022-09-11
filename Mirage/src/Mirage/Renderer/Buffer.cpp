@@ -26,11 +26,11 @@ namespace Mirage
     {
         switch (Renderer::GetGfxApi())
         {
-        case GraphicsAPI::None:
+        case RenderAPI::API::None:
             MRG_CORE_ASSERT(false, "No graphics API selected!");
             return nullptr;
             
-        case GraphicsAPI::OpenGL:
+        case RenderAPI::API::OpenGL:
             return new OpenGLVertexBuffer(vertices, size); 
         }
 
@@ -49,11 +49,11 @@ namespace Mirage
     {
         switch (Renderer::GetGfxApi())
         {
-        case GraphicsAPI::None:
+        case RenderAPI::API::None:
             MRG_CORE_ASSERT(false, "No graphics API selected!");
             return nullptr;
             
-        case GraphicsAPI::OpenGL:
+        case RenderAPI::API::OpenGL:
             return new OpenGLIndexBuffer(indices, count); 
         }
 
