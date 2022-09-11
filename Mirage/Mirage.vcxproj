@@ -158,10 +158,13 @@
     <ClInclude Include="src\Mirage\LayerStack.h" />
     <ClInclude Include="src\Mirage\Log.h" />
     <ClInclude Include="src\Mirage\MouseButtonCodes.h" />
+    <ClInclude Include="src\Mirage\Renderer\Buffer.h" />
     <ClInclude Include="src\Mirage\Renderer\Graphicscontext.h" />
+    <ClInclude Include="src\Mirage\Renderer\Renderer.h" />
     <ClInclude Include="src\Mirage\Renderer\Shader.h" />
     <ClInclude Include="src\Mirage\Window.h" />
     <ClInclude Include="src\MrgPch.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
@@ -588,11 +591,14 @@
     <ClCompile Include="src\Mirage\Layer.cpp" />
     <ClCompile Include="src\Mirage\LayerStack.cpp" />
     <ClCompile Include="src\Mirage\Log.cpp" />
+    <ClCompile Include="src\Mirage\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Mirage\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Mirage\Renderer\Shader.cpp" />
     <ClCompile Include="src\MrgPch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
   </ItemGroup>
