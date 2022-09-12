@@ -3,8 +3,6 @@
 #include "Event.h"
 #include "Mirage/MouseButtonCodes.h"
 
-//TODO change mouse coordinates to vect2
-
 namespace Mirage
 {
     MIRAGE_CLASS MouseMoveEvent : public Event
@@ -15,8 +13,7 @@ namespace Mirage
         {
         }
 
-        inline float GetX() const { return m_MouseX; }
-        inline float GetY() const { return m_MouseY; }
+        inline Vec2 GetMousePosition() { return {m_MouseX, m_MouseY }; }
 
         std::string ToString() const override
         {

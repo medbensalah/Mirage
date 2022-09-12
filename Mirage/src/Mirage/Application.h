@@ -4,13 +4,10 @@
 
 #include "Window.h"
 #include "LayerStack.h"
+#include "Core/Time.h"
 #include "Events/ApplicationEvent.h"
 
 #include "Mirage/ImGui/ImGuiLayer.h"
-
-#include "Mirage/Renderer/Shader.h"
-#include "Renderer/OrthographicCamera.h"
-#include "Renderer/VertexArray.h"
 
 namespace Mirage
 {
@@ -30,24 +27,21 @@ namespace Mirage
         inline Window& GetWindow() { return *m_Window; }
 
         inline static Application& Get() { return *s_Instance; }
-
+    
+        inline static float GetSeconds() { return s_Instance->time.GetSeconds(); }
+        inline static float GetMilliseconds() { return s_Instance->time.GetMilliseconds(); }
     private:
         bool OnWindowClosed(WindowCloseEvent& e);
 
         LayerStack m_LayerStack;
 
+        Time time = Time(0.0f);
+
         std::unique_ptr<Window> m_Window;
         ImGuiLayer* m_ImGuiLayer;
+
         bool m_Running = true;
 
-        std::shared_ptr<Shader> m_Shader;
-        std::shared_ptr<VertexArray> m_VertexArray;
-        
-        std::shared_ptr<Shader> m_SquareShader;
-        std::shared_ptr<VertexArray> m_SquareVA;
-
-        OrthographicCamera m_Camera;
-        
         static Application* s_Instance;
     };
 

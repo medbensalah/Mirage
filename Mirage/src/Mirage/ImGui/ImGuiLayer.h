@@ -2,10 +2,6 @@
 
 #include "Mirage/Layer.h"
 
-#include "Mirage/Events/ApplicationEvent.h"
-#include "Mirage/Events/KeyEvent.h"
-#include "Mirage/Events/MouseEvent.h"
-
 namespace Mirage
 {
     MIRAGE_CLASS ImGuiLayer : public Layer

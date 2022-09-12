@@ -1,8 +1,7 @@
 ﻿#pragma once
 
 #include "Event.h"
-
-//TODO change to vect2
+#include "Mirage/Math.h"
 
 namespace Mirage
 {
@@ -14,8 +13,7 @@ namespace Mirage
         {
         }
 
-        inline unsigned int GetWidth() { return m_Width; }
-        inline unsigned int GetHeight() { return m_Height; }
+        inline Vec2 GetWindowBounds() { return {m_Width, m_Height}; }
 
         std::string ToString() const override
         {
