@@ -9,6 +9,7 @@
 #include "Mirage/ImGui/ImGuiLayer.h"
 
 #include "Mirage/Renderer/Shader.h"
+#include "Renderer/OrthographicCamera.h"
 #include "Renderer/VertexArray.h"
 
 namespace Mirage
@@ -45,6 +46,8 @@ namespace Mirage
         std::shared_ptr<Shader> m_SquareShader;
         std::shared_ptr<VertexArray> m_SquareVA;
 
+        OrthographicCamera m_Camera;
+        
         static Application* s_Instance;
     };
 

@@ -2,17 +2,15 @@
 
 #include "Application.h"
 
-#include <glm/glm.hpp>
-
 #include "Mirage/Renderer/Renderer.h"
-
 namespace Mirage
 {
 #define Bind_event_FN(x) std::bind(x, this, std::placeholders::_1)
 
     Application* Application::s_Instance = nullptr;
-
+    
     Application::Application()
+        : m_Camera(-1.60, 1.60, -0.90, 0.90, -1.0, 1.0)
     {
         MRG_ASSERT(!s_Instance, "Application already exists!");
         s_Instance = this;
@@ -20,6 +18,8 @@ namespace Mirage
         m_Window = std::unique_ptr<Window>(Window::Create());
         m_Window->SetEventCallbackFn(Bind_event_FN(&Application::OnEvent));
 
+        m_Window->SetVSync(false);
+        
         m_ImGuiLayer = new ImGuiLayer();
         PushOverlay(m_ImGuiLayer);
 
@@ -53,6 +53,8 @@ namespace Mirage
         layout(location = 0) in vec3 a_Position;
         layout(location = 1) in vec4 a_Color;
 
+        uniform mat4 u_ViewProjection;
+        
         out vec3 v_Position;
         out vec4 v_Color;
         
@@ -60,7 +62,7 @@ namespace Mirage
         {
             v_Position = a_Position;
             v_Color = a_Color;
-            gl_Position = vec4(a_Position, 1.0);
+            gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
         }
         )";
         std::string fragmentShader = R"(
@@ -114,13 +116,15 @@ namespace Mirage
 
         layout(location = 0) in vec3 a_Position;
 
+        uniform mat4 u_ViewProjection;
+        
         out vec3 v_Position;
         out vec4 v_Color;
         
         void main()
         {
             v_Position = a_Position;
-            gl_Position = vec4(a_Position, 1.0);
+            gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
         }
         )";
         std::string squareFragmentShader = R"(
@@ -174,14 +178,15 @@ namespace Mirage
         {
             RenderCommand::SetClearColor({ 0.15f, 0.15f, 0.15f, 1.0f });
             RenderCommand::Clear();
+
+            m_Camera.SetPosition({0.5f, 0.5f,0.0f});
+            m_Camera.SetRotation({0.0f,0.0f,180.0f});
             
-            Renderer::BeginScene();
-            {
-                m_SquareShader->Bind();            
-                Renderer::Submit(m_SquareVA);
-                m_Shader->Bind();
-                Renderer::Submit(m_VertexArray);
-            }
+            Renderer::BeginScene(m_Camera);
+            
+                Renderer::Submit(m_SquareShader, m_SquareVA);
+                Renderer::Submit(m_Shader, m_VertexArray);
+            
             Renderer::EndScene();
 
             for (Layer* layer : m_LayerStack)

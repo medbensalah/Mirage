@@ -14,7 +14,7 @@ namespace Mirage
         Bool,
         Int1, Int2, Int3, Int4,
         Float1, Float2, Float3, Float4,
-        Mat3, Mat4
+        Mat3_s, Mat4_s
     };
 
     static uint32_t ShaderDataTypeSize(ShaderDataType type)
@@ -30,8 +30,8 @@ namespace Mirage
         case ShaderDataType::Float2:        return 4 * 2;
         case ShaderDataType::Float3:        return 4 * 3;
         case ShaderDataType::Float4:        return 4 * 4;
-        case ShaderDataType::Mat3:          return 4 * 3 * 3;
-        case ShaderDataType::Mat4:          return 4 * 4 * 4;
+        case ShaderDataType::Mat3_s:        return 4 * 3 * 3;
+        case ShaderDataType::Mat4_s:        return 4 * 4 * 4;
         }
 
         MRG_CORE_ASSERT(false, "Unknown Shader Data Type!");
@@ -68,8 +68,8 @@ namespace Mirage
             case ShaderDataType::Float2:        return 2;
             case ShaderDataType::Float3:        return 3;
             case ShaderDataType::Float4:        return 4;
-            case ShaderDataType::Mat3:          return 3 * 3;
-            case ShaderDataType::Mat4:          return 4 * 4;
+            case ShaderDataType::Mat3_s:        return 3 * 3;
+            case ShaderDataType::Mat4_s:        return 4 * 4;
             }
 
             MRG_CORE_ASSERT(false, "Unknown Shader Data Type!");

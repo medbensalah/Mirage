@@ -157,9 +157,11 @@
     <ClInclude Include="src\Mirage\Layer.h" />
     <ClInclude Include="src\Mirage\LayerStack.h" />
     <ClInclude Include="src\Mirage\Log.h" />
+    <ClInclude Include="src\Mirage\Math.h" />
     <ClInclude Include="src\Mirage\MouseButtonCodes.h" />
     <ClInclude Include="src\Mirage\Renderer\Buffer.h" />
     <ClInclude Include="src\Mirage\Renderer\Graphicscontext.h" />
+    <ClInclude Include="src\Mirage\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\Mirage\Renderer\RenderAPI.h" />
     <ClInclude Include="src\Mirage\Renderer\RenderCommand.h" />
     <ClInclude Include="src\Mirage\Renderer\Renderer.h" />
@@ -597,6 +599,7 @@
     <ClCompile Include="src\Mirage\LayerStack.cpp" />
     <ClCompile Include="src\Mirage\Log.cpp" />
     <ClCompile Include="src\Mirage\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Mirage\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Mirage\Renderer\RenderAPI.cpp" />
     <ClCompile Include="src\Mirage\Renderer\RenderCommand.cpp" />
     <ClCompile Include="src\Mirage\Renderer\Renderer.cpp" />

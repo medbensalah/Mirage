@@ -170,10 +170,12 @@ namespace Mirage
     {
         if (enabled)
         {
+            MRG_CORE_TRACE("Enabling VSync");
             glfwSwapInterval(1);
         }
         else
         {
+            MRG_CORE_TRACE("Disabling VSync");
             glfwSwapInterval(0);
         }
 
