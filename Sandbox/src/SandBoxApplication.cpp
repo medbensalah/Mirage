@@ -8,10 +8,9 @@ public:
     ExampleLayer()
         : Layer("Example"),
           m_Camera(-1.60f, 1.60f, -0.90f, 0.90f, -1.0f, 1.0f),
-          m_CameraPosition(0.0f), m_CameraRotation(0.0f)
+          m_CameraPosition(0.0f), m_CameraRotation(0.0f),
+          m_SquarePosition(0.0f)
     {
-
-
         float vertices[3 * 7] = {
             -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
             0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
@@ -42,6 +41,7 @@ public:
         layout(location = 1) in vec4 a_Color;
 
         uniform mat4 u_ViewProjection;
+        uniform mat4 u_Transform;
         
         out vec3 v_Position;
         out vec4 v_Color;
@@ -50,7 +50,7 @@ public:
         {
             v_Position = a_Position;
             v_Color = a_Color;
-            gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+            gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
         }
         )";
         std::string fragmentShader = R"(
@@ -76,10 +76,10 @@ public:
         /*              Square              */
         
         float squareVertices[4 * 3] = {
-            -0.75f, -0.75f, 0.0f,
-             0.75f, -0.75f, 0.0f,
-             0.75f,  0.75f, 0.0f,
-            -0.75f,  0.75f, 0.0f
+            -0.5f, -0.5f, 0.0f,
+             0.5f, -0.5f, 0.0f,
+             0.5f,  0.5f, 0.0f,
+            -0.5f,  0.5f, 0.0f
         };
         Mirage::BufferLayout squareLayout = {
             {Mirage::ShaderDataType::Float3, "a_Position"}
@@ -105,6 +105,7 @@ public:
         layout(location = 0) in vec3 a_Position;
 
         uniform mat4 u_ViewProjection;
+        uniform mat4 u_Transform;
         
         out vec3 v_Position;
         out vec4 v_Color;
@@ -112,7 +113,7 @@ public:
         void main()
         {
             v_Position = a_Position;
-            gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+            gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
         }
         )";
         std::string squareFragmentShader = R"(
@@ -124,7 +125,7 @@ public:
         
         void main()
         {
-            color = vec4(v_Position + vec3(0.7,0.7,0.7), 1.0);
+            color = vec4(0.2, 0.3, 0.8, 1.0);
         }
         )";
         m_SquareShader.reset(new Mirage::Shader(squareVertexShader, squareFragmentShader));
@@ -134,20 +135,20 @@ public:
     {
         MRG_TRACE("Frame time : {0:.3f} ms   -   FPS : {1:.1f}", DeltaTime * 1000.0f, 1.0f / DeltaTime);
         MRG_TRACE("Total elapsed time : {0:.3f} s", Mirage::Application::GetSeconds());
-        
-        if(Mirage::Input::IsKeyPressed(Mirage::MRG_Key_A) || Mirage::Input::IsKeyPressed(Mirage::MRG_Key_Left))
+
+        if (Mirage::Input::IsKeyPressed(Mirage::MRG_Key_A))
         {
             m_CameraPosition.x -= (m_CameraMvmtSpeed * DeltaTime);
         }
-        else if(Mirage::Input::IsKeyPressed(Mirage::MRG_Key_D) || Mirage::Input::IsKeyPressed(Mirage::MRG_Key_Right))
+        else if (Mirage::Input::IsKeyPressed(Mirage::MRG_Key_D))
         {
             m_CameraPosition.x += (m_CameraMvmtSpeed * DeltaTime);
         }
-        if(Mirage::Input::IsKeyPressed(Mirage::MRG_Key_W) || Mirage::Input::IsKeyPressed(Mirage::MRG_Key_Up))
+        if (Mirage::Input::IsKeyPressed(Mirage::MRG_Key_W))
         {
-            m_CameraPosition.y += (m_CameraMvmtSpeed*DeltaTime);
+            m_CameraPosition.y += (m_CameraMvmtSpeed * DeltaTime);
         }
-        else if(Mirage::Input::IsKeyPressed(Mirage::MRG_Key_S) || Mirage::Input::IsKeyPressed(Mirage::MRG_Key_Down))
+        else if (Mirage::Input::IsKeyPressed(Mirage::MRG_Key_S))
         {
             m_CameraPosition.y -= (m_CameraMvmtSpeed * DeltaTime);
         }
@@ -160,7 +161,7 @@ public:
         {
             m_CameraRotation.z -= (m_CameraRotSpeed * DeltaTime);
         }
-        
+
         Mirage::RenderCommand::SetClearColor({ 0.15f, 0.15f, 0.15f, 1.0f });
         Mirage::RenderCommand::Clear();
 
@@ -168,9 +169,18 @@ public:
         m_Camera.SetRotation(m_CameraRotation);
             
         Mirage::Renderer::BeginScene(m_Camera);
-            
-        Mirage::Renderer::Submit(m_SquareShader, m_SquareVA);
-        Mirage::Renderer::Submit(m_Shader, m_VertexArray);
+
+        
+        for(int i = 0; i < 25; ++i)
+        {
+            for(int j = 0; j < 25; ++j)
+            {
+                Vec3 Pos = Vec3(0.06f * i , 0.06f * j, 0.0f);
+                Mat4 SquareTransform = MatTranslate(Mat4(1.0f), Pos) * scale;
+                Mirage::Renderer::Submit(m_SquareShader, m_SquareVA, SquareTransform);
+            }
+        }
+        //Mirage::Renderer::Submit(m_Shader, m_VertexArray);
             
         Mirage::Renderer::EndScene();
     }
@@ -197,6 +207,8 @@ private:
     Vec3 m_CameraRotation;
     float m_CameraMvmtSpeed = 5.0f;
     float m_CameraRotSpeed = 50.0f;
+    
+    Mat4 scale = MatScale(Mat4(1.0f), Vec3(0.05f));
 };
 
 class Sandbox : public Mirage::Application

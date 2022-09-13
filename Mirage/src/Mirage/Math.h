@@ -16,8 +16,9 @@ namespace Mirage
 
 #define Invert      glm::inverse
 
-#define Translate   glm::translate
-#define Rotate      glm::rotate
+#define MatTranslate   glm::translate
+#define MatRotate      glm::rotate
+#define MatScale      glm::scale
 
 #define Radians    glm::radians
 }

@@ -18,10 +18,10 @@ namespace Mirage
 
     void OrthographicCamera::RecalculateViewMatrix()
     {
-        Mat4 transform = Translate(Mat4(1.0f), m_Position)
-            * Rotate(Mat4(1.0f), Radians(m_Rotation.x),Vec3(1.0f, 0.0f, 0.0f))
-            * Rotate(Mat4(1.0f), Radians(m_Rotation.y),Vec3(0.0f, 1.0f, 0.0f))
-            * Rotate(Mat4(1.0f), Radians(m_Rotation.z),Vec3(0.0f, 0.0f, 1.0f));
+        Mat4 transform = MatTranslate(Mat4(1.0f), m_Position)
+            * MatRotate(Mat4(1.0f), Radians(m_Rotation.x),Vec3(1.0f, 0.0f, 0.0f))
+            * MatRotate(Mat4(1.0f), Radians(m_Rotation.y),Vec3(0.0f, 1.0f, 0.0f))
+            * MatRotate(Mat4(1.0f), Radians(m_Rotation.z),Vec3(0.0f, 0.0f, 1.0f));
 
         m_ViewMatrix = Invert(transform);
         m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
