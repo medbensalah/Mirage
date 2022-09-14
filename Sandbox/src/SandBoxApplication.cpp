@@ -1,6 +1,8 @@
 #include <Mirage.h>
 
+#include "glm/gtc/type_ptr.inl"
 #include "ImGui/imgui.h"
+#include "Platform/OpenGL/OpenGLShader.h"
 
 class ExampleLayer : public Mirage::Layer
 {
@@ -8,8 +10,7 @@ public:
     ExampleLayer()
         : Layer("Example"),
           m_Camera(-1.60f, 1.60f, -0.90f, 0.90f, -1.0f, 1.0f),
-          m_CameraPosition(0.0f), m_CameraRotation(0.0f),
-          m_SquarePosition(0.0f)
+          m_CameraPosition(0.0f), m_CameraRotation(0.0f)
     {
         float vertices[3 * 7] = {
             -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
@@ -67,7 +68,7 @@ public:
             color = v_Color;
         }
         )";
-        m_Shader.reset(new Mirage::Shader(vertexShader, fragmentShader));
+        m_Shader.reset(Mirage::Shader::Create(vertexShader, fragmentShader));
 
 
 
@@ -107,8 +108,8 @@ public:
         uniform mat4 u_ViewProjection;
         uniform mat4 u_Transform;
         
+        
         out vec3 v_Position;
-        out vec4 v_Color;
         
         void main()
         {
@@ -122,19 +123,21 @@ public:
         layout(location = 0) out vec4 color;
 
         in vec3 v_Position;
+
+        uniform vec4 u_Color;
         
         void main()
         {
-            color = vec4(0.2, 0.3, 0.8, 1.0);
+            color = u_Color;
         }
         )";
-        m_SquareShader.reset(new Mirage::Shader(squareVertexShader, squareFragmentShader));
+        m_SquareShader.reset(Mirage::Shader::Create(squareVertexShader, squareFragmentShader));
     }
 
     void OnUpdate(float DeltaTime) override
     {
-        MRG_TRACE("Frame time : {0:.3f} ms   -   FPS : {1:.1f}", DeltaTime * 1000.0f, 1.0f / DeltaTime);
-        MRG_TRACE("Total elapsed time : {0:.3f} s", Mirage::Application::GetSeconds());
+        // MRG_TRACE("Frame time : {0:.3f} ms   -   FPS : {1:.1f}", DeltaTime * 1000.0f, 1.0f / DeltaTime);
+        // MRG_TRACE("Total elapsed time : {0:.3f} s", Mirage::Application::GetSeconds());
 
         if (Mirage::Input::IsKeyPressed(Mirage::MRG_Key_A))
         {
@@ -167,9 +170,11 @@ public:
 
         m_Camera.SetPosition(m_CameraPosition);
         m_Camera.SetRotation(m_CameraRotation);
-            
+                
         Mirage::Renderer::BeginScene(m_Camera);
-
+        
+        std::dynamic_pointer_cast<Mirage::OpenGLShader>(m_SquareShader)->Bind();
+        std::dynamic_pointer_cast<Mirage::OpenGLShader>(m_SquareShader)->UploadUniformFloat4("u_Color", m_SquareColor);
         
         for(int i = 0; i < 25; ++i)
         {
@@ -180,13 +185,16 @@ public:
                 Mirage::Renderer::Submit(m_SquareShader, m_SquareVA, SquareTransform);
             }
         }
-        //Mirage::Renderer::Submit(m_Shader, m_VertexArray);
+        Mirage::Renderer::Submit(m_Shader, m_VertexArray);
             
         Mirage::Renderer::EndScene();
     }
 
     void OnImGuiRender() override
     {
+        ImGui::Begin("Settings");
+        ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
+        ImGui::End();
     }
 
     void OnEvent(Mirage::Event& event) override
@@ -209,6 +217,8 @@ private:
     float m_CameraRotSpeed = 50.0f;
     
     Mat4 scale = MatScale(Mat4(1.0f), Vec3(0.05f));
+
+    Vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 };
 
 class Sandbox : public Mirage::Application
