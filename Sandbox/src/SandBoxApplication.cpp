@@ -203,11 +203,11 @@ public:
     }
     
 private:
-    std::shared_ptr<Mirage::Shader> m_Shader;
-    std::shared_ptr<Mirage::VertexArray> m_VertexArray;
-        
-    std::shared_ptr<Mirage::Shader> m_SquareShader;
-    std::shared_ptr<Mirage::VertexArray> m_SquareVA;
+    Mirage::Ref<Mirage::Shader> m_Shader;
+    Mirage::Ref<Mirage::VertexArray> m_VertexArray;
+    
+    Mirage::Ref<Mirage::Shader> m_SquareShader;
+    Mirage::Ref<Mirage::VertexArray> m_SquareVA;
 
     Mirage::OrthographicCamera m_Camera;
 

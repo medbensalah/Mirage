@@ -12,7 +12,7 @@ namespace Mirage
         static void BeginScene(OrthographicCamera& camera);
         static void EndScene();
         
-        static void Submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray, const Mat4& transform = Mat4(1.0f));
+        static void Submit(const Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const Mat4& transform = Mat4(1.0f));
         
         inline static RenderAPI::API GetGfxApi() { return RenderAPI::GetAPI(); }
 

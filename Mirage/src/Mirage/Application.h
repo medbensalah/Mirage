@@ -37,7 +37,7 @@ namespace Mirage
 
         Time time = Time(0.0f);
 
-        std::unique_ptr<Window> m_Window;
+        Scope<Window> m_Window;
         ImGuiLayer* m_ImGuiLayer;
 
         bool m_Running = true;
