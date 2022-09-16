@@ -134,7 +134,7 @@ namespace Mirage
         glUseProgram(0);
     }
 
-    void OpenGLShader::UploadUniformInt1(const std::string& name, const int& vector)
+    void OpenGLShader::UploadUniformInt(const std::string& name, const int& vector)
     {
         GLint location = glGetUniformLocation(m_RendererID, name.c_str());
         glUniform1i(location, vector);

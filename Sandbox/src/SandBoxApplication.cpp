@@ -76,14 +76,15 @@ public:
         
         /*              Square              */
         
-        float squareVertices[4 * 3] = {
-            -0.5f, -0.5f, 0.0f,
-             0.5f, -0.5f, 0.0f,
-             0.5f,  0.5f, 0.0f,
-            -0.5f,  0.5f, 0.0f
+        float squareVertices[4 * 5] = {
+            -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+             0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+             0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f
         };
         Mirage::BufferLayout squareLayout = {
-            {Mirage::ShaderDataType::Float3, "a_Position"}
+            {Mirage::ShaderDataType::Float3, "a_Position"},
+            {Mirage::ShaderDataType::Float2, "a_TexCoord"}
         };
         uint32_t squareIndices[] = {
             0, 1, 2,
@@ -132,6 +133,47 @@ public:
         }
         )";
         m_SquareShader.reset(Mirage::Shader::Create(squareVertexShader, squareFragmentShader));
+
+
+
+        
+        std::string textureVertexShader = R"(
+        #version 330 core
+
+        layout(location = 0) in vec3 a_Position;
+        layout(location = 1) in vec2 a_TexCoord;
+
+        uniform mat4 u_ViewProjection;
+        uniform mat4 u_Transform;
+        
+        out vec2 v_TexCoord;
+        
+        void main()
+        {
+            v_TexCoord = a_TexCoord;
+            gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
+        }
+        )";
+        std::string textureFragmentShader = R"(
+        #version 330 core
+
+        layout(location = 0) out vec4 color;
+
+        in vec2 v_TexCoord;
+
+        uniform sampler2D u_Texture;
+        
+        void main()
+        {
+            color = texture(u_Texture, v_TexCoord);
+        }
+        )";
+        m_TextureShader.reset(Mirage::Shader::Create(textureVertexShader, textureFragmentShader));
+        
+        m_Texture = Mirage::Texture2D::Create("assets/textures/CheckerBoard.png");
+
+        std::dynamic_pointer_cast<Mirage::OpenGLShader>(m_TextureShader)->Bind();
+        std::dynamic_pointer_cast<Mirage::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);        
     }
 
     void OnUpdate(float DeltaTime) override
@@ -185,7 +227,9 @@ public:
                 Mirage::Renderer::Submit(m_SquareShader, m_SquareVA, SquareTransform);
             }
         }
-        Mirage::Renderer::Submit(m_Shader, m_VertexArray);
+        m_Texture->Bind();
+        Mirage::Renderer::Submit(m_TextureShader, m_SquareVA, MatScale(Mat4(1.0f), Vec3(1.5f)));
+        // Mirage::Renderer::Submit(m_Shader, m_VertexArray);
             
         Mirage::Renderer::EndScene();
     }
@@ -193,6 +237,9 @@ public:
     void OnImGuiRender() override
     {
         ImGui::Begin("Settings");
+        //add color picker
+        
+        
         ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
         ImGui::End();
     }
@@ -208,6 +255,10 @@ private:
     
     Mirage::Ref<Mirage::Shader> m_SquareShader;
     Mirage::Ref<Mirage::VertexArray> m_SquareVA;
+
+    Mirage::Ref<Mirage::Shader> m_TextureShader;
+
+    Mirage::Ref<Mirage::Texture2D> m_Texture;
 
     Mirage::OrthographicCamera m_Camera;
 

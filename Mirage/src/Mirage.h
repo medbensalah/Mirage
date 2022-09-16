@@ -17,6 +17,7 @@
 
 #include "Mirage/Renderer/Buffer.h"
 #include "Mirage/Renderer/Shader.h"
+#include "Mirage/Renderer/Texture.h"
 #include "Mirage/Renderer/VertexArray.h"
 
 #include "Mirage/Renderer/OrthographicCamera.h"

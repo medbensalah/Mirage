@@ -7,14 +7,23 @@
     <Filter Include="src\Mirage">
       <UniqueIdentifier>{D1508720-BD08-C96D-2610-A2C912E7635E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Mirage\Core">
+      <UniqueIdentifier>{C99F9814-352B-06D9-3E3C-89CDAA4662D9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Mirage\Events">
       <UniqueIdentifier>{95C761A2-01DE-5F38-4A55-EB59B6AA30C0}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Mirage\ImGui">
       <UniqueIdentifier>{BB5E17A8-A757-36FA-D089-1B7FBCE11506}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Mirage\Renderer">
+      <UniqueIdentifier>{970FEDB8-0371-CAC6-8CDE-1079F83E0186}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Platform\OpenGL">
+      <UniqueIdentifier>{35A49437-A105-7245-2A73-B8F796D3A804}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Platform\Windows">
       <UniqueIdentifier>{5B054582-4794-CE4B-F0B2-E246DC20DFF1}</UniqueIdentifier>
@@ -40,6 +49,9 @@
     <Filter Include="vendor\glm\glm\gtx">
       <UniqueIdentifier>{B3A6A76B-9F8A-68C1-08EB-6214F4ED5243}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vendor\stb_image">
+      <UniqueIdentifier>{0DA0BA59-F998-D9AB-22CB-BE300E23B9B7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Mirage.h">
@@ -50,6 +62,9 @@
     </ClInclude>
     <ClInclude Include="src\Mirage\Core.h">
       <Filter>src\Mirage</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Core\Time.h">
+      <Filter>src\Mirage\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\EntryPoint.h">
       <Filter>src\Mirage</Filter>
@@ -84,14 +99,62 @@
     <ClInclude Include="src\Mirage\Log.h">
       <Filter>src\Mirage</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\Math.h">
+      <Filter>src\Mirage</Filter>
+    </ClInclude>
     <ClInclude Include="src\Mirage\MouseButtonCodes.h">
       <Filter>src\Mirage</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Renderer\Buffer.h">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Renderer\Graphicscontext.h">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Renderer\OrthographicCamera.h">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Renderer\RenderAPI.h">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Renderer\RenderCommand.h">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Renderer\Renderer.h">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Renderer\Shader.h">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Renderer\Texture.h">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Renderer\VertexArray.h">
+      <Filter>src\Mirage\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\Window.h">
       <Filter>src\Mirage</Filter>
     </ClInclude>
     <ClInclude Include="src\MrgPch.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLRenderAPI.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h">
+      <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsInput.h">
       <Filter>src\Platform\Windows</Filter>
@@ -1344,6 +1407,9 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="vendor\stb_image\stb_image.h">
+      <Filter>vendor\stb_image</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Mirage\Application.cpp">
@@ -1364,14 +1430,59 @@
     <ClCompile Include="src\Mirage\Log.cpp">
       <Filter>src\Mirage</Filter>
     </ClCompile>
+    <ClCompile Include="src\Mirage\Renderer\Buffer.cpp">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\Renderer\OrthographicCamera.cpp">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\Renderer\RenderAPI.cpp">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\Renderer\RenderCommand.cpp">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\Renderer\Renderer.cpp">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\Renderer\Shader.cpp">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\Renderer\Texture.cpp">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\Renderer\VertexArray.cpp">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\MrgPch.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLRenderAPI.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
       <Filter>src\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
       <Filter>src\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\stb_image\stb_image.cpp">
+      <Filter>vendor\stb_image</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

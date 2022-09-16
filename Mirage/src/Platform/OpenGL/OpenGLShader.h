@@ -14,7 +14,7 @@ namespace Mirage
         virtual void Bind() const override;
         virtual void Unbind() const override;
 
-        void UploadUniformInt1(const std::string& name, const int& vector);
+        void UploadUniformInt(const std::string& name, const int& vector);
         
         void UploadUniformFloat1(const std::string& name, float value);
         void UploadUniformFloat2(const std::string& name, const Vec2& vector);
