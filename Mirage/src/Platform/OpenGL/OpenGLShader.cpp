@@ -2,7 +2,6 @@
 
 #include "OpenGLShader.h"
 
-#include <fstream>
 #include <glad/glad.h>
 
 #include "glm/gtc/type_ptr.inl"
@@ -25,9 +24,16 @@ namespace Mirage
         std::string source = ReadFile(filepath);
         auto shaderSources = PreProcess(source);
         Compile(shaderSources);
+        
+        auto lastSladh = filepath.find_last_of("/\\");
+        lastSladh = lastSladh == std::string::npos ? 0 : lastSladh + 1;
+        auto lastDot = filepath.rfind('.');
+        int count = lastDot == std::string::npos ? filepath.size() - lastSladh : lastDot - lastSladh;
+        m_Name = filepath.substr(lastSladh, count);
     }
 
-    OpenGLShader::OpenGLShader(const std::string& vertexSource, const std::string& fragmentSource)
+    OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSource, const std::string& fragmentSource)
+        : m_Name(name)
     {
         std::unordered_map<GLenum, std::string> sources;
         sources[GL_VERTEX_SHADER] = vertexSource;
@@ -43,7 +49,7 @@ namespace Mirage
     std::string OpenGLShader::ReadFile(const std::string& filepath)
     {
         std::string result;
-        std::ifstream in(filepath, std::ios::in, std::ios::binary);
+        std::ifstream in(filepath, std::ios::in | std::ios::binary);
         if (in)
         {
             in.seekg(0, std::ios::end);
@@ -86,9 +92,9 @@ namespace Mirage
     void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& shaderSources)
     {
         GLuint program = glCreateProgram();
-
-        std::vector<GLenum> glShaderIDs(shaderSources.size());
-        
+        MRG_CORE_ASSERT(shaderSources.size() <= 2, "Mirage supports onlu up to 2 shaders");
+        std::array<GLenum, 2> glShaderIDs;
+        int glShaderIDIndex = 0;
         for(auto& kv : shaderSources)
         {
             GLenum type = kv.first;
@@ -117,7 +123,7 @@ namespace Mirage
             }
 
             glAttachShader(program, shader);
-            glShaderIDs.push_back(shader);
+            glShaderIDs[glShaderIDIndex++] = shader;
         }
         
         glLinkProgram(program);

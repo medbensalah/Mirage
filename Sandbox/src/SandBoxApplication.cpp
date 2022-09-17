@@ -34,45 +34,8 @@ public:
 
         m_VertexArray->AddVertexBuffer(vertexBuffer);
         m_VertexArray->SetIndexBuffer(indexBuffer);
-
-        std::string vertexShader = R"(
-        #version 330 core
-
-        layout(location = 0) in vec3 a_Position;
-        layout(location = 1) in vec4 a_Color;
-
-        uniform mat4 u_ViewProjection;
-        uniform mat4 u_Transform;
+        m_Shader = Mirage::Shader::Create("assets/shaders/Triangle.glsl");
         
-        out vec3 v_Position;
-        out vec4 v_Color;
-        
-        void main()
-        {
-            v_Position = a_Position;
-            v_Color = a_Color;
-            gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-        }
-        )";
-        std::string fragmentShader = R"(
-        #version 330 core
-
-        layout(location = 0) out vec4 color;
-
-        in vec3 v_Position;
-        in vec4 v_Color;
-        
-        void main()
-        {
-            //color = vec4(v_Position + 0.5, 1.0);
-            color = v_Color;
-        }
-        )";
-        m_Shader.reset(Mirage::Shader::Create(vertexShader, fragmentShader));
-
-
-
-
         
         /*              Square              */
         
@@ -101,46 +64,13 @@ public:
         m_SquareVA->AddVertexBuffer(squareVB);
         m_SquareVA->SetIndexBuffer(squareIB);
         
-        std::string squareVertexShader = R"(
-        #version 330 core
-
-        layout(location = 0) in vec3 a_Position;
-
-        uniform mat4 u_ViewProjection;
-        uniform mat4 u_Transform;
-        
-        
-        out vec3 v_Position;
-        
-        void main()
-        {
-            v_Position = a_Position;
-            gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
-        }
-        )";
-        std::string squareFragmentShader = R"(
-        #version 330 core
-
-        layout(location = 0) out vec4 color;
-
-        in vec3 v_Position;
-
-        uniform vec4 u_Color;
-        
-        void main()
-        {
-            color = u_Color;
-        }
-        )";
-        m_SquareShader.reset(Mirage::Shader::Create(squareVertexShader, squareFragmentShader));
-
-        
-        m_TextureShader.reset(Mirage::Shader::Create("assets/shaders/Texture.glsl"));
+        m_SquareShader = Mirage::Shader::Create("assets/shaders/Square.glsl");        
+        m_ShaderLibrary.Load("assets/shaders/Texture.glsl");
         
         m_Texture = Mirage::Texture2D::Create("assets/textures/CheckerBoard.png");
 
-        std::dynamic_pointer_cast<Mirage::OpenGLShader>(m_TextureShader)->Bind();
-        std::dynamic_pointer_cast<Mirage::OpenGLShader>(m_TextureShader)->UploadUniformInt("u_Texture", 0);        
+        std::dynamic_pointer_cast<Mirage::OpenGLShader>(m_ShaderLibrary.Get("Texture"))->Bind();
+        std::dynamic_pointer_cast<Mirage::OpenGLShader>(m_ShaderLibrary.Get("Texture"))->UploadUniformInt("u_Texture", 0);        
     }
 
     void OnUpdate(float DeltaTime) override
@@ -195,7 +125,7 @@ public:
             }
         }
         m_Texture->Bind();
-        Mirage::Renderer::Submit(m_TextureShader, m_SquareVA, MatScale(Mat4(1.0f), Vec3(1.5f)));
+        Mirage::Renderer::Submit(m_ShaderLibrary.Get("Texture"), m_SquareVA, MatScale(Mat4(1.0f), Vec3(1.5f)));
         // Mirage::Renderer::Submit(m_Shader, m_VertexArray);
             
         Mirage::Renderer::EndScene();
@@ -217,13 +147,13 @@ public:
     }
     
 private:
+    Mirage::ShaderLibrary m_ShaderLibrary;
+    
     Mirage::Ref<Mirage::Shader> m_Shader;
     Mirage::Ref<Mirage::VertexArray> m_VertexArray;
     
     Mirage::Ref<Mirage::Shader> m_SquareShader;
     Mirage::Ref<Mirage::VertexArray> m_SquareVA;
-
-    Mirage::Ref<Mirage::Shader> m_TextureShader;
 
     Mirage::Ref<Mirage::Texture2D> m_Texture;
 

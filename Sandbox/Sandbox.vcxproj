@@ -142,7 +142,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="assets\Shaders\Square.glsl" />
     <Content Include="assets\Shaders\Texture.glsl" />
+    <Content Include="assets\Shaders\Triangle.glsl" />
     <Content Include="assets\textures\CheckerBoard.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
