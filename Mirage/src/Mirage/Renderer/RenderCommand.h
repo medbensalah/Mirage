@@ -33,6 +33,6 @@ namespace Mirage
         }
 
     private:
-        static RenderAPI* s_RenderAPI;
+        static Scope<RenderAPI> s_RenderAPI;
     };
 }

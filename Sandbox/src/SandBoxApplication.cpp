@@ -9,7 +9,7 @@ class ExampleLayer : public Mirage::Layer
 public:
     ExampleLayer()
         : Layer("Example"),
-          m_CameraController(1280.0f / 720.0f, false)
+          m_CameraController(1280.0f / 720.0f, true)
     {
         float vertices[3 * 7] = {
             -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f,

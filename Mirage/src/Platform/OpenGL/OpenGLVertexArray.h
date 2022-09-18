@@ -24,5 +24,6 @@ namespace Mirage
         Ref<IndexBuffer> m_IndexBuffer;
 
         unsigned int m_RendererID;
+        uint32_t m_VertexBufferIndex = 0;
     };
 }
