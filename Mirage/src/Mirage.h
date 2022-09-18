@@ -21,6 +21,7 @@
 #include "Mirage/Renderer/VertexArray.h"
 
 #include "Mirage/Renderer/OrthographicCamera.h"
+#include "Mirage/OrthographicCameraController.h"
 
 /* *******Entry point******* */
 #include "Mirage/EntryPoint.h"

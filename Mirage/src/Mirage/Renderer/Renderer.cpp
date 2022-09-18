@@ -13,6 +13,11 @@ namespace Mirage
         RenderCommand::Init();
     }
 
+    void Renderer::OnWindowResize(Vec2 size)
+    {
+        RenderCommand::SetViewport(0, 0, size.x, size.y);
+    }
+
     void Renderer::BeginScene(OrthographicCamera& camera)
     {
         s_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();

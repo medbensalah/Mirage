@@ -10,6 +10,8 @@ namespace Mirage
     {
     public:
         static void Init();
+
+        static void OnWindowResize(Vec2 size);
         
         static void BeginScene(OrthographicCamera& camera);
         static void EndScene();

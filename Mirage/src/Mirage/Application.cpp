@@ -9,7 +9,7 @@
 namespace Mirage
 {
 #define Bind_event_FN(x) std::bind(x, this, std::placeholders::_1)
-    
+
     Application* Application::s_Instance = nullptr;
 
     Application::Application()
@@ -47,6 +47,7 @@ namespace Mirage
     {
         EventDispatcher dispatcher(e);
         dispatcher.Dispatch<WindowCloseEvent>(Bind_event_FN(&Application::OnWindowClosed));
+        dispatcher.Dispatch<WindowResizeEvent>(Bind_event_FN(&Application::OnWindowResize));
 
         for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
         {
@@ -61,10 +62,13 @@ namespace Mirage
         while (m_Running)
         {
             time.Update((float)glfwGetTime());
-            
-            for (Layer* layer : m_LayerStack)
+
+            if(!m_Minimized)
             {
-                layer->OnUpdate(time.DeltaTime);
+                for (Layer* layer : m_LayerStack)
+                {
+                    layer->OnUpdate(time.DeltaTime);
+                }
             }
 
             m_ImGuiLayer->Begin();
@@ -83,7 +87,20 @@ namespace Mirage
     bool Application::OnWindowClosed(WindowCloseEvent& e)
     {
         m_Running = false;
+        return false;
+    }
 
-        return true;
+    bool Application::OnWindowResize(WindowResizeEvent& e)
+    {
+        if (e.GetWindowBounds().x == 0 || e.GetWindowBounds().y == 0)
+        {
+            m_Minimized = true;
+            return false;
+        }
+        m_Minimized = false;
+
+        Renderer::OnWindowResize(e.GetWindowBounds());
+        
+        return false;
     }
 }

@@ -32,6 +32,7 @@ namespace Mirage
         inline static float GetMilliseconds() { return s_Instance->time.GetMilliseconds(); }
     private:
         bool OnWindowClosed(WindowCloseEvent& e);
+        bool OnWindowResize(WindowResizeEvent& e);
 
         LayerStack m_LayerStack;
 
@@ -43,6 +44,8 @@ namespace Mirage
         bool m_Running = true;
 
         static Application* s_Instance;
+
+        bool m_Minimized = false;
     };
 
     /* Define in client */
