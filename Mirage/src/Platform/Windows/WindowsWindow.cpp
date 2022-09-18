@@ -5,8 +5,8 @@
 #include "Mirage/Events/KeyEvent.h"
 #include "Mirage/Events/MouseEvent.h"
 
-#include "Mirage/KeyCodes.h"
-#include "Mirage/MouseButtonCodes.h"
+#include "Mirage/Core/KeyCodes.h"
+#include "Mirage/Core/MouseButtonCodes.h"
 
 #include "Platform/OpenGL/OpenGLContext.h"
 

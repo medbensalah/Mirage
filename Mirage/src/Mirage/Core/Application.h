@@ -4,8 +4,8 @@
 
 #include "Window.h"
 #include "LayerStack.h"
-#include "Core/Time.h"
-#include "Events/ApplicationEvent.h"
+#include "Mirage/Core/Time.h"
+#include "Mirage/Events/ApplicationEvent.h"
 
 #include "Mirage/ImGui/ImGuiLayer.h"
 

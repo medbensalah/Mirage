@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Event.h"
-#include "Mirage/KeyCodes.h"
+#include "Mirage/Core/KeyCodes.h"
 
 namespace Mirage
 {

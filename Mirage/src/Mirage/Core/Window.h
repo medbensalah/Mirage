@@ -3,7 +3,7 @@
 #include "MrgPch.h"
 
 #include "Core.h"
-#include "Events/Event.h"
+#include "Mirage/Events/Event.h"
 
 namespace Mirage
 {

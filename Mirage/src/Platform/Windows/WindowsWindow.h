@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Mirage/Window.h"
+#include "Mirage/Core/Window.h"
 #include "Mirage/Renderer/Graphicscontext.h"
 
 #include <GLFW/glfw3.h>

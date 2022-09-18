@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Mirage/Core.h"
+#include "Mirage/Core/Core.h"
 
 namespace Mirage
 {

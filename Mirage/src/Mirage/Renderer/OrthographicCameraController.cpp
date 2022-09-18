@@ -1,7 +1,7 @@
 ﻿#include <MrgPch.h>
 
-#include "Mirage/KeyCodes.h"
-#include "Mirage/Input.h"
+#include "Mirage/Core/KeyCodes.h"
+#include "Mirage/Core/Input.h"
 #include "OrthographicCameraController.h"
 
 namespace Mirage

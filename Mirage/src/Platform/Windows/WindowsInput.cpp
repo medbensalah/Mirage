@@ -3,9 +3,9 @@
 
 #include <GLFW/glfw3.h>
 
-#include "Mirage/Application.h"
-#include "Mirage/KeyCodes.h"
-#include "Mirage/MouseButtonCodes.h"
+#include "Mirage/Core/Application.h"
+#include "Mirage/Core/KeyCodes.h"
+#include "Mirage/Core/MouseButtonCodes.h"
 
 namespace Mirage
 {

@@ -14,7 +14,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "Mirage/Log.h"
+#include "Mirage/Core/Log.h"
 
 #ifdef MRG_PLATFORM_WINDOWS
 #include<Windows.h>

@@ -2,7 +2,7 @@
 
 #include "Application.h"
 
-#include "Core/Time.h"
+#include "Mirage/Core/Time.h"
 #include "GLFW/glfw3.h"
 #include "Mirage/Renderer/Renderer.h"
 

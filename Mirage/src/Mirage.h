@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Mirage/Application.h"
-#include "Mirage/Layer.h"
-#include "Mirage/Log.h"
+#include "Mirage/Core/Application.h"
+#include "Mirage/Core/Layer.h"
+#include "Mirage/Core/Log.h"
 
-
-#include "Mirage/Input.h"
-#include "Mirage/KeyCodes.h"
-#include "Mirage/MouseButtonCodes.h"
+                 
+#include "Mirage/Core/Input.h"
+#include "Mirage/Core/KeyCodes.h"
+#include "Mirage/Core/MouseButtonCodes.h"
 
 #include "Mirage/ImGui/ImGuiLayer.h"
 
@@ -21,7 +21,7 @@
 #include "Mirage/Renderer/VertexArray.h"
 
 #include "Mirage/Renderer/OrthographicCamera.h"
-#include "Mirage/OrthographicCameraController.h"
+#include "Mirage/Renderer/OrthographicCameraController.h"
 
 /* *******Entry point******* */
-#include "Mirage/EntryPoint.h"
+#include "Mirage/Core/EntryPoint.h"

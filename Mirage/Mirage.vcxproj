@@ -144,33 +144,33 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Mirage.h" />
-    <ClInclude Include="src\Mirage\Application.h" />
-    <ClInclude Include="src\Mirage\Core.h" />
+    <ClInclude Include="src\Mirage\Core\Application.h" />
+    <ClInclude Include="src\Mirage\Core\Core.h" />
+    <ClInclude Include="src\Mirage\Core\EntryPoint.h" />
+    <ClInclude Include="src\Mirage\Core\Input.h" />
+    <ClInclude Include="src\Mirage\Core\KeyCodes.h" />
+    <ClInclude Include="src\Mirage\Core\Layer.h" />
+    <ClInclude Include="src\Mirage\Core\LayerStack.h" />
+    <ClInclude Include="src\Mirage\Core\Log.h" />
+    <ClInclude Include="src\Mirage\Core\Math.h" />
+    <ClInclude Include="src\Mirage\Core\MouseButtonCodes.h" />
     <ClInclude Include="src\Mirage\Core\Time.h" />
-    <ClInclude Include="src\Mirage\EntryPoint.h" />
+    <ClInclude Include="src\Mirage\Core\Window.h" />
     <ClInclude Include="src\Mirage\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Mirage\Events\Event.h" />
     <ClInclude Include="src\Mirage\Events\KeyEvent.h" />
     <ClInclude Include="src\Mirage\Events\MouseEvent.h" />
     <ClInclude Include="src\Mirage\ImGui\ImGuiLayer.h" />
-    <ClInclude Include="src\Mirage\Input.h" />
-    <ClInclude Include="src\Mirage\KeyCodes.h" />
-    <ClInclude Include="src\Mirage\Layer.h" />
-    <ClInclude Include="src\Mirage\LayerStack.h" />
-    <ClInclude Include="src\Mirage\Log.h" />
-    <ClInclude Include="src\Mirage\Math.h" />
-    <ClInclude Include="src\Mirage\MouseButtonCodes.h" />
-    <ClInclude Include="src\Mirage\OrthographicCameraController.h" />
     <ClInclude Include="src\Mirage\Renderer\Buffer.h" />
     <ClInclude Include="src\Mirage\Renderer\Graphicscontext.h" />
     <ClInclude Include="src\Mirage\Renderer\OrthographicCamera.h" />
+    <ClInclude Include="src\Mirage\Renderer\OrthographicCameraController.h" />
     <ClInclude Include="src\Mirage\Renderer\RenderAPI.h" />
     <ClInclude Include="src\Mirage\Renderer\RenderCommand.h" />
     <ClInclude Include="src\Mirage\Renderer\Renderer.h" />
     <ClInclude Include="src\Mirage\Renderer\Shader.h" />
     <ClInclude Include="src\Mirage\Renderer\Texture.h" />
     <ClInclude Include="src\Mirage\Renderer\VertexArray.h" />
-    <ClInclude Include="src\Mirage\Window.h" />
     <ClInclude Include="src\MrgPch.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
@@ -598,15 +598,15 @@
     <ClInclude Include="vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Mirage\Application.cpp" />
+    <ClCompile Include="src\Mirage\Core\Application.cpp" />
+    <ClCompile Include="src\Mirage\Core\Layer.cpp" />
+    <ClCompile Include="src\Mirage\Core\LayerStack.cpp" />
+    <ClCompile Include="src\Mirage\Core\Log.cpp" />
     <ClCompile Include="src\Mirage\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Mirage\ImGui\ImGuiLayer.cpp" />
-    <ClCompile Include="src\Mirage\Layer.cpp" />
-    <ClCompile Include="src\Mirage\LayerStack.cpp" />
-    <ClCompile Include="src\Mirage\Log.cpp" />
-    <ClCompile Include="src\Mirage\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Mirage\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Mirage\Renderer\OrthographicCamera.cpp" />
+    <ClCompile Include="src\Mirage\Renderer\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Mirage\Renderer\RenderAPI.cpp" />
     <ClCompile Include="src\Mirage\Renderer\RenderCommand.cpp" />
     <ClCompile Include="src\Mirage\Renderer\Renderer.cpp" />
