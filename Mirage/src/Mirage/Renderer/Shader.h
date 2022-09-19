@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "Mirage/Core/Math.h"
+
 namespace Mirage
 {
     MIRAGE_CLASS Shader
@@ -10,6 +12,10 @@ namespace Mirage
         virtual void Bind() const = 0;
         virtual void Unbind() const = 0;
 
+        virtual void SetFloat3(const std::string& name, const Vec3& vector) = 0;
+        virtual void SetFloat4(const std::string& name, const Vec4& vector) = 0;
+        virtual void SetMat4(const std::string& name, const Mat4& matrix) = 0;
+        
         virtual const std::string& GetName() const = 0;
         
         static Ref<Shader> Create(const std::string& filepath);

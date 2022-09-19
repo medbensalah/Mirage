@@ -19,7 +19,7 @@ namespace Mirage
 
         inline const std::string& GetName() const { return m_DebugName; }
 
-        private:
+    private:
         std::string m_DebugName;
     };
 }

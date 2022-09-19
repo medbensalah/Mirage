@@ -2,6 +2,7 @@
 
 #include "Renderer.h"
 
+#include "Renderer2D.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 
 namespace Mirage
@@ -11,6 +12,7 @@ namespace Mirage
     void Renderer::Init()
     {
         RenderCommand::Init();
+        Renderer2D::Init();
     }
 
     void Renderer::OnWindowResize(Vec2 size)

@@ -172,6 +172,7 @@
     <ClInclude Include="src\Mirage\Renderer\RenderAPI.h" />
     <ClInclude Include="src\Mirage\Renderer\RenderCommand.h" />
     <ClInclude Include="src\Mirage\Renderer\Renderer.h" />
+    <ClInclude Include="src\Mirage\Renderer\Renderer2D.h" />
     <ClInclude Include="src\Mirage\Renderer\Shader.h" />
     <ClInclude Include="src\Mirage\Renderer\Texture.h" />
     <ClInclude Include="src\Mirage\Renderer\VertexArray.h" />
@@ -614,6 +615,7 @@
     <ClCompile Include="src\Mirage\Renderer\RenderAPI.cpp" />
     <ClCompile Include="src\Mirage\Renderer\RenderCommand.cpp" />
     <ClCompile Include="src\Mirage\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Mirage\Renderer\Renderer2D.cpp" />
     <ClCompile Include="src\Mirage\Renderer\Shader.cpp" />
     <ClCompile Include="src\Mirage\Renderer\Texture.cpp" />
     <ClCompile Include="src\Mirage\Renderer\VertexArray.cpp" />

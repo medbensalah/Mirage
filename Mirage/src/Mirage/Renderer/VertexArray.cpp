@@ -6,7 +6,7 @@
 
 namespace Mirage
 {
-    VertexArray* VertexArray::Create()
+    Ref<VertexArray> VertexArray::Create()
     {
         switch (Renderer::GetGfxApi())
         {
@@ -15,7 +15,7 @@ namespace Mirage
             return nullptr;
             
         case RenderAPI::API::OpenGL:
-            return new OpenGLVertexArray(); 
+            return std::make_shared<OpenGLVertexArray>(); 
         }
 
         MRG_CORE_ERROR("Unknown graphics API!");

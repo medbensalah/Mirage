@@ -45,18 +45,17 @@ namespace Mirage
                       properties.Width,
                       properties.Height
         );
-        
+
         if (!s_GLFWInitialized)
         {
-            // TODO: glfwTerminate on system shutdown
             int success = glfwInit();
             MRG_CORE_ASSERT(success, "GLFW initialization Failed!");
             glfwSetErrorCallback(GLFWErrorCallback);
-
             s_GLFWInitialized = true;
         }
 
         m_Window = glfwCreateWindow((int)m_Data.Width, (int)m_Data.Height, m_Data.Title.c_str(), NULL, NULL);
+
         m_Context = CreateScope<OpenGLContext>(m_Window);
         m_Context->Init();
 
@@ -70,7 +69,7 @@ namespace Mirage
 
             data.Width = width;
             data.Height = height;
-            
+
             WindowResizeEvent event(width, height);
             data.EventCallback(event);
         });

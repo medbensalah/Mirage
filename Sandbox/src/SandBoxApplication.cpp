@@ -1,8 +1,11 @@
 #include <Mirage.h>
 
+#include "Sandbox2D.h"
 #include "glm/gtc/type_ptr.inl"
 #include "ImGui/imgui.h"
 #include "Platform/OpenGL/OpenGLShader.h"
+/* *******Entry point******* */
+#include "Mirage/Core/EntryPoint.h"
 
 class ExampleLayer : public Mirage::Layer
 {
@@ -24,12 +27,10 @@ public:
             0, 1, 2
         };
 
-        m_VertexArray.reset(Mirage::VertexArray::Create());
-        std::shared_ptr<Mirage::VertexBuffer> vertexBuffer;
-        vertexBuffer.reset(Mirage::VertexBuffer::Create(vertices, sizeof(vertices)));
+        m_VertexArray = Mirage::VertexArray::Create();
+        Mirage::Ref<Mirage::VertexBuffer> vertexBuffer = Mirage::VertexBuffer::Create(vertices, sizeof(vertices));
         vertexBuffer->SetLayout(layout);
-        std::shared_ptr<Mirage::IndexBuffer> indexBuffer;
-        indexBuffer.reset(Mirage::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+        Mirage::Ref<Mirage::IndexBuffer> indexBuffer = Mirage::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
 
         m_VertexArray->AddVertexBuffer(vertexBuffer);
         m_VertexArray->SetIndexBuffer(indexBuffer);
@@ -53,17 +54,15 @@ public:
             2, 3, 0
         };
 
-        m_SquareVA.reset(Mirage::VertexArray::Create());
-        std::shared_ptr<Mirage::VertexBuffer> squareVB;
-        squareVB.reset(Mirage::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
+        m_SquareVA = Mirage::VertexArray::Create();
+        Mirage::Ref<Mirage::VertexBuffer> squareVB = Mirage::VertexBuffer::Create(squareVertices, sizeof(squareVertices));
         squareVB->SetLayout(squareLayout);
-        std::shared_ptr<Mirage::IndexBuffer> squareIB;
-        squareIB.reset(Mirage::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+        Mirage::Ref<Mirage::IndexBuffer> squareIB = Mirage::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
 
         m_SquareVA->AddVertexBuffer(squareVB);
         m_SquareVA->SetIndexBuffer(squareIB);
 
-        m_SquareShader = Mirage::Shader::Create("assets/shaders/Square.glsl");
+        m_SquareShader = Mirage::Shader::Create("assets/shaders/FlatColor.glsl");
         m_ShaderLibrary.Load("assets/shaders/Texture.glsl");
 
         m_Texture = Mirage::Texture2D::Create("assets/textures/CheckerBoard.png");
@@ -102,7 +101,7 @@ public:
         }
         m_Texture->Bind();
         Mirage::Renderer::Submit(m_ShaderLibrary.Get("Texture"), m_SquareVA, MatScale(Mat4(1.0f), Vec3(1.5f)));
-        // Mirage::Renderer::Submit(m_Shader, m_VertexArray);
+        // Mirage::Renderer::Submit(m_FlatColorShader, m_VertexArray);
 
         Mirage::Renderer::EndScene();
     }
@@ -142,7 +141,8 @@ class Sandbox : public Mirage::Application
 public:
     Sandbox()
     {
-        PushLayer(new ExampleLayer());
+    //    PushLayer(new ExampleLayer());
+        PushLayer(new Sandbox2D());
     }
 
     ~Sandbox()

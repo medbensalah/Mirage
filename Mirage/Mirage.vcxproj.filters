@@ -129,6 +129,9 @@
     <ClInclude Include="src\Mirage\Renderer\Renderer.h">
       <Filter>src\Mirage\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\Renderer\Renderer2D.h">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Mirage\Renderer\Shader.h">
       <Filter>src\Mirage\Renderer</Filter>
     </ClInclude>
@@ -1449,6 +1452,9 @@
       <Filter>src\Mirage\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Mirage\Renderer\Renderer.cpp">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\Renderer\Renderer2D.cpp">
       <Filter>src\Mirage\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Mirage\Renderer\Shader.cpp">
