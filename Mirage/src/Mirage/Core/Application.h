@@ -28,8 +28,10 @@ namespace Mirage
 
         inline static Application& Get() { return *s_Instance; }
     
-        inline static float GetSeconds() { return s_Instance->time.GetSeconds(); }
-        inline static float GetMilliseconds() { return s_Instance->time.GetMilliseconds(); }
+        inline static float GetSeconds() { return s_Instance->time.GetElapsedTimeInSeconds(); }
+        inline static float GetMilliseconds() { return s_Instance->time.GetElapsedTimeInMilliseconds(); }
+
+        inline static float GetDeltaTime() { return s_Instance->time.DeltaTime; }
     private:
         bool OnWindowClosed(WindowCloseEvent& e);
         bool OnWindowResize(WindowResizeEvent& e);

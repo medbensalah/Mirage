@@ -5,8 +5,8 @@ namespace Mirage
     {
         friend class Application;
 
-        float GetMilliseconds() { return m_ElapsedTime * 1000.0f; }
-        float GetSeconds() { return m_ElapsedTime; }
+        float GetElapsedTimeInMilliseconds() { return m_ElapsedTime * 1000.0f; }
+        float GetElapsedTimeInSeconds() { return m_ElapsedTime; }
 
         const float& ElapsedTime;
         const float& DeltaTime;

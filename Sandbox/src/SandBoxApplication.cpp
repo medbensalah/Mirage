@@ -101,7 +101,7 @@ public:
         }
         m_Texture->Bind();
         Mirage::Renderer::Submit(m_ShaderLibrary.Get("Texture"), m_SquareVA, MatScale(Mat4(1.0f), Vec3(1.5f)));
-        // Mirage::Renderer::Submit(m_FlatColorShader, m_VertexArray);
+        //Mirage::Renderer::Submit(m_FlatColorShader, m_VertexArray);
 
         Mirage::Renderer::EndScene();
     }
@@ -141,7 +141,7 @@ class Sandbox : public Mirage::Application
 public:
     Sandbox()
     {
-    //    PushLayer(new ExampleLayer());
+        // PushLayer(new ExampleLayer());
         PushLayer(new Sandbox2D());
     }
 

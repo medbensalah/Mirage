@@ -24,4 +24,10 @@ namespace Mirage
         MRG_CORE_ASSERT(false, "Unknown graphics API!");
         return nullptr;
     }
+
+    Ref<Texture2D> Texture2D::GetDefaultTexture()
+    {
+        static Ref<Texture2D> whiteTexture = Texture2D::Create("assets/textures/Default.png");
+        return whiteTexture;
+    }
 }

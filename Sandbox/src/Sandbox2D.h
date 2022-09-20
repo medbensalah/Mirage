@@ -18,10 +18,17 @@ private:
 
     Mirage::Ref<Mirage::VertexArray> m_SquareVA;
     Mirage::Ref<Mirage::Shader> m_FlatColorShader;
-
+    
     Vec3 m_Position = { 0.0f, 0.0f, 0.0f };
     Vec3 m_Rotation = { 0.0f, 0.0f, 0.0f };
     Vec3 m_Scale = { 1.0f, 1.0f, 1.0f };
 
-    Vec4 m_Color = { 0.2f, 0.3f, 0.8f, 1.0f };
+    Mirage::Ref<Mirage::Texture2D> m_texture;
+    
+    Vec4 m_Color = { 1.0f, 1.0f, 1.0f, 1.0f };
+    
+    Vec2 m_Tiling = { 10.0f, 10.0f };
+    Vec2 m_Offset = { 0.0f, 0.0f };
+
+    float m_DeltaTime = 0.0f;
 };

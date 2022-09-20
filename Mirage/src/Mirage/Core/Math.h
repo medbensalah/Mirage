@@ -6,9 +6,17 @@
 
 namespace Mirage
 {
-#define Vec2        glm::vec2
-#define Vec3        glm::vec3
-#define Vec4        glm::vec4
+#define VecI2       glm::ivec2
+#define VecI3       glm::ivec3
+#define VecI4       glm::ivec4
+
+#define Vec2        glm::fvec2
+#define Vec3        glm::fvec3
+#define Vec4        glm::fvec4
+
+#define MatI2       glm::imat2
+#define MatI2       glm::imat2
+#define MatI3       glm::imat3
 
 #define Mat2        glm::mat2
 #define Mat3        glm::mat3

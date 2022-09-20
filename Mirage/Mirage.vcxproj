@@ -169,6 +169,7 @@
     <ClInclude Include="src\Mirage\Renderer\Graphicscontext.h" />
     <ClInclude Include="src\Mirage\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\Mirage\Renderer\OrthographicCameraController.h" />
+    <ClInclude Include="src\Mirage\Renderer\Primitives.h" />
     <ClInclude Include="src\Mirage\Renderer\RenderAPI.h" />
     <ClInclude Include="src\Mirage\Renderer\RenderCommand.h" />
     <ClInclude Include="src\Mirage\Renderer\Renderer.h" />
