@@ -15,6 +15,7 @@
 #include <unordered_set>
 
 #include "Mirage/Core/Log.h"
+#include "Mirage/Debug/Instrumentor.h"
 
 #ifdef MRG_PLATFORM_WINDOWS
 #include<Windows.h>

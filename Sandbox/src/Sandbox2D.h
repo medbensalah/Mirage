@@ -29,15 +29,4 @@ private:
     Vec2 m_Offset = { 0.0f, 0.0f };
 
     float m_DeltaTime = 0.0f;
-
-    struct ProfileResult
-    {
-        const char* Name;
-        float Time;
-    };
-
-    std::vector<ProfileResult> m_ProfileResults;
-
-    Mirage::Renderer2D::Primitives::Quad quad{m_Position, m_Rotation, m_Scale, m_Color, m_texture, m_Tiling, m_Offset};
-
 };

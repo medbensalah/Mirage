@@ -160,6 +160,7 @@
     <ClInclude Include="src\Mirage\Core\MouseButtonCodes.h" />
     <ClInclude Include="src\Mirage\Core\Time.h" />
     <ClInclude Include="src\Mirage\Core\Window.h" />
+    <ClInclude Include="src\Mirage\Debug\Instrumentor.h" />
     <ClInclude Include="src\Mirage\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Mirage\Events\Event.h" />
     <ClInclude Include="src\Mirage\Events\KeyEvent.h" />
