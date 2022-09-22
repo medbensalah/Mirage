@@ -10,7 +10,7 @@ namespace Mirage
     ///                                                                                          ///
     ////////////////////////////////////////////////////////////////////////////////////////////////
     
-    MIRAGE_CLASS OpenGLVertexBuffer : public VertexBuffer
+    class OpenGLVertexBuffer : public VertexBuffer
     {
     public:
         OpenGLVertexBuffer(float* vertices, uint32_t size);
@@ -33,7 +33,7 @@ namespace Mirage
     ///                                                                                          ///
     ////////////////////////////////////////////////////////////////////////////////////////////////
     
-    MIRAGE_CLASS OpenGLIndexBuffer : public IndexBuffer
+    class OpenGLIndexBuffer : public IndexBuffer
     {
     public:
         OpenGLIndexBuffer(uint32_t* indices, uint32_t count);

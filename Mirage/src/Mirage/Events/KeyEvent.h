@@ -1,11 +1,10 @@
 ﻿#pragma once
 
-#include "Event.h"
-#include "Mirage/Core/KeyCodes.h"
+#include "Mirage/Events/Event.h"
 
 namespace Mirage
 {
-    MIRAGE_CLASS KeyEvent : public Event
+    class KeyEvent : public Event
     {
     public:
         inline int GetKeyCode() const { return m_KeyCode; }
@@ -20,7 +19,7 @@ namespace Mirage
         int m_KeyCode;
     };
 
-    MIRAGE_CLASS KeyPressedEvent : public KeyEvent
+    class KeyPressedEvent : public KeyEvent
     {
     public:
         KeyPressedEvent(int keycode, int repeatCount)
@@ -42,7 +41,7 @@ namespace Mirage
         int m_RepeatCount;
     };
 
-    MIRAGE_CLASS KeyReleasedEvent : public KeyEvent
+    class KeyReleasedEvent : public KeyEvent
     {
     public:
         KeyReleasedEvent(int keyCode)
@@ -60,7 +59,7 @@ namespace Mirage
         EVENT_CLASS_TYPE(KeyReleased)
     };
 
-    MIRAGE_CLASS KeyTypedEvent : public KeyEvent
+    class KeyTypedEvent : public KeyEvent
     {
     public:
         KeyTypedEvent(int keycode)

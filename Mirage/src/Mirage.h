@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Mirage/Core/Core.h"
+
 #include "Mirage/Core/Application.h"
 #include "Mirage/Core/Layer.h"
 #include "Mirage/Core/Log.h"

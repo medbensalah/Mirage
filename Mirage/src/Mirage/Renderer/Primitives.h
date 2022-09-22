@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Texture.h"
+#include "Mirage/Renderer/Texture.h"
 
 namespace Mirage
 {
@@ -23,7 +23,7 @@ namespace Mirage
                     const Vec3& rotation = Vec3{0.0f},
                     const Vec3& scale = Vec3{1.0f},
                     const Vec4& color = Vec4{1.0f, 1.0f, 1.0f, 1.0f},
-                    const Ref<Texture2D>& texture = Texture2D::GetDefaultTexture(),
+                    const Ref<Texture2D>& texture = nullptr,
                     const Vec2& tiling = Vec2{1.0f, 1.0f},
                     const Vec2& offset = Vec2{0.0f, 0.0f}
                 )
@@ -36,7 +36,7 @@ namespace Mirage
                     float rotation = 0.0f,
                     const Vec2& scale = Vec3{1.0f},
                     const Vec4& color = Vec4{1.0f, 1.0f, 1.0f, 1.0f},
-                    const Ref<Texture2D>& texture = Texture2D::GetDefaultTexture(),
+                    const Ref<Texture2D>& texture = nullptr,
                     const Vec2& tiling = Vec2{1.0f, 1.0f},
                     const Vec2& offset = Vec2{0.0f, 0.0f}
                 )
@@ -49,7 +49,7 @@ namespace Mirage
                     const Vec3& position = Vec3{0.0f},
                     const Vec3& rotation = Vec3{0.0f},
                     const Vec3& scale = Vec3{1.0f},
-                    const Ref<Texture2D>& texture = Texture2D::GetDefaultTexture(),
+                    const Ref<Texture2D>& texture = nullptr,
                     const Vec2& tiling = Vec2{1.0f, 1.0f},
                     const Vec2& offset = Vec2{0.0f, 0.0f}
                 )
@@ -61,7 +61,7 @@ namespace Mirage
                     const Vec2& position = Vec2{0.0f},
                     float rotation = 0.0f,
                     const Vec2& scale = Vec3{1.0f},
-                    const Ref<Texture2D>& texture = Texture2D::GetDefaultTexture(),
+                    const Ref<Texture2D>& texture = nullptr,
                     const Vec2& tiling = Vec2{1.0f, 1.0f},
                     const Vec2& offset = Vec2{0.0f, 0.0f}
                 )

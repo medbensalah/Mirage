@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "OrthographicCamera.h"
+#include "Mirage/Renderer/OrthographicCamera.h"
 
-#include "Primitives.h"
+#include "Mirage/Renderer/Primitives.h"
 
 namespace Mirage
 {

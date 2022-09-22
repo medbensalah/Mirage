@@ -1,10 +1,10 @@
 ﻿#pragma once
 
-#include "Core.h"
+#include "Mirage/Core/Core.h"
 
 namespace Mirage
 {
-    MIRAGE_CLASS Input
+    class Input
     {
     protected:
         Input() = default;

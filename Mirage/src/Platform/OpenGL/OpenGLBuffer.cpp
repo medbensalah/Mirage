@@ -1,6 +1,6 @@
 ﻿#include <MrgPch.h>
 
-#include "OpenGLBuffer.h"
+#include "Platform/OpenGL/OpenGLBuffer.h"
 
 #include "glad/glad.h"
 

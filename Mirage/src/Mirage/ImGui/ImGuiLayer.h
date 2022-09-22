@@ -4,7 +4,7 @@
 
 namespace Mirage
 {
-    MIRAGE_CLASS ImGuiLayer : public Layer
+    class ImGuiLayer : public Layer
     {
     public:
         ImGuiLayer();

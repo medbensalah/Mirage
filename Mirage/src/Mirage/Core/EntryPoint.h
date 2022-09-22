@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Mirage/Core/Core.h"
+
 #ifdef MRG_PLATFORM_WINDOWS
 
 extern Mirage::Application* Mirage::CreateApplication();

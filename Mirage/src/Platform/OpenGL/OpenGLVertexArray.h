@@ -4,7 +4,7 @@
 
 namespace Mirage
 {
-    MIRAGE_CLASS OpenGLVertexArray : public VertexArray
+    class OpenGLVertexArray : public VertexArray
     {
     public:
         OpenGLVertexArray();

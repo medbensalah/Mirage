@@ -4,7 +4,7 @@
 
 namespace Mirage
 {
-    MIRAGE_CLASS OrthographicCamera
+    class OrthographicCamera
     {
     public:
         OrthographicCamera(float left, float right, float bottom, float top, float nearPlane = -1.0f, float farPlane = 1.0f);

@@ -1,10 +1,10 @@
 ﻿#pragma once
 
-#include "RenderAPI.h"
+#include "Mirage/Renderer/RenderAPI.h"
 
 namespace Mirage
 {
-    MIRAGE_CLASS RenderCommand
+    class RenderCommand
     {
     public:
         inline static void Init()
@@ -17,7 +17,7 @@ namespace Mirage
             s_RenderAPI->SetViewport(x, y, width, height);
         }
 
-        inline static void SetClearColor(const glm::vec4& color)
+        inline static void SetClearColor(const Vec4& color)
         {
             s_RenderAPI->SetClearColor(color);
         }

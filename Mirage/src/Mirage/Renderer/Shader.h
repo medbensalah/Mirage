@@ -4,7 +4,7 @@
 
 namespace Mirage
 {
-    MIRAGE_CLASS Shader
+    class Shader
     {
     public:
         virtual ~Shader() = default;
@@ -31,7 +31,7 @@ namespace Mirage
         static Ref<Shader> Create(const std::string& name, const std::string& vertexSrc, const std::string& fragmentSrc);
     };
 
-    MIRAGE_CLASS ShaderLibrary
+    class ShaderLibrary
     {
     public:
         void Add(const std::string& name, const Ref<Shader>& shader);

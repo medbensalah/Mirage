@@ -1,5 +1,6 @@
 ﻿#include "MrgPch.h"
-#include "WindowsWindow.h"
+
+#include "Platform/Windows/WindowsWindow.h"
 
 #include "Mirage/Events/ApplicationEvent.h"
 #include "Mirage/Events/KeyEvent.h"
@@ -12,16 +13,17 @@
 
 namespace Mirage
 {
-    static bool s_GLFWInitialized = false;
-
+    //static bool s_GLFWInitialized = false;
+    static uint8_t s_GLFWWindowCount = 0;
+    
     static void GLFWErrorCallback(int error, const char* description)
     {
         MRG_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
     }
 
-    Window* Window::Create(const WindowProperties& properties)
+    Scope<Window> Window::Create(const WindowProperties& properties)
     {
-        return new WindowsWindow(properties);
+        return CreateScope<WindowsWindow>(properties);
     }
 
     WindowsWindow::WindowsWindow(const WindowProperties& properties)
@@ -46,17 +48,18 @@ namespace Mirage
                       properties.Height
         );
 
-        if (!s_GLFWInitialized)
+        if (s_GLFWWindowCount == 0)
         {
             int success = glfwInit();
             MRG_CORE_ASSERT(success, "GLFW initialization Failed!");
             glfwSetErrorCallback(GLFWErrorCallback);
-            s_GLFWInitialized = true;
+            //s_GLFWInitialized = true;
         }
 
         m_Window = glfwCreateWindow((int)m_Data.Width, (int)m_Data.Height, m_Data.Title.c_str(), NULL, NULL);
-
-        m_Context = CreateScope<OpenGLContext>(m_Window);
+        ++s_GLFWWindowCount;
+        
+        m_Context = GraphicsContext::Create(m_Window);
         m_Context->Init();
 
         glfwSetWindowUserPointer(m_Window, &m_Data);
@@ -158,6 +161,11 @@ namespace Mirage
     void WindowsWindow::Shutdown()
     {
         glfwDestroyWindow(m_Window);
+        --s_GLFWWindowCount;
+        if (s_GLFWWindowCount == 0)
+        {
+            glfwTerminate();
+        }
     }
 
     void WindowsWindow::OnUpdate()

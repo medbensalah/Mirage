@@ -2,7 +2,7 @@
 
 #include "Mirage/Core/KeyCodes.h"
 #include "Mirage/Core/Input.h"
-#include "OrthographicCameraController.h"
+#include "Mirage/Renderer/OrthographicCameraController.h"
 
 namespace Mirage
 {
@@ -64,8 +64,8 @@ namespace Mirage
     void OrthographicCameraController::OnEvent(Event& event)
     {
         EventDispatcher dispatcher(event);
-        dispatcher.Dispatch<MouseScrollEvent>(MRG_BIND_EVENT_FN(&OrthographicCameraController::OnMouseScroll));
-        dispatcher.Dispatch<WindowResizeEvent>(MRG_BIND_EVENT_FN(&OrthographicCameraController::OnWindowResize));
+        dispatcher.Dispatch<MouseScrollEvent>(MRG_BIND_EVENT_FN(OrthographicCameraController::OnMouseScroll));
+        dispatcher.Dispatch<WindowResizeEvent>(MRG_BIND_EVENT_FN(OrthographicCameraController::OnWindowResize));
     }
 
     bool OrthographicCameraController::OnMouseScroll(MouseScrollEvent& event)

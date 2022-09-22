@@ -1,14 +1,13 @@
 ﻿#pragma once
 
-#include "Core.h"
-#include "Layer.h"
+#include "Mirage/Core/Layer.h"
 
 namespace Mirage
 {
-    MIRAGE_CLASS LayerStack
+    class LayerStack
     {
     public:
-        LayerStack();
+        LayerStack() = default;
         ~LayerStack();
 
         void PushLayer(Layer* layer);

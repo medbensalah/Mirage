@@ -1,7 +1,7 @@
 ﻿#include <MrgPch.h>
 
-#include "VertexArray.h"
-#include "Renderer.h"
+#include "Mirage/Renderer/VertexArray.h"
+#include "Mirage/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLVertexArray.h"
 
 namespace Mirage
@@ -15,7 +15,7 @@ namespace Mirage
             return nullptr;
             
         case RenderAPI::API::OpenGL:
-            return std::make_shared<OpenGLVertexArray>(); 
+            return CreateRef<OpenGLVertexArray>(); 
         }
 
         MRG_CORE_ERROR("Unknown graphics API!");

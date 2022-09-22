@@ -1,9 +1,8 @@
 ﻿#include <MrgPch.h>
 
-#include "Renderer.h"
+#include "Mirage/Renderer/Renderer.h"
 
-#include "Renderer2D.h"
-#include "Platform/OpenGL/OpenGLShader.h"
+#include "Mirage/Renderer/Renderer2D.h"
 
 namespace Mirage
 {
@@ -15,6 +14,11 @@ namespace Mirage
         Renderer2D::Init();
     }
 
+    void Renderer::Shutdown()
+    {
+        Renderer2D::Shutdown();
+    }
+    
     void Renderer::OnWindowResize(Vec2 size)
     {
         RenderCommand::SetViewport(0, 0, size.x, size.y);

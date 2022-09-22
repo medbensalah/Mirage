@@ -1,6 +1,6 @@
 ﻿#include "MrgPch.h"
 
-#include "Application.h"
+#include "Mirage/Core/Application.h"
 
 #include "Mirage/Core/Time.h"
 #include "GLFW/glfw3.h"
@@ -8,8 +8,6 @@
 
 namespace Mirage
 {
-#define Bind_event_FN(x) std::bind(x, this, std::placeholders::_1)
-
     Application* Application::s_Instance = nullptr;
 
     Application::Application()
@@ -17,17 +15,19 @@ namespace Mirage
         MRG_CORE_ASSERT(!s_Instance, "Application already exists!");
         s_Instance = this;
 
-        m_Window = Scope<Window>(Window::Create());
-        m_Window->SetEventCallbackFn(Bind_event_FN(&Application::OnEvent));
+        m_Window = Window::Create();
+        m_Window->SetVSync(false);
+        m_Window->SetEventCallback(MRG_BIND_EVENT_FN(Application::OnEvent));
 
         Renderer::Init();
 
         m_ImGuiLayer = new ImGuiLayer();
         PushOverlay(m_ImGuiLayer);
     }
-
+    
     Application::~Application()
     {
+        Renderer::Shutdown();
     }
 
     void Application::PushLayer(Layer* layer)
@@ -46,8 +46,8 @@ namespace Mirage
     void Application::OnEvent(Event& e)
     {
         EventDispatcher dispatcher(e);
-        dispatcher.Dispatch<WindowCloseEvent>(Bind_event_FN(&Application::OnWindowClosed));
-        dispatcher.Dispatch<WindowResizeEvent>(Bind_event_FN(&Application::OnWindowResize));
+        dispatcher.Dispatch<WindowCloseEvent>(MRG_BIND_EVENT_FN(Application::OnWindowClosed));
+        dispatcher.Dispatch<WindowResizeEvent>(MRG_BIND_EVENT_FN(Application::OnWindowResize));
 
         for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
         {

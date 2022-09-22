@@ -1,6 +1,6 @@
 ﻿#include "MrgPch.h"
 
-#include "OpenGLVertexArray.h"
+#include "Platform/OpenGL/OpenGLVertexArray.h"
 
 #include "glad/glad.h"
 
@@ -47,7 +47,7 @@ namespace Mirage
         glBindVertexArray(0);
     }
 
-    void OpenGLVertexArray::AddVertexBuffer(const std::shared_ptr<VertexBuffer>& VertexBuffer)
+    void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& VertexBuffer)
     {
         MRG_CORE_ASSERT(VertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
 
@@ -70,7 +70,7 @@ namespace Mirage
         m_VertexBuffers.push_back(VertexBuffer);
     }
 
-    void OpenGLVertexArray::SetIndexBuffer(const std::shared_ptr<IndexBuffer>& IndexBuffer)
+    void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& IndexBuffer)
     {
         glBindVertexArray(m_RendererID);
         IndexBuffer->Bind();

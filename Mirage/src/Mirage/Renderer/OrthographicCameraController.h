@@ -7,7 +7,7 @@
 
 namespace Mirage
 {
-    MIRAGE_CLASS OrthographicCameraController
+    class OrthographicCameraController
     {
     public:
         OrthographicCameraController(float aspectRatio, bool rotation = false);

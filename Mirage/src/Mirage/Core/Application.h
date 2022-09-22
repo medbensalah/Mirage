@@ -1,9 +1,9 @@
 ﻿#pragma once
 
-#include "Core.h"
+#include "Mirage/Core/Core.h"
 
-#include "Window.h"
-#include "LayerStack.h"
+#include "Mirage/Core/Window.h"
+#include "Mirage/Core/LayerStack.h"
 #include "Mirage/Core/Time.h"
 #include "Mirage/Events/ApplicationEvent.h"
 
@@ -11,7 +11,7 @@
 
 namespace Mirage
 {
-    MIRAGE_CLASS Application
+    class Application
     {
     public:
         Application();

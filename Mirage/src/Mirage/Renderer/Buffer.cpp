@@ -1,7 +1,7 @@
 ﻿#include <MrgPch.h>
 
-#include "Buffer.h"
-#include "Renderer.h"
+#include "Mirage/Renderer/Buffer.h"
+#include "Mirage/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLBuffer.h"
 
 namespace Mirage
@@ -31,7 +31,7 @@ namespace Mirage
             return nullptr;
             
         case RenderAPI::API::OpenGL:
-            return std::make_shared<OpenGLVertexBuffer>(vertices, size); 
+            return CreateRef<OpenGLVertexBuffer>(vertices, size); 
         }
 
         MRG_CORE_ERROR("Unknown graphics API!");
@@ -54,7 +54,7 @@ namespace Mirage
             return nullptr;
             
         case RenderAPI::API::OpenGL:
-            return std::make_shared<OpenGLIndexBuffer>(indices, count); 
+            return CreateRef<OpenGLIndexBuffer>(indices, count); 
         }
 
         MRG_CORE_ERROR("Unknown graphics API!");

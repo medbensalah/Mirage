@@ -1,6 +1,7 @@
 ﻿#include <MrgPch.h>
 
-#include "Renderer.h"
+#include "Mirage/Renderer/Shader.h"
+#include "Mirage/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLShader.h"
 
 
@@ -15,10 +16,9 @@ namespace Mirage
             return nullptr;
 
         case RenderAPI::API::OpenGL:
-            return std::make_shared<OpenGLShader>(filepath);
+            return CreateRef<OpenGLShader>(filepath);
         }
 
-        MRG_CORE_ERROR("Unknown graphics API!");
         MRG_CORE_ASSERT(false, "Unknown graphics API!");
         return nullptr;
     }
@@ -33,10 +33,9 @@ namespace Mirage
             return nullptr;
 
         case RenderAPI::API::OpenGL:
-            return std::make_shared<OpenGLShader>(name, vertexSource, fragmentSource);
+            return CreateRef<OpenGLShader>(name, vertexSource, fragmentSource);
         }
 
-        MRG_CORE_ERROR("Unknown graphics API!");
         MRG_CORE_ASSERT(false, "Unknown graphics API!");
         return nullptr;
     }

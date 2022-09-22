@@ -1,6 +1,6 @@
 ﻿#include <MrgPch.h>
 
-#include "OrthographicCamera.h"
+#include "Mirage/Renderer/OrthographicCamera.h"
 
 
 namespace Mirage

@@ -1,16 +1,17 @@
 ﻿#pragma once
 
-#include "OrthographicCamera.h"
-#include "RenderCommand.h"
-#include "Shader.h"
+#include "Mirage/Renderer/OrthographicCamera.h"
+#include "Mirage/Renderer/RenderCommand.h"
+#include "Mirage/Renderer/Shader.h"
 
 namespace Mirage
 {
-    MIRAGE_CLASS Renderer
+    class Renderer
     {
     public:
         static void Init();
-
+        static void Shutdown();
+        
         static void OnWindowResize(Vec2 size);
         
         static void BeginScene(OrthographicCamera& camera);

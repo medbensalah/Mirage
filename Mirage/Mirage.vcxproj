@@ -611,6 +611,7 @@
     <ClCompile Include="src\Mirage\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Mirage\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Mirage\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Mirage\Renderer\GraphicsContext.cpp" />
     <ClCompile Include="src\Mirage\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Mirage\Renderer\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Mirage\Renderer\RenderAPI.cpp" />

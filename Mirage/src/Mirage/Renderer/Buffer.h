@@ -76,7 +76,7 @@ namespace Mirage
     };
 
     
-    MIRAGE_CLASS BufferLayout
+    class BufferLayout
     {
     public:
         BufferLayout()
@@ -122,7 +122,7 @@ namespace Mirage
     ///                                                                                          ///
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    MIRAGE_CLASS VertexBuffer
+    class VertexBuffer
     {
     public:
         virtual ~VertexBuffer()
@@ -145,7 +145,7 @@ namespace Mirage
     ///                                                                                          ///
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    MIRAGE_CLASS IndexBuffer
+    class IndexBuffer
     {
     public:
         virtual ~IndexBuffer()

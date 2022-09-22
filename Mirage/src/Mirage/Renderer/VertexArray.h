@@ -4,7 +4,7 @@
 
 namespace Mirage
 {
-    MIRAGE_CLASS VertexArray
+    class VertexArray
     {
         public:
         virtual ~VertexArray()

@@ -48,7 +48,7 @@ namespace Mirage
 
 #define EVENT_CLASS_CATEGORY(category)	virtual int GetCategoryFlags() const override {return category; }
 
-    MIRAGE_CLASS Event
+    class Event
     {
         friend class EventDispatcher;
     public:

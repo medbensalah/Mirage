@@ -1,10 +1,9 @@
 ﻿#include <MrgPch.h>
 
-#include "RenderCommand.h"
-#include "Platform/OpenGL/OpenGLRenderAPI.h"
+#include "Mirage/Renderer/RenderCommand.h"
 
 
 namespace Mirage
 {
-    Scope<RenderAPI> RenderCommand::s_RenderAPI = CreateScope<OpenGLRenderAPI>();
+    Scope<RenderAPI> RenderCommand::s_RenderAPI = RenderAPI::Create();
 }

@@ -1,11 +1,10 @@
 ﻿#pragma once
 
-#include "Core.h"
 #include "Mirage/Events/Event.h"
 
 namespace Mirage
 {
-    MIRAGE_CLASS Layer
+    class Layer
     {
     public:
         Layer(const std::string& name = "Layer");

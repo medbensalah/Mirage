@@ -1,9 +1,9 @@
 #include <Mirage.h>
 
 #include "Sandbox2D.h"
-#include "glm/gtc/type_ptr.inl"
-#include "ImGui/imgui.h"
-#include "Platform/OpenGL/OpenGLShader.h"
+#include <glm/gtc/type_ptr.inl>
+#include <ImGui/imgui.h>
+
 /* *******Entry point******* */
 #include "Mirage/Core/EntryPoint.h"
 
@@ -28,6 +28,7 @@ public:
         };
 
         m_VertexArray = Mirage::VertexArray::Create();
+        
         Mirage::Ref<Mirage::VertexBuffer> vertexBuffer = Mirage::VertexBuffer::Create(vertices, sizeof(vertices));
         vertexBuffer->SetLayout(layout);
         Mirage::Ref<Mirage::IndexBuffer> indexBuffer = Mirage::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
@@ -63,13 +64,13 @@ public:
         m_SquareVA->SetIndexBuffer(squareIB);
 
         m_SquareShader = Mirage::Shader::Create("assets/shaders/FlatColor.glsl");
-        m_ShaderLibrary.Load("assets/shaders/Texture.glsl");
+        
+        auto textureShader = m_ShaderLibrary.Load("assets/shaders/Standard.glsl");
 
         m_Texture = Mirage::Texture2D::Create("assets/textures/CheckerBoard.png");
 
-        std::dynamic_pointer_cast<Mirage::OpenGLShader>(m_ShaderLibrary.Get("Texture"))->Bind();
-        std::dynamic_pointer_cast<Mirage::OpenGLShader>(m_ShaderLibrary.Get("Texture"))->UploadUniformInt(
-            "u_Texture", 0);
+        textureShader->Bind();
+        textureShader->SetInt("u_Texture", 0);
     }
 
     void OnUpdate(float DeltaTime) override
@@ -87,8 +88,8 @@ public:
 
         Mirage::Renderer::BeginScene(m_CameraController.GetCamera());
 
-        std::dynamic_pointer_cast<Mirage::OpenGLShader>(m_SquareShader)->Bind();
-        std::dynamic_pointer_cast<Mirage::OpenGLShader>(m_SquareShader)->UploadUniformFloat4("u_Color", m_SquareColor);
+        m_SquareShader->Bind();
+        m_SquareShader->SetFloat4("u_Color", m_SquareColor);
 
         for (int i = 0; i < 25; ++i)
         {
@@ -99,9 +100,14 @@ public:
                 Mirage::Renderer::Submit(m_SquareShader, m_SquareVA, SquareTransform);
             }
         }
+
+        auto textureShader = m_ShaderLibrary.Get("Texture");
+        
         m_Texture->Bind();
-        Mirage::Renderer::Submit(m_ShaderLibrary.Get("Texture"), m_SquareVA, MatScale(Mat4(1.0f), Vec3(1.5f)));
-        //Mirage::Renderer::Submit(m_FlatColorShader, m_VertexArray);
+        Mirage::Renderer::Submit(textureShader, m_SquareVA, MatScale(Mat4(1.0f), Vec3(1.5f)));
+        
+        // Triangle
+        // Mirage::Renderer::Submit(m_FlatColorShader, m_VertexArray);
 
         Mirage::Renderer::EndScene();
     }

@@ -41,22 +41,6 @@
     #error "Unknown platform!"
 #endif // End of platform detection
 
-
-// DLL support
-#ifdef MRG_PLATFORM_WINDOWS
-    #if MRG_DYNAMIC_LINK
-        #ifdef MRG_BUILD_DLL
-            #define MIRAGE_CLASS class __declspec(dllexport)
-        #else
-            #define MIRAGE_CLASS class __declspec(dllimport)
-        #endif
-    #else
-        #define MIRAGE_CLASS class
-    #endif
-#else
-    #error MIRAGE SUPPORTS WINDOWS ONLY!!!
-#endif // End of DLL support
-
 #ifdef MRG_DEBUG
     #define MRG_ENABLE_ASSERTS
 #endif
@@ -71,7 +55,7 @@
 
 #define BIT(x) (1 << x)
 
-#define MRG_BIND_EVENT_FN(fn) std::bind(fn, this, std::placeholders::_1)
+#define MRG_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
 
 namespace Mirage
 {

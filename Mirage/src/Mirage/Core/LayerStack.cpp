@@ -1,12 +1,8 @@
 ﻿#include "MrgPch.h"
-#include "LayerStack.h"
+#include "Mirage/Core/LayerStack.h"
 
 namespace Mirage
 {
-    LayerStack::LayerStack()
-    {
-    }
-
     LayerStack::~LayerStack()
     {
         for (Layer* layer : m_Layers)
