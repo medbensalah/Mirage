@@ -13,10 +13,6 @@
     #endif
 #elif defined(__APPLE__) || defined(__MACH__)
     #include <TargetConditionals.h>
-    /* TARGET_OS_MAC exists on all tMRG platforms
-     * so we must cMRGck all of tMRGm (in this order)
-     * to ensure that we're running on MAC
-     * and not some otMRGr Apple platform */
     #if TARGET_IPHONE_SIMULATOR == 1
         #error "IOS simulator is not supported!"
     #elif TARGET_OS_IPHONE == 1
@@ -27,9 +23,7 @@
         #error "MacOS is not supported!"
     #else
         #error "Unknown Apple platform!"
-    #endif /* We also have to cMRGck __ANDROID__ before __linux__
-            * since android is based on tMRG linux kernel
-            * it has __linux__ defined */
+    #endif 
 #elif defined(__ANDROID__)
     #define MRG_PLATFORM_ANDROID
     #error "Android is not supported!"

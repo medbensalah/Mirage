@@ -29,26 +29,36 @@ namespace Mirage
     
     OpenGLVertexArray::OpenGLVertexArray()
     {
+        MRG_PROFILE_FUNCTION();
+
         glCreateVertexArrays(1, &m_RendererID);
     }
 
     OpenGLVertexArray::~OpenGLVertexArray()
     {
+        MRG_PROFILE_FUNCTION();
+
         glDeleteVertexArrays(1, &m_RendererID);
     }
     
     void OpenGLVertexArray::Bind() const
     {
+        MRG_PROFILE_FUNCTION();
+
         glBindVertexArray(m_RendererID);
     }
 
     void OpenGLVertexArray::Unbind() const
     {
+        MRG_PROFILE_FUNCTION();
+
         glBindVertexArray(0);
     }
 
     void OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& VertexBuffer)
     {
+        MRG_PROFILE_FUNCTION();
+
         MRG_CORE_ASSERT(VertexBuffer->GetLayout().GetElements().size(), "Vertex Buffer has no layout!");
 
         glBindVertexArray(m_RendererID);
@@ -72,6 +82,8 @@ namespace Mirage
 
     void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& IndexBuffer)
     {
+        MRG_PROFILE_FUNCTION();
+
         glBindVertexArray(m_RendererID);
         IndexBuffer->Bind();
 

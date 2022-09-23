@@ -110,14 +110,13 @@ namespace Mirage
     ImGuiLayer::ImGuiLayer()
         : Layer("ImGuiLayer")
     {
+        MRG_PROFILE_FUNCTION();
     }
-
-    ImGuiLayer::~ImGuiLayer()
-    {
-    }
-
+    
     void ImGuiLayer::OnAttach()
     {
+        MRG_PROFILE_FUNCTION();
+        
         // Setup Dear ImGui context
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -129,10 +128,9 @@ namespace Mirage
         io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; // Enable Multi-Viewport / Platform Windows
         //io.ConfigViewportsNoAutoMerge = true;
         //io.ConfigViewportsNoTaskBarIcon = true;
-
+        
         // Setup Dear ImGui style
         SetImGuiStyle();
-        //ImGui::StyleColorsClassic();
 
         // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
         ImGuiStyle& style = ImGui::GetStyle();
@@ -154,6 +152,8 @@ namespace Mirage
 
     void ImGuiLayer::OnDetach()
     {
+        MRG_PROFILE_FUNCTION();
+        
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
@@ -161,18 +161,17 @@ namespace Mirage
 
     void ImGuiLayer::Begin()
     {
+        MRG_PROFILE_FUNCTION();
+        
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
     }
-
-
-    void ImGuiLayer::OnImGuiRender()
-    {
-    }
-
+    
     void ImGuiLayer::End()
     {
+        MRG_PROFILE_FUNCTION();
+        
         ImGuiIO& io = ImGui::GetIO();
         Application& app = Application::Get();
         io.DisplaySize = ImVec2((float)app.GetWindow().GetWidth(), (float)app.GetWindow().GetHeight());

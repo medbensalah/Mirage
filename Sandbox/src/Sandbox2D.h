@@ -27,6 +27,4 @@ private:
     
     Vec2 m_Tiling = { 1.0f, 1.0f };
     Vec2 m_Offset = { 0.0f, 0.0f };
-
-    float m_DeltaTime = 0.0f;
 };

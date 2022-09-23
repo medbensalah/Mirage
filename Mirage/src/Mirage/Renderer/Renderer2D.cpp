@@ -21,6 +21,8 @@ namespace Mirage
 
         void Init()
         {
+            MRG_PROFILE_FUNCTION();
+
             s_Data = new Storage();
 
             float squareVertices[4 * 5] = {
@@ -56,17 +58,23 @@ namespace Mirage
 
         void Shutdown()
         {
+            MRG_PROFILE_FUNCTION();
+        
             delete s_Data;
         }
 
         void BeginScene(const OrthographicCamera& camera)
         {
+            MRG_PROFILE_FUNCTION();
+        
             s_Data->Shader->Bind();
             s_Data->Shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
         }
 
         void EndScene()
         {
+            MRG_PROFILE_FUNCTION();
+        
         }
 
 
@@ -74,13 +82,19 @@ namespace Mirage
         {
             void Quad(Primitives::Quad quad)
             {
+                MRG_PROFILE_FUNCTION();
+        
                 s_Data->Shader->SetFloat4("u_Color", quad.color);
             
-                Mat4 transform = MatTranslate(Mat4(1.0f), quad.position) *
-                    MatRotate(Mat4(1.0f), quad.rotation.x, {1.0f, 0.0f, 0.0f}) *
-                    MatRotate(Mat4(1.0f), quad.rotation.y, {0.0f, 1.0f, 0.0f}) *
-                    MatRotate(Mat4(1.0f), quad.rotation.z, {0.0f, 0.0f, 1.0f}) *
-                    MatScale(Mat4(1.0f), quad.scale);
+                Mat4 transform ;
+                {
+                    MRG_PROFILE_SCOPE("calculating transform");
+                    transform = MatTranslate(Mat4(1.0f), quad.position) *
+                       MatRotate(Mat4(1.0f), quad.rotation.x, {1.0f, 0.0f, 0.0f}) *
+                       MatRotate(Mat4(1.0f), quad.rotation.y, {0.0f, 1.0f, 0.0f}) *
+                       MatRotate(Mat4(1.0f), quad.rotation.z, {0.0f, 0.0f, 1.0f}) *
+                       MatScale(Mat4(1.0f), quad.scale);
+                }
                 s_Data->Shader->SetMat4("u_Transform", transform);
                 if (quad.texture)
                 {

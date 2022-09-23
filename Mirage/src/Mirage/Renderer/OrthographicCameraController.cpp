@@ -15,6 +15,8 @@ namespace Mirage
 
     void OrthographicCameraController::OnUpdate(float DeltaTime)
     {
+        MRG_PROFILE_FUNCTION();
+        
         if (Input::IsKeyPressed(MRG_Key_A))
         {
             m_CameraPosition.x -= cos(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
@@ -63,6 +65,8 @@ namespace Mirage
 
     void OrthographicCameraController::OnEvent(Event& event)
     {
+        MRG_PROFILE_FUNCTION();
+        
         EventDispatcher dispatcher(event);
         dispatcher.Dispatch<MouseScrollEvent>(MRG_BIND_EVENT_FN(OrthographicCameraController::OnMouseScroll));
         dispatcher.Dispatch<WindowResizeEvent>(MRG_BIND_EVENT_FN(OrthographicCameraController::OnWindowResize));
@@ -70,6 +74,8 @@ namespace Mirage
 
     bool OrthographicCameraController::OnMouseScroll(MouseScrollEvent& event)
     {
+        MRG_PROFILE_FUNCTION();
+        
         m_ZoomLevel -= event.GetYOffset() * 0.1f;
         m_ZoomLevel = std::max(m_ZoomLevel, 0.25f);
         m_ZoomLevel = std::min(m_ZoomLevel, 4.5f);
@@ -80,6 +86,8 @@ namespace Mirage
 
     bool OrthographicCameraController::OnWindowResize(WindowResizeEvent& event)
     {
+        MRG_PROFILE_FUNCTION();
+        
         m_AspectRatio = event.GetWindowBounds().x / event.GetWindowBounds().y;
         m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
         return false;

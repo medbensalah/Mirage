@@ -15,6 +15,8 @@ namespace Mirage
 
     void OpenGLContext::Init()
     {
+        MRG_PROFILE_FUNCTION();
+
         glfwMakeContextCurrent(m_WindowHandle);
 
         int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
@@ -36,7 +38,9 @@ namespace Mirage
     }
 
     void OpenGLContext::SwapBuffers()
-    { 
+    {
+        MRG_PROFILE_FUNCTION();
+
         glfwSwapBuffers(m_WindowHandle);
     }
 }

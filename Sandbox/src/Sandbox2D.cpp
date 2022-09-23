@@ -5,39 +5,42 @@
 Sandbox2D::Sandbox2D()
     : Layer("SandBox2D"), m_CameraController(1280.0f / 720.0f, true)
 {
-    m_texture = Mirage::Texture2D::Create("assets/textures/CheckerBoard.png");
 }
 
 void Sandbox2D::OnAttach()
 {
+    MRG_PROFILE_FUNCTION();
+
+    m_texture = Mirage::Texture2D::Create("assets/textures/CheckerBoard.png");
 }
 
 void Sandbox2D::OnDetach()
 {
+    MRG_PROFILE_FUNCTION();
+        
 }
 
 void Sandbox2D::OnUpdate(float DeltaTime)
 {
     MRG_PROFILE_FUNCTION();
+    
     // Update
-    {
-        MRG_PROFILE_SCOPE("CameraController::OnUpdate");
-        m_CameraController.OnUpdate(DeltaTime);
-    }
+    m_CameraController.OnUpdate(DeltaTime);
     
+
     Mirage::Renderer2D::Primitives::Quad quad{m_Position, m_Rotation, m_Scale, m_Color, m_texture, m_Tiling, m_Offset};
-    
+
     // Render
     {
         MRG_PROFILE_SCOPE("Renderer Clear");
         Mirage::RenderCommand::SetClearColor({0.15f, 0.15f, 0.15f, 1.0f});
         Mirage::RenderCommand::Clear();
     }
-    
+
     {
         MRG_PROFILE_SCOPE("Renderer Draw");
         Mirage::Renderer2D::BeginScene(m_CameraController.GetCamera());
-
+        
         Mirage::Renderer2D::Draw::Quad(quad);
 
         Mirage::Renderer2D::EndScene();
@@ -47,8 +50,8 @@ void Sandbox2D::OnUpdate(float DeltaTime)
 void Sandbox2D::OnImGuiRender()
 {
     MRG_PROFILE_FUNCTION();
-    
-    ImGui::Begin("Settings");
+
+    ImGui::Begin("Settings");    
     ImGui::DragFloat3("Position", glm::value_ptr(m_Position), 0.05f);
     ImGui::DragFloat3("Rotation", glm::value_ptr(m_Rotation), 0.05f, -180.0f, 180.0f);
     ImGui::DragFloat3("Scale", glm::value_ptr(m_Scale), 0.05f);
@@ -63,6 +66,9 @@ void Sandbox2D::OnImGuiRender()
     ImGui::Spacing();
     ImGui::Separator();
 
+    float deltaTime =Mirage::Application::Get().GetDeltaTime();
+    
+    ImGui::TextDisabled("FPS : %3.1f  (%f ms)", 1.0f / deltaTime, deltaTime * 1000.0f);
     ImGui::End();
 }
 

@@ -28,16 +28,21 @@ namespace Mirage
 
     WindowsWindow::WindowsWindow(const WindowProperties& properties)
     {
+        MRG_PROFILE_FUNCTION();
         Init(properties);
     }
 
     WindowsWindow::~WindowsWindow()
     {
+        MRG_PROFILE_FUNCTION();
+
         Shutdown();
     }
 
     void WindowsWindow::Init(const WindowProperties& properties)
     {
+        MRG_PROFILE_FUNCTION();
+
         m_Data.Title = properties.Title;
         m_Data.Width = properties.Width;
         m_Data.Height = properties.Height;
@@ -50,15 +55,20 @@ namespace Mirage
 
         if (s_GLFWWindowCount == 0)
         {
+            MRG_PROFILE_SCOPE("glfwInit");
+            
             int success = glfwInit();
             MRG_CORE_ASSERT(success, "GLFW initialization Failed!");
             glfwSetErrorCallback(GLFWErrorCallback);
             //s_GLFWInitialized = true;
         }
 
-        m_Window = glfwCreateWindow((int)m_Data.Width, (int)m_Data.Height, m_Data.Title.c_str(), NULL, NULL);
-        ++s_GLFWWindowCount;
-        
+        {
+            MRG_PROFILE_SCOPE("glfwCreateWindow");
+            
+            m_Window = glfwCreateWindow((int)m_Data.Width, (int)m_Data.Height, m_Data.Title.c_str(), NULL, NULL);
+            ++s_GLFWWindowCount;
+        }
         m_Context = GraphicsContext::Create(m_Window);
         m_Context->Init();
 
@@ -160,8 +170,11 @@ namespace Mirage
 
     void WindowsWindow::Shutdown()
     {
+        MRG_PROFILE_FUNCTION();
+
         glfwDestroyWindow(m_Window);
         --s_GLFWWindowCount;
+        
         if (s_GLFWWindowCount == 0)
         {
             glfwTerminate();
@@ -170,12 +183,16 @@ namespace Mirage
 
     void WindowsWindow::OnUpdate()
     {
+        MRG_PROFILE_FUNCTION();
+
         glfwPollEvents();
         m_Context->SwapBuffers();
     }
 
     void WindowsWindow::SetVSync(bool enabled)
     {
+        MRG_PROFILE_FUNCTION();
+
         if (enabled)
         {
             MRG_CORE_TRACE("Enabling VSync");

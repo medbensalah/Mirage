@@ -21,6 +21,8 @@ namespace Mirage
     
     OpenGLShader::OpenGLShader(const std::string& filepath)
     {
+        MRG_PROFILE_FUNCTION();
+
         std::string source = ReadFile(filepath);
         auto shaderSources = PreProcess(source);
         Compile(shaderSources);
@@ -35,6 +37,8 @@ namespace Mirage
     OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexSource, const std::string& fragmentSource)
         : m_Name(name)
     {
+        MRG_PROFILE_FUNCTION();
+        
         std::unordered_map<GLenum, std::string> sources;
         sources[GL_VERTEX_SHADER] = vertexSource;
         sources[GL_FRAGMENT_SHADER] = fragmentSource;
@@ -43,11 +47,15 @@ namespace Mirage
 
     OpenGLShader::~OpenGLShader()
     {
+        MRG_PROFILE_FUNCTION();
+        
         glDeleteProgram(m_RendererID);
     }
 
     std::string OpenGLShader::ReadFile(const std::string& filepath)
     {
+        MRG_PROFILE_FUNCTION();
+        
         std::string result;
         std::ifstream in(filepath, std::ios::in | std::ios::binary);
         if (in)
@@ -75,6 +83,8 @@ namespace Mirage
 
     std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string& source)
     {
+        MRG_PROFILE_FUNCTION();
+        
         std::unordered_map<GLenum, std::string> shaderSources;
 
         const char* typeToken = "#type";
@@ -99,6 +109,8 @@ namespace Mirage
 
     void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& shaderSources)
     {
+        MRG_PROFILE_FUNCTION();
+        
         GLuint program = glCreateProgram();
         MRG_CORE_ASSERT(shaderSources.size() <= 2, "Mirage supports onlu up to 2 shaders");
         std::array<GLenum, 2> glShaderIDs;
@@ -168,11 +180,15 @@ namespace Mirage
 
     void OpenGLShader::Bind() const
     {
+        MRG_PROFILE_FUNCTION();
+        
         glUseProgram(m_RendererID);
     }
 
     void OpenGLShader::Unbind() const
     {
+        MRG_PROFILE_FUNCTION();
+        
         glUseProgram(0);
     }
 

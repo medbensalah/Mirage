@@ -12,6 +12,8 @@ namespace Mirage
 
     Application::Application()
     {
+        MRG_PROFILE_FUNCTION();
+        
         MRG_CORE_ASSERT(!s_Instance, "Application already exists!");
         s_Instance = this;
 
@@ -27,24 +29,31 @@ namespace Mirage
     
     Application::~Application()
     {
+        MRG_PROFILE_FUNCTION();
+        
         Renderer::Shutdown();
     }
 
     void Application::PushLayer(Layer* layer)
     {
+        MRG_PROFILE_FUNCTION();
+        
         m_LayerStack.PushLayer(layer);
         layer->OnAttach();
     }
 
     void Application::PushOverlay(Layer* overlay)
     {
+        MRG_PROFILE_FUNCTION();
+        
         m_LayerStack.PushOverlay(overlay);
         overlay->OnAttach();
     }
-
-
+    
     void Application::OnEvent(Event& e)
     {
+        MRG_PROFILE_FUNCTION();
+        
         EventDispatcher dispatcher(e);
         dispatcher.Dispatch<WindowCloseEvent>(MRG_BIND_EVENT_FN(Application::OnWindowClosed));
         dispatcher.Dispatch<WindowResizeEvent>(MRG_BIND_EVENT_FN(Application::OnWindowResize));
@@ -59,26 +68,30 @@ namespace Mirage
 
     void Application::Run()
     {
+        MRG_PROFILE_FUNCTION();
+        
         while (m_Running)
         {
+            MRG_PROFILE_SCOPE("RUN LOOP");
             time.Update((float)glfwGetTime());
 
             if(!m_Minimized)
             {
-                for (Layer* layer : m_LayerStack)
                 {
-                    layer->OnUpdate(time.DeltaTime);
+                    MRG_PROFILE_SCOPE("Layerstack Update");
+                    for (Layer* layer : m_LayerStack)
+                        layer->OnUpdate(time.DeltaTime);
                 }
+
+                m_ImGuiLayer->Begin();
+                {
+                    MRG_PROFILE_SCOPE("layerstack ImGui Render");
+                    for (Layer* layer : m_LayerStack)
+                        layer->OnImGuiRender();
+                }
+                m_ImGuiLayer->End();
             }
 
-            m_ImGuiLayer->Begin();
-
-            for (Layer* layer : m_LayerStack)
-            {
-                layer->OnImGuiRender();
-            }
-
-            m_ImGuiLayer->End();
 
             m_Window->OnUpdate();
         }
@@ -92,6 +105,8 @@ namespace Mirage
 
     bool Application::OnWindowResize(WindowResizeEvent& e)
     {
+        MRG_PROFILE_FUNCTION();
+        
         if (e.GetWindowBounds().x == 0 || e.GetWindowBounds().y == 0)
         {
             m_Minimized = true;

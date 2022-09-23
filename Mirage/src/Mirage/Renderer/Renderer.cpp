@@ -10,6 +10,8 @@ namespace Mirage
 
     void Renderer::Init()
     {
+        MRG_PROFILE_FUNCTION();
+
         RenderCommand::Init();
         Renderer2D::Init();
     }
