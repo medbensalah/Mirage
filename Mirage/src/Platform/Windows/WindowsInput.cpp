@@ -10,8 +10,6 @@
 
 namespace Mirage
 {
-    Scope<Input> Input::s_Instance = CreateScope<WindowsInput>();
-
     bool WindowsInput::IsKeyPressed_Impl(int keyCode)
     {
         auto window = static_cast<GLFWwindow*>(Application::Get().GetWindow().GetNativeWindow());

@@ -55,12 +55,12 @@ namespace Mirage
         MRG_PROFILE_FUNCTION();
         
         EventDispatcher dispatcher(e);
-        dispatcher.Dispatch<WindowCloseEvent>(MRG_BIND_EVENT_FN(Application::OnWindowClosed));
+        dispatcher.Dispatch<WindowCloseEvent>(MRG_BIND_EVENT_FN(Application::OnWindowClose));
         dispatcher.Dispatch<WindowResizeEvent>(MRG_BIND_EVENT_FN(Application::OnWindowResize));
 
-        for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
+        for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
         {
-            (*--it)->OnEvent(e);
+            (*it)->OnEvent(e);
             if (e.Handled)
                 break;
         }
@@ -97,7 +97,7 @@ namespace Mirage
         }
     }
 
-    bool Application::OnWindowClosed(WindowCloseEvent& e)
+    bool Application::OnWindowClose(WindowCloseEvent& e)
     {
         m_Running = false;
         return false;

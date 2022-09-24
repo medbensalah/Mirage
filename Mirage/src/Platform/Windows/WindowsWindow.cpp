@@ -9,6 +9,8 @@
 #include "Mirage/Core/KeyCodes.h"
 #include "Mirage/Core/MouseButtonCodes.h"
 
+#include "Mirage/Renderer/Renderer.h"
+
 #include "Platform/OpenGL/OpenGLContext.h"
 
 namespace Mirage
@@ -19,11 +21,6 @@ namespace Mirage
     static void GLFWErrorCallback(int error, const char* description)
     {
         MRG_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
-    }
-
-    Scope<Window> Window::Create(const WindowProperties& properties)
-    {
-        return CreateScope<WindowsWindow>(properties);
     }
 
     WindowsWindow::WindowsWindow(const WindowProperties& properties)
@@ -65,6 +62,11 @@ namespace Mirage
 
         {
             MRG_PROFILE_SCOPE("glfwCreateWindow");
+
+#if defined(MRG_DEBUG)
+            if (Renderer::GetGfxApi() == RenderAPI::API::OpenGL)
+                glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+#endif
             
             m_Window = glfwCreateWindow((int)m_Data.Width, (int)m_Data.Height, m_Data.Title.c_str(), NULL, NULL);
             ++s_GLFWWindowCount;

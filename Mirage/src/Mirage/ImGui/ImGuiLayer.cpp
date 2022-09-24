@@ -96,10 +96,10 @@ namespace Mirage
         colors[ImGuiCol_NavWindowingDimBg]      = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
         colors[ImGuiCol_ModalWindowDimBg]       = ImVec4(0.00f, 0.00f, 0.00f, 0.71f);
 
+        ImGuiIO& io = ImGui::GetIO();
 
-
-
-
+        io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/Lato/Lato-Regular.ttf", 16.0f);
+        
         ImGuiColorEditFlags flags = ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoSidePreview |
             ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_PickerHueWheel |
             ImGuiColorEditFlags_NoSidePreview ;
@@ -133,12 +133,12 @@ namespace Mirage
         SetImGuiStyle();
 
         // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
-        ImGuiStyle& style = ImGui::GetStyle();
-        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-        {
-            style.WindowRounding = 0.0f;
-            style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-        }
+        // ImGuiStyle& style = ImGui::GetStyle();
+        // if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+        // {
+        //     style.WindowRounding = 0.0f;
+        //     style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+        // }
 
         Application& app = Application::Get();
         GLFWwindow* window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());

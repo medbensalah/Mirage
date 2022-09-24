@@ -17,6 +17,9 @@ public:
 private:
     Mirage::OrthographicCameraController m_CameraController;
     
+    Mirage::Renderer2D::Primitives::Quad quad;
+    Mirage::Renderer2D::Primitives::Quad quad2;
+    
     Vec3 m_Position = { 0.0f, 0.0f, 0.0f };
     Vec3 m_Rotation = { 0.0f, 0.0f, 0.0f };
     Vec3 m_Scale = { 1.0f, 1.0f, 1.0f };

@@ -9,6 +9,8 @@
 
 #include "Mirage/ImGui/ImGuiLayer.h"
 
+int main(int argc, char** argv);
+
 namespace Mirage
 {
     class Application
@@ -16,8 +18,6 @@ namespace Mirage
     public:
         Application();
         virtual ~Application();
-
-        void Run();
 
         void OnEvent(Event& e);
 
@@ -33,7 +33,9 @@ namespace Mirage
 
         inline static float GetDeltaTime() { return s_Instance->time.DeltaTime; }
     private:
-        bool OnWindowClosed(WindowCloseEvent& e);
+        void Run();
+
+        bool OnWindowClose(WindowCloseEvent& e);
         bool OnWindowResize(WindowResizeEvent& e);
 
         LayerStack m_LayerStack;
@@ -44,10 +46,10 @@ namespace Mirage
         ImGuiLayer* m_ImGuiLayer;
 
         bool m_Running = true;
+        bool m_Minimized = false;
 
         static Application* s_Instance;
-
-        bool m_Minimized = false;
+        friend int ::main(int argc, char** argv);
     };
 
     /* Define in client */

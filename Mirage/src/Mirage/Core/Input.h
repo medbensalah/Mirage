@@ -23,6 +23,8 @@ namespace Mirage
         static float GetMouseX() { return s_Instance->GetMouseX_Impl(); }
         static float GetMouseY() { return s_Instance->GetMouseY_Impl(); }
 
+        static Scope<Input> Create();
+        
     protected:
         virtual bool IsKeyPressed_Impl(int keyCode) = 0;
         virtual bool IsKeyReleased_Impl(int keyCode) = 0;

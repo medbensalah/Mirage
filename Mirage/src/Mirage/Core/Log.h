@@ -24,11 +24,11 @@ namespace Mirage
 #define MRG_CORE_INFO(...)		::Mirage::Log::GetCoreLogger()->info(__VA_ARGS__)
 #define MRG_CORE_ERROR(...)		::Mirage::Log::GetCoreLogger()->error(__VA_ARGS__)
 #define MRG_CORE_WARN(...)		::Mirage::Log::GetCoreLogger()->warn(__VA_ARGS__)
-#define MRG_CORE_FATAL(...)		::Mirage::Log::GetCoreLogger()->fatal(__VA_ARGS__)
+#define MRG_CORE_CRITICAL(...)	::Mirage::Log::GetCoreLogger()->critical(__VA_ARGS__)
 
 /* Client Log */
 #define MRG_TRACE(...)			::Mirage::Log::GetClientLogger()->trace(__VA_ARGS__)
 #define MRG_INFO(...)			::Mirage::Log::GetClientLogger()->info(__VA_ARGS__)
 #define MRG_ERROR(...)			::Mirage::Log::GetClientLogger()->error(__VA_ARGS__)
 #define MRG_WARN(...)			::Mirage::Log::GetClientLogger()->warn(__VA_ARGS__)
-#define MRG_FATAL(...)			::Mirage::Log::GetClientLogger()->fatal(__VA_ARGS__)
+#define MRG_CRITICAL(...)	    ::Mirage::Log::GetClientLogger()->critical(__VA_ARGS__)
