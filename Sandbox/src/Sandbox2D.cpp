@@ -17,18 +17,11 @@ void Sandbox2D::OnAttach()
     quad.rotation = m_Rotation;
     quad.scale = m_Scale;
     quad.color = m_Color;
-    quad.texture = m_texture;
-    quad.tiling = m_Tiling;
-    quad.offset = m_Offset;
-
 
     quad2.position = m_Position;
     quad2.rotation = m_Rotation;
     quad2.scale = m_Scale;
     quad2.color = Vec4{0.1f, 0.35f, 0.9f, 1.0f};
-    quad2.texture = m_texture;
-    quad2.tiling = m_Tiling;
-    quad2.offset = m_Offset;
 }
 
 void Sandbox2D::OnDetach()
@@ -47,16 +40,10 @@ void Sandbox2D::OnUpdate(float DeltaTime)
     quad.rotation = m_Rotation;
     quad.scale = m_Scale;
     quad.color = m_Color;
-    quad.texture = m_texture;
-    quad.tiling = m_Tiling;
-    quad.offset = m_Offset;
 
     quad2.position = m_Position + 0.1f;
     quad2.rotation = Vec3(0.0f);
     quad2.scale = m_Scale;
-    quad2.texture = m_texture;
-    quad2.tiling = m_Tiling;
-    quad2.offset = m_Offset;
 
     // Render
     {
@@ -69,8 +56,9 @@ void Sandbox2D::OnUpdate(float DeltaTime)
         MRG_PROFILE_SCOPE("Renderer Draw");
         Mirage::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-        Mirage::Renderer2D::Draw::Quad(quad);
-        Mirage::Renderer2D::Draw::Quad(quad2);
+            Mirage::Renderer2D::Draw::Quad(quad, m_texture, m_Tiling, m_Offset);
+            Mirage::Renderer2D::Draw::Quad(quad2, m_texture, Vec2(3.0f));
+        
 
         Mirage::Renderer2D::EndScene();
     }
@@ -88,7 +76,7 @@ void Sandbox2D::OnImGuiRender()
     MRG_IMGUI_DRAW_LABEL_WIDGET("Scale", 75, ImGui::DragFloat3, "##Scale", glm::value_ptr(m_Scale), 0.05f);
 
     ImGui::Spacing();
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Color", 75, ImGui::DragFloat3, "##Scale", glm::value_ptr(m_Color));
+    MRG_IMGUI_DRAW_LABEL_WIDGET("Color", 75, ImGui::ColorEdit4, "##Color", glm::value_ptr(m_Color));
 
     ImGui::Spacing();
     MRG_IMGUI_DRAW_LABEL_WIDGET("Tiling", 75, ImGui::DragFloat2, "##Tiling", glm::value_ptr(m_Tiling), 0.05f);

@@ -23,6 +23,8 @@ namespace Mirage
         virtual void SetInt3(const std::string& name, const VecI3& vector) override;
         virtual void SetInt4(const std::string& name, const VecI4& vector) override;
         
+        virtual void SetIntArray(const std::string& name, int* arr, uint32_t count) override;
+        
         virtual void SetFloat(const std::string& name, float vector) override;
         virtual void SetFloat2(const std::string& name, const Vec2& vector) override;
         virtual void SetFloat3(const std::string& name, const Vec3& vector) override;
@@ -37,6 +39,8 @@ namespace Mirage
         void UploadUniformInt2(const std::string& name, const VecI2& vector);
         void UploadUniformInt3(const std::string& name, const VecI3& vector);
         void UploadUniformInt4(const std::string& name, const VecI4& vector);
+        
+        void UploadUniformIntArray(const std::string& name, int* arr, uint32_t count);
         
         void UploadUniformFloat(const std::string& name, float value);
         void UploadUniformFloat2(const std::string& name, const Vec2& vector);
@@ -54,4 +58,5 @@ namespace Mirage
         std::string m_Name;
         uint32_t m_RendererID;
     };
+
 }

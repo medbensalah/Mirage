@@ -14,9 +14,13 @@ namespace Mirage
         void BeginScene(const OrthographicCamera& camera);
         void EndScene();
 
+        void Flush();
+
         namespace Draw
         {
-            void Quad(Primitives::Quad quad);
+            void Quad(const Primitives::Quad& quad,
+                const Ref<Texture2D>& texture = nullptr,
+                const Vec2& tiling = Vec2(1.0f), const Vec2& offset = Vec2{0.0f});
         }
     };
 }

@@ -159,7 +159,6 @@
     <ClInclude Include="src\Mirage\Core\Math.h" />
     <ClInclude Include="src\Mirage\Core\MouseButtonCodes.h" />
     <ClInclude Include="src\Mirage\Core\Time.h" />
-    <ClInclude Include="src\Mirage\Core\Window.cpp.h" />
     <ClInclude Include="src\Mirage\Core\Window.h" />
     <ClInclude Include="src\Mirage\Debug\Instrumentor.h" />
     <ClInclude Include="src\Mirage\Events\ApplicationEvent.h" />
@@ -611,7 +610,7 @@
     <ClCompile Include="src\Mirage\Core\Layer.cpp" />
     <ClCompile Include="src\Mirage\Core\LayerStack.cpp" />
     <ClCompile Include="src\Mirage\Core\Log.cpp" />
-    <ClCompile Include="src\Mirage\Core\Window.cpp.cpp" />
+    <ClCompile Include="src\Mirage\Core\Window.cpp" />
     <ClCompile Include="src\Mirage\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Mirage\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Mirage\Renderer\Buffer.cpp" />

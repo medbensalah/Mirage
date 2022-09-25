@@ -212,6 +212,11 @@ namespace Mirage
         UploadUniformInt4(name, vector);
     }
 
+    void OpenGLShader::SetIntArray(const std::string& name, int* arr, uint32_t count)
+    {
+        UploadUniformIntArray(name, arr, count);
+    }
+
     void OpenGLShader::SetFloat(const std::string& name, float vector)
     {
         UploadUniformFloat(name, vector);
@@ -264,6 +269,12 @@ namespace Mirage
     {
         GLint location = glGetUniformLocation(m_RendererID, name.c_str());
         glUniform4i(location, vector.x, vector.y, vector.z, vector.w);
+    }
+    
+    inline void OpenGLShader::UploadUniformIntArray(const std::string& name, int* arr, uint32_t count)
+    {
+        GLint location = glGetUniformLocation(m_RendererID, name.c_str());
+        glUniform1iv(location, count, arr);
     }
 
     void OpenGLShader::UploadUniformFloat(const std::string& name, float value)

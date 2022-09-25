@@ -12,7 +12,7 @@ namespace Mirage
         unsigned int Width;
         unsigned int Height;
 
-        WindowProperties(const std::string& title = "Mirage Engien",
+        WindowProperties(const std::string& title = "Mirage Engine",
                          unsigned int width = 1200,
                          unsigned int height = 700)
             : Title(title), Width(width), Height(height)

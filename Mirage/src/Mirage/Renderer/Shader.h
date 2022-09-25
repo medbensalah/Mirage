@@ -17,6 +17,9 @@ namespace Mirage
         virtual void SetInt3(const std::string& name, const VecI3& value) = 0;
         virtual void SetInt4(const std::string& name, const VecI4& value) = 0;
         
+        virtual void SetIntArray(const std::string& name, int* arr, uint32_t count) = 0;
+
+        
         virtual void SetFloat(const std::string& name, float value) = 0;
         virtual void SetFloat2(const std::string& name, const Vec2& vector) = 0;
         virtual void SetFloat3(const std::string& name, const Vec3& vector) = 0;

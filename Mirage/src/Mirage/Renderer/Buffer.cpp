@@ -21,7 +21,24 @@ namespace Mirage
     ///                                       Vertex Buffer                                      ///
     ///                                                                                          ///
     ////////////////////////////////////////////////////////////////////////////////////////////////
-    
+
+    Ref<VertexBuffer> VertexBuffer::Create(uint32_t size)
+    {
+        switch (Renderer::GetGfxApi())
+        {
+        case RenderAPI::API::None:
+            MRG_CORE_ASSERT(false, "No graphics API selected!");
+            return nullptr;
+            
+        case RenderAPI::API::OpenGL:
+            return CreateRef<OpenGLVertexBuffer>(size); 
+        }
+
+        MRG_CORE_ERROR("Unknown graphics API!");
+        MRG_CORE_ASSERT(false, "Unknown graphics API!");
+        return nullptr;
+    }
+
     Ref<VertexBuffer> VertexBuffer::Create(float* vertices, uint32_t size)
     {
         switch (Renderer::GetGfxApi())
