@@ -40,6 +40,8 @@ namespace Mirage
 
             std::array<Ref<Texture2D>, MaxTextureSlots> TextureSlots;
             uint32_t TextureSlotIndex = 1;
+
+            Vec4 QuadVertexPositions[4];
         };
         
         static Renderer2DData s_Data;
@@ -98,6 +100,11 @@ namespace Mirage
             s_Data.Shader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
 
             s_Data.TextureSlots[0] = s_Data.WhiteTexture;
+
+            s_Data.QuadVertexPositions[0] = {-0.5f, -0.5f, 0.0f, 1.0f};
+            s_Data.QuadVertexPositions[1] = { 0.5f, -0.5f, 0.0f, 1.0f};
+            s_Data.QuadVertexPositions[2] = { 0.5f,  0.5f, 0.0f, 1.0f};
+            s_Data.QuadVertexPositions[3] = {-0.5f,  0.5f, 0.0f, 1.0f};
         }
 
         void Shutdown()
@@ -166,16 +173,32 @@ namespace Mirage
                         s_Data.TextureSlotIndex++;
                     }
                 }
+
+                Mat4 transform;
+                if(quad.rotation.x || quad.rotation.y)
+                {
+                    transform = MatTranslate(Mat4(1.0f), quad.position) *
+                                     MatRotate(Mat4(1.0f), Radians(quad.rotation.x), {1.0f, 0.0f, 0.0f}) *
+                                     MatRotate(Mat4(1.0f), Radians(quad.rotation.y), {0.0f, 1.0f, 0.0f}) *
+                                     MatRotate(Mat4(1.0f), Radians(quad.rotation.z), {0.0f, 0.0f, 1.0f}) *
+                                     MatScale(Mat4(1.0f), quad.scale);
+                }
+                else
+                {
+                    transform = MatTranslate(Mat4(1.0f), quad.position) *
+                                     MatRotate(Mat4(1.0f), Radians(quad.rotation.z), {0.0f, 0.0f, 1.0f}) *
+                                     MatScale(Mat4(1.0f), quad.scale);
+                }
                 
-                s_Data.QuadVertexBufferPtr->Position = quad.position + Vec3{-quad.scale.x / 2.0f, -quad.scale.y / 2.0f, 0.0f};
+                s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[0];
                 s_Data.QuadVertexBufferPtr->Color = quad.color;
                 s_Data.QuadVertexBufferPtr->TexCoord = {0.0f, 0.0f};
                 s_Data.QuadVertexBufferPtr->TexIndex = TextureIndex;
                 s_Data.QuadVertexBufferPtr->Tiling = tiling;
                 s_Data.QuadVertexBufferPtr->Offset = offset;
                 s_Data.QuadVertexBufferPtr++;
-                
-                s_Data.QuadVertexBufferPtr->Position = quad.position + Vec3{quad.scale.x / 2.0f, -quad.scale.y / 2.0f, 0.0f};
+
+                s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[1];
                 s_Data.QuadVertexBufferPtr->Color = quad.color;
                 s_Data.QuadVertexBufferPtr->TexCoord = {1.0f, 0.0f};
                 s_Data.QuadVertexBufferPtr->TexIndex = TextureIndex;
@@ -183,7 +206,7 @@ namespace Mirage
                 s_Data.QuadVertexBufferPtr->Offset = offset;
                 s_Data.QuadVertexBufferPtr++;
                 
-                s_Data.QuadVertexBufferPtr->Position = quad.position + Vec3{quad.scale.x / 2.0f, quad.scale.y / 2.0f, 0.0f};
+                s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[2];
                 s_Data.QuadVertexBufferPtr->Color = quad.color;
                 s_Data.QuadVertexBufferPtr->TexCoord = {1.0f, 1.0f};
                 s_Data.QuadVertexBufferPtr->TexIndex = TextureIndex;
@@ -191,7 +214,7 @@ namespace Mirage
                 s_Data.QuadVertexBufferPtr->Offset = offset;
                 s_Data.QuadVertexBufferPtr++;
                 
-                s_Data.QuadVertexBufferPtr->Position = quad.position + Vec3{-quad.scale.x / 2.0f, quad.scale.y / 2.0f, 0.0f};
+                s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[3];
                 s_Data.QuadVertexBufferPtr->Color = quad.color;
                 s_Data.QuadVertexBufferPtr->TexCoord = {0.0f, 1.0f};
                 s_Data.QuadVertexBufferPtr->TexIndex = TextureIndex;
