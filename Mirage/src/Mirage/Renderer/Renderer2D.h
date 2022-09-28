@@ -19,8 +19,20 @@ namespace Mirage
         namespace Draw
         {
             void Quad(const Primitives::Quad& quad,
-                const Ref<Texture2D>& texture = nullptr,
                 const Vec2& tiling = Vec2(1.0f), const Vec2& offset = Vec2{0.0f});
         }
+
+        
+        struct Stats
+        {
+            uint32_t DrawCalls = 0;
+            uint32_t QuadCount = 0;
+
+            uint32_t GetVertexCount() { return QuadCount * 4; }
+            uint32_t GetIndexCount() { return QuadCount * 6; }
+        };
+        
+        Stats GetStats();
+        void ResetStats();
     };
 }

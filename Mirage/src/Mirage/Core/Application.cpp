@@ -49,7 +49,12 @@ namespace Mirage
         m_LayerStack.PushOverlay(overlay);
         overlay->OnAttach();
     }
-    
+
+    void Application::Close()
+    {
+        m_Running = false;
+    }
+
     void Application::OnEvent(Event& e)
     {
         MRG_PROFILE_FUNCTION();
@@ -60,9 +65,9 @@ namespace Mirage
 
         for (auto it = m_LayerStack.rbegin(); it != m_LayerStack.rend(); ++it)
         {
-            (*it)->OnEvent(e);
             if (e.Handled)
                 break;
+            (*it)->OnEvent(e);
         }
     }
 
@@ -82,7 +87,7 @@ namespace Mirage
                     for (Layer* layer : m_LayerStack)
                         layer->OnUpdate(time.DeltaTime);
                 }
-
+                
                 m_ImGuiLayer->Begin();
                 {
                     MRG_PROFILE_SCOPE("layerstack ImGui Render");

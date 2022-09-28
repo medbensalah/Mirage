@@ -10,14 +10,15 @@ namespace Mirage
         OrthographicCamera(float left, float right, float bottom, float top, float nearPlane = -1.0f, float farPlane = 1.0f);
         void SetProjection(float left, float right, float bottom, float top, float nearPlane = -1.0f, float farPlane = 1.0f);
 
-        const Vec3& getPosition() const { return m_Position; }
+        
+        const Vec3& GetPosition() const { return m_Position; }
         void SetPosition(const Vec3& position)
         {
             m_Position = position;
             RecalculateViewMatrix();
         }
 
-        const Vec3& getRotation() const { return m_Rotation; }
+        const Vec3& GetRotation() const { return m_Rotation; }
         void SetRotation(const Vec3& Rotation)
         {
             m_Rotation = Rotation;

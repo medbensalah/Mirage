@@ -15,17 +15,17 @@ namespace Mirage
         {
             Vec3 Position;
             Vec4 Color;
-            Vec2 TexCoord;
-            float TexIndex;
+            Vec2 TextureCoord;
+            float TextureIndex;
             Vec2 Tiling;
             Vec2 Offset;
         };
         
         struct Renderer2DData
         {
-            const uint32_t MaxQuads = 100000;
-            const uint32_t MaxVertices = MaxQuads * 4;
-            const uint32_t MaxIndices = MaxQuads * 6;
+            static const uint32_t MaxQuads = 10000;
+            static const uint32_t MaxVertices = MaxQuads * 4;
+            static const uint32_t MaxIndices = MaxQuads * 6;
             static const uint32_t MaxTextureSlots = 32;        //TODO : RenderCaps
             
             Ref<VertexArray> QuadVertexArray;
@@ -42,6 +42,8 @@ namespace Mirage
             uint32_t TextureSlotIndex = 1;
 
             Vec4 QuadVertexPositions[4];
+
+            Stats Stats;
         };
         
         static Renderer2DData s_Data;
@@ -110,25 +112,26 @@ namespace Mirage
         void Shutdown()
         {
             MRG_PROFILE_FUNCTION();
+            delete[] s_Data.QuadVertexBufferBase;
         }
 
         void BeginScene(const OrthographicCamera& camera)
         {
             MRG_PROFILE_FUNCTION();
-        
             s_Data.Shader->Bind();
             s_Data.Shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 
             s_Data.QuadIndexCount = 0;
             s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
+
+            s_Data.TextureSlotIndex = 1;
         }
 
         void EndScene()
         {
             MRG_PROFILE_FUNCTION();
-
-            uint32_t size = (uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase;
             
+            uint32_t size = (uint32_t)( (uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase );
             s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, size);
 
             Flush();
@@ -136,6 +139,9 @@ namespace Mirage
 
         void Flush()
         {
+            if (s_Data.QuadIndexCount == 0)
+                return;
+            
             //Bind textures
             for(uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
             {
@@ -143,23 +149,44 @@ namespace Mirage
             }
             
             RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCount);
+            
+            s_Data.Stats.DrawCalls++;
+        }
+
+        static void FlushAndReset()
+        {
+            MRG_PROFILE_FUNCTION();
+            
+            EndScene();
+            
+            s_Data.QuadIndexCount = 0;
+            s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
+            
+            s_Data.TextureSlotIndex = 1;
         }
 
         namespace Draw
         {
             
-            void Quad(const Primitives::Quad& quad, const Ref<Texture2D>& texture, const Vec2& tiling, const Vec2& offset)
+            void Quad(const Primitives::Quad& quad, const Vec2& tiling, const Vec2& offset)
             {
                 MRG_PROFILE_FUNCTION();
 
-                constexpr Vec4 color = {1.0f, 0.0f, 1.0f, 1.0f};
+                constexpr size_t quadVertexCount = 4;
+                constexpr Vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+
+                if(s_Data.QuadIndexCount >= s_Data.MaxIndices)
+                {
+                    FlushAndReset();
+                }
+
                 float TextureIndex = 0.0f;
 
-                if(texture)
+                if(quad.texture)
                 {
                     for(uint32_t i = 1; i < s_Data.TextureSlotIndex; ++i)
                     {
-                        if (*(s_Data.TextureSlots[i].get()) == *(texture.get()))
+                        if (*(s_Data.TextureSlots[i].get()) == *(quad.texture.get()))
                         {
                             TextureIndex = (float)i;
                             break;
@@ -168,8 +195,13 @@ namespace Mirage
                 
                     if (TextureIndex == 0.0f)
                     {
+                        if(s_Data.TextureSlotIndex >= Renderer2DData::MaxTextureSlots)
+                        {
+                            FlushAndReset();
+                        }
+                        
                         TextureIndex = (float)s_Data.TextureSlotIndex;
-                        s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;
+                        s_Data.TextureSlots[s_Data.TextureSlotIndex] = quad.texture;
                         s_Data.TextureSlotIndex++;
                     }
                 }
@@ -189,66 +221,34 @@ namespace Mirage
                                      MatRotate(Mat4(1.0f), Radians(quad.rotation.z), {0.0f, 0.0f, 1.0f}) *
                                      MatScale(Mat4(1.0f), quad.scale);
                 }
-                
-                s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[0];
-                s_Data.QuadVertexBufferPtr->Color = quad.color;
-                s_Data.QuadVertexBufferPtr->TexCoord = {0.0f, 0.0f};
-                s_Data.QuadVertexBufferPtr->TexIndex = TextureIndex;
-                s_Data.QuadVertexBufferPtr->Tiling = tiling;
-                s_Data.QuadVertexBufferPtr->Offset = offset;
-                s_Data.QuadVertexBufferPtr++;
 
-                s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[1];
-                s_Data.QuadVertexBufferPtr->Color = quad.color;
-                s_Data.QuadVertexBufferPtr->TexCoord = {1.0f, 0.0f};
-                s_Data.QuadVertexBufferPtr->TexIndex = TextureIndex;
-                s_Data.QuadVertexBufferPtr->Tiling = tiling;
-                s_Data.QuadVertexBufferPtr->Offset = offset;
-                s_Data.QuadVertexBufferPtr++;
                 
-                s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[2];
-                s_Data.QuadVertexBufferPtr->Color = quad.color;
-                s_Data.QuadVertexBufferPtr->TexCoord = {1.0f, 1.0f};
-                s_Data.QuadVertexBufferPtr->TexIndex = TextureIndex;
-                s_Data.QuadVertexBufferPtr->Tiling = tiling;
-                s_Data.QuadVertexBufferPtr->Offset = offset;
-                s_Data.QuadVertexBufferPtr++;
-                
-                s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[3];
-                s_Data.QuadVertexBufferPtr->Color = quad.color;
-                s_Data.QuadVertexBufferPtr->TexCoord = {0.0f, 1.0f};
-                s_Data.QuadVertexBufferPtr->TexIndex = TextureIndex;
-                s_Data.QuadVertexBufferPtr->Tiling = tiling;
-                s_Data.QuadVertexBufferPtr->Offset = offset;
-                s_Data.QuadVertexBufferPtr++;
+                for (size_t i = 0; i < quadVertexCount; i++)
+                {
+                    s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[i];
+                    s_Data.QuadVertexBufferPtr->Color = quad.color;
+                    s_Data.QuadVertexBufferPtr->TextureCoord = textureCoords[i];
+                    s_Data.QuadVertexBufferPtr->TextureIndex = TextureIndex;
+                    s_Data.QuadVertexBufferPtr->Tiling = tiling;
+                    s_Data.QuadVertexBufferPtr->Offset = offset;
+                    s_Data.QuadVertexBufferPtr++;
+                }
 
                 s_Data.QuadIndexCount += 6;
-                            
-                /*Mat4 transform ;
-                {
-                    MRG_PROFILE_SCOPE("calculating transform");
-                    transform = MatTranslate(Mat4(1.0f), quad.position) *
-                       MatRotate(Mat4(1.0f), quad.rotation.x, {1.0f, 0.0f, 0.0f}) *
-                       MatRotate(Mat4(1.0f), quad.rotation.y, {0.0f, 1.0f, 0.0f}) *
-                       MatRotate(Mat4(1.0f), quad.rotation.z, {0.0f, 0.0f, 1.0f}) *
-                       MatScale(Mat4(1.0f), quad.scale);
-                }
-                s_Data.Shader->SetMat4("u_Transform", transform);
-                if (texture)
-                {
-                    texture->Bind();
-                }
-                else
-                {
-                    s_Data.WhiteTexture->Bind();
-                }
-                s_Data.Shader->SetInt("u_Texture", 0);
-                s_Data.Shader->SetFloat2("u_Tiling", tiling);
-                s_Data.Shader->SetFloat2("u_Offset", offset);
-                      
-                s_Data.QuadVertexArray->Bind();
-                RenderCommand::DrawIndexed(s_Data.QuadVertexArray);*/
+
+                s_Data.Stats.QuadCount++;
             }
         }
+
+        Stats GetStats()
+        {
+            return s_Data.Stats;
+        }
+
+        void ResetStats()
+        {
+            memset(&s_Data.Stats, 0, sizeof(Stats));
+        }
+
     }
 }

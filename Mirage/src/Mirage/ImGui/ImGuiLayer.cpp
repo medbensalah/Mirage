@@ -99,7 +99,7 @@ namespace Mirage
         ImGuiIO& io = ImGui::GetIO();
 
         io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/Lato/Lato-Regular.ttf", 16.0f);
-        
+                
         ImGuiColorEditFlags flags = ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoSidePreview |
             ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_PickerHueWheel |
             ImGuiColorEditFlags_NoSidePreview ;
@@ -158,7 +158,14 @@ namespace Mirage
         ImGui_ImplGlfw_Shutdown();
         ImGui::DestroyContext();
     }
-
+    
+    void ImGuiLayer::OnEvent(Event& e)
+    {
+        ImGuiIO& io = ImGui::GetIO();
+        e.Handled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
+        e.Handled |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+    }
+    
     void ImGuiLayer::Begin()
     {
         MRG_PROFILE_FUNCTION();

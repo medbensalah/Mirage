@@ -11,7 +11,8 @@ namespace Mirage
         float nearPlane,
         float farPlane
     )
-        : m_ProjectionMatrix(glm::ortho(left, right, bottom, top, nearPlane, farPlane)), m_ViewMatrix(1.0f)
+        : m_ProjectionMatrix(glm::ortho(left, right, bottom, top, nearPlane, farPlane)),
+          m_ViewMatrix(1.0f)
     {
         MRG_PROFILE_FUNCTION();
         

@@ -10,6 +10,9 @@
     <Filter Include="src\Mirage\Core">
       <UniqueIdentifier>{C99F9814-352B-06D9-3E3C-89CDAA4662D9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Mirage\Debug">
+      <UniqueIdentifier>{07F4B8A7-F3EC-D7F9-1C1F-BD7E0877B705}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Mirage\Events">
       <UniqueIdentifier>{95C761A2-01DE-5F38-4A55-EB59B6AA30C0}</UniqueIdentifier>
     </Filter>
@@ -93,6 +96,9 @@
     <ClInclude Include="src\Mirage\Core\Window.h">
       <Filter>src\Mirage\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\Debug\Instrumentor.h">
+      <Filter>src\Mirage\Debug</Filter>
+    </ClInclude>
     <ClInclude Include="src\Mirage\Events\ApplicationEvent.h">
       <Filter>src\Mirage\Events</Filter>
     </ClInclude>
@@ -118,6 +124,9 @@
       <Filter>src\Mirage\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\Renderer\OrthographicCameraController.h">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Renderer\Primitives.h">
       <Filter>src\Mirage\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\Renderer\RenderAPI.h">
@@ -1421,6 +1430,9 @@
     <ClCompile Include="src\Mirage\Core\Application.cpp">
       <Filter>src\Mirage\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Mirage\Core\Input.cpp">
+      <Filter>src\Mirage\Core</Filter>
+    </ClCompile>
     <ClCompile Include="src\Mirage\Core\Layer.cpp">
       <Filter>src\Mirage\Core</Filter>
     </ClCompile>
@@ -1430,6 +1442,9 @@
     <ClCompile Include="src\Mirage\Core\Log.cpp">
       <Filter>src\Mirage\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Mirage\Core\Window.cpp">
+      <Filter>src\Mirage\Core</Filter>
+    </ClCompile>
     <ClCompile Include="src\Mirage\ImGui\ImGuiBuild.cpp">
       <Filter>src\Mirage\ImGui</Filter>
     </ClCompile>
@@ -1437,6 +1452,9 @@
       <Filter>src\Mirage\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Mirage\Renderer\Buffer.cpp">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\Renderer\GraphicsContext.cpp">
       <Filter>src\Mirage\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Mirage\Renderer\OrthographicCamera.cpp">

@@ -36,12 +36,22 @@
 #endif // End of platform detection
 
 #ifdef MRG_DEBUG
+    #if defined(MRG_PLATFORM_WINDOWS)
+        #define MRG_DEBUGBREAK() __debugbreak()
+    #elif defined(MRG_PLATFORM_LINUX)
+        #include <signal.h>
+        #define MRG_DEBUGBREAK() raise(SIGTRAP)
+    #else
+        #error "Platform doesn't support debugbreak yet!"
+    #endif
     #define MRG_ENABLE_ASSERTS
+    #else
+        #define MRG_DEBUGBREAK()
 #endif
 
 #ifdef MRG_ENABLE_ASSERTS
-    #define MRG_CORE_ASSERT(x, ...) { if(!(x)) { MRG_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
-    #define MRG_ASSERT(x, ...) { if(!(x)) { MRG_ERROR("Assertion Failed: {0}", __VA_ARGS__); __debugbreak(); } }
+    #define MRG_CORE_ASSERT(x, ...) { if(!(x)) { MRG_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); MRG_DEBUGBREAK(); } }
+    #define MRG_ASSERT(x, ...) { if(!(x)) { MRG_ERROR("Assertion Failed: {0}", __VA_ARGS__); MRG_DEBUGBREAK(); } }
 #else
     #define MRG_CORE_ASSERT(x, ...)
     #define MRG_ASSERT(x, ...)

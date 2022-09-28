@@ -9,7 +9,8 @@ namespace Mirage
     OrthographicCameraController::OrthographicCameraController(float aspectRatio, bool rotation)
         : m_Camera(-aspectRatio * m_ZoomLevel, aspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel),
           m_AspectRatio(aspectRatio),
-          m_Rotation(rotation)
+          m_Rotation(rotation),
+          m_Bounds({-aspectRatio * m_ZoomLevel, aspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel})
     {
     }
 
@@ -76,11 +77,19 @@ namespace Mirage
     {
         MRG_PROFILE_FUNCTION();
         
-        m_ZoomLevel -= event.GetYOffset() * 0.1f;
-        m_ZoomLevel = std::max(m_ZoomLevel, 0.25f);
-        m_ZoomLevel = std::min(m_ZoomLevel, 4.5f);
-        m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
-        m_CameraTranslationSpeed = m_ZoomLevel;
+        m_ZoomLevel -= event.GetYOffset() * 0.075f * m_ZoomLevel;
+        m_ZoomLevel = std::max(m_ZoomLevel, 0.15f);
+        m_ZoomLevel = std::min(m_ZoomLevel, 9.0f);
+        
+        m_Bounds.left = -m_AspectRatio * m_ZoomLevel;
+        m_Bounds.right = m_AspectRatio * m_ZoomLevel;
+        m_Bounds.bottom = -m_ZoomLevel;
+        m_Bounds.top = m_ZoomLevel;
+        
+        m_Camera.SetProjection(m_Bounds.left, m_Bounds.right, m_Bounds.bottom, m_Bounds.top);
+        m_CameraTranslationSpeed = m_CameraInitialTranslationSpeed * glm::pow(m_ZoomLevel, 1.75f);
+        m_CameraTranslationSpeed = std::max(m_CameraTranslationSpeed, 0.25f);
+        m_CameraTranslationSpeed = std::min(m_CameraTranslationSpeed, 2.5f);
         return false;
     }
 
@@ -89,7 +98,13 @@ namespace Mirage
         MRG_PROFILE_FUNCTION();
         
         m_AspectRatio = event.GetWindowBounds().x / event.GetWindowBounds().y;
-        m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+        
+        m_Bounds.left = -m_AspectRatio * m_ZoomLevel;
+        m_Bounds.right = m_AspectRatio * m_ZoomLevel;
+        m_Bounds.bottom = -m_ZoomLevel;
+        m_Bounds.top = m_ZoomLevel;
+        
+        m_Camera.SetProjection(m_Bounds.left, m_Bounds.right, m_Bounds.bottom, m_Bounds.top);
         return false;
     }
 }

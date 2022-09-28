@@ -29,4 +29,5 @@ namespace Mirage
 #define MatScale      glm::scale
 
 #define Radians    glm::radians
+#define Degrees    glm::degrees
 }

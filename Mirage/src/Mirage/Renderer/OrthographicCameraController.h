@@ -7,6 +7,14 @@
 
 namespace Mirage
 {
+    struct OrthographicCameraBounds
+    {
+        float left, right, bottom, top;
+
+        float GetWidth() { return right - left; }
+        float GetHeight() { return top - bottom; }
+    };
+    
     class OrthographicCameraController
     {
     public:
@@ -15,6 +23,8 @@ namespace Mirage
         void OnUpdate(float DeltaTime);
         void OnEvent(Event& event);
 
+        const OrthographicCameraBounds& GetBounds() const { return m_Bounds; }
+        
         inline OrthographicCamera& GetCamera() { return m_Camera; }
         inline const OrthographicCamera& GetCamera() const { return m_Camera; }
 
@@ -26,12 +36,15 @@ namespace Mirage
         float m_ZoomLevel = 1.0f;
         OrthographicCamera m_Camera;
 
+        OrthographicCameraBounds m_Bounds;
+
         bool m_Rotation;
 
         Vec3 m_CameraPosition{0.0f};
         Vec3 m_CameraRotation{0.0f};
 
-        float m_CameraTranslationSpeed = 5.0f;
+        float m_CameraInitialTranslationSpeed = 1.0f;
+        float m_CameraTranslationSpeed = 1.0f;
         float m_CameraRotationSpeed = 90.0f;
     };
 }

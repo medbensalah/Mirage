@@ -66,8 +66,8 @@ namespace Mirage
             case ShaderDataType::Float2:        return 2;
             case ShaderDataType::Float3:        return 3;
             case ShaderDataType::Float4:        return 4;
-            case ShaderDataType::Mat3_s:        return 3 * 3;
-            case ShaderDataType::Mat4_s:        return 4 * 4;
+            case ShaderDataType::Mat3_s:        return 3;
+            case ShaderDataType::Mat4_s:        return 4;
             }
 
             MRG_CORE_ASSERT(false, "Unknown Shader Data Type!");
