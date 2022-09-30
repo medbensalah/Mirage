@@ -30,24 +30,24 @@ namespace Mirage
         }
         if (Input::IsKeyPressed(MRG_Key_W))
         {
-            m_CameraPosition.x += -sin(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
-            m_CameraPosition.y += cos(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
+            m_CameraPosition.x -= -sin(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
+            m_CameraPosition.y -= cos(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
         }
         else if (Input::IsKeyPressed(MRG_Key_S))
         {
-            m_CameraPosition.x -= -sin(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
-            m_CameraPosition.y -= cos(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
+            m_CameraPosition.x += -sin(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
+            m_CameraPosition.y += cos(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
         }
 
         if (m_Rotation)
         {
             if (Input::IsKeyPressed(MRG_Key_Q))
             {
-                m_CameraRotation.z += (m_CameraRotationSpeed * DeltaTime);
+                m_CameraRotation.z -= (m_CameraRotationSpeed * DeltaTime);
             }
             else if (Input::IsKeyPressed(MRG_Key_E))
             {
-                m_CameraRotation.z -= (m_CameraRotationSpeed * DeltaTime);
+                m_CameraRotation.z += (m_CameraRotationSpeed * DeltaTime);
             }
             
             if (m_CameraRotation.z > 180.0f)

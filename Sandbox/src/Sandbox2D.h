@@ -16,11 +16,13 @@ public:
     void OnUpdate(float DeltaTime) override;
     virtual void OnImGuiRender() override;
     void OnEvent(Mirage::Event& e) override;
+    
 private:
     Mirage::OrthographicCameraController m_CameraController;
     
     Mirage::Renderer2D::Primitives::Quad quad;
     Mirage::Renderer2D::Primitives::Quad quad2;
+    Mirage::Ref<Mirage::Framebuffer> m_Framebuffer;
     
     Vec3 m_Position = { 0.0f, 0.0f, -0.01f };
     Vec3 m_Rotation = { 0.0f, 0.0f, 0.0f };

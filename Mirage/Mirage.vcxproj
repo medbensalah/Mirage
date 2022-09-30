@@ -167,6 +167,7 @@
     <ClInclude Include="src\Mirage\Events\MouseEvent.h" />
     <ClInclude Include="src\Mirage\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Mirage\Renderer\Buffer.h" />
+    <ClInclude Include="src\Mirage\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Mirage\Renderer\Graphicscontext.h" />
     <ClInclude Include="src\Mirage\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\Mirage\Renderer\OrthographicCameraController.h" />
@@ -181,6 +182,7 @@
     <ClInclude Include="src\MrgPch.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLFramebuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRenderAPI.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h" />
@@ -614,6 +616,7 @@
     <ClCompile Include="src\Mirage\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Mirage\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Mirage\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Mirage\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\Mirage\Renderer\GraphicsContext.cpp" />
     <ClCompile Include="src\Mirage\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Mirage\Renderer\OrthographicCameraController.cpp" />
@@ -629,6 +632,7 @@
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLFramebuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRenderAPI.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />

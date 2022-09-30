@@ -22,6 +22,7 @@
 
 #include "Mirage/Renderer/Buffer.h"
 #include "Mirage/Renderer/Shader.h"
+#include "Mirage/Renderer/Framebuffer.h"
 #include "Mirage/Renderer/Texture.h"
 #include "Mirage/Renderer/VertexArray.h"
 
