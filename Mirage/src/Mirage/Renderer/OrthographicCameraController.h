@@ -23,11 +23,15 @@ namespace Mirage
         void OnUpdate(float DeltaTime);
         void OnEvent(Event& event);
 
+        void OnResize(float width, float height);
+        
         const OrthographicCameraBounds& GetBounds() const { return m_Bounds; }
         
         inline OrthographicCamera& GetCamera() { return m_Camera; }
         inline const OrthographicCamera& GetCamera() const { return m_Camera; }
 
+        float GetZoomLevel() const { return m_ZoomLevel; }
+        void SetZoomLevel(float level) { m_ZoomLevel = level; }
     private:
         bool OnMouseScroll(MouseScrollEvent& event);
         bool OnWindowResize(WindowResizeEvent& event);

@@ -9,13 +9,13 @@ namespace Mirage
     class RenderAPI
     {
     public:
-        virtual ~RenderAPI() = default;
-
         enum class API
         {
             None = 0,
             OpenGL = 1
         };
+        
+        virtual ~RenderAPI() = default;
 
         virtual void Init() = 0;
 

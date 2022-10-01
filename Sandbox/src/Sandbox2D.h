@@ -2,8 +2,6 @@
 
 #include "Mirage.h"
 
-#include "ParticleSystem.h"
-
 class Sandbox2D : public Mirage::Layer
 {
 public:
@@ -22,7 +20,6 @@ private:
     
     Mirage::Renderer2D::Primitives::Quad quad;
     Mirage::Renderer2D::Primitives::Quad quad2;
-    Mirage::Ref<Mirage::Framebuffer> m_Framebuffer;
     
     Vec3 m_Position = { 0.0f, 0.0f, -0.01f };
     Vec3 m_Rotation = { 0.0f, 0.0f, 0.0f };
@@ -34,7 +31,4 @@ private:
     
     Vec2 m_Tiling = { 20.0f, 20.0f };
     Vec2 m_Offset = { 0.0f, 0.0f };
-
-    ParticleProps m_particleProps;
-    ParticleSystem m_ParticleSystem;
 };

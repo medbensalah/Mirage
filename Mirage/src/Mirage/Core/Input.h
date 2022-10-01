@@ -11,6 +11,8 @@ namespace Mirage
         
     public:
         Input(const Input&) = delete;
+        virtual ~Input() = default;
+        
         Input& operator=(const Input&) = delete;
         
         static bool IsKeyPressed(int keyCode) { return s_Instance->IsKeyPressed_Impl(keyCode); }

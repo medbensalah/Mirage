@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Sandbox", "Sandbox\Sandbox.vcxproj", "{F4C124E3-60A1-A37E-69B9-2E55D5170AE0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{53E47842-3FC8-3998-A828-34EB942B241A}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GLFW", "Mirage\vendor\GLFW\GLFW.vcxproj", "{154B857C-0182-860D-AA6E-6C109684020F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Glad", "Mirage\vendor\Glad\Glad.vcxproj", "{BDD6857C-A90D-870D-52FA-6C103E10030F}"
@@ -10,6 +12,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImGui", "Mirage\vendor\ImGui\ImGui.vcxproj", "{C0FF640D-2C14-8DBE-F595-301E616989EF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Mirage", "Mirage\Mirage.vcxproj", "{9A7728C3-8619-5399-6FD4-66ED5B15DAE9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Mirage Editor", "Mirage Editor\Mirage Editor.vcxproj", "{41543FA7-AD14-BBDD-764F-045BE2CEFFB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,8 +52,19 @@ Global
 		{9A7728C3-8619-5399-6FD4-66ED5B15DAE9}.Dist|x64.Build.0 = Dist|x64
 		{9A7728C3-8619-5399-6FD4-66ED5B15DAE9}.Release|x64.ActiveCfg = Release|x64
 		{9A7728C3-8619-5399-6FD4-66ED5B15DAE9}.Release|x64.Build.0 = Release|x64
+		{41543FA7-AD14-BBDD-764F-045BE2CEFFB9}.Debug|x64.ActiveCfg = Debug|x64
+		{41543FA7-AD14-BBDD-764F-045BE2CEFFB9}.Debug|x64.Build.0 = Debug|x64
+		{41543FA7-AD14-BBDD-764F-045BE2CEFFB9}.Dist|x64.ActiveCfg = Dist|x64
+		{41543FA7-AD14-BBDD-764F-045BE2CEFFB9}.Dist|x64.Build.0 = Dist|x64
+		{41543FA7-AD14-BBDD-764F-045BE2CEFFB9}.Release|x64.ActiveCfg = Release|x64
+		{41543FA7-AD14-BBDD-764F-045BE2CEFFB9}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{154B857C-0182-860D-AA6E-6C109684020F} = {53E47842-3FC8-3998-A828-34EB942B241A}
+		{BDD6857C-A90D-870D-52FA-6C103E10030F} = {53E47842-3FC8-3998-A828-34EB942B241A}
+		{C0FF640D-2C14-8DBE-F595-301E616989EF} = {53E47842-3FC8-3998-A828-34EB942B241A}
 	EndGlobalSection
 EndGlobal

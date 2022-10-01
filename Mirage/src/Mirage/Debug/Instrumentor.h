@@ -210,7 +210,7 @@ namespace Mirage
 #elif defined(__cplusplus) && (__cplusplus >= 201103)
         #define MRG_FUNC_SIG __func__
 #else
-#define MRG_FUNC_SIG "MRG_FUNC_SIG unknown!"
+#define MRG_FUNC_SIG "Function signature not recognized!!!"
 #endif
 
 #define MRG_PROFILE_BEGIN_SESSION(name, filepath)       ::Mirage::Instrumentor::Get().BeginSession(name, filepath)

@@ -16,7 +16,7 @@ namespace Mirage
     class Application
     {
     public:
-        Application();
+        Application(const std::string& name = "Mirage");
         virtual ~Application();
 
         void OnEvent(Event& e);

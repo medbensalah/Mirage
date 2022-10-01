@@ -30,24 +30,24 @@ namespace Mirage
         }
         if (Input::IsKeyPressed(MRG_Key_W))
         {
-            m_CameraPosition.x -= -sin(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
-            m_CameraPosition.y -= cos(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
+            m_CameraPosition.x += -sin(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
+            m_CameraPosition.y += cos(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
         }
         else if (Input::IsKeyPressed(MRG_Key_S))
         {
-            m_CameraPosition.x += -sin(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
-            m_CameraPosition.y += cos(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
+            m_CameraPosition.x -= -sin(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
+            m_CameraPosition.y -= cos(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
         }
 
         if (m_Rotation)
         {
             if (Input::IsKeyPressed(MRG_Key_Q))
             {
-                m_CameraRotation.z -= (m_CameraRotationSpeed * DeltaTime);
+                m_CameraRotation.z += (m_CameraRotationSpeed * DeltaTime);
             }
             else if (Input::IsKeyPressed(MRG_Key_E))
             {
-                m_CameraRotation.z += (m_CameraRotationSpeed * DeltaTime);
+                m_CameraRotation.z -= (m_CameraRotationSpeed * DeltaTime);
             }
             
             if (m_CameraRotation.z > 180.0f)
@@ -73,6 +73,14 @@ namespace Mirage
         dispatcher.Dispatch<WindowResizeEvent>(MRG_BIND_EVENT_FN(OrthographicCameraController::OnWindowResize));
     }
 
+    void OrthographicCameraController::OnResize(float width, float height)
+    {
+        MRG_PROFILE_FUNCTION();
+        
+        m_AspectRatio = width / height;
+        m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
+    }
+
     bool OrthographicCameraController::OnMouseScroll(MouseScrollEvent& event)
     {
         MRG_PROFILE_FUNCTION();
@@ -96,15 +104,9 @@ namespace Mirage
     bool OrthographicCameraController::OnWindowResize(WindowResizeEvent& event)
     {
         MRG_PROFILE_FUNCTION();
+
+        OnResize(event.GetWindowBounds().x, event.GetWindowBounds().y);
         
-        m_AspectRatio = event.GetWindowBounds().x / event.GetWindowBounds().y;
-        
-        m_Bounds.left = -m_AspectRatio * m_ZoomLevel;
-        m_Bounds.right = m_AspectRatio * m_ZoomLevel;
-        m_Bounds.bottom = -m_ZoomLevel;
-        m_Bounds.top = m_ZoomLevel;
-        
-        m_Camera.SetProjection(m_Bounds.left, m_Bounds.right, m_Bounds.bottom, m_Bounds.top);
         return false;
     }
 }
