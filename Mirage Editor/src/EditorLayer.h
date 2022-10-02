@@ -16,13 +16,19 @@ namespace Mirage
         void OnUpdate(float DeltaTime) override;
         virtual void OnImGuiRender() override;
         void OnEvent(Event& e) override;
-    
+
+        void CreateDockspace();
+        void CreateViewport();
+        
     private:
         OrthographicCameraController m_CameraController;
     
         Renderer2D::Primitives::Quad quad;
         Renderer2D::Primitives::Quad quad2;
         Ref<Framebuffer> m_Framebuffer;
+
+        bool m_ViewportFocused = false;
+        bool m_ViewportHovered = false;
     
         Vec3 m_Position = { 0.0f, 0.0f, -0.01f };
         Vec3 m_Rotation = { 0.0f, 0.0f, 0.0f };

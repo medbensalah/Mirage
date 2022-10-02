@@ -56,7 +56,7 @@ namespace Mirage
             colors[ImGuiCol_Text]                   = ImVec4(0.87f, 0.87f, 0.87f, 1.00f);
             colors[ImGuiCol_TextDisabled]           = ImVec4(0.54f, 0.54f, 0.54f, 1.00f);
             colors[ImGuiCol_WindowBg]               = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
-            colors[ImGuiCol_ChildBg]                = ImVec4(0.08f, 0.08f, 0.08f, 1.00f);
+            colors[ImGuiCol_ChildBg]                = ImVec4(0.15f, 0.15f, 0.15f, 1.00f);
             colors[ImGuiCol_PopupBg]                = ImVec4(0.04f, 0.04f, 0.04f, 0.89f);
             colors[ImGuiCol_Border]                 = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
             colors[ImGuiCol_BorderShadow]           = ImVec4(0.00f, 0.00f, 0.00f, 0.71f);
@@ -203,7 +203,7 @@ namespace Mirage
         //io.ConfigViewportsNoTaskBarIcon = true;
         
         // Setup Dear ImGui style
-        SetImGuiStyle(false);
+        SetImGuiStyle(true);
 
         // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
         // ImGuiStyle& style = ImGui::GetStyle();
@@ -234,9 +234,12 @@ namespace Mirage
     
     void ImGuiLayer::OnEvent(Event& e)
     {
-        // ImGuiIO& io = ImGui::GetIO();
-        // e.Handled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
-        // e.Handled |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+        ImGuiIO& io = ImGui::GetIO();
+
+        if(m_BlockKbEvents)
+            e.Handled |= e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+        if(m_BlockMouseEvents)
+            e.Handled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
     }
     
     void ImGuiLayer::Begin()

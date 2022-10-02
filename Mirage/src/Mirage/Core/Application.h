@@ -28,6 +28,8 @@ namespace Mirage
         
         inline Window& GetWindow() { return *m_Window; }
 
+        ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
+
         inline static Application& Get() { return *s_Instance; }
     
         inline static float GetSeconds() { return s_Instance->time.GetElapsedTimeInSeconds(); }
@@ -40,6 +42,7 @@ namespace Mirage
         bool OnWindowClose(WindowCloseEvent& e);
         bool OnWindowResize(WindowResizeEvent& e);
 
+    private:
         LayerStack m_LayerStack;
 
         Time time = Time(0.0f);
