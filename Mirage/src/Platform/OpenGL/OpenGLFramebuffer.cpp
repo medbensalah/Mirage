@@ -5,6 +5,8 @@
 
 namespace Mirage
 {
+    static const uint32_t s_MaxFramebufferSize = 8192;
+    
     OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecs& specs)
         : m_Specs(specs)
     {
@@ -60,8 +62,15 @@ namespace Mirage
 
     void OpenGLFramebuffer::Resize(uint32_t width, uint32_t height)
     {
+        if(width <= 0 || height <= 0 || width > s_MaxFramebufferSize || height > s_MaxFramebufferSize)
+        {
+            MRG_CORE_WARN("Attempted to resize framebuffer to {0}, {1}", width, height);
+            return;
+        }
+        
         m_Specs.Width = width;
         m_Specs.Height = height;
+        
         Invalidate();
     }
 }

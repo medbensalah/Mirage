@@ -3,6 +3,8 @@
 #include <glm/gtc/type_ptr.inl>
 
 #include "ImGui/imgui_internal.h"
+#include "Mirage/ImGui/GradientButtonV1.h"
+#include "Mirage/ImGui/ToggleButton.h"
 
 namespace Mirage
 {
@@ -11,11 +13,13 @@ EditorLayer::EditorLayer()
 {
     quad2 = Renderer2D::Primitives::Quad();
 }
-
+static 
+    ImGuiWindowClass s_ViewportWindowClass;
 void EditorLayer::OnAttach()
 {
     MRG_PROFILE_FUNCTION();
-
+    s_ViewportWindowClass.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar;
+    
     m_texture = Texture2D::Create("assets/textures/CheckerBoard.png");
     quad.position = m_Position;
     quad.rotation = m_Rotation;
@@ -47,6 +51,18 @@ void EditorLayer::OnUpdate(float DeltaTime)
 
     // MRG_TRACE("Frame time : {0:.3f} ms   -   FPS : {1:.1f}", DeltaTime * 1000.0f, 1.0f / DeltaTime);
     // MRG_TRACE("Total elapsed time : {0:.3f} s", Application::GetSeconds());
+    
+    
+    // Resize
+    if (Mirage::FramebufferSpecs spec = m_Framebuffer->GetSpecs();
+        m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
+        (spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
+    {
+        m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+        m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
+    }
+
+    
     // Update
     if(m_ViewportFocused && m_ViewportHovered)
     {
@@ -183,20 +199,16 @@ void EditorLayer::CreateDockspace()
 void EditorLayer::CreateViewport()
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
+    ImGui::SetNextWindowClass(&s_ViewportWindowClass);
     ImGui::Begin("ViewPort");
-
+    
     m_ViewportFocused = ImGui::IsWindowFocused();
     m_ViewportHovered = ImGui::IsWindowHovered();
     Application::Get().GetImGuiLayer()->AllowKbEvents(m_ViewportFocused && m_ViewportHovered);
     Application::Get().GetImGuiLayer()->AllowMouseEvents(m_ViewportHovered);
     
-    ImVec2 ViewportSize = ImGui::GetContentRegionAvail();
-    if(m_ViewportSize != *((glm::vec2*)&ViewportSize))
-    {
-        m_Framebuffer->Resize((uint32_t)ViewportSize.x, (uint32_t)ViewportSize.y);
-        m_ViewportSize = {ViewportSize.x, ViewportSize.y};
-        m_CameraController.OnResize(ViewportSize.x, ViewportSize.y);
-    }
+    ImVec2 ViewportSize = ImGui::GetContentRegionAvail();    
+    m_ViewportSize = { ViewportSize.x, ViewportSize.y };
     uint32_t texId = m_Framebuffer->GetColorAttachmentRendererID();
     ImGui::Image((void*)texId,ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
     ImGui::End();
@@ -209,16 +221,13 @@ void EditorLayer::OnImGuiRender()
     CreateDockspace();
     CreateViewport();
     
-
-
-
-    
-    
     ImGui::Begin("Settings");
-    
+    // ImGui::ColoredButtonV1("You", ImVec2(-FLT_MIN, 0.0f), IM_COL32(255, 255, 255, 255), IM_COL32(50, 220, 60, 255), IM_COL32(69, 150, 70, 255));
+    // ImGui::ToggleButton("Show Demo toggle", &showDemo);
     MRG_IMGUI_DRAW_LABEL_WIDGET("Position", 95, ImGui::DragFloat3, "##Position", glm::value_ptr(m_Position), 0.05f);
     MRG_IMGUI_DRAW_LABEL_WIDGET("Rotation", 95, ImGui::DragFloat3, "##Rotation", glm::value_ptr(m_Rotation), 0.05f, -180.0f, 180.0f);
     MRG_IMGUI_DRAW_LABEL_WIDGET("Scale", 95, ImGui::DragFloat3, "##Scale", glm::value_ptr(m_Scale), 0.05f);
+
     
     ImGui::Spacing();
     MRG_IMGUI_DRAW_LABEL_WIDGET("Color", 95, ImGui::ColorEdit4, "##Color", glm::value_ptr(m_Color));
@@ -245,6 +254,8 @@ void EditorLayer::OnImGuiRender()
     ImGui::Spacing();
     
     MRG_IMGUI_DRAW_LABEL_WIDGET("Show demo", 95, ImGui::Checkbox, "##Showdemo", &showDemo);
+    
+
     if(showDemo)
     {
         ImGui::ShowDemoWindow(&showDemo);

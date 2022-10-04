@@ -189,7 +189,7 @@ namespace Mirage
     void ImGuiLayer::OnAttach()
     {
         MRG_PROFILE_FUNCTION();
-        
+#pragma 
         // Setup Dear ImGui context
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -203,7 +203,7 @@ namespace Mirage
         //io.ConfigViewportsNoTaskBarIcon = true;
         
         // Setup Dear ImGui style
-        SetImGuiStyle(true);
+        SetImGuiStyle(false);
 
         // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
         // ImGuiStyle& style = ImGui::GetStyle();

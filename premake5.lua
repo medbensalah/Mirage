@@ -23,6 +23,7 @@ IncludeDir["Glad"] = "Mirage/vendor/Glad/include"
 IncludeDir["ImGui"] = "Mirage/vendor/ImGui"
 IncludeDir["glm"] = "Mirage/vendor/glm"
 IncludeDir["stb_image"] = "Mirage/vendor/stb_image"
+IncludeDir["enTT"] = "Mirage/vendor/enTT/include"
 
 group "Dependencies"
     include "Mirage/vendor/GLFW"
@@ -68,7 +69,8 @@ project "Mirage"
         "%{IncludeDir.Glad}",
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.glm}",
-        "%{IncludeDir.stb_image}"
+        "%{IncludeDir.stb_image}",
+        "%{IncludeDir.enTT}"
     }
     
     links
@@ -122,7 +124,8 @@ project "Sandbox"
         "Mirage/src",
         "Mirage/vendor/spdlog/include",
         "Mirage/vendor",
-        "%{IncludeDir.glm}"
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.enTT}"
     }
 
     links
@@ -170,7 +173,8 @@ project "Mirage Editor"
         "Mirage/src",
         "Mirage/vendor/spdlog/include",
         "Mirage/vendor",
-        "%{IncludeDir.glm}"
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.enTT}"
     }
 
     links
