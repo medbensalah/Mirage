@@ -11,10 +11,11 @@
 
 namespace Mirage
 {
+static bool isDark = true;
     void SetImGuiStyle(bool dark = true)
     {
         ImGuiStyle* style = &ImGui::GetStyle();
-
+        
         style->WindowPadding                        = ImVec2(7, 7);
         style->FramePadding                         = ImVec2(7, 2);
         style->ItemSpacing                          = ImVec2(12, 7);
@@ -77,6 +78,12 @@ namespace Mirage
             colors[ImGuiCol_Button]                 = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
             colors[ImGuiCol_ButtonHovered]          = ImVec4(0.00f, 0.00f, 0.49f, 1.00f);
             colors[ImGuiCol_ButtonActive]           = ImVec4(0.00f, 0.00f, 0.35f, 1.00f);
+            colors[ImGuiCol_GradButtonU]            = ImVec4(0.23f, 0.23f, 0.23f, 1.00f);
+            colors[ImGuiCol_GradButtonHoveredU]     = ImVec4(0.16f, 0.16f, 0.16f, 1.00f);
+            colors[ImGuiCol_GradButtonActiveU]      = ImVec4(0.05f, 0.05f, 0.05f, 1.00f);
+            colors[ImGuiCol_GradButtonD]            = ImVec4(0.03f, 0.03f, 0.03f, 1.00f);
+            colors[ImGuiCol_GradButtonHoveredD]     = ImVec4(0.05f, 0.05f, 0.05f, 1.00f);
+            colors[ImGuiCol_GradButtonActiveD]      = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
             colors[ImGuiCol_Header]                 = ImVec4(0.00f, 0.00f, 0.00f, 1.00f);
             colors[ImGuiCol_HeaderHovered]          = ImVec4(0.00f, 0.00f, 0.49f, 1.00f);
             colors[ImGuiCol_HeaderActive]           = ImVec4(0.00f, 0.00f, 0.35f, 0.88f);
@@ -135,6 +142,12 @@ namespace Mirage
             colors[ImGuiCol_Button]                 = ImVec4(0.93f, 0.98f, 1.00f, 1.00f);
             colors[ImGuiCol_ButtonHovered]          = ImVec4(0.66f, 0.66f, 1.00f, 1.00f);
             colors[ImGuiCol_ButtonActive]           = ImVec4(0.35f, 0.35f, 0.78f, 1.00f);
+            colors[ImGuiCol_GradButtonU]            = ImVec4(0.93f, 0.98f, 1.00f, 1.00f);
+            colors[ImGuiCol_GradButtonHoveredU]     = ImVec4(0.89f, 0.89f, 1.00f, 1.00f);
+            colors[ImGuiCol_GradButtonActiveU]      = ImVec4(0.62f, 0.62f, 0.92f, 1.00f);
+            colors[ImGuiCol_GradButtonD]            = ImVec4(0.73f, 0.78f, 1.00f, 1.00f);
+            colors[ImGuiCol_GradButtonHoveredD]     = ImVec4(0.62f, 0.62f, 0.92f, 1.00f);
+            colors[ImGuiCol_GradButtonActiveD]      = ImVec4(0.89f, 0.89f, 1.00f, 1.00f);
             colors[ImGuiCol_Header]                 = ImVec4(0.83f, 0.93f, 1.00f, 1.00f);
             colors[ImGuiCol_HeaderHovered]          = ImVec4(0.66f, 0.66f, 1.00f, 1.00f);
             colors[ImGuiCol_HeaderActive]           = ImVec4(0.35f, 0.35f, 0.78f, 1.00f);
@@ -203,7 +216,7 @@ namespace Mirage
         //io.ConfigViewportsNoTaskBarIcon = true;
         
         // Setup Dear ImGui style
-        SetImGuiStyle(false);
+        SetImGuiStyle(isDark);
 
         // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
         // ImGuiStyle& style = ImGui::GetStyle();

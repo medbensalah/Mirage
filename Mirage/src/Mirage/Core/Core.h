@@ -61,7 +61,7 @@
 
 #define MRG_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
 
-#define MRG_IMGUI_DRAW_LABEL_WIDGET(Label,offset,fn,...)    (ImGui::AlignTextToFramePadding(),ImGui::TextUnformatted(Label),ImGui::SameLine(offset),fn(__VA_ARGS__))
+#define MRG_IMGUI_DRAW_LABEL_WIDGET(Label,offset,fn,...)    (ImGui::AlignTextToFramePadding(),ImGui::TextUnformatted(Label),ImGui::SameLine(ImMax(offset, 15 + ImGui::CalcTextSize(Label).x)),fn(__VA_ARGS__))
 
 namespace Mirage
 {

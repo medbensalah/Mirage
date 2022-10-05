@@ -93,44 +93,6 @@ static bool showDemo = true;
 void Sandbox2D::OnImGuiRender()
 {
     MRG_PROFILE_FUNCTION();
-
-    ImGui::Begin("Settings");
-    
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Position", 95, ImGui::DragFloat3, "##Position", glm::value_ptr(m_Position), 0.05f);
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Rotation", 95, ImGui::DragFloat3, "##Rotation", glm::value_ptr(m_Rotation), 0.05f, -180.0f, 180.0f);
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Scale", 95, ImGui::DragFloat3, "##Scale", glm::value_ptr(m_Scale), 0.05f);
-    
-    ImGui::Spacing();
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Color", 95, ImGui::ColorEdit4, "##Color", glm::value_ptr(m_Color));
-    
-    ImGui::Spacing();
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Tiling", 95, ImGui::DragFloat2, "##Tiling", glm::value_ptr(m_Tiling), 0.05f);
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Offset", 95, ImGui::DragFloat2, "##Offset", glm::value_ptr(m_Offset), 0.05f);
-    
-    ImGui::Spacing();
-    ImGui::Separator();
-
-    float deltaTime = Mirage::Application::Get().GetDeltaTime();
-    ImGui::Text("Renderer2D Stats:");
-    ImGui::Indent();
-    ImGui::Text("Draw Calls: %d", Mirage::Renderer2D::GetStats().DrawCalls);
-    ImGui::Text("Quads: %d", Mirage::Renderer2D::GetStats().QuadCount);
-    ImGui::Text("Vertices: %d", Mirage::Renderer2D::GetStats().GetVertexCount());
-    ImGui::Text("Indices: %d", Mirage::Renderer2D::GetStats().GetIndexCount());
-    ImGui::Unindent();
-    ImGui::Spacing();
-    ImGui::TextDisabled("FPS : %3.1f  (%f ms)", 1.0f / deltaTime, deltaTime * 1000.0f);
-    ImGui::Spacing();
-    ImGui::Separator();
-    ImGui::Spacing();
-    
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Show demo", 95, ImGui::Checkbox, "##Showdemo", &showDemo);
-    if(showDemo)
-    {
-        ImGui::ShowDemoWindow(&showDemo);
-    }
-    ImGui::End();
-
 }
 
 void Sandbox2D::OnEvent(Mirage::Event& e)

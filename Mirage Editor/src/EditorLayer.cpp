@@ -3,8 +3,8 @@
 #include <glm/gtc/type_ptr.inl>
 
 #include "ImGui/imgui_internal.h"
-#include "Mirage/ImGui/GradientButtonV1.h"
-#include "Mirage/ImGui/ToggleButton.h"
+#include "Mirage/ImGui/Extensions/GradientButtonV1.h"
+#include "Mirage/ImGui/Extensions/ToggleButton.h"
 
 namespace Mirage
 {
@@ -214,27 +214,30 @@ void EditorLayer::CreateViewport()
     ImGui::End();
     ImGui::PopStyleVar(1);
 }
+    
 void EditorLayer::OnImGuiRender()
 {
     MRG_PROFILE_FUNCTION();
 
     CreateDockspace();
     CreateViewport();
-    
+
+    float baseOffset = 80.0f;
     ImGui::Begin("Settings");
-    // ImGui::ColoredButtonV1("You", ImVec2(-FLT_MIN, 0.0f), IM_COL32(255, 255, 255, 255), IM_COL32(50, 220, 60, 255), IM_COL32(69, 150, 70, 255));
-    // ImGui::ToggleButton("Show Demo toggle", &showDemo);
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Position", 95, ImGui::DragFloat3, "##Position", glm::value_ptr(m_Position), 0.05f);
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Rotation", 95, ImGui::DragFloat3, "##Rotation", glm::value_ptr(m_Rotation), 0.05f, -180.0f, 180.0f);
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Scale", 95, ImGui::DragFloat3, "##Scale", glm::value_ptr(m_Scale), 0.05f);
+    ImGui::ColoredButtonV1("You");
+    
+    MRG_IMGUI_DRAW_LABEL_WIDGET("Show Demo toggle", baseOffset, ImGui::ToggleButton, "##ToggleDemo", &showDemo);
+    MRG_IMGUI_DRAW_LABEL_WIDGET("Position", baseOffset, ImGui::DragFloat3, "##Position", glm::value_ptr(m_Position), 0.05f);
+    MRG_IMGUI_DRAW_LABEL_WIDGET("Rotation", baseOffset, ImGui::DragFloat3, "##Rotation", glm::value_ptr(m_Rotation), 0.05f, -180.0f, 180.0f);
+    MRG_IMGUI_DRAW_LABEL_WIDGET("Scale", baseOffset, ImGui::DragFloat3, "##Scale", glm::value_ptr(m_Scale), 0.05f);
 
     
     ImGui::Spacing();
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Color", 95, ImGui::ColorEdit4, "##Color", glm::value_ptr(m_Color));
+    MRG_IMGUI_DRAW_LABEL_WIDGET("Color", baseOffset, ImGui::ColorEdit4, "##Color", glm::value_ptr(m_Color));
     
     ImGui::Spacing();
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Tiling", 95, ImGui::DragFloat2, "##Tiling", glm::value_ptr(m_Tiling), 0.05f);
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Offset", 95, ImGui::DragFloat2, "##Offset", glm::value_ptr(m_Offset), 0.05f);
+    MRG_IMGUI_DRAW_LABEL_WIDGET("Tiling", baseOffset, ImGui::DragFloat2, "##Tiling", glm::value_ptr(m_Tiling), 0.05f);
+    MRG_IMGUI_DRAW_LABEL_WIDGET("Offset", baseOffset, ImGui::DragFloat2, "##Offset", glm::value_ptr(m_Offset), 0.05f);
     
     ImGui::Spacing();
     ImGui::Separator();
@@ -253,7 +256,7 @@ void EditorLayer::OnImGuiRender()
     ImGui::Separator();
     ImGui::Spacing();
     
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Show demo", 95, ImGui::Checkbox, "##Showdemo", &showDemo);
+    MRG_IMGUI_DRAW_LABEL_WIDGET("Show demo", baseOffset, ImGui::Checkbox, "##Showdemo", &showDemo);
     
 
     if(showDemo)
