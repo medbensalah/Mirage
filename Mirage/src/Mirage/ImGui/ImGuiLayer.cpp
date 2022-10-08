@@ -11,7 +11,7 @@
 
 namespace Mirage
 {
-static bool isDark = true;
+static bool isDark = false;
     void SetImGuiStyle(bool dark = true)
     {
         ImGuiStyle* style = &ImGui::GetStyle();
@@ -19,7 +19,7 @@ static bool isDark = true;
         style->WindowPadding                        = ImVec2(7, 7);
         style->FramePadding                         = ImVec2(7, 2);
         style->ItemSpacing                          = ImVec2(12, 7);
-        style->ItemInnerSpacing                     = ImVec2(7, 7);
+        style->ItemInnerSpacing                     = ImVec2(7, 7); 
         style->TouchExtraPadding                    = ImVec2(0, 0);
         style->IndentSpacing                        = 22.0f;
         style->ScrollbarSize                        = 10.0f;

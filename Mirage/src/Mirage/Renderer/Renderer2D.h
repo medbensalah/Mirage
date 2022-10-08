@@ -18,8 +18,8 @@ namespace Mirage
 
         namespace Draw
         {
-            void Quad(const Primitives::Quad& quad,
-                const Vec2& tiling = Vec2(1.0f), const Vec2& offset = Vec2{0.0f});
+            void Quad(const Mat4& transform, const Vec4& color, const Ref<Texture2D> texture = nullptr, const Vec2& tiling = Vec2(1.0f), const Vec2& offset = Vec2{0.0f});
+            void Quad(const Primitives::Quad& quad, const Vec2& tiling = Vec2(1.0f), const Vec2& offset = Vec2{0.0f});
         }
 
         

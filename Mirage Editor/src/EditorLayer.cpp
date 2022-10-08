@@ -11,31 +11,28 @@ namespace Mirage
 EditorLayer::EditorLayer()
     : Layer("EditorLayer"), m_CameraController(1280.0f / 720.0f, true)
 {
-    quad2 = Renderer2D::Primitives::Quad();
 }
-static 
-    ImGuiWindowClass s_ViewportWindowClass;
+    
+static ImGuiWindowClass s_ViewportWindowClass;
+    
 void EditorLayer::OnAttach()
 {
     MRG_PROFILE_FUNCTION();
     s_ViewportWindowClass.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar;
     
     m_texture = Texture2D::Create("assets/textures/CheckerBoard.png");
-    quad.position = m_Position;
-    quad.rotation = m_Rotation;
-    quad.scale = m_Scale;
-    quad.color = m_Color;
-    quad.texture = m_texture;
-
-    quad2.position = m_Position;
-    quad2.rotation = m_Rotation;
-    quad2.scale = m_Scale;
-    quad2.color = Vec4{0.1f, 0.35f, 0.9f, 1.0f};
-
+    
     FramebufferSpecs specs;
     specs.Width = 1280;
     specs.Height = 720;
     m_Framebuffer = Framebuffer::Create(specs);
+
+    m_ActiveScene = CreateRef<Scene>();
+
+
+    auto square = m_ActiveScene->CreateEntity("Square");
+    square.AddComponent<SpriteRendererComponent>( Vec4{0.2f,1.0f,0.3f,1.0f});
+    m_SquareEntity = square;
 }
 
 void EditorLayer::OnDetach()
@@ -54,7 +51,7 @@ void EditorLayer::OnUpdate(float DeltaTime)
     
     
     // Resize
-    if (Mirage::FramebufferSpecs spec = m_Framebuffer->GetSpecs();
+    if (FramebufferSpecs spec = m_Framebuffer->GetSpecs();
         m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
         (spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
     {
@@ -69,51 +66,20 @@ void EditorLayer::OnUpdate(float DeltaTime)
         m_CameraController.OnUpdate(DeltaTime);
     }
 
-    quad.position = m_Position;
-    quad.rotation = m_Rotation;
-    quad.scale = m_Scale;
-    quad.color = m_Color;
-
-    quad2.position = m_Position + 0.1f;
-    quad2.rotation = Vec3(0.0f);
-    quad2.scale = m_Scale;
-    
 
     // Render
     Renderer2D::ResetStats();
-    {
-        MRG_PROFILE_SCOPE("Renderer Clear");
-        m_Framebuffer->Bind();
-        // RenderCommand::SetClearColor({1.0f,1.0f,1.0f,0.0f});
-        RenderCommand::SetClearColor({0.15f, 0.15f, 0.15f, 1.0f});
-        RenderCommand::Clear();
-    }
+    m_Framebuffer->Bind();
+    RenderCommand::SetClearColor({0.15f, 0.15f, 0.15f, 1.0f});
+    RenderCommand::Clear();
 
-    {
-        MRG_PROFILE_SCOPE("Scene 1");
-        Renderer2D::BeginScene(m_CameraController.GetCamera());
-        
-        Renderer2D::Draw::Quad(quad, m_Tiling, m_Offset);
 
-        
-        for(float y = -5.0f; y < 5.0f; y += 0.5f)
-        {
-            for(float x = -5.0f; x < 5.0f; x += 0.5f)
-            {
-                Vec2 color = {(x + 5.0f) / 10.0f, (y + 5.0f) / 10.0f};
-                Renderer2D::Draw::Quad(
-                    {
-                        Vec3(x, y, 0.0f),
-                        Vec3(0.0f),
-                        Vec3(0.45f),
-                        {color.x, color.y,1.0f, 1.0f}
-                    });
-            }
-        }
+    Renderer2D::BeginScene(m_CameraController.GetCamera());
     
-        Renderer2D::EndScene();
-        m_Framebuffer->Unbind();
-    }
+    m_ActiveScene->OnUpdate(DeltaTime);
+
+    Renderer2D::EndScene();
+    m_Framebuffer->Unbind();
 }
 
 static bool showDemo = true;
@@ -224,24 +190,28 @@ void EditorLayer::OnImGuiRender()
 
     float baseOffset = 80.0f;
     ImGui::Begin("Settings");
-    ImGui::ColoredButtonV1("You");
-    
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Show Demo toggle", baseOffset, ImGui::ToggleButton, "##ToggleDemo", &showDemo);
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Position", baseOffset, ImGui::DragFloat3, "##Position", glm::value_ptr(m_Position), 0.05f);
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Rotation", baseOffset, ImGui::DragFloat3, "##Rotation", glm::value_ptr(m_Rotation), 0.05f, -180.0f, 180.0f);
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Scale", baseOffset, ImGui::DragFloat3, "##Scale", glm::value_ptr(m_Scale), 0.05f);
+    ImGui::Text("%s", m_SquareEntity.GetComponent<TagComponent>().Tag.c_str());
+    // ImGui::ColoredButtonV1("You");
+    //
+    // MRG_IMGUI_DRAW_LABEL_WIDGET("Show Demo toggle", baseOffset, ImGui::ToggleButton, "##ToggleDemo", &showDemo);
+    // MRG_IMGUI_DRAW_LABEL_WIDGET("Position", baseOffset, ImGui::DragFloat3, "##Position", glm::value_ptr(m_Position), 0.05f);
+    // MRG_IMGUI_DRAW_LABEL_WIDGET("Rotation", baseOffset, ImGui::DragFloat3, "##Rotation", glm::value_ptr(m_Rotation), 0.05f, -180.0f, 180.0f);
+    // MRG_IMGUI_DRAW_LABEL_WIDGET("Scale", baseOffset, ImGui::DragFloat3, "##Scale", glm::value_ptr(m_Scale), 0.05f);
+    //
+    //
+    // ImGui::Spacing();
+    MRG_IMGUI_DRAW_LABEL_WIDGET("Color", baseOffset, ImGui::ColorEdit4, "##Color", glm::value_ptr(m_SquareEntity.GetComponent<SpriteRendererComponent>().Color));
+    //
+    // ImGui::Spacing();
+    // MRG_IMGUI_DRAW_LABEL_WIDGET("Tiling", baseOffset, ImGui::DragFloat2, "##Tiling", glm::value_ptr(m_Tiling), 0.05f);
+    // MRG_IMGUI_DRAW_LABEL_WIDGET("Offset", baseOffset, ImGui::DragFloat2, "##Offset", glm::value_ptr(m_Offset), 0.05f);
+    //
+    // ImGui::Spacing();
+    // ImGui::Separator();
 
-    
-    ImGui::Spacing();
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Color", baseOffset, ImGui::ColorEdit4, "##Color", glm::value_ptr(m_Color));
-    
-    ImGui::Spacing();
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Tiling", baseOffset, ImGui::DragFloat2, "##Tiling", glm::value_ptr(m_Tiling), 0.05f);
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Offset", baseOffset, ImGui::DragFloat2, "##Offset", glm::value_ptr(m_Offset), 0.05f);
-    
     ImGui::Spacing();
     ImGui::Separator();
-
+    ImGui::Spacing();
     float deltaTime = Application::Get().GetDeltaTime();
     ImGui::Text("Renderer2D Stats:");
     ImGui::Indent();

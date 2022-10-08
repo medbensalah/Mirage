@@ -167,6 +167,62 @@ namespace Mirage
 
         namespace Draw
         {
+            void Quad(const Mat4& transform, const Vec4& color, const Ref<Texture2D> texture, const Vec2& tiling, const Vec2& offset)
+            {
+                MRG_PROFILE_FUNCTION();
+
+                
+                Primitives::Quad quad;
+                quad.color = color;
+
+                constexpr size_t quadVertexCount = 4;
+                constexpr Vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+
+                if(s_Data.QuadIndexCount >= s_Data.MaxIndices)
+                {
+                    FlushAndReset();
+                }
+
+                float TextureIndex = 0.0f;
+                if(quad.texture)
+                {
+                    for(uint32_t i = 1; i < s_Data.TextureSlotIndex; ++i)
+                    {
+                        if (*(s_Data.TextureSlots[i].get()) == *(quad.texture.get()))
+                        {
+                            TextureIndex = (float)i;
+                            break;
+                        }
+                    }
+                
+                    if (TextureIndex == 0.0f)
+                    {
+                        if(s_Data.TextureSlotIndex >= Renderer2DData::MaxTextureSlots)
+                        {
+                            FlushAndReset();
+                        }
+                        
+                        TextureIndex = (float)s_Data.TextureSlotIndex;
+                        s_Data.TextureSlots[s_Data.TextureSlotIndex] = quad.texture;
+                        s_Data.TextureSlotIndex++;
+                    }
+                }
+                
+                for (size_t i = 0; i < quadVertexCount; i++)
+                {
+                    s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[i];
+                    s_Data.QuadVertexBufferPtr->Color = quad.color;
+                    s_Data.QuadVertexBufferPtr->TextureCoord = textureCoords[i];
+                    s_Data.QuadVertexBufferPtr->TextureIndex = TextureIndex;
+                    s_Data.QuadVertexBufferPtr->Tiling = tiling;
+                    s_Data.QuadVertexBufferPtr->Offset = offset;
+                    s_Data.QuadVertexBufferPtr++;
+                }
+
+                s_Data.QuadIndexCount += 6;
+
+                s_Data.Stats.QuadCount++;
+            }
             
             void Quad(const Primitives::Quad& quad, const Vec2& tiling, const Vec2& offset)
             {
@@ -222,17 +278,7 @@ namespace Mirage
                                      MatScale(Mat4(1.0f), quad.scale);
                 }
 
-                
-                for (size_t i = 0; i < quadVertexCount; i++)
-                {
-                    s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[i];
-                    s_Data.QuadVertexBufferPtr->Color = quad.color;
-                    s_Data.QuadVertexBufferPtr->TextureCoord = textureCoords[i];
-                    s_Data.QuadVertexBufferPtr->TextureIndex = TextureIndex;
-                    s_Data.QuadVertexBufferPtr->Tiling = tiling;
-                    s_Data.QuadVertexBufferPtr->Offset = offset;
-                    s_Data.QuadVertexBufferPtr++;
-                }
+                Quad(transform, quad.color, quad.texture, tiling, offset);
 
                 s_Data.QuadIndexCount += 6;
 

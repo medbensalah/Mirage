@@ -161,6 +161,7 @@
     <ClInclude Include="src\Mirage\Core\Time.h" />
     <ClInclude Include="src\Mirage\Core\Window.h" />
     <ClInclude Include="src\Mirage\Debug\Instrumentor.h" />
+    <ClInclude Include="src\Mirage\ECS\SceneObject.h" />
     <ClInclude Include="src\Mirage\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Mirage\Events\Event.h" />
     <ClInclude Include="src\Mirage\Events\KeyEvent.h" />
@@ -181,7 +182,8 @@
     <ClInclude Include="src\Mirage\Renderer\Shader.h" />
     <ClInclude Include="src\Mirage\Renderer\Texture.h" />
     <ClInclude Include="src\Mirage\Renderer\VertexArray.h" />
-    <ClInclude Include="src\Mirage\Scene\Scene.h" />
+    <ClInclude Include="src\Mirage\ECS\Components.h" />
+    <ClInclude Include="src\Mirage\ECS\Scene.h" />
     <ClInclude Include="src\MrgPch.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
@@ -614,6 +616,7 @@
     <ClCompile Include="src\Mirage\Core\LayerStack.cpp" />
     <ClCompile Include="src\Mirage\Core\Log.cpp" />
     <ClCompile Include="src\Mirage\Core\Window.cpp" />
+    <ClCompile Include="src\Mirage\ECS\SceneObject.cpp" />
     <ClCompile Include="src\Mirage\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Mirage\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Mirage\Renderer\Buffer.cpp" />
@@ -628,7 +631,7 @@
     <ClCompile Include="src\Mirage\Renderer\Shader.cpp" />
     <ClCompile Include="src\Mirage\Renderer\Texture.cpp" />
     <ClCompile Include="src\Mirage\Renderer\VertexArray.cpp" />
-    <ClCompile Include="src\Mirage\Scene\Scene.cpp" />
+    <ClCompile Include="src\Mirage\ECS\Scene.cpp" />
     <ClCompile Include="src\MrgPch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
