@@ -1,20 +1,17 @@
 ﻿#pragma once
 
-#include "Mirage/Renderer/Camera.h"
+#include "Mirage/ECS/SceneCamera.h"
 
 namespace Mirage
 {
     
     struct CameraComponent
     {
-        Camera Camera;
+        SceneCamera Camera;
         bool IsMain = true;
+        bool FixedAspectRatio = false;
         
         CameraComponent() = default;
         CameraComponent(const CameraComponent&) = default;
-        CameraComponent(const Mat4& projection)
-            : Camera(projection)
-        {
-        }
     };
 }

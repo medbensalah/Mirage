@@ -163,6 +163,7 @@
     <ClInclude Include="src\Mirage\Debug\Instrumentor.h" />
     <ClInclude Include="src\Mirage\ECS\Components\CameraComponent.h" />
     <ClInclude Include="src\Mirage\ECS\Components\TransformComponent.h" />
+    <ClInclude Include="src\Mirage\ECS\SceneCamera.h" />
     <ClInclude Include="src\Mirage\ECS\SceneObject.h" />
     <ClInclude Include="src\Mirage\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Mirage\Events\Event.h" />
@@ -618,6 +619,7 @@
     <ClCompile Include="src\Mirage\Core\LayerStack.cpp" />
     <ClCompile Include="src\Mirage\Core\Log.cpp" />
     <ClCompile Include="src\Mirage\Core\Window.cpp" />
+    <ClCompile Include="src\Mirage\ECS\SceneCamera.cpp" />
     <ClCompile Include="src\Mirage\ECS\SceneObject.cpp" />
     <ClCompile Include="src\Mirage\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Mirage\ImGui\ImGuiLayer.cpp" />

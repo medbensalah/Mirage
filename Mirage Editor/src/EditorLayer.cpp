@@ -38,7 +38,7 @@ void EditorLayer::OnAttach()
     m_SquareEntity.AddComponent<SpriteRendererComponent>( Vec4{0.2f,1.0f,0.3f,1.0f});
 
     m_Camera = m_ActiveScene->CreateEntity("Camera");
-    m_Camera.AddComponent<CameraComponent>(glm::ortho(-16.0f,16.0f,-9.0f,9.0f, -1.0f, 1.0f));
+    m_Camera.AddComponent<CameraComponent>();
 }
 
 void EditorLayer::OnDetach()
@@ -63,6 +63,8 @@ void EditorLayer::OnUpdate(float DeltaTime)
     {
         m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
         m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
+
+        m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
     }
 
     
@@ -198,13 +200,16 @@ void EditorLayer::OnImGuiRender()
     // ImGui::ColoredButtonV1("You");
     //
     // MRG_IMGUI_DRAW_LABEL_WIDGET("Show Demo toggle", baseOffset, ImGui::ToggleButton, "##ToggleDemo", &showDemo);
-    // MRG_IMGUI_DRAW_LABEL_WIDGET("Position", baseOffset, ImGui::DragFloat3, "##Position", glm::value_ptr(m_Position), 0.05f);
+
     MRG_IMGUI_DRAW_LABEL_WIDGET("Position", baseOffset, ImGui::DragFloat3, "##Position", glm::value_ptr(m_Camera.GetComponent<TransformComponent>().Trannsform[3]), 0.05f);
-    // MRG_IMGUI_DRAW_LABEL_WIDGET("Rotation", baseOffset, ImGui::DragFloat3, "##Rotation", glm::value_ptr(m_Rotation), 0.05f, -180.0f, 180.0f);
-    // MRG_IMGUI_DRAW_LABEL_WIDGET("Scale", baseOffset, ImGui::DragFloat3, "##Scale", glm::value_ptr(m_Scale), 0.05f);
-    //
-    //
-    // ImGui::Spacing();
+    float cameraSize = m_Camera.GetComponent<CameraComponent>().Camera.GetOrthographicSize();
+    
+    MRG_IMGUI_DRAW_LABEL_WIDGET("Size", baseOffset, ImGui::DragFloat, "##Size", &cameraSize, 0.05f);
+    m_Camera.GetComponent<CameraComponent>().Camera.SetOrthographicSize(cameraSize);
+
+    ImGui::Spacing();
+    ImGui::Separator();
+    
     MRG_IMGUI_DRAW_LABEL_WIDGET("Color", baseOffset, ImGui::ColorEdit4, "##Color", glm::value_ptr(m_SquareEntity.GetComponent<SpriteRendererComponent>().Color));
     //
     // ImGui::Spacing();
