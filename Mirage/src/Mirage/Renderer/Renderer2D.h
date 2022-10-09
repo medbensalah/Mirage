@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "Mirage/Renderer/Camera.h"
 #include "Mirage/Renderer/OrthographicCamera.h"
 
 #include "Mirage/Renderer/Primitives.h"
@@ -7,10 +8,11 @@
 namespace Mirage
 {
     namespace Renderer2D
-    {
+    {        
         void Init();
         void Shutdown();
 
+        void BeginScene(const Camera& camera, const Mat4& transform);
         void BeginScene(const OrthographicCamera& camera);
         void EndScene();
 

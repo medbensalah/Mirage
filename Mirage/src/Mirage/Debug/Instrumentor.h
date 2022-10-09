@@ -3,15 +3,20 @@
 #include <algorithm>
 #include <chrono>
 #include <fstream>
+#include <iomanip>
 #include <string>
 #include <thread>
 
 namespace Mirage
 {
+    using FloatingPointMicroseconds = std::chrono::duration<double, std::micro>;
+
     struct ProfileResult
     {
         std::string Name;
-        long long Start, End;
+
+        FloatingPointMicroseconds Start;
+        std::chrono::microseconds ElapsedTime;
         std::thread::id ThreadID;
     };
 
@@ -22,15 +27,9 @@ namespace Mirage
 
     class Instrumentor
     {
-    private:
-        std::mutex m_Mutex;
-        InstrumentationSession* m_CurrentSession;
-        std::ofstream m_OutputStream;
     public:
-        Instrumentor()
-            : m_CurrentSession(nullptr)
-        {
-        }
+        Instrumentor(const Instrumentor&) = delete;
+        Instrumentor(Instrumentor&&) = delete;
 
         void BeginSession(const std::string& name, const std::string& filepath = "results.json")
         {
@@ -41,12 +40,11 @@ namespace Mirage
                 // Subsequent profiling output meant for the original session will end up in the
                 // newly opened session instead.  That's better than having badly formatted
                 // profiling output.
-                if (Log::GetCoreLogger())
-                {
-                    // Edge case: BeginSession() might be before Log::Init()
+                if (Log::GetCoreLogger()) // Edge case: BeginSession() might be before Log::Init()
+                    {
                     MRG_CORE_ERROR("Instrumentor::BeginSession('{0}') when session '{1}' already open.", name,
                                    m_CurrentSession->Name);
-                }
+                    }
                 InternalEndSession();
             }
             m_OutputStream.open(filepath);
@@ -57,11 +55,10 @@ namespace Mirage
             }
             else
             {
-                if (Log::GetCoreLogger())
-                {
-                    // Edge case: BeginSession() might be before Log::Init()
+                if (Log::GetCoreLogger()) // Edge case: BeginSession() might be before Log::Init()
+                    {
                     MRG_CORE_ERROR("Instrumentor could not open results file '{0}'.", filepath);
-                }
+                    }
             }
         }
 
@@ -74,17 +71,16 @@ namespace Mirage
         void WriteProfile(const ProfileResult& result)
         {
             std::stringstream json;
-            
+            json << std::setprecision(3) << std::fixed;
             json << ",{";
             json << "\"cat\":\"function\",";
-            json << "\"dur\":" << (result.End - result.Start) << ',';
+            json << "\"dur\":" << (result.ElapsedTime.count()) << ',';
             json << "\"name\":\"" << result.Name << "\",";
             json << "\"ph\":\"X\",";
             json << "\"pid\":0,";
             json << "\"tid\":" << result.ThreadID << ",";
-            json << "\"ts\":" << result.Start;
+            json << "\"ts\":" << result.Start.count();
             json << "}";
-
             std::lock_guard lock(m_Mutex);
             if (m_CurrentSession)
             {
@@ -100,6 +96,17 @@ namespace Mirage
         }
 
     private:
+    private:
+        Instrumentor()
+            : m_CurrentSession(nullptr)
+        {
+        }
+
+        ~Instrumentor()
+        {
+            EndSession();
+        }
+
         void WriteHeader()
         {
             m_OutputStream << "{\"otherData\": {},\"traceEvents\":[{}";
@@ -124,6 +131,11 @@ namespace Mirage
                 m_CurrentSession = nullptr;
             }
         }
+
+    private:
+        std::mutex m_Mutex;
+        InstrumentationSession* m_CurrentSession;
+        std::ofstream m_OutputStream;
     };
 
     class InstrumentationTimer
@@ -132,35 +144,26 @@ namespace Mirage
         InstrumentationTimer(const char* name)
             : m_Name(name), m_Stopped(false)
         {
-            m_StartTimepoint = std::chrono::high_resolution_clock::now();
+            m_StartTimepoint = std::chrono::steady_clock::now();
         }
-
         ~InstrumentationTimer()
         {
             if (!m_Stopped)
                 Stop();
         }
-
         void Stop()
         {
-            auto endTimepoint = std::chrono::high_resolution_clock::now();
-
-            long long start = std::chrono::time_point_cast<std::chrono::microseconds>(m_StartTimepoint).
-                              time_since_epoch().count();
-            long long end = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch().
-                count();
-
-            Instrumentor::Get().WriteProfile({m_Name, start, end, std::this_thread::get_id()});
-
+            auto endTimepoint = std::chrono::steady_clock::now();
+            auto highResStart = FloatingPointMicroseconds{ m_StartTimepoint.time_since_epoch() };
+            auto elapsedTime = std::chrono::time_point_cast<std::chrono::microseconds>(endTimepoint).time_since_epoch() - std::chrono::time_point_cast<std::chrono::microseconds>(m_StartTimepoint).time_since_epoch();
+            Instrumentor::Get().WriteProfile({ m_Name, highResStart, elapsedTime, std::this_thread::get_id() });
             m_Stopped = true;
         }
-    
     private:
         const char* m_Name;
-        std::chrono::time_point<std::chrono::high_resolution_clock> m_StartTimepoint;
+        std::chrono::time_point<std::chrono::steady_clock> m_StartTimepoint;
         bool m_Stopped;
     };
-
 
     namespace InstrumentorUtils
     {
@@ -171,17 +174,17 @@ namespace Mirage
         };
 
         template <size_t N, size_t K>
-        constexpr auto CleanupOutputString(const char(&expr)[N], const char(&remove)[K])
+        constexpr auto CleanupOutputString(const char (&expr)[N], const char (&remove)[K])
         {
             ChangeResult<N> result = {};
-
             size_t srcIndex = 0;
             size_t dstIndex = 0;
             while (srcIndex < N)
             {
                 size_t matchIndex = 0;
-                while (matchIndex < K - 1 && srcIndex + matchIndex < N - 1 && expr[srcIndex + matchIndex] == remove[matchIndex])
-                    matchIndex++;
+                while (matchIndex < K - 1 && srcIndex + matchIndex < N - 1 && expr[srcIndex + matchIndex] == remove[
+                    matchIndex])
+                        matchIndex++;
                 if (matchIndex == K - 1)
                     srcIndex += matchIndex;
                 result.Data[dstIndex++] = expr[srcIndex] == '"' ? '\'' : expr[srcIndex];
@@ -215,8 +218,10 @@ namespace Mirage
 
 #define MRG_PROFILE_BEGIN_SESSION(name, filepath)       ::Mirage::Instrumentor::Get().BeginSession(name, filepath)
 #define MRG_PROFILE_END_SESSION()                       ::Mirage::Instrumentor::Get().EndSession()
-#define MRG_PROFILE_SCOPE(name)                         constexpr auto fixedName = ::MRGMirage::InstrumentorUtils::CleanupOutputString(name, "__cdecl ");\
-                                                            ::MRGMirage::InstrumentationTimer timer##__LINE__(fixedName.Data)
+#define MRG_PROFILE_SCOPE_LINE2(name, line)             constexpr auto fixedName##line = ::Mirage::InstrumentorUtils::CleanupOutputString(name, "__cdecl ");\
+                                                        ::Mirage::InstrumentationTimer timer##line(fixedName##line.Data)
+#define MRG_PROFILE_SCOPE_LINE(name, line)              MRG_PROFILE_SCOPE_LINE2(name, line)
+#define MRG_PROFILE_SCOPE(name)                         MRG_PROFILE_SCOPE_LINE(name, __LINE__)
 #define MRG_PROFILE_FUNCTION()                          MRG_PROFILE_SCOPE(MRG_FUNC_SIG)
 #else
     #define MRG_PROFILE_BEGIN_SESSION(name, filepath)

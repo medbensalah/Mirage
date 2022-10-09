@@ -115,6 +115,20 @@ namespace Mirage
             delete[] s_Data.QuadVertexBufferBase;
         }
 
+        void BeginScene(const Camera& camera, const Mat4& transform)
+        {
+            MRG_PROFILE_FUNCTION();
+
+            Mat4 viewProj = camera.GetProjection() * Invert(transform);
+            
+            s_Data.Shader->Bind();
+            s_Data.Shader->SetMat4("u_ViewProjection", viewProj);
+
+            s_Data.QuadIndexCount = 0;
+            s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
+
+            s_Data.TextureSlotIndex = 1;
+        }
         void BeginScene(const OrthographicCamera& camera)
         {
             MRG_PROFILE_FUNCTION();

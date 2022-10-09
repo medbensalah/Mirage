@@ -3,8 +3,12 @@
 #include <glm/gtc/type_ptr.inl>
 
 #include "ImGui/imgui_internal.h"
+#include "Mirage/ECS/Components/CameraComponent.h"
 #include "Mirage/ImGui/Extensions/GradientButtonV1.h"
 #include "Mirage/ImGui/Extensions/ToggleButton.h"
+
+#include "Mirage/ECS/Components/SpriteRendererComponent.h"
+#include "Mirage/ECS/Components/TransformComponent.h"
 
 namespace Mirage
 {
@@ -30,9 +34,11 @@ void EditorLayer::OnAttach()
     m_ActiveScene = CreateRef<Scene>();
 
 
-    auto square = m_ActiveScene->CreateEntity("Square");
-    square.AddComponent<SpriteRendererComponent>( Vec4{0.2f,1.0f,0.3f,1.0f});
-    m_SquareEntity = square;
+    m_SquareEntity = m_ActiveScene->CreateEntity("Square");
+    m_SquareEntity.AddComponent<SpriteRendererComponent>( Vec4{0.2f,1.0f,0.3f,1.0f});
+
+    m_Camera = m_ActiveScene->CreateEntity("Camera");
+    m_Camera.AddComponent<CameraComponent>(glm::ortho(-16.0f,16.0f,-9.0f,9.0f, -1.0f, 1.0f));
 }
 
 void EditorLayer::OnDetach()
@@ -73,12 +79,9 @@ void EditorLayer::OnUpdate(float DeltaTime)
     RenderCommand::SetClearColor({0.15f, 0.15f, 0.15f, 1.0f});
     RenderCommand::Clear();
 
-
-    Renderer2D::BeginScene(m_CameraController.GetCamera());
     
     m_ActiveScene->OnUpdate(DeltaTime);
 
-    Renderer2D::EndScene();
     m_Framebuffer->Unbind();
 }
 
@@ -190,11 +193,13 @@ void EditorLayer::OnImGuiRender()
 
     float baseOffset = 80.0f;
     ImGui::Begin("Settings");
-    ImGui::Text("%s", m_SquareEntity.GetComponent<TagComponent>().Tag.c_str());
+    
+    ImGui::Text("%s", m_SquareEntity.Name().c_str());
     // ImGui::ColoredButtonV1("You");
     //
     // MRG_IMGUI_DRAW_LABEL_WIDGET("Show Demo toggle", baseOffset, ImGui::ToggleButton, "##ToggleDemo", &showDemo);
     // MRG_IMGUI_DRAW_LABEL_WIDGET("Position", baseOffset, ImGui::DragFloat3, "##Position", glm::value_ptr(m_Position), 0.05f);
+    MRG_IMGUI_DRAW_LABEL_WIDGET("Position", baseOffset, ImGui::DragFloat3, "##Position", glm::value_ptr(m_Camera.GetComponent<TransformComponent>().Trannsform[3]), 0.05f);
     // MRG_IMGUI_DRAW_LABEL_WIDGET("Rotation", baseOffset, ImGui::DragFloat3, "##Rotation", glm::value_ptr(m_Rotation), 0.05f, -180.0f, 180.0f);
     // MRG_IMGUI_DRAW_LABEL_WIDGET("Scale", baseOffset, ImGui::DragFloat3, "##Scale", glm::value_ptr(m_Scale), 0.05f);
     //

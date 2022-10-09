@@ -59,7 +59,7 @@
 
 #define BIT(x) (1 << x)
 
-#define MRG_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
+#define MRG_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 
 #define MRG_IMGUI_DRAW_LABEL_WIDGET(Label,offset,fn,...)    (ImGui::AlignTextToFramePadding(),ImGui::TextUnformatted(Label),ImGui::SameLine(ImMax(offset, 15 + ImGui::CalcTextSize(Label).x)),fn(__VA_ARGS__))
 

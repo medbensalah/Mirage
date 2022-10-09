@@ -161,6 +161,8 @@
     <ClInclude Include="src\Mirage\Core\Time.h" />
     <ClInclude Include="src\Mirage\Core\Window.h" />
     <ClInclude Include="src\Mirage\Debug\Instrumentor.h" />
+    <ClInclude Include="src\Mirage\ECS\Components\CameraComponent.h" />
+    <ClInclude Include="src\Mirage\ECS\Components\TransformComponent.h" />
     <ClInclude Include="src\Mirage\ECS\SceneObject.h" />
     <ClInclude Include="src\Mirage\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Mirage\Events\Event.h" />
@@ -170,6 +172,7 @@
     <ClInclude Include="src\Mirage\ImGui\Extensions\ToggleButton.h" />
     <ClInclude Include="src\Mirage\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Mirage\Renderer\Buffer.h" />
+    <ClInclude Include="src\Mirage\Renderer\Camera.h" />
     <ClInclude Include="src\Mirage\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Mirage\Renderer\Graphicscontext.h" />
     <ClInclude Include="src\Mirage\Renderer\OrthographicCamera.h" />
@@ -182,7 +185,6 @@
     <ClInclude Include="src\Mirage\Renderer\Shader.h" />
     <ClInclude Include="src\Mirage\Renderer\Texture.h" />
     <ClInclude Include="src\Mirage\Renderer\VertexArray.h" />
-    <ClInclude Include="src\Mirage\ECS\Components.h" />
     <ClInclude Include="src\Mirage\ECS\Scene.h" />
     <ClInclude Include="src\MrgPch.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
@@ -656,6 +658,9 @@
     <ProjectReference Include="vendor\ImGui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Mirage\ECS\Components\SpriteRendererComponent.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
