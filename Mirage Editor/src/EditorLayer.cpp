@@ -4,6 +4,7 @@
 
 #include "ImGui/imgui_internal.h"
 #include "Mirage/ECS/Components/CameraComponent.h"
+#include "Mirage/ECS/Components/NativeScriptComponent.h"
 #include "Mirage/ImGui/Extensions/GradientButtonV1.h"
 #include "Mirage/ImGui/Extensions/ToggleButton.h"
 
@@ -39,6 +40,45 @@ void EditorLayer::OnAttach()
 
     m_Camera = m_ActiveScene->CreateEntity("Camera");
     m_Camera.AddComponent<CameraComponent>();
+
+    class CameraController : public ScriptableSceneObject
+    {
+    private:
+        float _speed = 5.0f;
+        TransformComponent* _transform;
+    public:
+        void OnCreate()
+        {
+            _transform = &GetComponent<TransformComponent>();
+        }
+
+        void OnDestroy()
+        {
+            
+        }
+
+        void OnUpdate(float DeltaTime)
+        {
+            if(Input::IsKeyPressed(KeyCodes::MRG_Key_A))
+            {
+                _transform->Trannsform[3][0] -= _speed * DeltaTime;
+            }
+            if(Input::IsKeyPressed(KeyCodes::MRG_Key_D))
+            {
+                _transform->Trannsform[3][0] += _speed * DeltaTime;
+            }
+            if(Input::IsKeyPressed(KeyCodes::MRG_Key_W))
+            {
+                _transform->Trannsform[3][1] += _speed * DeltaTime;
+            }
+            if(Input::IsKeyPressed(KeyCodes::MRG_Key_S))
+            {
+                _transform->Trannsform[3][1] -= _speed * DeltaTime;
+            }
+        }
+    };
+    
+    m_Camera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 }
 
 void EditorLayer::OnDetach()

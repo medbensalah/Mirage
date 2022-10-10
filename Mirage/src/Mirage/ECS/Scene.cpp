@@ -3,6 +3,7 @@
 #include "Scene.h"
 #include "SceneObject.h"
 #include "Components/CameraComponent.h"
+#include "Components/NativeScriptComponent.h"
 #include "Components/TransformComponent.h"
 #include "Components/SpriteRendererComponent.h"
 #include "Mirage/Renderer/Renderer2D.h"
@@ -27,6 +28,21 @@ namespace Mirage
 
     void Scene::OnUpdate(float DeltaTime)
     {
+        //Update scripts
+        {
+            m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
+            {
+                //TODO: Move to Scene::OnPlay
+               if(!nsc.Instance)
+               {
+                   nsc.Instance = nsc.InstantiateScript();
+                   nsc.Instance->m_SceneObject = SceneObject{entity, this};
+                   nsc.Instance->OnCreate();
+               }
+
+                nsc.Instance->OnUpdate(DeltaTime);
+            });
+        }
 
         //Render 2D
         Camera* mainCamera = nullptr;

@@ -16,7 +16,8 @@
 #include "Mirage/ImGui/ImGuiLayer.h"
 
 #include "Mirage/ECS/Scene.h"
-#include "Mirage/ECS/SceneObject.h""
+#include "Mirage/ECS/SceneObject.h"
+#include "Mirage/ECS/ScriptableSceneObject.h"
 
 /* *********Renderer******** */
 #include "Mirage/Renderer/Renderer.h"
