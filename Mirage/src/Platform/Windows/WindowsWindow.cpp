@@ -7,7 +7,7 @@
 #include "Mirage/Events/MouseEvent.h"
 
 #include "Mirage/Core/KeyCodes.h"
-#include "Mirage/Core/MouseButtonCodes.h"
+#include "Mirage/Core/MouseCodes.h"
 
 #include "Mirage/Renderer/Renderer.h"
 
@@ -105,19 +105,19 @@ namespace Mirage
             {
             case GLFW_PRESS:
                 {
-                    KeyPressedEvent event(GLFW_KEY_TO_MRG_KEY(key), 0);
+                    KeyPressedEvent event(key, 0);
                     data.EventCallback(event);
                     break;
                 }
             case GLFW_RELEASE:
                 {
-                    KeyReleasedEvent event(GLFW_KEY_TO_MRG_KEY(key));
+                    KeyReleasedEvent event(key);
                     data.EventCallback(event);
                     break;
                 }
             case GLFW_REPEAT:
                 {
-                    KeyPressedEvent event(GLFW_KEY_TO_MRG_KEY(key), 1);
+                    KeyPressedEvent event(key, 1);
                     data.EventCallback(event);
                     break;
                 }
@@ -140,13 +140,13 @@ namespace Mirage
             {
             case GLFW_PRESS:
                 {
-                    MouseButtonPressedEvent event(GLFW_BTN_TO_MRG_BTN(button));
+                    MouseButtonPressedEvent event(button);
                     data.EventCallback(event);
                     break;
                 }
             case GLFW_RELEASE:
                 {
-                    MouseButtonReleasedEvent event(GLFW_BTN_TO_MRG_BTN(button));
+                    MouseButtonReleasedEvent event(button);
                     data.EventCallback(event);
                     break;
                 }

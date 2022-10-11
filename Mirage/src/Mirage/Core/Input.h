@@ -1,18 +1,19 @@
 ﻿#pragma once
 
 #include "Math.h"
-#include "Mirage/Core/Core.h"
+#include "Mirage/Core/KeyCodes.h"
+#include "Mirage/Core/MouseCodes.h"
 
 namespace Mirage
 {
     class Input
     {
     public:        
-        static bool IsKeyPressed(int keyCode);
-        static bool IsKeyReleased(int keyCode);
+        static bool IsKeyPressed(KeyCode keyCode);
+        static bool IsKeyReleased(KeyCode keyCode);
 
-        static bool IsMouseButtonPressed(int button);
-        static bool IsMouseButtonReleased(int button);
+        static bool IsMouseButtonPressed(MouseCode button);
+        static bool IsMouseButtonReleased(MouseCode button);
         
         static Vec2 GetMousePosition();
         

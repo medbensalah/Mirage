@@ -59,19 +59,19 @@ void EditorLayer::OnAttach()
 
         void OnUpdate(float DeltaTime)
         {
-            if(Input::IsKeyPressed(KeyCodes::MRG_Key_A))
+            if(Input::IsKeyPressed(Key::A))
             {
                 _transform->Trannsform[3][0] -= _speed * DeltaTime;
             }
-            if(Input::IsKeyPressed(KeyCodes::MRG_Key_D))
+            if(Input::IsKeyPressed(Key::D))
             {
                 _transform->Trannsform[3][0] += _speed * DeltaTime;
             }
-            if(Input::IsKeyPressed(KeyCodes::MRG_Key_W))
+            if(Input::IsKeyPressed(Key::W))
             {
                 _transform->Trannsform[3][1] += _speed * DeltaTime;
             }
-            if(Input::IsKeyPressed(KeyCodes::MRG_Key_S))
+            if(Input::IsKeyPressed(Key::S))
             {
                 _transform->Trannsform[3][1] -= _speed * DeltaTime;
             }

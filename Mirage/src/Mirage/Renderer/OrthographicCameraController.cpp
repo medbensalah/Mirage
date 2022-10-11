@@ -18,22 +18,22 @@ namespace Mirage
     {
         MRG_PROFILE_FUNCTION();
         
-        if (Input::IsKeyPressed(MRG_Key_A))
+        if (Input::IsKeyPressed(Key::A))
         {
             m_CameraPosition.x -= cos(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
             m_CameraPosition.y -= sin(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
         }
-        else if (Input::IsKeyPressed(MRG_Key_D))
+        else if (Input::IsKeyPressed(Key::D))
         {
             m_CameraPosition.x += cos(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
             m_CameraPosition.y += sin(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
         }
-        if (Input::IsKeyPressed(MRG_Key_W))
+        if (Input::IsKeyPressed(Key::W))
         {
             m_CameraPosition.x += -sin(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
             m_CameraPosition.y += cos(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
         }
-        else if (Input::IsKeyPressed(MRG_Key_S))
+        else if (Input::IsKeyPressed(Key::S))
         {
             m_CameraPosition.x -= -sin(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
             m_CameraPosition.y -= cos(Radians(m_CameraRotation.z)) * m_CameraTranslationSpeed * DeltaTime;
@@ -41,11 +41,11 @@ namespace Mirage
 
         if (m_Rotation)
         {
-            if (Input::IsKeyPressed(MRG_Key_Q))
+            if (Input::IsKeyPressed(Key::Q))
             {
                 m_CameraRotation.z += (m_CameraRotationSpeed * DeltaTime);
             }
-            else if (Input::IsKeyPressed(MRG_Key_E))
+            else if (Input::IsKeyPressed(Key::E))
             {
                 m_CameraRotation.z -= (m_CameraRotationSpeed * DeltaTime);
             }

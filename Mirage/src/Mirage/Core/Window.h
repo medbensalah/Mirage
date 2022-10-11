@@ -1,7 +1,8 @@
 ﻿#pragma once
 
-#include "MrgPch.h"
+#include <sstream>
 
+#include "Mirage/Core/Core.h"
 #include "Mirage/Events/Event.h"
 
 namespace Mirage

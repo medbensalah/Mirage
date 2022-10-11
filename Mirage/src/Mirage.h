@@ -10,7 +10,7 @@
                  
 #include "Mirage/Core/Input.h"
 #include "Mirage/Core/KeyCodes.h"
-#include "Mirage/Core/MouseButtonCodes.h"
+#include "Mirage/Core/MouseCodes.h"
 #include "Mirage/Renderer/OrthographicCamera.h"
 
 #include "Mirage/ImGui/ImGuiLayer.h"

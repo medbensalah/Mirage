@@ -1,5 +1,8 @@
 #pragma once
 
+#include <functional>
+
+#include "Mirage/Debug/Instrumentor.h"
 #include "Mirage/Core/Core.h"
 
 namespace Mirage

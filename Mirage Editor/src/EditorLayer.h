@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Mirage.h"
+#include "Mirage/Core/Input.h"
 
 namespace Mirage
 {

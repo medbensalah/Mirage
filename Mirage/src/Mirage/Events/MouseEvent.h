@@ -1,13 +1,14 @@
 ﻿#pragma once
 
 #include "Mirage/Events/Event.h"
+#include "Mirage/Core/MouseCodes.h"
 
 namespace Mirage
 {
     class MouseMoveEvent : public Event
     {
     public:
-        MouseMoveEvent(float x, float y)
+        MouseMoveEvent(const float x, const float y)
             : m_MouseX(x), m_MouseY(y)
         {
         }
@@ -31,7 +32,7 @@ namespace Mirage
     class MouseScrollEvent : public Event
     {
     public:
-        MouseScrollEvent(float xOffset, float yOffset)
+        MouseScrollEvent(const float xOffset, const float yOffset)
             : m_XOffset(xOffset), m_YOffset(yOffset)
         {
         }
@@ -57,7 +58,7 @@ namespace Mirage
     class MouseButtonEvent : public Event
     {
     public:
-        int GetButton() const { return m_Button; }
+        MouseCode GetButton() const { return m_Button; }
         
         EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput);
 
@@ -67,13 +68,13 @@ namespace Mirage
         {
         }
 
-        int m_Button;
+        MouseCode m_Button;
     };
     
     class MouseButtonPressedEvent : public MouseButtonEvent
     {
     public:
-        MouseButtonPressedEvent(int button)
+        MouseButtonPressedEvent(const MouseCode button)
             : MouseButtonEvent(button)
         {
         }
@@ -90,7 +91,7 @@ namespace Mirage
     class MouseButtonReleasedEvent : public MouseButtonEvent
     {
     public:
-        MouseButtonReleasedEvent(int button)
+        MouseButtonReleasedEvent(const MouseCode button)
             : MouseButtonEvent(button)
         {
         }

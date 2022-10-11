@@ -202,7 +202,7 @@ namespace Mirage
                 {
                     for(uint32_t i = 1; i < s_Data.TextureSlotIndex; ++i)
                     {
-                        if (*(s_Data.TextureSlots[i].get()) == *(quad.texture.get()))
+                        if (*(s_Data.TextureSlots[i]) == *(quad.texture))
                         {
                             TextureIndex = (float)i;
                             break;
@@ -256,7 +256,7 @@ namespace Mirage
                 {
                     for(uint32_t i = 1; i < s_Data.TextureSlotIndex; ++i)
                     {
-                        if (*(s_Data.TextureSlots[i].get()) == *(quad.texture.get()))
+                        if (*(s_Data.TextureSlots[i]) == *(quad.texture))
                         {
                             TextureIndex = (float)i;
                             break;
