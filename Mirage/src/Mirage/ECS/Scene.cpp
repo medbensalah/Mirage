@@ -51,7 +51,7 @@ namespace Mirage
             auto group = m_Registry.group(entt::get<TransformComponent, CameraComponent>);
             for(auto entity : group)
             {
-                auto& [transform, cam] = group.get<TransformComponent, CameraComponent>(entity);
+                auto [transform, cam] = group.get<TransformComponent, CameraComponent>(entity);
                 
                 if (cam.IsMain)
                 {
@@ -68,7 +68,7 @@ namespace Mirage
         
             for (auto entity : group)
             {
-                auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+                auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
                 Renderer2D::Draw::Quad(transform, sprite.Color);
                 // MRG_CORE_INFO((unsigned int)entity);
             }

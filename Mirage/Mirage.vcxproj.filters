@@ -13,11 +13,20 @@
     <Filter Include="src\Mirage\Debug">
       <UniqueIdentifier>{07F4B8A7-F3EC-D7F9-1C1F-BD7E0877B705}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Mirage\ECS">
+      <UniqueIdentifier>{9B4590C2-8713-84C8-70A7-F4EE5C14602D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Mirage\ECS\Components">
+      <UniqueIdentifier>{D09341A1-3C56-752B-8506-04B8F1074E09}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Mirage\Events">
       <UniqueIdentifier>{95C761A2-01DE-5F38-4A55-EB59B6AA30C0}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Mirage\ImGui">
       <UniqueIdentifier>{BB5E17A8-A757-36FA-D089-1B7FBCE11506}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Mirage\ImGui\Extensions">
+      <UniqueIdentifier>{FA907BCC-669E-A9B2-EF84-A59D5B917569}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Mirage\Renderer">
       <UniqueIdentifier>{970FEDB8-0371-CAC6-8CDE-1079F83E0186}</UniqueIdentifier>
@@ -99,6 +108,30 @@
     <ClInclude Include="src\Mirage\Debug\Instrumentor.h">
       <Filter>src\Mirage\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\Components\CameraComponent.h">
+      <Filter>src\Mirage\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\Components\NativeScriptComponent.h">
+      <Filter>src\Mirage\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\Components\SpriteRendererComponent.h">
+      <Filter>src\Mirage\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\Components\TransformComponent.h">
+      <Filter>src\Mirage\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\Scene.h">
+      <Filter>src\Mirage\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\SceneCamera.h">
+      <Filter>src\Mirage\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\SceneObject.h">
+      <Filter>src\Mirage\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\ScriptableSceneObject.h">
+      <Filter>src\Mirage\ECS</Filter>
+    </ClInclude>
     <ClInclude Include="src\Mirage\Events\ApplicationEvent.h">
       <Filter>src\Mirage\Events</Filter>
     </ClInclude>
@@ -111,10 +144,19 @@
     <ClInclude Include="src\Mirage\Events\MouseEvent.h">
       <Filter>src\Mirage\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\ImGui\Extensions\GradientButtonV1.h">
+      <Filter>src\Mirage\ImGui\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\ImGui\Extensions\ToggleButton.h">
+      <Filter>src\Mirage\ImGui\Extensions</Filter>
+    </ClInclude>
     <ClInclude Include="src\Mirage\ImGui\ImGuiLayer.h">
       <Filter>src\Mirage\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\Renderer\Buffer.h">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Renderer\Camera.h">
       <Filter>src\Mirage\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\Renderer\Framebuffer.h">
@@ -1444,6 +1486,15 @@
     </ClCompile>
     <ClCompile Include="src\Mirage\Core\Window.cpp">
       <Filter>src\Mirage\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\ECS\Scene.cpp">
+      <Filter>src\Mirage\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\ECS\SceneCamera.cpp">
+      <Filter>src\Mirage\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\ECS\SceneObject.cpp">
+      <Filter>src\Mirage\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Mirage\ImGui\ImGuiBuild.cpp">
       <Filter>src\Mirage\ImGui</Filter>
