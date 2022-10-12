@@ -6,6 +6,7 @@
 #include "Components/NativeScriptComponent.h"
 #include "Components/TransformComponent.h"
 #include "Components/SpriteRendererComponent.h"
+#include "Components/TagComponent.h"
 #include "Mirage/Renderer/Renderer2D.h"
 
 namespace Mirage
@@ -20,8 +21,10 @@ namespace Mirage
 
     SceneObject Scene::CreateEntity(const std::string& name)
     {
-        SceneObject sceneObject {m_Registry.create(), this, name};
+        SceneObject sceneObject {m_Registry.create(), this};
         sceneObject.AddComponent<TransformComponent>();
+        auto& tag = sceneObject.AddComponent<TagComponent>();
+        tag.Tag = name.empty() ? "Entity" : name;
         
         return sceneObject;
     }

@@ -3,8 +3,8 @@
 
 namespace Mirage
 {
-    SceneObject::SceneObject(entt::entity entity, Scene* scene, const std::string& name)
-        : m_name(name), m_Entity(entity), m_Scene(scene)
+    SceneObject::SceneObject(entt::entity entity, Scene* scene)
+        : m_Entity(entity), m_Scene(scene)
     {
     }
 }

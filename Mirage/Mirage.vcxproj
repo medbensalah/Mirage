@@ -165,6 +165,7 @@
     <ClInclude Include="src\Mirage\ECS\Components\CameraComponent.h" />
     <ClInclude Include="src\Mirage\ECS\Components\NativeScriptComponent.h" />
     <ClInclude Include="src\Mirage\ECS\Components\SpriteRendererComponent.h" />
+    <ClInclude Include="src\Mirage\ECS\Components\TagComponent.h" />
     <ClInclude Include="src\Mirage\ECS\Components\TransformComponent.h" />
     <ClInclude Include="src\Mirage\ECS\Scene.h" />
     <ClInclude Include="src\Mirage\ECS\SceneCamera.h" />

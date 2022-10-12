@@ -9,7 +9,7 @@ namespace Mirage
     {
     public:
         SceneObject() = default;
-        SceneObject(entt::entity entity, Scene* scene, const std::string& name = "SceneObject");
+        SceneObject(entt::entity entity, Scene* scene);
         SceneObject(const SceneObject& other) = default;
 
         template <typename T, typename... Args>
@@ -45,12 +45,17 @@ namespace Mirage
         }
 
         operator bool() const { return m_Entity != entt::null; }
-        
-    public:
-        const std::string& Name() { return m_name; }
-        
+        operator uint32_t() const { return (uint32_t)m_Entity; }
+
+        bool operator== (const SceneObject& other) const
+        {
+            return m_Entity == other.m_Entity && m_Scene == other.m_Scene;
+        }
+        bool operator!= (const SceneObject& other) const
+        {
+            return !(*this == other);
+        }
     private:
-        std::string m_name = "SceneObject";
         entt::entity m_Entity{ entt::null };
         Scene* m_Scene = nullptr;
     };

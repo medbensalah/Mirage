@@ -9,6 +9,7 @@
 #include "Mirage/ImGui/Extensions/ToggleButton.h"
 
 #include "Mirage/ECS/Components/SpriteRendererComponent.h"
+#include "Mirage/ECS/Components/TagComponent.h"
 #include "Mirage/ECS/Components/TransformComponent.h"
 
 namespace Mirage
@@ -79,6 +80,8 @@ void EditorLayer::OnAttach()
     };
     
     m_Camera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+
+    m_HierarchyPanel.SetContext(m_ActiveScene);
 }
 
 void EditorLayer::OnDetach()
@@ -127,7 +130,7 @@ void EditorLayer::OnUpdate(float DeltaTime)
     m_Framebuffer->Unbind();
 }
 
-static bool showDemo = true;
+static bool showDemo = false;
 
 void EditorLayer::CreateDockspace()
 {
@@ -233,10 +236,12 @@ void EditorLayer::OnImGuiRender()
     CreateDockspace();
     CreateViewport();
 
+    m_HierarchyPanel.OnImguiRender();
+
     float baseOffset = 80.0f;
     ImGui::Begin("Settings");
     
-    ImGui::Text("%s", m_SquareEntity.Name().c_str());
+    ImGui::Text("%s", m_SquareEntity.GetComponent<TagComponent>().Tag.c_str());
     // ImGui::ColoredButtonV1("You");
     //
     // MRG_IMGUI_DRAW_LABEL_WIDGET("Show Demo toggle", baseOffset, ImGui::ToggleButton, "##ToggleDemo", &showDemo);

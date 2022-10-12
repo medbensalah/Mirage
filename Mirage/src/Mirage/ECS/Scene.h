@@ -11,7 +11,7 @@ namespace Mirage
         Scene();
         ~Scene();
 
-        SceneObject CreateEntity(const std::string& name ="");
+        SceneObject CreateEntity(const std::string& name = std::string());
 
         void OnUpdate(float DeltaTime);
         void OnViewportResize(uint32_t width, uint32_t height);
@@ -22,5 +22,6 @@ namespace Mirage
         uint32_t m_ViewportHeight;
         
         friend class SceneObject;
+        friend class HierarchyPanel;
     };
 }

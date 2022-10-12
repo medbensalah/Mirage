@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Mirage.h"
-#include "Mirage/Core/Input.h"
+#include "Panels/HierarchyPanel.h"
 
 namespace Mirage
 {
@@ -36,10 +36,11 @@ namespace Mirage
         bool m_ViewportHovered = false;
     
         Ref<Texture2D> m_texture;
-    
 
         Vec2 m_ViewportSize = {0.0f, 0.0f};
-        
+
+        //Panels
+        HierarchyPanel m_HierarchyPanel;
     };
 
 }
