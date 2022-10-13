@@ -5,15 +5,15 @@ namespace Mirage
 {
     struct TransformComponent
     {
-        Mat4 Trannsform = Mat4(1.0f);
+        Mat4 Transform = Mat4(1.0f);
 
         TransformComponent() = default;
         TransformComponent(const Mat4& transform)
-            : Trannsform(transform)
+            : Transform(transform)
         {
         }
 
-        operator const Mat4&() const { return Trannsform; }
-        operator Mat4&() { return Trannsform; }
+        operator const Mat4&() const { return Transform; }
+        operator Mat4&() { return Transform; }
     };
 }

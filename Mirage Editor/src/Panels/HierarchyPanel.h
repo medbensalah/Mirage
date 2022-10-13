@@ -20,6 +20,7 @@ namespace Mirage
 
     private:
             void DrawEntityNode(SceneObject so);
+            void DrawComponents(SceneObject so);
     private:
         Ref<Scene> m_Context;
 

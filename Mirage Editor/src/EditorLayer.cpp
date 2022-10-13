@@ -62,19 +62,19 @@ void EditorLayer::OnAttach()
         {
             if(Input::IsKeyPressed(Key::A))
             {
-                _transform->Trannsform[3][0] -= _speed * DeltaTime;
+                _transform->Transform[3][0] -= _speed * DeltaTime;
             }
             if(Input::IsKeyPressed(Key::D))
             {
-                _transform->Trannsform[3][0] += _speed * DeltaTime;
+                _transform->Transform[3][0] += _speed * DeltaTime;
             }
             if(Input::IsKeyPressed(Key::W))
             {
-                _transform->Trannsform[3][1] += _speed * DeltaTime;
+                _transform->Transform[3][1] += _speed * DeltaTime;
             }
             if(Input::IsKeyPressed(Key::S))
             {
-                _transform->Trannsform[3][1] -= _speed * DeltaTime;
+                _transform->Transform[3][1] -= _speed * DeltaTime;
             }
         }
     };
@@ -238,28 +238,27 @@ void EditorLayer::OnImGuiRender()
 
     m_HierarchyPanel.OnImguiRender();
 
-    float baseOffset = 80.0f;
     ImGui::Begin("Settings");
     
     ImGui::Text("%s", m_SquareEntity.GetComponent<TagComponent>().Tag.c_str());
     // ImGui::ColoredButtonV1("You");
     //
-    // MRG_IMGUI_DRAW_LABEL_WIDGET("Show Demo toggle", baseOffset, ImGui::ToggleButton, "##ToggleDemo", &showDemo);
+    // MRG_IMGUI_DRAW_LABEL_WIDGET("Show Demo toggle", ImGui::ToggleButton, "##ToggleDemo", &showDemo);
 
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Position", baseOffset, ImGui::DragFloat3, "##Position", glm::value_ptr(m_Camera.GetComponent<TransformComponent>().Trannsform[3]), 0.05f);
+    MRG_IMGUI_DRAW_LABEL_WIDGET("Position", ImGui::DragFloat3, "##Position", glm::value_ptr(m_Camera.GetComponent<TransformComponent>().Transform[3]), 0.05f);
     float cameraSize = m_Camera.GetComponent<CameraComponent>().Camera.GetOrthographicSize();
     
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Size", baseOffset, ImGui::DragFloat, "##Size", &cameraSize, 0.05f);
+    MRG_IMGUI_DRAW_LABEL_WIDGET("Size", ImGui::DragFloat, "##Size", &cameraSize, 0.05f);
     m_Camera.GetComponent<CameraComponent>().Camera.SetOrthographicSize(cameraSize);
 
     ImGui::Spacing();
     ImGui::Separator();
     
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Color", baseOffset, ImGui::ColorEdit4, "##Color", glm::value_ptr(m_SquareEntity.GetComponent<SpriteRendererComponent>().Color));
+    MRG_IMGUI_DRAW_LABEL_WIDGET("Color", ImGui::ColorEdit4, "##Color", glm::value_ptr(m_SquareEntity.GetComponent<SpriteRendererComponent>().Color));
     //
     // ImGui::Spacing();
-    // MRG_IMGUI_DRAW_LABEL_WIDGET("Tiling", baseOffset, ImGui::DragFloat2, "##Tiling", glm::value_ptr(m_Tiling), 0.05f);
-    // MRG_IMGUI_DRAW_LABEL_WIDGET("Offset", baseOffset, ImGui::DragFloat2, "##Offset", glm::value_ptr(m_Offset), 0.05f);
+    // MRG_IMGUI_DRAW_LABEL_WIDGET("Tiling", ImGui::DragFloat2, "##Tiling", glm::value_ptr(m_Tiling), 0.05f);
+    // MRG_IMGUI_DRAW_LABEL_WIDGET("Offset", ImGui::DragFloat2, "##Offset", glm::value_ptr(m_Offset), 0.05f);
     //
     // ImGui::Spacing();
     // ImGui::Separator();
@@ -281,7 +280,7 @@ void EditorLayer::OnImGuiRender()
     ImGui::Separator();
     ImGui::Spacing();
     
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Show demo", baseOffset, ImGui::Checkbox, "##Showdemo", &showDemo);
+    MRG_IMGUI_DRAW_LABEL_WIDGET("Show demo", ImGui::Checkbox, "##Showdemo", &showDemo);
     
 
     if(showDemo)

@@ -59,7 +59,7 @@ namespace Mirage
                 if (cam.IsMain)
                 {
                     mainCamera = &(cam.Camera);
-                    cameraTransform = &(transform.Trannsform);
+                    cameraTransform = &(transform.Transform);
                     break;
                 }
             }

@@ -29,7 +29,8 @@
 
 #define MRG_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 
-#define MRG_IMGUI_DRAW_LABEL_WIDGET(Label,offset,fn,...)    (ImGui::AlignTextToFramePadding(),ImGui::TextUnformatted(Label),ImGui::SameLine(ImMax(offset, 15 + ImGui::CalcTextSize(Label).x)),fn(__VA_ARGS__))
+static float baseOffset = 80.0f;
+#define MRG_IMGUI_DRAW_LABEL_WIDGET(Label,fn,...)    (ImGui::AlignTextToFramePadding(),ImGui::TextUnformatted(Label),ImGui::SameLine(ImMax(baseOffset,  + ImGui::CalcTextSize(Label).x)),fn(__VA_ARGS__))
 
 namespace Mirage
 {
