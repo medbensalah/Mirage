@@ -11,6 +11,7 @@
 #include "Mirage/ECS/Components/SpriteRendererComponent.h"
 #include "Mirage/ECS/Components/TagComponent.h"
 #include "Mirage/ECS/Components/TransformComponent.h"
+#include "Mirage/ImGui/Extensions/DrawingAPI.h"
 
 namespace Mirage
 {
@@ -245,16 +246,27 @@ void EditorLayer::OnImGuiRender()
     //
     // MRG_IMGUI_DRAW_LABEL_WIDGET("Show Demo toggle", ImGui::ToggleButton, "##ToggleDemo", &showDemo);
 
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Position", ImGui::DragFloat3, "##Position", glm::value_ptr(m_Camera.GetComponent<TransformComponent>().Transform[3]), 0.05f);
-    float cameraSize = m_Camera.GetComponent<CameraComponent>().Camera.GetOrthographicSize();
+    DrawSplitUIItem("Position", [&]()->bool
+    {
+        return ImGui::DragFloat3("##Position", glm::value_ptr(m_Camera.GetComponent<TransformComponent>().Transform[3]), 0.05f);
+    });
     
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Size", ImGui::DragFloat, "##Size", &cameraSize, 0.05f);
+    float cameraSize = m_Camera.GetComponent<CameraComponent>().Camera.GetOrthographicSize();
+    DrawSplitUIItem("Size", [&]()->bool
+    {
+        return ImGui::DragFloat("##Size", &cameraSize, 0.05f);
+    });
+    
     m_Camera.GetComponent<CameraComponent>().Camera.SetOrthographicSize(cameraSize);
 
     ImGui::Spacing();
     ImGui::Separator();
     
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Color", ImGui::ColorEdit4, "##Color", glm::value_ptr(m_SquareEntity.GetComponent<SpriteRendererComponent>().Color));
+    DrawSplitUIItem("Color", [&]()->bool
+    {
+        return ImGui::ColorEdit4("##Color", glm::value_ptr(m_SquareEntity.GetComponent<SpriteRendererComponent>().Color));
+    });
+    
     //
     // ImGui::Spacing();
     // MRG_IMGUI_DRAW_LABEL_WIDGET("Tiling", ImGui::DragFloat2, "##Tiling", glm::value_ptr(m_Tiling), 0.05f);
@@ -280,8 +292,10 @@ void EditorLayer::OnImGuiRender()
     ImGui::Separator();
     ImGui::Spacing();
     
-    MRG_IMGUI_DRAW_LABEL_WIDGET("Show demo", ImGui::Checkbox, "##Showdemo", &showDemo);
-    
+    DrawSplitUIItem("Show demo", [&]()->bool
+    {
+        return ImGui::Checkbox("##Showdemo", &showDemo);
+    });
 
     if(showDemo)
     {

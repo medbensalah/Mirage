@@ -8,6 +8,7 @@
 #include "Mirage/Core/Log.h"
 #include "Mirage/ECS/Components/TagComponent.h"
 #include "Mirage/ECS/Components/TransformComponent.h"
+#include "Mirage/ImGui/Extensions/DrawingAPI.h"
 
 namespace Mirage
 {
@@ -27,18 +28,18 @@ namespace Mirage
 
         m_Context->m_Registry.each([&](auto entityID)
         {
-            SceneObject so{ entityID, m_Context.get() };
+            SceneObject so{entityID, m_Context.get()};
             DrawEntityNode(so);
         });
 
-        if(ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
+        if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
             m_SelectionContext = {};
-        
+
         ImGui::End();
 
         ImGui::Begin("Inspector");
 
-        if(m_SelectionContext)
+        if (m_SelectionContext)
         {
             DrawComponents(m_SelectionContext);
         }
@@ -49,52 +50,55 @@ namespace Mirage
     void HierarchyPanel::DrawEntityNode(SceneObject so)
     {
         auto& tag = so.GetComponent<TagComponent>().Tag;
-        
+
         ImGuiTreeNodeFlags flags =
             ImGuiTreeNodeFlags_OpenOnArrow |
             ImGuiTreeNodeFlags_SpanFullWidth |
-           // ImGuiTreeNodeFlags_Leaf |
+            // ImGuiTreeNodeFlags_Leaf |
             ((m_SelectionContext == so) ? ImGuiTreeNodeFlags_Selected : 0);
         bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)so, flags, tag.c_str());
 
-        if(ImGui::IsItemClicked())
+        if (ImGui::IsItemClicked())
         {
             m_SelectionContext = so;
         }
 
-        if(opened)
+        if (opened)
         {
             ImGui::TreePop();
         }
-
     }
 
     void HierarchyPanel::DrawComponents(SceneObject so)
     {
-        if(so.HasComponent<TagComponent>())
+        if (so.HasComponent<TagComponent>())
         {
             auto& tag = so.GetComponent<TagComponent>().Tag;
-
+            
             char buffer[256];
             memset(buffer, 0, sizeof(buffer));
             strcpy_s(buffer, sizeof(buffer), tag.c_str());
-
-            if (MRG_IMGUI_DRAW_LABEL_WIDGET("Tag", ImGui::InputText, "##Tag", buffer, sizeof(buffer)))
+            
+            ImGui::Text("Tag");
+            ImGui::SameLine();
+            if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
             {
                 tag = std::string(buffer);
             }
         }
-        
-        if(so.HasComponent<TransformComponent>())
+
+        if (so.HasComponent<TransformComponent>())
         {
             ImGuiTreeNodeFlags flags =
                 ImGuiTreeNodeFlags_DefaultOpen |
                 ImGuiTreeNodeFlags_CollapsingHeader;
-            if(ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), flags, "Transform"))
+            if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), flags, "Transform"))
             {
                 auto& tc = so.GetComponent<TransformComponent>();
-                MRG_IMGUI_DRAW_LABEL_WIDGET("Position", ImGui::DragFloat3, "##Position", glm::value_ptr(tc.Transform[3]), 0.1f);
-               
+                DrawSplitUIItem("Position", [&]()-> bool
+                {
+                    return ImGui::DragFloat3("##Position", glm::value_ptr(tc.Transform[3]), 0.1f);
+                });
             }
         }
     }
