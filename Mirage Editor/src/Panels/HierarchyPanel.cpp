@@ -6,6 +6,7 @@
 #include "ImGui/imgui_internal.h"
 
 #include "Mirage/Core/Log.h"
+#include "Mirage/ECS/Components/CameraComponent.h"
 #include "Mirage/ECS/Components/TagComponent.h"
 #include "Mirage/ECS/Components/TransformComponent.h"
 #include "Mirage/ImGui/Extensions/DrawingAPI.h"
@@ -81,6 +82,7 @@ namespace Mirage
             
             ImGui::Text("Tag");
             ImGui::SameLine();
+            ImGui::PushItemWidth(-1);
             if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
             {
                 tag = std::string(buffer);
@@ -94,11 +96,72 @@ namespace Mirage
                 ImGuiTreeNodeFlags_CollapsingHeader;
             if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), flags, "Transform"))
             {
+            ImGui::Indent();
                 auto& tc = so.GetComponent<TransformComponent>();
                 DrawSplitUIItem("Position", [&]()-> bool
                 {
                     return ImGui::DragFloat3("##Position", glm::value_ptr(tc.Transform[3]), 0.1f);
+                }, "TransformComponent");
+            ImGui::Unindent();
+            }
+        }
+        
+        if (so.HasComponent<CameraComponent>())
+        {
+            ImGuiTreeNodeFlags flags =
+                ImGuiTreeNodeFlags_DefaultOpen |
+                ImGuiTreeNodeFlags_CollapsingHeader;
+            if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), flags, "Camera"))
+            {
+            ImGui::Indent();
+                auto& camera = so.GetComponent<CameraComponent>().Camera;
+                
+                const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
+                const char* projectionTypeString = projectionTypeStrings[camera.GetProjectionType()];
+                int out = (int)camera.GetProjectionType();
+                DrawComboBox("Projection", projectionTypeStrings, 2, projectionTypeString, &out, [&]()
+                {
+                    camera.SetProjectionType(out);
                 });
+                
+                
+                if(camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
+                {
+                }
+               
+
+                if(camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
+                {
+                    float size = camera.GetOrthographicSize();
+                    if (DrawSplitUIItem("Orthographic Size", [&]()-> bool
+                    {
+                        return ImGui::DragFloat("##Orthographic Size", &size, 0.1f, 0.1f, 1000.0f, "%.1f", 1.0f);
+                    }, "CameraComponent"))
+                    {
+                        camera.SetOrthographicSize(size);
+                    }
+
+                    float nearClip = camera.GetOrthographicNearClip();
+                    if (DrawSplitUIItem("near Clip", [&]()-> bool
+                    {
+                        return ImGui::DragFloat("##near Clip", &nearClip, 0.1f, 0.1f, 1000.0f, "%.1f", 1.0f);
+                    }, "CameraComponent"))
+                    {
+                        camera.SetOrthographicNearClip(nearClip);
+                    }
+
+                    float farClip = camera.GetOrthographicFarClip();
+                    if (DrawSplitUIItem("Far Clip", [&]()-> bool
+                    {
+                        return ImGui::DragFloat("##Far Clip", &farClip, 0.1f, 0.1f, 1000.0f, "%.1f", 1.0f);
+                    }, "CameraComponent"))
+                    {
+                        camera.SetOrthographicFarClip(farClip);
+                    }
+
+                    
+                }
+            ImGui::Unindent();
             }
         }
     }

@@ -246,9 +246,10 @@ void EditorLayer::OnImGuiRender()
     //
     // MRG_IMGUI_DRAW_LABEL_WIDGET("Show Demo toggle", ImGui::ToggleButton, "##ToggleDemo", &showDemo);
 
-    DrawSplitUIItem("Position", [&]()->bool
+    auto& tc = m_Camera.GetComponent<TransformComponent>();
+    DrawSplitUIItem("Position", [&tc]()->bool
     {
-        return ImGui::DragFloat3("##Position", glm::value_ptr(m_Camera.GetComponent<TransformComponent>().Transform[3]), 0.05f);
+        return ImGui::DragFloat3("##Position", glm::value_ptr(tc.Transform[3]), 0.05f);
     });
     
     float cameraSize = m_Camera.GetComponent<CameraComponent>().Camera.GetOrthographicSize();
