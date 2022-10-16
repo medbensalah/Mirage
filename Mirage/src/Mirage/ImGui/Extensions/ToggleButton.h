@@ -1,8 +1,10 @@
 ﻿#pragma once
 
-namespace ImGui
-{
-    bool ToggleButton(const char* label, bool* v)
+    namespace ImGui
+    {
+    static bool ToggleButton(const char* label, bool* v);
+    }
+    bool ImGui::ToggleButton(const char* label, bool* v)
     {
         ImGuiWindow* window = GetCurrentWindow();
         if (window->SkipItems)
@@ -42,4 +44,3 @@ namespace ImGui
         draw_list->AddCircleFilled(ImVec2(p.x + radius + (*v ? 1.1f : -0.1f) * (width - radius * 2.0f), p.y + radius), radius - 1.5f, ColorConvertFloat4ToU32(  colors[ImGuiCol_CheckMark]));
         return true;
     }
-}

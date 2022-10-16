@@ -11,7 +11,9 @@ namespace Mirage
         Scene();
         ~Scene();
 
-        SceneObject CreateEntity(const std::string& name = std::string());
+        SceneObject CreateSceneObject(const std::string& name = std::string());
+        SceneObject CreateChildSceneObject(SceneObject parent, const std::string& name = std::string());
+        void DestroySceneObject(SceneObject& entity);
 
         void OnUpdate(float DeltaTime);
         void OnViewportResize(uint32_t width, uint32_t height);

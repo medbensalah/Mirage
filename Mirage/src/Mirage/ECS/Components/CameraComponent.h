@@ -10,6 +10,8 @@ namespace Mirage
         SceneCamera Camera;
         bool IsMain = true;
         bool FixedAspectRatio = false;
+
+        //TODO : Add clear color
         
         CameraComponent() = default;
         CameraComponent(const CameraComponent&) = default;

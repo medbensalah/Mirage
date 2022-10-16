@@ -19,7 +19,7 @@ namespace Mirage
     {
     }
 
-    SceneObject Scene::CreateEntity(const std::string& name)
+    SceneObject Scene::CreateSceneObject(const std::string& name)
     {
         SceneObject sceneObject {m_Registry.create(), this};
         sceneObject.AddComponent<TransformComponent>();
@@ -27,6 +27,11 @@ namespace Mirage
         tag.Tag = name.empty() ? "Entity" : name;
         
         return sceneObject;
+    }
+    
+    void Scene::DestroySceneObject(SceneObject& entity)
+    {
+        entity.Destroy();
     }
 
     void Scene::OnUpdate(float DeltaTime)
@@ -64,6 +69,9 @@ namespace Mirage
                 }
             }
         }
+
+
+        
         if(mainCamera)
         {
             Renderer2D::BeginScene(*mainCamera, cameraTransform);

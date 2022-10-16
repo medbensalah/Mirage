@@ -37,12 +37,12 @@ void EditorLayer::OnAttach()
     m_ActiveScene = CreateRef<Scene>();
 
 
-    m_SquareEntitysec = m_ActiveScene->CreateEntity("Square2");
+    m_SquareEntitysec = m_ActiveScene->CreateSceneObject("Square2");
     m_SquareEntitysec.AddComponent<SpriteRendererComponent>( Vec4{1.0f,0.0f,0.0f,1.0f});
-    m_SquareEntity = m_ActiveScene->CreateEntity("Square");
+    m_SquareEntity = m_ActiveScene->CreateSceneObject("Square");
     m_SquareEntity.AddComponent<SpriteRendererComponent>( Vec4{0.0f,1.0f,0.0f,1.0f});
 
-    m_Camera = m_ActiveScene->CreateEntity("Camera");
+    m_Camera = m_ActiveScene->CreateSceneObject("Camera");
     m_Camera.AddComponent<CameraComponent>();
 
     class CameraController : public ScriptableSceneObject
@@ -243,7 +243,6 @@ void EditorLayer::OnImGuiRender()
 
     ImGui::Begin("Settings");
     
-    ImGui::Text("%s", m_SquareEntity.GetComponent<TagComponent>().Tag.c_str());
     // ImGui::ColoredButtonV1("You");
     //
     // 

@@ -13,7 +13,6 @@ namespace Mirage
         }
         virtual ~Camera() = default;
 
-        
         const Mat4& GetProjection () const { return m_Projection; }
         
     protected:

@@ -4,7 +4,22 @@
 // Header
 namespace ImGui
 {
-    bool ColoredButtonV1(const char* label, const ImVec2& size = ImVec2(-FLT_MIN, 30));
+    
+    static bool ColoredButtonV1(const char* label, const ImVec2& size = ImVec2(-FLT_MIN, 30));
+    
+    static bool ButtonCenteredOnLine(const char* label, float alignment = 0.5f, const ImVec2& psize = ImVec2(-FLT_MIN, 30))
+    {
+        ImGuiStyle& style = ImGui::GetStyle();
+
+        float size = ImMax(ImGui::CalcTextSize(label).x + style.FramePadding.x * 2.0f, psize.x) ;
+        float avail = ImGui::GetContentRegionAvail().x;
+
+        float off = (avail - size) * alignment;
+        if (off > 0.0f)
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
+
+        return ColoredButtonV1(label, ImVec2(size, psize.y));
+    }
 }
 
 #define IMGUI_DEFINE_MATH_OPERATORS
@@ -98,7 +113,7 @@ bool ImGui::ColoredButtonV1(const char* label, const ImVec2& size_arg)
     if (g.LogEnabled)
         LogSetNextTextDecoration("[", "]");
     
-    ImVec2 posMin = {bb.Min.x + style.FramePadding.x, bb.Min.y + style.FramePadding.y};
+    ImVec2 posMin = {bb.Min.x + style.FramePadding.x, bb.Min.y };
     
     ImVec2 posMax = {bb.Max.x + style.FramePadding.x, bb.Max.y + style.FramePadding.y};
     RenderTextClipped(posMin,posMax, label, NULL, &label_size, style.ButtonTextAlign, &bb);

@@ -11,7 +11,10 @@ namespace Mirage
         SceneObject() = default;
         SceneObject(entt::entity entity, Scene* scene);
         SceneObject(const SceneObject& other) = default;
-
+        
+        void Destroy();
+        
+        
         template <typename T, typename... Args>
         T& AddComponent(Args&&... args)
         {
@@ -46,6 +49,7 @@ namespace Mirage
 
         operator bool() const { return m_Entity != entt::null; }
         operator uint32_t() const { return (uint32_t)m_Entity; }
+        operator entt::entity() const { return m_Entity; }
 
         bool operator== (const SceneObject& other) const
         {
@@ -58,5 +62,6 @@ namespace Mirage
     private:
         entt::entity m_Entity{ entt::null };
         Scene* m_Scene = nullptr;
+
     };
 }

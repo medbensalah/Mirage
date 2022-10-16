@@ -10,6 +10,7 @@
 #include "Mirage/ECS/Components/TagComponent.h"
 #include "Mirage/ECS/Components/TransformComponent.h"
 #include "Mirage/ImGui/Extensions/DrawingAPI.h"
+#include "Mirage/ImGui/Extensions/GradientButtonV1.h"
 
 namespace Mirage
 {
@@ -35,14 +36,55 @@ namespace Mirage
 
         if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
             m_SelectionContext = {};
+        
+        //Right-Click on blank space
+        if(ImGui::BeginPopupContextWindow(0, 1, false))
+        {
+            if(ImGui::MenuItem("Create empty SceneObject"))
+            {
+                m_Context->CreateSceneObject("new SceneObject");
+            }
 
+            ImGui::EndPopup();
+        }
+        
         ImGui::End();
-
+        
         ImGui::Begin("Inspector");
 
         if (m_SelectionContext)
         {
             DrawComponents(m_SelectionContext);
+
+            ImGui::Spacing();
+            ImGui::Spacing();
+            ImGui::Spacing();
+            ImGui::Separator();
+            ImGui::Spacing();        
+            ImGui::Spacing();        
+            ImGui::Spacing();        
+            if(ImGui::ButtonCenteredOnLine("Add Component", 0.5f,{ImGui::GetWindowWidth()-50, 30}))
+            {
+                ImGui::OpenPopup("AddComponent");
+            }
+
+            if(ImGui::BeginPopup("AddComponent"))
+            {
+                if(ImGui::MenuItem("Camera"))
+                {
+                    if(!m_SelectionContext.HasComponent<CameraComponent>())
+                        m_SelectionContext.AddComponent<CameraComponent>();
+                    ImGui::CloseCurrentPopup();
+                }
+                if(ImGui::MenuItem("Sprite Renderer"))
+                {
+                    if(!m_SelectionContext.HasComponent<SpriteRendererComponent>())
+                        m_SelectionContext.AddComponent<SpriteRendererComponent>();
+                    ImGui::CloseCurrentPopup();
+                }
+                
+                ImGui::EndPopup();
+            }
         }
 
         ImGui::End();
@@ -53,9 +95,9 @@ namespace Mirage
         auto& tag = so.GetComponent<TagComponent>().Tag;
 
         ImGuiTreeNodeFlags flags =
-            ImGuiTreeNodeFlags_OpenOnArrow |
             ImGuiTreeNodeFlags_SpanFullWidth |
-            // ImGuiTreeNodeFlags_Leaf |
+            ImGuiTreeNodeFlags_OpenOnArrow |
+            // (so.GetImmediateChildCount() ? ImGuiTreeNodeFlags_OpenOnArrow : ImGuiTreeNodeFlags_Leaf) |
             ((m_SelectionContext == so) ? ImGuiTreeNodeFlags_Selected : 0);
         bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)so, flags, tag.c_str());
 
@@ -64,9 +106,36 @@ namespace Mirage
             m_SelectionContext = so;
         }
 
+        bool entityDeleted = false;
+        
+        
+        if(ImGui::BeginPopupContextItem())
+        {
+            if(ImGui::MenuItem("Delete SceneObject"))
+                entityDeleted = true;
+            
+            ImGui::EndPopup();
+        }
+        
         if (opened)
         {
+            // bool opened2 = ImGui::TreeNodeEx((void*)9817239, flags, tag.c_str());
+            // if(opened2)
+            //     ImGui::TreePop();
             ImGui::TreePop();
+        }
+
+        if(ImGui::IsKeyPressed(ImGuiKey_Delete))
+        {
+            if(m_SelectionContext == so)
+                entityDeleted = true;
+        }
+
+        if(entityDeleted)
+        {
+            m_Context->DestroySceneObject(so);
+            if(m_SelectionContext == so)
+                m_SelectionContext = {};
         }
     }
 
@@ -93,11 +162,12 @@ namespace Mirage
                 tag = std::string(buffer);
             }
         }
-
+        
         if (so.HasComponent<TransformComponent>())
         {
             if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), flags, "Transform"))
             {
+            ImGui::Spacing();
             ImGui::Indent(indentWidth);
                 auto& tc = so.GetComponent<TransformComponent>();
                 
@@ -127,6 +197,7 @@ namespace Mirage
         {
             if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), flags, "Camera"))
             {
+                ImGui::Spacing();
                 ImGui::Indent(indentWidth);
                 auto& cc = so.GetComponent<CameraComponent>();
                 auto& camera = so.GetComponent<CameraComponent>().Camera;
@@ -157,7 +228,7 @@ namespace Mirage
                     float nearClip = camera.GetPerspectiveNearClip();
                     if (DrawSplitUIItem("near Clip", [&]()-> bool
                     {
-                        return ImGui::DragFloat("##near Clip", &nearClip, 0.1f, 0.1f, 1000.0f, "%.1f", 1.0f);
+                        return ImGui::DragFloat("##near Clip", &nearClip, 0.1f, 0.1f, 1000.0f);
                     },  typeid(CameraComponent).name()))
                     {
                         camera.SetPerspectiveNearClip(nearClip);
@@ -166,7 +237,7 @@ namespace Mirage
                     float farClip = camera.GetPerspectiveFarClip();
                     if (DrawSplitUIItem("Far Clip", [&]()-> bool
                     {
-                        return ImGui::DragFloat("##Far Clip", &farClip, 0.1f, 0.1f, 1000.0f, "%.1f", 1.0f);
+                        return ImGui::DragFloat("##Far Clip", &farClip, 0.1f, 0.1f, 1000.0f);
                     },  typeid(CameraComponent).name()))
                     {
                         camera.SetPerspectiveFarClip(farClip);
@@ -186,7 +257,7 @@ namespace Mirage
                     float nearClip = camera.GetOrthographicNearClip();
                     if (DrawSplitUIItem("near Clip", [&]()-> bool
                     {
-                        return ImGui::DragFloat("##near Clip", &nearClip, 0.1f, 0.1f, 1000.0f, "%.1f", 1.0f);
+                        return ImGui::DragFloat("##near Clip", &nearClip, 0.1f, 0.1f, 1000.0f);
                     },  typeid(CameraComponent).name()))
                     {
                         camera.SetOrthographicNearClip(nearClip);
@@ -195,13 +266,13 @@ namespace Mirage
                     float farClip = camera.GetOrthographicFarClip();
                     if (DrawSplitUIItem("Far Clip", [&]()-> bool
                     {
-                        return ImGui::DragFloat("##Far Clip", &farClip, 0.1f, 0.1f, 1000.0f, "%.1f", 1.0f);
+                        return ImGui::DragFloat("##Far Clip", &farClip, 0.1f, 0.1f, 1000.0f);
                     },  typeid(CameraComponent).name()))
                     {
                         camera.SetOrthographicFarClip(farClip);
                     }
                 }
-            
+                
                 DrawSplitUIItem("Main", [&cc]()->bool
                 {
                     return ImGui::Checkbox("##Main", &cc.IsMain);
@@ -223,6 +294,7 @@ namespace Mirage
         {
             if (ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), flags, "Sprite renderer"))
             {
+                ImGui::Spacing();
                 ImGui::Indent(indentWidth);
                 
                 auto& src = so.GetComponent<SpriteRendererComponent>();
