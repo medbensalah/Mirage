@@ -16,13 +16,14 @@ static bool isDark = true;
     {
         ImGuiStyle* style = &ImGui::GetStyle();
         
-        style->WindowPadding                        = ImVec2(7, 7);
-        style->FramePadding                         = ImVec2(15, 3);
-        style->ItemSpacing                          = ImVec2(12, 7);
-        style->ItemInnerSpacing                     = ImVec2(7, 7); 
+        style->WindowPadding                        = ImVec2(7, 5);
+        style->FramePadding                         = ImVec2(9, 3);
+        style->CellPadding                         = ImVec2(7, 0);
+        style->ItemSpacing                          = ImVec2(7, 3);
+        style->ItemInnerSpacing                     = ImVec2(5, 5); 
         style->TouchExtraPadding                    = ImVec2(0, 0);
         
-        style->IndentSpacing                        = 22.0f;
+        style->IndentSpacing                        = 15.0f;
         style->ScrollbarSize                        = 10.0f;
         style->GrabMinSize                          = 3.0f;
 

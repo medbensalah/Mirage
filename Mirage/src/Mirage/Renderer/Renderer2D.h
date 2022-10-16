@@ -15,8 +15,10 @@ namespace Mirage
         void BeginScene(const Camera& camera, const Mat4& transform);
         void BeginScene(const OrthographicCamera& camera);
         void EndScene();
+        void StartBatch();
 
         void Flush();
+        void NextBatch();
 
         namespace Draw
         {
@@ -30,8 +32,8 @@ namespace Mirage
             uint32_t DrawCalls = 0;
             uint32_t QuadCount = 0;
 
-            uint32_t GetVertexCount() { return QuadCount * 4; }
-            uint32_t GetIndexCount() { return QuadCount * 6; }
+            uint32_t GetVertexCount() const { return QuadCount * 4; }
+            uint32_t GetIndexCount() const { return QuadCount * 6; }
         };
         
         Stats GetStats();

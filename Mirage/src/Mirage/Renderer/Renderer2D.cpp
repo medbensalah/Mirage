@@ -50,7 +50,7 @@ namespace Mirage
 
         void Init()
         {
-            MRG_PROFILE_FUNCTION();
+            
             
             s_Data.QuadVertexArray = VertexArray::Create();
             s_Data.QuadVertexBuffer = VertexBuffer::Create(s_Data.MaxVertices * sizeof(QuadVertex));
@@ -111,50 +111,52 @@ namespace Mirage
 
         void Shutdown()
         {
-            MRG_PROFILE_FUNCTION();
+            
             delete[] s_Data.QuadVertexBufferBase;
         }
 
         void BeginScene(const Camera& camera, const Mat4& transform)
         {
-            MRG_PROFILE_FUNCTION();
+            
 
             Mat4 viewProj = camera.GetProjection() * Invert(transform);
             
             s_Data.Shader->Bind();
             s_Data.Shader->SetMat4("u_ViewProjection", viewProj);
 
-            s_Data.QuadIndexCount = 0;
-            s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
-
-            s_Data.TextureSlotIndex = 1;
+            StartBatch();
         }
         void BeginScene(const OrthographicCamera& camera)
         {
-            MRG_PROFILE_FUNCTION();
+            
             s_Data.Shader->Bind();
             s_Data.Shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 
-            s_Data.QuadIndexCount = 0;
-            s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
-
-            s_Data.TextureSlotIndex = 1;
+            StartBatch();
         }
 
         void EndScene()
         {
-            MRG_PROFILE_FUNCTION();
             
-            uint32_t size = (uint32_t)( (uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase );
-            s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, size);
-
+            
             Flush();
+        }
+        
+        void StartBatch()
+        {
+            s_Data.QuadIndexCount = 0;
+            s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
+
+            s_Data.TextureSlotIndex = 1;
         }
 
         void Flush()
         {
             if (s_Data.QuadIndexCount == 0)
                 return;
+
+            uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
+            s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
             
             //Bind textures
             for(uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
@@ -167,10 +169,8 @@ namespace Mirage
             s_Data.Stats.DrawCalls++;
         }
 
-        static void FlushAndReset()
+        void NextBatch()
         {
-            MRG_PROFILE_FUNCTION();
-            
             EndScene();
             
             s_Data.QuadIndexCount = 0;
@@ -183,7 +183,7 @@ namespace Mirage
         {
             void Quad(const Mat4& transform, const Vec4& color, const Ref<Texture2D> texture, const Vec2& tiling, const Vec2& offset)
             {
-                MRG_PROFILE_FUNCTION();
+                
 
                 
                 Primitives::Quad quad;
@@ -194,7 +194,7 @@ namespace Mirage
 
                 if(s_Data.QuadIndexCount >= s_Data.MaxIndices)
                 {
-                    FlushAndReset();
+                    NextBatch();
                 }
 
                 float TextureIndex = 0.0f;
@@ -213,7 +213,7 @@ namespace Mirage
                     {
                         if(s_Data.TextureSlotIndex >= Renderer2DData::MaxTextureSlots)
                         {
-                            FlushAndReset();
+                    NextBatch();
                         }
                         
                         TextureIndex = (float)s_Data.TextureSlotIndex;
@@ -240,14 +240,14 @@ namespace Mirage
             
             void Quad(const Primitives::Quad& quad, const Vec2& tiling, const Vec2& offset)
             {
-                MRG_PROFILE_FUNCTION();
+                
 
                 constexpr size_t quadVertexCount = 4;
                 constexpr Vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 
                 if(s_Data.QuadIndexCount >= s_Data.MaxIndices)
                 {
-                    FlushAndReset();
+                    NextBatch();
                 }
 
                 float TextureIndex = 0.0f;
@@ -267,7 +267,7 @@ namespace Mirage
                     {
                         if(s_Data.TextureSlotIndex >= Renderer2DData::MaxTextureSlots)
                         {
-                            FlushAndReset();
+                    NextBatch();
                         }
                         
                         TextureIndex = (float)s_Data.TextureSlotIndex;

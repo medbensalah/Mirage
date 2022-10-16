@@ -28,6 +28,7 @@ namespace Mirage
         OrthographicCameraController m_CameraController;
 
         SceneObject m_SquareEntity;
+        SceneObject m_SquareEntitysec;
         SceneObject m_Camera;
 
         

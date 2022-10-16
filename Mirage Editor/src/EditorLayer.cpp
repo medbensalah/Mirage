@@ -37,8 +37,10 @@ void EditorLayer::OnAttach()
     m_ActiveScene = CreateRef<Scene>();
 
 
+    m_SquareEntitysec = m_ActiveScene->CreateEntity("Square2");
+    m_SquareEntitysec.AddComponent<SpriteRendererComponent>( Vec4{1.0f,0.0f,0.0f,1.0f});
     m_SquareEntity = m_ActiveScene->CreateEntity("Square");
-    m_SquareEntity.AddComponent<SpriteRendererComponent>( Vec4{0.2f,1.0f,0.3f,1.0f});
+    m_SquareEntity.AddComponent<SpriteRendererComponent>( Vec4{0.0f,1.0f,0.0f,1.0f});
 
     m_Camera = m_ActiveScene->CreateEntity("Camera");
     m_Camera.AddComponent<CameraComponent>();
@@ -63,19 +65,19 @@ void EditorLayer::OnAttach()
         {
             if(Input::IsKeyPressed(Key::A))
             {
-                _transform->Transform[3][0] -= _speed * DeltaTime;
+                _transform->Position.x -= _speed * DeltaTime;
             }
             if(Input::IsKeyPressed(Key::D))
             {
-                _transform->Transform[3][0] += _speed * DeltaTime;
+                _transform->Position.x += _speed * DeltaTime;
             }
             if(Input::IsKeyPressed(Key::W))
             {
-                _transform->Transform[3][1] += _speed * DeltaTime;
+                _transform->Position.y += _speed * DeltaTime;
             }
             if(Input::IsKeyPressed(Key::S))
             {
-                _transform->Transform[3][1] -= _speed * DeltaTime;
+                _transform->Position.y -= _speed * DeltaTime;
             }
         }
     };
@@ -244,30 +246,8 @@ void EditorLayer::OnImGuiRender()
     ImGui::Text("%s", m_SquareEntity.GetComponent<TagComponent>().Tag.c_str());
     // ImGui::ColoredButtonV1("You");
     //
-    // MRG_IMGUI_DRAW_LABEL_WIDGET("Show Demo toggle", ImGui::ToggleButton, "##ToggleDemo", &showDemo);
+    // 
 
-    auto& tc = m_Camera.GetComponent<TransformComponent>();
-    DrawSplitUIItem("Position", [&tc]()->bool
-    {
-        return ImGui::DragFloat3("##Position", glm::value_ptr(tc.Transform[3]), 0.05f);
-    });
-    
-    float cameraSize = m_Camera.GetComponent<CameraComponent>().Camera.GetOrthographicSize();
-    DrawSplitUIItem("Size", [&]()->bool
-    {
-        return ImGui::DragFloat("##Size", &cameraSize, 0.05f);
-    });
-    
-    m_Camera.GetComponent<CameraComponent>().Camera.SetOrthographicSize(cameraSize);
-
-    ImGui::Spacing();
-    ImGui::Separator();
-    
-    DrawSplitUIItem("Color", [&]()->bool
-    {
-        return ImGui::ColorEdit4("##Color", glm::value_ptr(m_SquareEntity.GetComponent<SpriteRendererComponent>().Color));
-    });
-    
     //
     // ImGui::Spacing();
     // MRG_IMGUI_DRAW_LABEL_WIDGET("Tiling", ImGui::DragFloat2, "##Tiling", glm::value_ptr(m_Tiling), 0.05f);
@@ -276,9 +256,6 @@ void EditorLayer::OnImGuiRender()
     // ImGui::Spacing();
     // ImGui::Separator();
 
-    ImGui::Spacing();
-    ImGui::Separator();
-    ImGui::Spacing();
     float deltaTime = Application::Get().GetDeltaTime();
     ImGui::Text("Renderer2D Stats:");
     ImGui::Indent();
@@ -293,14 +270,14 @@ void EditorLayer::OnImGuiRender()
     ImGui::Separator();
     ImGui::Spacing();
     
-    DrawSplitUIItem("Show demo", [&]()->bool
+    DrawSplitUIItem("Show demo", [&]()-> bool
     {
-        return ImGui::Checkbox("##Showdemo", &showDemo);
+        return ImGui::ToggleButton("##ShowDemo",  &showDemo);
     });
 
     if(showDemo)
     {
-        ImGui::ShowDemoWindow(&showDemo);
+        ImGui::ShowDemoWindow();
     }
     ImGui::End();
 

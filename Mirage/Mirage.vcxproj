@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClInclude Include="src\Mirage.h" />
     <ClInclude Include="src\Mirage\Core\Application.h" />
+    <ClInclude Include="src\Mirage\Core\Assert.h" />
     <ClInclude Include="src\Mirage\Core\Core.h" />
     <ClInclude Include="src\Mirage\Core\EntryPoint.h" />
     <ClInclude Include="src\Mirage\Core\Input.h" />

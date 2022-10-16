@@ -3,10 +3,10 @@
 #include <ImGui/imgui.h>
 
 #include "glm/gtc/type_ptr.hpp"
-#include "ImGui/imgui_internal.h"
 
 #include "Mirage/Core/Log.h"
 #include "Mirage/ECS/Components/CameraComponent.h"
+#include "Mirage/ECS/Components/SpriteRendererComponent.h"
 #include "Mirage/ECS/Components/TagComponent.h"
 #include "Mirage/ECS/Components/TransformComponent.h"
 #include "Mirage/ImGui/Extensions/DrawingAPI.h"
@@ -72,6 +72,11 @@ namespace Mirage
 
     void HierarchyPanel::DrawComponents(SceneObject so)
     {
+        static float indentWidth = 10.0f;
+        ImGuiTreeNodeFlags flags =
+            ImGuiTreeNodeFlags_DefaultOpen |
+            ImGuiTreeNodeFlags_CollapsingHeader;
+        
         if (so.HasComponent<TagComponent>())
         {
             auto& tag = so.GetComponent<TagComponent>().Tag;
@@ -91,77 +96,142 @@ namespace Mirage
 
         if (so.HasComponent<TransformComponent>())
         {
-            ImGuiTreeNodeFlags flags =
-                ImGuiTreeNodeFlags_DefaultOpen |
-                ImGuiTreeNodeFlags_CollapsingHeader;
             if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), flags, "Transform"))
             {
-            ImGui::Indent();
+            ImGui::Indent(indentWidth);
                 auto& tc = so.GetComponent<TransformComponent>();
+                
+                ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{7, 7
+                });
                 DrawSplitUIItem("Position", [&]()-> bool
                 {
-                    return ImGui::DragFloat3("##Position", glm::value_ptr(tc.Transform[3]), 0.1f);
-                }, "TransformComponent");
-            ImGui::Unindent();
+                    return DrawVec3Control("Position", tc.Position);
+                }, typeid(TransformComponent).name());
+                
+                DrawSplitUIItem("Rotation", [&]()-> bool
+                {
+                    return DrawVec3Control("Rotation", tc.Rotation);
+                }, typeid(TransformComponent).name());
+                
+                DrawSplitUIItem("Scale", [&]()-> bool
+                {
+                    return DrawVec3Control("Scale", tc.Scale);
+                }, typeid(TransformComponent).name());
+                ImGui::PopStyleVar();
+                
+            ImGui::Unindent(indentWidth);
             }
         }
         
         if (so.HasComponent<CameraComponent>())
         {
-            ImGuiTreeNodeFlags flags =
-                ImGuiTreeNodeFlags_DefaultOpen |
-                ImGuiTreeNodeFlags_CollapsingHeader;
             if (ImGui::TreeNodeEx((void*)typeid(CameraComponent).hash_code(), flags, "Camera"))
             {
-            ImGui::Indent();
+                ImGui::Indent(indentWidth);
+                auto& cc = so.GetComponent<CameraComponent>();
                 auto& camera = so.GetComponent<CameraComponent>().Camera;
                 
                 const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
                 const char* projectionTypeString = projectionTypeStrings[camera.GetProjectionType()];
                 int out = (int)camera.GetProjectionType();
-                DrawComboBox("Projection", projectionTypeStrings, 2, projectionTypeString, &out, [&]()
+
+                if(DrawSplitUIItem("Projection", [&]()->bool
+                {
+                    return DrawComboBox("Projection", projectionTypeStrings, 2, projectionTypeString, &out);
+                }, typeid(CameraComponent).name()))
                 {
                     camera.SetProjectionType(out);
-                });
-                
+                }
                 
                 if(camera.GetProjectionType() == SceneCamera::ProjectionType::Perspective)
                 {
+                    float vFov = Degrees(camera.GetPerspectiveVFOV());
+                    if (DrawSplitUIItem("Vertical FOV", [&]()-> bool
+                    {
+                        return ImGui::DragFloat("##Vertical FOV", &vFov, 0.1f, 0.1f, 1000.0f, "%.1f", 1.0f);
+                    },  typeid(CameraComponent).name()))
+                    {
+                        camera.SetPerspectiveVFOV(Radians(vFov));
+                    }
+            
+                    float nearClip = camera.GetPerspectiveNearClip();
+                    if (DrawSplitUIItem("near Clip", [&]()-> bool
+                    {
+                        return ImGui::DragFloat("##near Clip", &nearClip, 0.1f, 0.1f, 1000.0f, "%.1f", 1.0f);
+                    },  typeid(CameraComponent).name()))
+                    {
+                        camera.SetPerspectiveNearClip(nearClip);
+                    }
+            
+                    float farClip = camera.GetPerspectiveFarClip();
+                    if (DrawSplitUIItem("Far Clip", [&]()-> bool
+                    {
+                        return ImGui::DragFloat("##Far Clip", &farClip, 0.1f, 0.1f, 1000.0f, "%.1f", 1.0f);
+                    },  typeid(CameraComponent).name()))
+                    {
+                        camera.SetPerspectiveFarClip(farClip);
+                    }
                 }
-               
-
                 if(camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
                 {
                     float size = camera.GetOrthographicSize();
                     if (DrawSplitUIItem("Orthographic Size", [&]()-> bool
                     {
                         return ImGui::DragFloat("##Orthographic Size", &size, 0.1f, 0.1f, 1000.0f, "%.1f", 1.0f);
-                    }, "CameraComponent"))
+                    },  typeid(CameraComponent).name()))
                     {
                         camera.SetOrthographicSize(size);
                     }
-
+            
                     float nearClip = camera.GetOrthographicNearClip();
                     if (DrawSplitUIItem("near Clip", [&]()-> bool
                     {
                         return ImGui::DragFloat("##near Clip", &nearClip, 0.1f, 0.1f, 1000.0f, "%.1f", 1.0f);
-                    }, "CameraComponent"))
+                    },  typeid(CameraComponent).name()))
                     {
                         camera.SetOrthographicNearClip(nearClip);
                     }
-
+            
                     float farClip = camera.GetOrthographicFarClip();
                     if (DrawSplitUIItem("Far Clip", [&]()-> bool
                     {
                         return ImGui::DragFloat("##Far Clip", &farClip, 0.1f, 0.1f, 1000.0f, "%.1f", 1.0f);
-                    }, "CameraComponent"))
+                    },  typeid(CameraComponent).name()))
                     {
                         camera.SetOrthographicFarClip(farClip);
                     }
-
-                    
                 }
-            ImGui::Unindent();
+            
+                DrawSplitUIItem("Main", [&cc]()->bool
+                {
+                    return ImGui::Checkbox("##Main", &cc.IsMain);
+                },  typeid(CameraComponent).name());
+                
+                if(camera.GetProjectionType() == SceneCamera::ProjectionType::Orthographic)
+                {
+                    DrawSplitUIItem("Fixed aspect ratio", [&cc]()->bool
+                    {
+                        return ImGui::Checkbox("##FixedAspectRatio", &cc.FixedAspectRatio);
+                    },  typeid(CameraComponent).name());
+                }
+               
+                ImGui::Unindent(indentWidth);
+            }
+        }
+
+        if(so.HasComponent<SpriteRendererComponent>())
+        {
+            if (ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), flags, "Sprite renderer"))
+            {
+                ImGui::Indent(indentWidth);
+                
+                auto& src = so.GetComponent<SpriteRendererComponent>();
+                DrawSplitUIItem("Color", [&]()-> bool
+                {
+                    return ImGui::ColorEdit4("##Color", glm::value_ptr(src.Color));
+                }, typeid(SpriteRendererComponent).name());
+                
+                ImGui::Unindent(indentWidth);
             }
         }
     }

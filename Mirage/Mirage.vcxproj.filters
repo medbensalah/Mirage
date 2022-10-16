@@ -96,7 +96,10 @@
     <ClInclude Include="src\Mirage\Core\Math.h">
       <Filter>src\Mirage\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Mirage\Core\MouseButtonCodes.h">
+    <ClInclude Include="src\Mirage\Core\MouseCodes.h">
+      <Filter>src\Mirage\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Core\PlatformDetection.h">
       <Filter>src\Mirage\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\Core\Time.h">
@@ -111,10 +114,16 @@
     <ClInclude Include="src\Mirage\ECS\Components\CameraComponent.h">
       <Filter>src\Mirage\ECS\Components</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\Components\Component.h">
+      <Filter>src\Mirage\ECS\Components</Filter>
+    </ClInclude>
     <ClInclude Include="src\Mirage\ECS\Components\NativeScriptComponent.h">
       <Filter>src\Mirage\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\ECS\Components\SpriteRendererComponent.h">
+      <Filter>src\Mirage\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\Components\TagComponent.h">
       <Filter>src\Mirage\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\ECS\Components\TransformComponent.h">
@@ -143,6 +152,9 @@
     </ClInclude>
     <ClInclude Include="src\Mirage\Events\MouseEvent.h">
       <Filter>src\Mirage\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\ImGui\Extensions\DrawingAPI.h">
+      <Filter>src\Mirage\ImGui\Extensions</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\ImGui\Extensions\GradientButtonV1.h">
       <Filter>src\Mirage\ImGui\Extensions</Filter>

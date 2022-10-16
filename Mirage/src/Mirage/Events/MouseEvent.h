@@ -60,7 +60,7 @@ namespace Mirage
     public:
         MouseCode GetButton() const { return m_Button; }
         
-        EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput);
+        EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput | EventCategoryMouseButton);
 
     protected:
         MouseButtonEvent(int button)

@@ -17,13 +17,8 @@
         #define MRG_DEBUGBREAK()
 #endif
 
-#ifdef MRG_ENABLE_ASSERTS
-    #define MRG_CORE_ASSERT(x, ...) { if(!(x)) { MRG_CORE_ERROR("Assertion Failed: {0}", __VA_ARGS__); MRG_DEBUGBREAK(); } }
-    #define MRG_ASSERT(x, ...) { if(!(x)) { MRG_ERROR("Assertion Failed: {0}", __VA_ARGS__); MRG_DEBUGBREAK(); } }
-#else
-    #define MRG_CORE_ASSERT(x, ...)
-    #define MRG_ASSERT(x, ...)
-#endif
+#define MRG_EXPAND_MACRO(x) x
+#define MRG_STRINGIFY_MACRO(x) #x
 
 #define BIT(x) (1 << x)
 
@@ -52,3 +47,6 @@ namespace Mirage
     template <typename T>
     using WeakRef = std::weak_ptr<T>;
 }
+
+#include "Mirage/Core/Log.h"
+#include "Mirage/Core/Assert.h"

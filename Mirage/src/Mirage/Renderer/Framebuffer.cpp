@@ -1,7 +1,7 @@
 ﻿#include "MrgPch.h"
-#include "Framebuffer.h"
+#include "Mirage/Renderer/Framebuffer.h"
 
-#include "Renderer.h"
+#include "Mirage/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLFramebuffer.h"
 
 namespace Mirage

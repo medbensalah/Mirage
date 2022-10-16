@@ -14,4 +14,5 @@ namespace Mirage
         CameraComponent() = default;
         CameraComponent(const CameraComponent&) = default;
     };
+
 }

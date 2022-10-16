@@ -5,6 +5,7 @@
 #include "Mirage/Core/Application.h"
 #include "Mirage/Core/Layer.h"
 #include "Mirage/Core/Log.h"
+#include "Mirage/Core/Assert.h"
 
 #include "Mirage/Core/Time.h"
                  
