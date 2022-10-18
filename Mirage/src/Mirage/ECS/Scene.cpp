@@ -23,7 +23,6 @@ namespace Mirage
     {        
         SceneObject sceneObject = {m_Registry.create(), this};
         Relationship r;
-            MRG_CORE_TRACE((uint32_t)sceneObject);
         m_Hierarchy.emplace(sceneObject, r);
         auto& transform = sceneObject.AddComponent<TransformComponent>(this);
         auto& tag = sceneObject.AddComponent<TagComponent>();

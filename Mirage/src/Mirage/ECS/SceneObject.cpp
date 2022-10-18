@@ -13,6 +13,10 @@ namespace Mirage
 
     void SceneObject::Destroy()
     {
+        if(HasParent())
+        {
+            GetParent().RemoveChild(m_Entity);
+        }
         auto v = &m_Scene->m_Hierarchy.at(m_Entity).m_Children;
         for(auto child : *v)
         {
@@ -26,7 +30,7 @@ namespace Mirage
     {
         m_Scene->m_Hierarchy.at(m_Entity).m_Children.push_back(entity);
         SceneObject so = {entity, m_Scene};
-        so.m_Scene->m_Hierarchy.at(m_Entity).m_Parent = m_Entity;
+        m_Scene->m_Hierarchy.at(so).m_Parent = m_Entity;
     }
 
     void SceneObject::RemoveChild(entt::entity child)
@@ -43,7 +47,6 @@ namespace Mirage
 
     void SceneObject::SetParent(entt::entity parent)
     {
-        
         m_Scene->m_Hierarchy.at(m_Entity).m_Parent = parent;
     }
 }

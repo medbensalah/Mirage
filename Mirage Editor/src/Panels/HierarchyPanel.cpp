@@ -31,7 +31,10 @@ namespace Mirage
         m_Context->m_Registry.each([&](auto entityID)
         {
             SceneObject so{entityID, m_Context.get()};
-            DrawEntityNode(so);
+            if(!so.HasParent())
+            {
+                DrawEntityNode(so);
+            }
         });
 
         if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
@@ -120,25 +123,26 @@ namespace Mirage
             
             ImGui::EndPopup();
         }
+
+        if(ImGui::IsKeyPressed(ImGuiKey_Delete))
+        {
+            if(m_SelectionContext == so)
+                entityDeleted = true;
+        }
         
         if (opened)
         {
             // bool opened2 = ImGui::TreeNodeEx((void*)9817239, flags, tag.c_str());
             // if(opened2)
             //     ImGui::TreePop();
-            
-            auto v = &m_Context->m_Hierarchy.at(so).m_Children;
-            for(auto child : *v)
-            {
-                DrawEntityNode({child, m_Context.get()});
-            }
-            ImGui::TreePop();
-        }
 
-        if(ImGui::IsKeyPressed(ImGuiKey_Delete))
-        {
-            if(m_SelectionContext == so)
-                entityDeleted = true;
+                auto v = &m_Context->m_Hierarchy.at(so).m_Children;
+                for(auto child : *v)
+                {
+                    DrawEntityNode({child, m_Context.get()});
+                }
+            
+            ImGui::TreePop();
         }
 
         if(entityDeleted)

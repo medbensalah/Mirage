@@ -26,7 +26,7 @@ namespace Mirage
         void AddChild(entt::entity child);
         void RemoveChild(entt::entity child);
         void SetParent(entt::entity parent);
-
+        
         size_t GetChildCount()
         {
             return m_Scene->m_Hierarchy.at(m_Entity).m_Children.size();
@@ -41,7 +41,6 @@ namespace Mirage
         }
         bool HasParent()
         {
-            MRG_CORE_WARN("{0} {1}", GetComponent<TagComponent>().Tag, (uint32_t)m_Entity);
             return m_Scene->m_Hierarchy.at(m_Entity).m_Parent != entt::null;
         }
         std::vector<entt::entity> GetChildren()
