@@ -20,15 +20,27 @@ namespace Mirage
     }
 
     SceneObject Scene::CreateSceneObject(const std::string& name)
-    {
-        SceneObject sceneObject {m_Registry.create(), this};
-        sceneObject.AddComponent<TransformComponent>();
+    {        
+        SceneObject sceneObject = {m_Registry.create(), this};
+        Relationship r;
+            MRG_CORE_TRACE((uint32_t)sceneObject);
+        m_Hierarchy.emplace(sceneObject, r);
+        auto& transform = sceneObject.AddComponent<TransformComponent>(this);
         auto& tag = sceneObject.AddComponent<TagComponent>();
         tag.Tag = name.empty() ? "Entity" : name;
         
         return sceneObject;
     }
-    
+
+    SceneObject Scene::CreateChildSceneObject(entt::entity parent, const std::string& name)
+    {
+        SceneObject so = CreateSceneObject(name);
+
+        SceneObject p = {parent, this};
+        p.AddChild(so);
+        return so;
+    }
+
     void Scene::DestroySceneObject(SceneObject& entity)
     {
         entity.Destroy();
@@ -64,7 +76,7 @@ namespace Mirage
                 if (cam.IsMain)
                 {
                     mainCamera = &(cam.Camera);
-                    cameraTransform = transform.GetTransform();
+                    cameraTransform = transform.GetWorldTransform();
                     break;
                 }
             }
@@ -80,7 +92,7 @@ namespace Mirage
             for (auto entity : group)
             {
                 auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-                Renderer2D::Draw::Quad(transform.GetTransform(), sprite.Color);
+                Renderer2D::Draw::Quad(transform.GetWorldTransform(), sprite.Color);
             }
 
             Renderer2D::EndScene();

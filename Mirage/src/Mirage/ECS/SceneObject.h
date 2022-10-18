@@ -3,17 +3,51 @@
 #include "Scene.h"
 #include <enTT.hpp>
 
+#include "Components/TagComponent.h"
+
 namespace Mirage
 {
+
+    struct Relationship
+    {
+        entt::entity m_Parent = entt::null;
+        std::vector<entt::entity> m_Children;
+    };
+    
     class SceneObject
     {
-    public:
+    public:        
         SceneObject() = default;
         SceneObject(entt::entity entity, Scene* scene);
         SceneObject(const SceneObject& other) = default;
-        
+                
         void Destroy();
-        
+
+        void AddChild(entt::entity child);
+        void RemoveChild(entt::entity child);
+        void SetParent(entt::entity parent);
+
+        size_t GetChildCount()
+        {
+            return m_Scene->m_Hierarchy.at(m_Entity).m_Children.size();
+        }
+        SceneObject GetChild(size_t index)
+        {
+            return SceneObject(m_Scene->m_Hierarchy.at(m_Entity).m_Children[index], m_Scene);
+        }
+        SceneObject GetParent()
+        {
+            return SceneObject(m_Scene->m_Hierarchy.at(m_Entity).m_Parent, m_Scene);
+        }
+        bool HasParent()
+        {
+            MRG_CORE_WARN("{0} {1}", GetComponent<TagComponent>().Tag, (uint32_t)m_Entity);
+            return m_Scene->m_Hierarchy.at(m_Entity).m_Parent != entt::null;
+        }
+        std::vector<entt::entity> GetChildren()
+        {
+            return m_Scene->m_Hierarchy.at(m_Entity).m_Children;
+        }
         
         template <typename T, typename... Args>
         T& AddComponent(Args&&... args)
@@ -59,9 +93,11 @@ namespace Mirage
         {
             return !(*this == other);
         }
+
     private:
         entt::entity m_Entity{ entt::null };
         Scene* m_Scene = nullptr;
-
+        
+        friend class HierarchyPanel;
     };
 }
