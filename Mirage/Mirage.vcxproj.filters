@@ -72,6 +72,9 @@
     <ClInclude Include="src\Mirage\Core\Application.h">
       <Filter>src\Mirage\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\Core\Assert.h">
+      <Filter>src\Mirage\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Mirage\Core\Core.h">
       <Filter>src\Mirage\Core</Filter>
     </ClInclude>
@@ -112,9 +115,6 @@
       <Filter>src\Mirage\Debug</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\ECS\Components\CameraComponent.h">
-      <Filter>src\Mirage\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Mirage\ECS\Components\Component.h">
       <Filter>src\Mirage\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\ECS\Components\NativeScriptComponent.h">

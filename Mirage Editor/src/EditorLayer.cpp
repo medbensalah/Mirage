@@ -63,22 +63,24 @@ void EditorLayer::OnAttach()
 
         void OnUpdate(float DeltaTime)
         {
+            Vec3 position = _transform->Position();
             if(Input::IsKeyPressed(Key::A))
             {
-                _transform->Position.x -= _speed * DeltaTime;
+                position.x -= _speed * DeltaTime;
             }
             if(Input::IsKeyPressed(Key::D))
             {
-                _transform->Position.x += _speed * DeltaTime;
+                position.x += _speed * DeltaTime;
             }
             if(Input::IsKeyPressed(Key::W))
             {
-                _transform->Position.y += _speed * DeltaTime;
+                position.y += _speed * DeltaTime;
             }
             if(Input::IsKeyPressed(Key::S))
             {
-                _transform->Position.y -= _speed * DeltaTime;
+                position.y -= _speed * DeltaTime;
             }
+            _transform->SetPosition(position);
         }
     };
     

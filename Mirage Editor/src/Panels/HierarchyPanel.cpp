@@ -31,7 +31,10 @@ namespace Mirage
         m_Context->m_Registry.each([&](auto entityID)
         {
             SceneObject so{entityID, m_Context.get()};
-            DrawEntityNode(so);
+            if(!so.HasParent())
+            {
+                DrawEntityNode(so);
+            }
         });
 
         if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
@@ -97,7 +100,7 @@ namespace Mirage
         ImGuiTreeNodeFlags flags =
             ImGuiTreeNodeFlags_SpanFullWidth |
             ImGuiTreeNodeFlags_OpenOnArrow |
-            // (so.GetImmediateChildCount() ? ImGuiTreeNodeFlags_OpenOnArrow : ImGuiTreeNodeFlags_Leaf) |
+            (so.GetChildCount() ? ImGuiTreeNodeFlags_OpenOnArrow : ImGuiTreeNodeFlags_Leaf) |
             ((m_SelectionContext == so) ? ImGuiTreeNodeFlags_Selected : 0);
         bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)so, flags, tag.c_str());
 
@@ -113,8 +116,18 @@ namespace Mirage
         {
             if(ImGui::MenuItem("Delete SceneObject"))
                 entityDeleted = true;
+            if(ImGui::MenuItem("Add Child SceneObject"))
+            {
+                m_Context->CreateChildSceneObject(so);
+            }
             
             ImGui::EndPopup();
+        }
+
+        if(ImGui::IsKeyPressed(ImGuiKey_Delete))
+        {
+            if(m_SelectionContext == so)
+                entityDeleted = true;
         }
         
         if (opened)
@@ -122,13 +135,14 @@ namespace Mirage
             // bool opened2 = ImGui::TreeNodeEx((void*)9817239, flags, tag.c_str());
             // if(opened2)
             //     ImGui::TreePop();
-            ImGui::TreePop();
-        }
 
-        if(ImGui::IsKeyPressed(ImGuiKey_Delete))
-        {
-            if(m_SelectionContext == so)
-                entityDeleted = true;
+                auto v = &m_Context->m_Hierarchy.at(so).m_Children;
+                for(auto child : *v)
+                {
+                    DrawEntityNode({child, m_Context.get()});
+                }
+            
+            ImGui::TreePop();
         }
 
         if(entityDeleted)
@@ -167,29 +181,45 @@ namespace Mirage
         {
             if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), flags, "Transform"))
             {
-            ImGui::Spacing();
-            ImGui::Indent(indentWidth);
+                ImGui::Spacing();
+                ImGui::Indent(indentWidth);
                 auto& tc = so.GetComponent<TransformComponent>();
-                
-                ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{7, 7
-                });
-                DrawSplitUIItem("Position", [&]()-> bool
+                Vec3 position = tc.Position();
+                Vec3 rotation = tc.Rotation();
+                Vec3 scale = tc.Scale();
+                ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{7, 7});
+                if (
+                    DrawSplitUIItem("Position", [&]()-> bool
+                        {
+                            return DrawVec3Control("Position", position);
+                        }, typeid(TransformComponent).name())
+                    )
                 {
-                    return DrawVec3Control("Position", tc.Position);
-                }, typeid(TransformComponent).name());
-                
-                DrawSplitUIItem("Rotation", [&]()-> bool
+                    tc.SetPosition(position);
+                }
+
+                if(
+                    DrawSplitUIItem("Rotation", [&]()-> bool
+                        {
+                            return DrawVec3Control("Rotation",  rotation);
+                        }, typeid(TransformComponent).name())
+                    )
                 {
-                    return DrawVec3Control("Rotation", tc.Rotation);
-                }, typeid(TransformComponent).name());
-                
-                DrawSplitUIItem("Scale", [&]()-> bool
+                    tc.SetRotation(rotation);
+                }
+
+                if(
+                    DrawSplitUIItem("Scale", [&]()-> bool
+                        {
+                            return DrawVec3Control("Scale", scale);
+                        }, typeid(TransformComponent).name())
+                    )
                 {
-                    return DrawVec3Control("Scale", tc.Scale);
-                }, typeid(TransformComponent).name());
+                    tc.SetScale(scale);
+                }
                 ImGui::PopStyleVar();
-                
-            ImGui::Unindent(indentWidth);
+
+                ImGui::Unindent(indentWidth);
             }
         }
         
