@@ -37,9 +37,9 @@ void EditorLayer::OnAttach()
     m_ActiveScene = CreateRef<Scene>();
 
 
-    m_SquareEntitysec = m_ActiveScene->CreateSceneObject("Square2");
+    m_SquareEntitysec = m_ActiveScene->CreateSceneObject("Square 1");
     m_SquareEntitysec.AddComponent<SpriteRendererComponent>( Vec4{1.0f,0.0f,0.0f,1.0f});
-    m_SquareEntity = m_ActiveScene->CreateSceneObject("Square");
+    m_SquareEntity = m_ActiveScene->CreateSceneObject("Square 2");
     m_SquareEntity.AddComponent<SpriteRendererComponent>( Vec4{0.0f,1.0f,0.0f,1.0f});
 
     m_Camera = m_ActiveScene->CreateSceneObject("Camera");
