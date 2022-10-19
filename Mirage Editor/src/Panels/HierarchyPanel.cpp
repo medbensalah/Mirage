@@ -27,7 +27,7 @@ namespace Mirage
     void HierarchyPanel::OnImguiRender()
     {
         ImGui::Begin("Outliner");
-
+        
         m_Context->m_Registry.each([&](auto entityID)
         {
             SceneObject so{entityID, m_Context.get()};
@@ -102,6 +102,7 @@ namespace Mirage
             ImGuiTreeNodeFlags_OpenOnArrow |
             (so.GetChildCount() ? ImGuiTreeNodeFlags_OpenOnArrow : ImGuiTreeNodeFlags_Leaf) |
             ((m_SelectionContext == so) ? ImGuiTreeNodeFlags_Selected : 0);
+
         bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)so, flags, tag.c_str());
 
         if (ImGui::IsItemClicked())

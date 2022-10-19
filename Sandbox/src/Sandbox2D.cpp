@@ -37,7 +37,7 @@ void Sandbox2D::OnUpdate(float DeltaTime)
 {
     MRG_PROFILE_FUNCTION();
 
-    // MRG_TRACE("Frame time : {0:.3f} ms   -   FPS : {1:.1f}", DeltaTime * 1000.0f, 1.0f / DeltaTime);
+    MRG_TRACE("Frame time : {0:.3f} ms   -   FPS : {1:.1f}", DeltaTime * 1000.0f, 1.0f / DeltaTime);
     // MRG_TRACE("Total elapsed time : {0:.3f} s", Mirage::Application::GetSeconds());
     // Update
     m_CameraController.OnUpdate(DeltaTime);
@@ -69,6 +69,7 @@ void Sandbox2D::OnUpdate(float DeltaTime)
         Mirage::Renderer2D::Draw::Quad(quad, m_Tiling, m_Offset);
 
         
+        
         for(float y = -5.0f; y < 5.0f; y += 0.5f)
         {
             for(float x = -5.0f; x < 5.0f; x += 0.5f)
@@ -76,13 +77,14 @@ void Sandbox2D::OnUpdate(float DeltaTime)
                 Vec2 color = {(x + 5.0f) / 10.0f, (y + 5.0f) / 10.0f};
                 Mirage::Renderer2D::Draw::Quad(
                     {
-                        Vec3(x, y, 0.0f),
+                        Vec3(0.0f),
                         Vec3(0.0f),
                         Vec3(0.45f),
                         {color.x, color.y,1.0f, 1.0f}
                     });
             }
         }
+            
         
         Mirage::Renderer2D::EndScene();
     }

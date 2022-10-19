@@ -26,6 +26,7 @@ namespace Mirage
         void AddChild(entt::entity child);
         void RemoveChild(entt::entity child);
         void SetParent(entt::entity parent);
+        void RemoveParent();
         
         size_t GetChildCount()
         {
