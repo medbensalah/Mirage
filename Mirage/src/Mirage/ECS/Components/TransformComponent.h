@@ -19,13 +19,19 @@ namespace Mirage
 
         Mat4 GetWorldTransform()
         {
-            Vec3 Rotation = WorldRotation();
-            Mat4 rotation = glm::rotate(Mat4(1.0f), Radians(Rotation.x), Vec3(1.0f, 0.0f, 0.0f)) *
-                            glm::rotate(Mat4(1.0f), Radians(Rotation.y), Vec3(0.0f, 1.0f, 0.0f)) *
-                            glm::rotate(Mat4(1.0f), Radians(Rotation.z), Vec3(0.0f, 0.0f, 1.0f));
-            return  glm::translate(Mat4(1.0f), WorldPosition()) *
+            Mat4 rotation = glm::rotate(Mat4(1.0f), Radians(m_Rotation.x), Vec3(1.0f, 0.0f, 0.0f)) *
+                            glm::rotate(Mat4(1.0f), Radians(m_Rotation.y), Vec3(0.0f, 1.0f, 0.0f)) *
+                            glm::rotate(Mat4(1.0f), Radians(m_Rotation.z), Vec3(0.0f, 0.0f, 1.0f));
+            Mat4 transform =  glm::translate(Mat4(1.0f), m_Position) *
                     rotation *
-                    glm::scale(Mat4(1.0f), WorldScale());
+                    glm::scale(Mat4(1.0f), m_Scale);
+            
+            SceneObject so {GetOwner(), m_Scene};
+            if(so.HasParent())
+            {
+                transform = so.GetParent().GetComponent<TransformComponent>().GetWorldTransform() * transform;
+            }
+            return transform;
         }
 
         SceneObject GetOwner()
@@ -46,14 +52,32 @@ namespace Mirage
 
         void MarkPositionDirty()
         {
+            //mark for all children
+            for(auto& child : GetOwner().GetChildren())
+            {
+                SceneObject so = {child, m_Scene};
+                so.GetComponent<TransformComponent>().MarkPositionDirty();
+            }
             m_IsWorldPositionDirty = true;
         }
         void MarkRotationDirty()
         {
+            //mark for all children
+            for(auto& child : GetOwner().GetChildren())
+            {
+                SceneObject so = {child, m_Scene};
+                so.GetComponent<TransformComponent>().MarkRotationDirty();
+            }
             m_IsWorldRotationDirty = true;
         }
         void MarkScaleDirty()
         {
+            //mark for all children
+            for(auto& child : GetOwner().GetChildren())
+            {
+                SceneObject so = {child, m_Scene};
+                so.GetComponent<TransformComponent>().MarkScaleDirty();
+            }
             m_IsWorldScaleDirty = true;
         }
 
@@ -89,22 +113,20 @@ namespace Mirage
             {
                 Vec3 result = m_Position;
                 SceneObject so = GetOwner();
-                while(so.HasParent())
+                if(so.HasParent())
                 {
                     so = so.GetParent();
                     if(so.HasComponent<TransformComponent>())
                     {
                         auto& tc = so.GetComponent<TransformComponent>();
-                        if(!tc.m_IsWorldPositionDirty)
-                            break;
-                        result += so.GetComponent<TransformComponent>().m_Position;
+                        result += so.GetComponent<TransformComponent>().WorldPosition();
                     }
+                    
                 }
-                m_IsWorldPositionDirty = false;
                 m_WorldPosition = result;
-                return result;
             }
-            else
+
+            m_IsWorldPositionDirty = false;
                 return m_WorldPosition;
         }
         Vec3 WorldRotation()
@@ -113,47 +135,42 @@ namespace Mirage
             {
                 Vec3 result = m_Rotation;
                 SceneObject so = GetOwner();
-                while(so.HasParent())
+                if(so.HasParent())
                 {
                     so = so.GetParent();
                     if(so.HasComponent<TransformComponent>())
                     {
                         auto& tc = so.GetComponent<TransformComponent>();
-                        if(!tc.m_IsWorldRotationDirty)
-                            break;
-                        result += so.GetComponent<TransformComponent>().m_Rotation;
+                        result += so.GetComponent<TransformComponent>().WorldRotation();
                     }
+                    
                 }
-                m_IsWorldRotationDirty = false;
                 m_WorldRotation = result;
-                return result;
             }
-            else
-                return m_WorldRotation;
+
+            m_IsWorldRotationDirty = false;
+            return m_WorldRotation;
         }
         Vec3 WorldScale()
         {
-            if (m_IsWorldScaleDirty)
+            if(m_IsWorldScaleDirty)
             {
                 Vec3 result = m_Scale;
                 SceneObject so = GetOwner();
-                while (so.HasParent())
+                if(so.HasParent())
                 {
                     so = so.GetParent();
                     if(so.HasComponent<TransformComponent>())
                     {
                         auto& tc = so.GetComponent<TransformComponent>();
-                        if(!tc.m_IsWorldScaleDirty)
-                            break;
-                        result *= so.GetComponent<TransformComponent>().m_Scale;
+                        result *= so.GetComponent<TransformComponent>().WorldScale();
                     }
                 }
-                m_IsWorldScaleDirty = false;
                 m_WorldScale = result;
-                return result;
             }
-            else
-                return m_WorldScale;
+
+            m_IsWorldScaleDirty = false;
+            return m_WorldScale;
         }
         
     private:
