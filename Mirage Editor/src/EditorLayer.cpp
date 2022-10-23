@@ -39,11 +39,11 @@ void EditorLayer::OnAttach()
 
     m_SquareEntitysec = m_ActiveScene->CreateSceneObject("Square 1");
     m_SquareEntitysec.AddComponent<SpriteRendererComponent>( Vec4{1.0f,0.0f,0.0f,1.0f});
-    for(int i =0; i< 100000; i++)
-    {
-
-        m_SquareEntity = m_ActiveScene->CreateSceneObject("Square 2");
-        m_SquareEntity.AddComponent<SpriteRendererComponent>( Vec4{0.0f,1.0f,0.0f,1.0f});    }
+    // for(int i =0; i< 90000; i++)
+    // {
+    //
+    //     m_SquareEntity = m_ActiveScene->CreateSceneObject("Square 2");
+    //     m_SquareEntity.AddComponent<SpriteRendererComponent>( Vec4{0.0f,1.0f,0.0f,1.0f});    }
 
     m_Camera = m_ActiveScene->CreateSceneObject("Camera");
     m_Camera.AddComponent<CameraComponent>();
@@ -190,12 +190,15 @@ void EditorLayer::CreateDockspace()
 
     // Submit the DockSpace
     ImGuiIO& io = ImGui::GetIO();
+    
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, {300.0f, 25.0f});
     if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
     {
         ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
     }
-
+    ImGui::PopStyleVar();
+    
     if (ImGui::BeginMenuBar())
     {
         if (ImGui::BeginMenu("File"))

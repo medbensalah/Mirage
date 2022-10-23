@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include <sstream>
-
 #include "Mirage/Core/Core.h"
 #include "Mirage/Events/Event.h"
 
@@ -10,12 +8,12 @@ namespace Mirage
     struct WindowProperties
     {
         std::string Title;
+        
         uint32_t Width;
         uint32_t Height;
-
         WindowProperties(const std::string& title = "Mirage Engine",
-                         uint32_t width = 1200,
-                         uint32_t height = 700)
+                         uint32_t width = 1600,
+                         uint32_t height = 900)
             : Title(title), Width(width), Height(height)
         {
         }

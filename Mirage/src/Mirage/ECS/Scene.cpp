@@ -13,12 +13,13 @@ namespace Mirage
 {
     Scene::Scene()
     {
+        // m_Registry.on_construct<CameraComponent>().connect<&Function>();
     }
 
     Scene::~Scene()
     {
     }
-
+    
     SceneObject Scene::CreateSceneObject(const std::string& name)
     {        
         SceneObject sceneObject = {m_Registry.create(), this};
@@ -114,4 +115,32 @@ namespace Mirage
             }
         }
     }
+
+    
+    template <>
+    void Scene::OnComponentAdded(SceneObject& entity, TagComponent& component)
+    {
+    }
+    
+    template <>
+    void Scene::OnComponentAdded(SceneObject& entity, TransformComponent& component)
+    {
+    }
+
+    template <>
+    void Scene::OnComponentAdded<CameraComponent>(SceneObject& entity, CameraComponent& component)
+    {
+        component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
+    }
+    
+    template <>
+    void Scene::OnComponentAdded(SceneObject& entity, SpriteRendererComponent& component)
+    {
+    }
+    
+    template <>
+    void Scene::OnComponentAdded(SceneObject& entity, NativeScriptComponent& component)
+    {
+    }
+
 }

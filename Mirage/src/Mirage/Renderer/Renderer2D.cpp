@@ -23,7 +23,7 @@ namespace Mirage
         
         struct Renderer2DData
         {
-            static const uint32_t MaxQuads = 10000;
+            static const uint32_t MaxQuads = 500;
             static const uint32_t MaxVertices = MaxQuads * 4;
             static const uint32_t MaxIndices = MaxQuads * 6;
             static const uint32_t MaxTextureSlots = 32;        //TODO : RenderCaps
@@ -179,6 +179,8 @@ namespace Mirage
             s_Data.TextureSlotIndex = 1;
         }
 
+
+        
         namespace Draw
         {
             void Quad(const Mat4& transform, const Vec4& color, const Ref<Texture2D> texture, const Vec2& tiling, const Vec2& offset)

@@ -113,7 +113,7 @@ bool ImGui::ColoredButtonV1(const char* label, const ImVec2& size_arg)
     if (g.LogEnabled)
         LogSetNextTextDecoration("[", "]");
     
-    ImVec2 posMin = {bb.Min.x + style.FramePadding.x, bb.Min.y };
+    ImVec2 posMin = {bb.Min.x - style.FramePadding.x , bb.Min.y  + style.FramePadding.y - label_size.y / 2};
     
     ImVec2 posMax = {bb.Max.x + style.FramePadding.x, bb.Max.y + style.FramePadding.y};
     RenderTextClipped(posMin,posMax, label, NULL, &label_size, style.ButtonTextAlign, &bb);

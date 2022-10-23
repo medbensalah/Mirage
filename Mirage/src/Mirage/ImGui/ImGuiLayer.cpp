@@ -7,11 +7,13 @@
 #include <backends/imgui_impl_glfw.h>
 #include <GLFW/glfw3.h>
 
+#include "FontLibrary.h"
 #include "Mirage/Core/Application.h"
 
 namespace Mirage
 {
 static bool isDark = true;
+    
     void SetImGuiStyle(bool dark = true)
     {
         ImGuiStyle* style = &ImGui::GetStyle();
@@ -185,9 +187,11 @@ static bool isDark = true;
 
 
         ImGuiIO& io = ImGui::GetIO();
-
+        
         io.FontDefault = io.Fonts->AddFontFromFileTTF("assets/fonts/Lato/Lato-Regular.ttf", 18.0f);
-                
+        io.Fonts->AddFontFromFileTTF("assets/fonts/Lato/Lato-Black.ttf", 18.0f);
+
+        
         ImGuiColorEditFlags flags = ImGuiColorEditFlags_NoLabel | ImGuiColorEditFlags_NoSidePreview |
             ImGuiColorEditFlags_AlphaBar | ImGuiColorEditFlags_PickerHueWheel |
             ImGuiColorEditFlags_NoSidePreview ;

@@ -39,10 +39,11 @@ namespace Mirage
     void WindowsWindow::Init(const WindowProperties& properties)
     {
         MRG_PROFILE_FUNCTION();
-
+        
         m_Data.Title = properties.Title;
         m_Data.Width = properties.Width;
         m_Data.Height = properties.Height;
+        
 
         MRG_CORE_INFO("Creating window \"{0}\" with size ({1}, {2})",
                       properties.Title,
@@ -168,6 +169,7 @@ namespace Mirage
             MouseMoveEvent event((float)xPos, (float)yPos);
             data.EventCallback(event);
         });
+
     }
 
     void WindowsWindow::Shutdown()

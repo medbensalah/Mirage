@@ -53,7 +53,9 @@ namespace Mirage
         T& AddComponent(Args&&... args)
         {
             MRG_CORE_ASSERT(!HasComponent<T>(), "Entity already has that component!");
-            return m_Scene->m_Registry.emplace<T>(m_Entity, std::forward<Args>(args)...);
+            T& component = m_Scene->m_Registry.emplace<T>(m_Entity, std::forward<Args>(args)...);
+            m_Scene->OnComponentAdded<T>(*this, component);
+            return component;
         }
 
         template <typename T>

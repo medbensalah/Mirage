@@ -23,12 +23,12 @@ namespace Mirage
         {
             if (m_IsTransformDirty)
             {
-                Mat4 rotation = glm::rotate(Mat4(1.0f), Radians(m_Rotation.x), Vec3(1.0f, 0.0f, 0.0f)) *
-                    glm::rotate(Mat4(1.0f), Radians(m_Rotation.y), Vec3(0.0f, 1.0f, 0.0f)) *
-                    glm::rotate(Mat4(1.0f), Radians(m_Rotation.z), Vec3(0.0f, 0.0f, 1.0f));
-                m_transform = glm::translate(Mat4(1.0f), m_Position) *
+                Mat4 rotation = MatRotate(Mat4(1.0f), Radians(m_Rotation.x), Vec3(1.0f, 0.0f, 0.0f)) *
+                    MatRotate(Mat4(1.0f), Radians(m_Rotation.y), Vec3(0.0f, 1.0f, 0.0f)) *
+                    MatRotate(Mat4(1.0f), Radians(m_Rotation.z), Vec3(0.0f, 0.0f, 1.0f));
+                m_transform = MatTranslate(Mat4(1.0f), m_Position) *
                     rotation *
-                    glm::scale(Mat4(1.0f), m_Scale);
+                    MatScale(Mat4(1.0f), m_Scale);
 
                 SceneObject so{GetOwner(), m_Scene};
                 if (so.HasParent())

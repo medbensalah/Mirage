@@ -57,7 +57,7 @@ void Sandbox2D::OnUpdate(float DeltaTime)
     {
         MRG_PROFILE_SCOPE("Renderer Clear");
         
-        Mirage::RenderCommand::SetClearColor({1.0f,1.0f,1.0f,0.0f});
+        Mirage::RenderCommand::SetClearColor({0.0f,0.0f,0.0f,1.0f});
         // Mirage::RenderCommand::SetClearColor({0.15f, 0.15f, 0.15f, 1.0f});
         Mirage::RenderCommand::Clear();
     }
@@ -68,7 +68,6 @@ void Sandbox2D::OnUpdate(float DeltaTime)
         
         Mirage::Renderer2D::Draw::Quad(quad, m_Tiling, m_Offset);
 
-        
         
         for(float y = -5.0f; y < 5.0f; y += 0.5f)
         {
@@ -95,6 +94,26 @@ static bool showDemo = true;
 void Sandbox2D::OnImGuiRender()
 {
     MRG_PROFILE_FUNCTION();
+    ImGui::Begin("Settings");
+    
+    // ImGui::ColoredButtonV1("You");
+    //
+    // 
+
+    //
+    // ImGui::Spacing();
+    // MRG_IMGUI_DRAW_LABEL_WIDGET("Tiling", ImGui::DragFloat2, "##Tiling", glm::value_ptr(m_Tiling), 0.05f);
+    // MRG_IMGUI_DRAW_LABEL_WIDGET("Offset", ImGui::DragFloat2, "##Offset", glm::value_ptr(m_Offset), 0.05f);
+    //
+    // ImGui::Spacing();
+    // ImGui::Separator();
+
+    float deltaTime = Mirage::Application::Get().GetDeltaTime();
+    ImGui::TextDisabled("FPS : %3.1f  (%f ms)", 1.0f / deltaTime, deltaTime * 1000.0f);
+    ImGui::Spacing();
+    ImGui::Separator();
+    ImGui::Spacing();
+    ImGui::End();
 }
 
 void Sandbox2D::OnEvent(Mirage::Event& e)

@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include "ImGui/imgui_internal.h"
+#include "Mirage/ImGui/FontLibrary.h"
 
 
 namespace Mirage
@@ -69,9 +70,11 @@ bool Mirage::DrawComboBox(const char* label, const char* strings[], int count, c
 
 bool Mirage::DrawVec3Control(const char* label, Vec3& vector)
 {
+    auto blackFont = GetFont( Font::Black);
+    
     bool result = false;
 
-    float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+    float lineHeight = blackFont->FontSize + GImGui->Style.FramePadding.y * 2.0f;
     ImVec2 buttonSize = {lineHeight + 4, lineHeight};
     ImGui::BeginGroup();
     ImGui::PushID(label);
@@ -98,7 +101,9 @@ bool Mirage::DrawVec3Control(const char* label, Vec3& vector)
     ImGui::PushStyleColor(ImGuiCol_Button, col1);
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, col1);
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, col1);
+    ImGui::PushFont(blackFont);
     ImGui::Button("X", buttonSize);
+    ImGui::PopFont();
     ImGui::SameLine();
     result |= ImGui::DragFloat("##X", &vector.x, 0.1f, 0.0f, 0.0f, fmt.c_str());
     ImGui::PopStyleColor(3);
@@ -118,7 +123,9 @@ bool Mirage::DrawVec3Control(const char* label, Vec3& vector)
     ImGui::PushStyleColor(ImGuiCol_Button, col2);
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, col2);
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, col2);
+    ImGui::PushFont(blackFont);
     ImGui::Button("Y", buttonSize);
+    ImGui::PopFont();
     ImGui::SameLine();
     result |= ImGui::DragFloat("##Y", &vector.y, 0.1f, 0.0f, 0.0f, fmt.c_str());
     ImGui::PopStyleColor(3);
@@ -139,7 +146,9 @@ bool Mirage::DrawVec3Control(const char* label, Vec3& vector)
     ImGui::PushStyleColor(ImGuiCol_Button, col3);
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, col3);
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, col3);
+    ImGui::PushFont(blackFont);
     ImGui::Button("Z", buttonSize);
+    ImGui::PopFont();
     ImGui::SameLine();
     result |= ImGui::DragFloat("##Z", &vector.z, 0.1f, 0.0f, 0.0f, fmt.c_str());
     ImGui::PopStyleColor(3);
