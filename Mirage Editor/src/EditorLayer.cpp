@@ -13,6 +13,8 @@
 #include "Mirage/ECS/Components/TransformComponent.h"
 #include "Mirage/ImGui/Extensions/DrawingAPI.h"
 
+#include "Mirage/ECS/SceneSerializer.h"
+
 namespace Mirage
 {
 EditorLayer::EditorLayer()
@@ -37,13 +39,24 @@ void EditorLayer::OnAttach()
     m_ActiveScene = CreateRef<Scene>();
 
 
-    m_SquareEntitysec = m_ActiveScene->CreateSceneObject("Square 1");
-    m_SquareEntitysec.AddComponent<SpriteRendererComponent>( Vec4{1.0f,0.0f,0.0f,1.0f});
+    m_SquareEntity = m_ActiveScene->CreateSceneObject("Square 1");
+    m_SquareEntity.AddComponent<SpriteRendererComponent>( Vec4{1.0f,0.0f,0.0f,1.0f});
+    SceneObject so = m_ActiveScene->CreateSceneObject("Square 2");
+    m_ActiveScene->CreateChildSceneObject(so, "Square 2 - 1").AddComponent<SpriteRendererComponent>();
+    SceneObject so1 = m_ActiveScene->CreateSceneObject("Square 3");
+    m_ActiveScene->CreateChildSceneObject(so1, "Square 3 - 1");
+    SceneObject so2 = m_ActiveScene->CreateChildSceneObject(so1, "Square 3 - 2");
+    m_ActiveScene->CreateChildSceneObject(so2, "Square 3 - 2 - 1");
+    m_ActiveScene->CreateChildSceneObject(so2, "Square 3 - 2 - 2");
+    m_ActiveScene->CreateChildSceneObject(so1, "Square 3 - 3");
+    m_ActiveScene->CreateSceneObject("Square 4");
+    
     // for(int i =0; i< 90000; i++)
     // {
     //
     //     m_SquareEntity = m_ActiveScene->CreateSceneObject("Square 2");
-    //     m_SquareEntity.AddComponent<SpriteRendererComponent>( Vec4{0.0f,1.0f,0.0f,1.0f});    }
+    //     m_SquareEntity.AddComponent<SpriteRendererComponent>( Vec4{0.0f,1.0f,0.0f,1.0f});
+    // }
 
     m_Camera = m_ActiveScene->CreateSceneObject("Camera");
     m_Camera.AddComponent<CameraComponent>();
@@ -52,11 +65,9 @@ void EditorLayer::OnAttach()
     {
     private:
         float _speed = 5.0f;
-        TransformComponent* _transform;
     public:
         void OnCreate()
         {
-            _transform = &GetComponent<TransformComponent>();
         }
 
         void OnDestroy()
@@ -66,7 +77,8 @@ void EditorLayer::OnAttach()
 
         void OnUpdate(float DeltaTime)
         {
-            Vec3 position = _transform->Position();
+            auto& _transform = GetComponent<TransformComponent>();
+            Vec3 position = _transform.Position();
             if(Input::IsKeyPressed(Key::A))
             {
                 position.x -= _speed * DeltaTime;
@@ -83,12 +95,13 @@ void EditorLayer::OnAttach()
             {
                 position.y -= _speed * DeltaTime;
             }
-            _transform->SetPosition(position);
+            _transform.SetPosition(position);
         }
     };
     
     m_Camera.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 
+    
     m_HierarchyPanel.SetContext(m_ActiveScene);
 }
 
@@ -212,6 +225,17 @@ void EditorLayer::CreateDockspace()
             // if (ImGui::MenuItem("Flag: NoDockingInCentralNode", "", (dockspace_flags & ImGuiDockNodeFlags_NoDockingInCentralNode) != 0))  { dockspace_flags ^= ImGuiDockNodeFlags_NoDockingInCentralNode; }
             // if (ImGui::MenuItem("Flag: AutoHideTabBar",         "", (dockspace_flags & ImGuiDockNodeFlags_AutoHideTabBar) != 0))          { dockspace_flags ^= ImGuiDockNodeFlags_AutoHideTabBar; }
             // if (ImGui::MenuItem("Flag: PassthruCentralNode",    "", (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode) != 0, opt_fullscreen)) { dockspace_flags ^= ImGuiDockNodeFlags_PassthruCentralNode; }
+
+            if (ImGui::MenuItem("Save"))
+            {
+                SceneSerializer serializer(m_ActiveScene);
+                serializer.SerializeText("assets/Scenes/Scene.mrg.yaml");
+            }
+            if (ImGui::MenuItem("Load"))
+            {
+                SceneSerializer serializer(m_ActiveScene);
+                serializer.DeserializeText("assets/Scenes/Scene.mrg.yaml");
+            }
             ImGui::Separator();
             if (ImGui::MenuItem("Exit")) { Application::Get().Close(); }
             ImGui::EndMenu();

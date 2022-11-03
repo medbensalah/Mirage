@@ -35,7 +35,8 @@ project "Mirage"
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.glm}",
         "%{IncludeDir.stb_image}",
-        "%{IncludeDir.enTT}"
+        "%{IncludeDir.enTT}",
+        "%{IncludeDir.yaml_cpp}"
     }
     
     links
@@ -43,6 +44,7 @@ project "Mirage"
         "GLFW",
         "Glad",
         "ImGui",
+        "yaml-cpp",
         "opengl32.lib"
     }
 

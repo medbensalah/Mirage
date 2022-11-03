@@ -23,10 +23,8 @@ namespace Mirage
                 
         void Destroy();
 
-        void AddChild(entt::entity child);
-        void RemoveChild(entt::entity child);
-        void SetParent(entt::entity parent);
-        void RemoveParent();
+        Scene* GetScene() const { return m_Scene; }
+        uint32_t GetEntity() const { return (uint32_t)m_Entity; }
         
         size_t GetChildCount()
         {
@@ -97,9 +95,15 @@ namespace Mirage
         }
 
     private:
+        void AddChild(entt::entity child);
+        void RemoveChild(entt::entity child);
+        void SetParent(entt::entity parent);
+        void RemoveParent();
+        
         entt::entity m_Entity{ entt::null };
         Scene* m_Scene = nullptr;
         
+        friend class Scene;
         friend class HierarchyPanel;
     };
 }

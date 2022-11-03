@@ -138,6 +138,9 @@
     <ClInclude Include="src\Mirage\ECS\SceneObject.h">
       <Filter>src\Mirage\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\SceneSerializer.h">
+      <Filter>src\Mirage\ECS</Filter>
+    </ClInclude>
     <ClInclude Include="src\Mirage\ECS\ScriptableSceneObject.h">
       <Filter>src\Mirage\ECS</Filter>
     </ClInclude>
@@ -161,6 +164,9 @@
     </ClInclude>
     <ClInclude Include="src\Mirage\ImGui\Extensions\ToggleButton.h">
       <Filter>src\Mirage\ImGui\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\ImGui\FontLibrary.h">
+      <Filter>src\Mirage\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\ImGui\ImGuiLayer.h">
       <Filter>src\Mirage\ImGui</Filter>
@@ -1506,6 +1512,9 @@
       <Filter>src\Mirage\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Mirage\ECS\SceneObject.cpp">
+      <Filter>src\Mirage\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\ECS\SceneSerializer.cpp">
       <Filter>src\Mirage\ECS</Filter>
     </ClCompile>
     <ClCompile Include="src\Mirage\ImGui\ImGuiBuild.cpp">

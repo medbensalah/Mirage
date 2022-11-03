@@ -30,6 +30,7 @@ namespace Mirage
 
         std::unordered_map<entt::entity, Relationship> m_Hierarchy;
         
+        friend class SceneSerializer;
         friend class SceneObject;
         friend class TransformComponent;
         friend class HierarchyPanel;

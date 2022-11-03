@@ -175,7 +175,17 @@ namespace Mirage
     void WindowsWindow::Shutdown()
     {
         MRG_PROFILE_FUNCTION();
-
+        // if (m_Window != nullptr) {
+        //     glfwDestroyWindow(m_Window);
+        //     --s_GLFWWindowCount;
+        // }
+        // if (m_Window != nullptr)
+        // {
+        //     if (s_GLFWWindowCount == 0)
+        //     {
+        //         glfwTerminate();
+        //     }
+        // }
         glfwDestroyWindow(m_Window);
         --s_GLFWWindowCount;
         
