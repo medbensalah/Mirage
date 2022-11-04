@@ -1,6 +1,7 @@
 ﻿#pragma once
 
 #include "Mirage.h"
+#include "Mirage/Events/KeyEvent.h"
 #include "Panels/HierarchyPanel.h"
 
 namespace Mirage
@@ -19,7 +20,16 @@ namespace Mirage
         void OnEvent(Event& e) override;
 
         void CreateDockspace();
+        void CreateMenuBar();
         void CreateViewport();
+
+    private:
+        void ProcessShortcuts(Event& e);
+        bool OnShortcutKeyPressed(KeyPressedEvent e);
+
+        void NewScene();
+        void OpenScene();
+        void SaveAs();
         
     private:
         Ref<Framebuffer> m_Framebuffer;

@@ -21,6 +21,7 @@ namespace Mirage
 
     void HierarchyPanel::SetContext(const Ref<Scene>& scene)
     {
+        m_SelectionContext = {};
         m_Context = scene;
     }
 

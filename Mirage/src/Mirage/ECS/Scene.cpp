@@ -18,6 +18,7 @@ namespace Mirage
 
     Scene::~Scene()
     {
+        m_Hierarchy.clear();
     }
     
     SceneObject Scene::CreateSceneObject(const std::string& name)
