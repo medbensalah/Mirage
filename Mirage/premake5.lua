@@ -17,7 +17,9 @@ project "Mirage"
         "vendor/stb_image/**.h",        
         "vendor/stb_image/**.cpp",        
         "vendor/glm/glm/**.hpp",
-        "vendor/glm/glm/**.inl"
+        "vendor/glm/glm/**.inl"        
+        "vendor/ImGuizmo/ImGuizmo.h",
+        "vendor/ImGuizmo/ImGuizmo.cpp"
     }
     
     defines

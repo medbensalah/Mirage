@@ -292,12 +292,16 @@ namespace Mirage
 
     bool SceneSerializer::DeserializeText(const std::string& filepath)
     {
-        bool result = true;
-        std::ifstream stream(filepath);
-        std::stringstream strStream;
-        strStream << stream.rdbuf();
+        // OLD CODE--------------------------------------------------------------
+        // std::ifstream stream(filepath);
+        // std::stringstream strStream;
+        // strStream << stream.rdbuf();
+        //
+        // YAML::Node data = YAML::Load(strStream.str());
+        // ----------------------------------------------------------------------
 
-        YAML::Node data = YAML::Load(strStream.str());
+        bool result = true;
+        YAML::Node data = YAML::LoadFile(filepath);
         if (!data["Scene"])
             return false;
 
