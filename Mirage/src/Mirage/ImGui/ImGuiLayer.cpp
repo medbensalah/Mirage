@@ -7,8 +7,9 @@
 #include <backends/imgui_impl_glfw.h>
 #include <GLFW/glfw3.h>
 
-#include "FontLibrary.h"
 #include "Mirage/Core/Application.h"
+
+#include "ImGuizmo.h"
 
 namespace Mirage
 {
@@ -19,7 +20,7 @@ static bool isDark = true;
         ImGuiStyle* style = &ImGui::GetStyle();
         
         style->WindowPadding                        = ImVec2(7, 5);
-        style->FramePadding                         = ImVec2(9, 3);
+        style->FramePadding                         = ImVec2(7, 3);
         style->CellPadding                         = ImVec2(7, 0);
         style->ItemSpacing                          = ImVec2(7, 3);
         style->ItemInnerSpacing                     = ImVec2(5, 5); 
@@ -208,7 +209,7 @@ static bool isDark = true;
     void ImGuiLayer::OnAttach()
     {
         MRG_PROFILE_FUNCTION();
-#pragma 
+        
         // Setup Dear ImGui context
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -268,6 +269,7 @@ static bool isDark = true;
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+        ImGuizmo::BeginFrame();
     }
     
     void ImGuiLayer::End()

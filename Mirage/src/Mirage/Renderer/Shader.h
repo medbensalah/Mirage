@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Mirage/Core/Math.h"
+#include "Mirage/Math/glmTypes.h"
 
 namespace Mirage
 {

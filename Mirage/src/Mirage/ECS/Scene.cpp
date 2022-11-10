@@ -77,7 +77,7 @@ namespace Mirage
                 if (cam.IsMain)
                 {
                     mainCamera = &(cam.Camera);
-                    cameraTransform = transform.GetWorldTransform();
+                    cameraTransform = transform.GetTransform();
                     break;
                 }
             }
@@ -93,7 +93,7 @@ namespace Mirage
             for (auto entity : group)
             {
                 auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-                Renderer2D::Draw::Quad(transform.GetWorldTransform(), sprite.Color);
+                Renderer2D::Draw::Quad(transform.GetTransform(), sprite.Color);
             }
 
             Renderer2D::EndScene();
@@ -116,8 +116,22 @@ namespace Mirage
             }
         }
     }
-
     
+    SceneObject Scene::GetMainCameraSO()
+    {
+        auto view = m_Registry.view<CameraComponent>();
+        for (auto entity : view)
+        {
+            auto& camera = view.get<CameraComponent>(entity);
+            if (camera.IsMain)
+            {
+                return SceneObject{entity, this};
+            }
+        }
+        return {};
+    }
+
+
     template <>
     void Scene::OnComponentAdded(SceneObject& entity, TagComponent& component)
     {

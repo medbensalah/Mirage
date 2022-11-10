@@ -119,7 +119,7 @@ namespace Mirage
         {
             
 
-            Mat4 viewProj = camera.GetProjection() * Invert(transform);
+            Mat4 viewProj = camera.GetProjection() * Inverse(transform);
             
             s_Data.Shader->Bind();
             s_Data.Shader->SetMat4("u_ViewProjection", viewProj);

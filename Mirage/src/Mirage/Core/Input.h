@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "Math.h"
 #include "Mirage/Core/KeyCodes.h"
 #include "Mirage/Core/MouseCodes.h"
+#include "Mirage/Math/glmTypes.h"
 
 namespace Mirage
 {

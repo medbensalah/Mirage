@@ -13,3 +13,6 @@
 [submodule "Mirage/vendor/yaml-cpp"]
 	path = Mirage/vendor/yaml-cpp
 	url = https://github.com/TheCherno/yaml-cpp
+[submodule "Mirage/vendor/ImGuizmo"]
+	path = Mirage/vendor/ImGuizmo
+	url = https://github.com/TheCherno/ImGuizmo

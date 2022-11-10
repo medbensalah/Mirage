@@ -9,16 +9,37 @@
 namespace Mirage
 {
     static float width = 60.0f;
-    static bool DrawSplitUIItem(const char* label, std::function<bool()> fn, const char* id = "tab");
+    static bool DrawSplitUIItem(const char* label, std::function<bool()> fn, const char* Cid = "tab");
     static bool DrawComboBox(const char* label, const char* strings[], int count, const char* preview, int* out);
 
     static bool DrawVec3Control(const char* label, Vec3& vector);
 }
 
-bool Mirage::DrawSplitUIItem(const char* label, std::function<bool()> fn, const char* id)
+namespace ImGui
 {
+    // imvec2 operators
+    inline ImVec2 operator+(const ImVec2& lhs, const ImVec2& rhs)
+    {
+        return ImVec2(lhs.x + rhs.x, lhs.y + rhs.y);
+    }
+}
+
+
+bool Mirage::DrawSplitUIItem(const char* label, std::function<bool()> fn, const char* Cid)
+{
+    using namespace ImGui;
+    ImGuiWindow* window = GetCurrentWindow();
+    if (window->SkipItems)
+        return false;
+
+    ImGuiContext& g = *GImGui;
+    const ImGuiStyle& style = g.Style;
+    const ImVec2 label_size = CalcTextSize(label, NULL, true);
+
+    const ImVec2 pos = window->DC.CursorPos;
+    
     bool result = false;
-    if(ImGui::BeginTable(id, 2, ImGuiTableFlags_Resizable))
+    if(ImGui::BeginTable(Cid, 2, ImGuiTableFlags_Resizable))
     {
         ImGui::TableSetupColumn("", ImGuiTableColumnFlags_WidthFixed, width);
         ImGui::TableNextRow();
@@ -27,7 +48,10 @@ bool Mirage::DrawSplitUIItem(const char* label, std::function<bool()> fn, const 
             ImGui::TableSetColumnIndex(column);
             if (column == 0)
             {
-                ImGui::Text(label);
+                ImVec2 label_pos = ImVec2(pos.x, pos.y + style.FramePadding.y);
+
+                if (label_size.x > 0.0f)
+                    RenderText(label_pos, label);
             }
             else
             {
@@ -84,18 +108,6 @@ bool Mirage::DrawVec3Control(const char* label, Vec3& vector)
     static ImVec4 col2 = {0.0f,0.64f,0.0f,1.0f};
     static ImVec4 col3 = {0.0f,0.0f,0.64f,1.0f};
     
-    // TODO: formatting
-    static std::string buffer;
-    static std::string t;
-    static std::string fmt;
-    static std::stringstream out;
-
-    out.str(std::string());
-    out << vector.x;
-    buffer = out.str();
-    t = buffer.substr(buffer.find(".")+1);
-    fmt = "%." + std::to_string(t.length()) + "f";
-    
     ImGui::PushID("X");
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{-4, 3});
     ImGui::PushStyleColor(ImGuiCol_Button, col1);
@@ -105,18 +117,12 @@ bool Mirage::DrawVec3Control(const char* label, Vec3& vector)
     ImGui::Button("X", buttonSize);
     ImGui::PopFont();
     ImGui::SameLine();
-    result |= ImGui::DragFloat("##X", &vector.x, 0.1f, 0.0f, 0.0f, fmt.c_str());
+    result |= ImGui::DragFloat("##X", &vector.x, 0.1f, 0.0f, 0.0f, "%.3g");
     ImGui::PopStyleColor(3);
     ImGui::PopStyleVar();
     ImGui::SameLine();
     ImGui::PopItemWidth();
     ImGui::PopID();
-    
-    out.str(std::string());
-    out << vector.y;
-    buffer = out.str();
-    t = buffer.substr(buffer.find(".")+1);
-    fmt = "%." + std::to_string(t.length()) + "f";
     
     ImGui::PushID("Y");
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{-4, 3});
@@ -127,19 +133,12 @@ bool Mirage::DrawVec3Control(const char* label, Vec3& vector)
     ImGui::Button("Y", buttonSize);
     ImGui::PopFont();
     ImGui::SameLine();
-    result |= ImGui::DragFloat("##Y", &vector.y, 0.1f, 0.0f, 0.0f, fmt.c_str());
+    result |= ImGui::DragFloat("##Y", &vector.y, 0.1f, 0.0f, 0.0f, "%.3g");
     ImGui::PopStyleColor(3);
     ImGui::PopStyleVar();
     ImGui::SameLine();
     ImGui::PopItemWidth();
     ImGui::PopID();
-    
-    out.str(std::string());
-
-    out << vector.z;
-    buffer = out.str();
-    t = buffer.substr(buffer.find(".")+1);
-    fmt = "%." + std::to_string(t.length()) + "f";
     
     ImGui::PushID("Z");
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{-4, 3});
@@ -150,7 +149,7 @@ bool Mirage::DrawVec3Control(const char* label, Vec3& vector)
     ImGui::Button("Z", buttonSize);
     ImGui::PopFont();
     ImGui::SameLine();
-    result |= ImGui::DragFloat("##Z", &vector.z, 0.1f, 0.0f, 0.0f, fmt.c_str());
+    result |= ImGui::DragFloat("##Z", &vector.z, 0.1f, 0.0f, 0.0f, "%.3g");
     ImGui::PopStyleColor(3);
     ImGui::PopStyleVar();
     ImGui::SameLine();

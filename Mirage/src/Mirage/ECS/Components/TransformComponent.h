@@ -1,10 +1,12 @@
 ﻿#pragma once
-#include "TagComponent.h"
-#include "Mirage/Core/Math.h"
+
+#include "glm/gtx/euler_angles.hpp"
+#include "Mirage/Math/glmTypes.h"
 #include "Mirage/ECS/Scene.h"
 
 namespace Mirage
 {
+    class SceneObject;
     struct TransformComponent
     {
         TransformComponent() = default;
@@ -18,175 +20,47 @@ namespace Mirage
             : m_Scene(scene)
         {
         }
+        
+        Mat4 GetLocalTransform();
+        Mat4 GetTransform();
 
-        Mat4 GetWorldTransform()
-        {
-            if (m_IsTransformDirty)
-            {
-                Mat4 rotation = MatRotate(Mat4(1.0f), Radians(m_Rotation.x), Vec3(1.0f, 0.0f, 0.0f)) *
-                    MatRotate(Mat4(1.0f), Radians(m_Rotation.y), Vec3(0.0f, 1.0f, 0.0f)) *
-                    MatRotate(Mat4(1.0f), Radians(m_Rotation.z), Vec3(0.0f, 0.0f, 1.0f));
-                m_transform = MatTranslate(Mat4(1.0f), m_Position) *
-                    rotation *
-                    MatScale(Mat4(1.0f), m_Scale);
+        SceneObject GetOwner();
+        SceneObject GetOwner() const;
 
-                SceneObject so{GetOwner(), m_Scene};
-                if (so.HasParent())
-                {
-                    m_transform = so.GetParent().GetComponent<TransformComponent>().GetWorldTransform() * m_transform;
-                }
-            }
+        void MarkPositionDirty();
+        void MarkRotationDirty();
+        void MarkScaleDirty();
 
-            m_IsTransformDirty = false;
-            return m_transform;
-        }
+        inline Vec3 Position() const { return m_Position; }
+        inline Vec3 Rotation() const { return m_Rotation; }
+        inline Quat RotationQ() const { return m_RotationQ; }
+        inline Vec3 Scale() const { return m_Scale; }
 
-        SceneObject GetOwner()
-        {
-            if (m_Owner == entt::null)
-                m_Owner = entt::to_entity<entt::entity, TransformComponent>(m_Scene->m_Registry, *this);
+        Vec3 WorldToLocalPosition(const Vec3& worldPosition);
 
-            SceneObject so{m_Owner, m_Scene};
-            return so;
-        }
+        
+        void SetPosition(const Vec3& position);
+        void SetWorldPosition(const Vec3& position);
 
-        SceneObject GetOwner() const
-        {
-            if (m_Owner == entt::null)
-                return {entt::to_entity(m_Scene->m_Registry, this), m_Scene};
-            else
-                return {m_Owner, m_Scene};
-        }
+        void SetRotation(const Vec3& rotation);
+        void SetWorldRotation(const Vec3& rotation);
+        
+        void SetScale(const Vec3& scale);
+        void SetWorldScale(const Vec3& scale);
 
-        void MarkPositionDirty()
-        {
-            //mark for all children
-            for (auto& child : GetOwner().GetChildren())
-            {
-                SceneObject so = {child, m_Scene};
-                so.GetComponent<TransformComponent>().MarkPositionDirty();
-            }
-            m_IsWorldPositionDirty = true;
-            m_IsTransformDirty = true;
-        }
-
-        void MarkRotationDirty()
-        {
-            //mark for all children
-            for (auto& child : GetOwner().GetChildren())
-            {
-                SceneObject so = {child, m_Scene};
-                so.GetComponent<TransformComponent>().MarkRotationDirty();
-            }
-            m_IsWorldRotationDirty = true;
-            m_IsTransformDirty = true;
-        }
-
-        void MarkScaleDirty()
-        {
-            //mark for all children
-            for (auto& child : GetOwner().GetChildren())
-            {
-                SceneObject so = {child, m_Scene};
-                so.GetComponent<TransformComponent>().MarkScaleDirty();
-            }
-            m_IsWorldScaleDirty = true;
-            m_IsTransformDirty = true;
-        }
-
-        Vec3 Position() const { return m_Position; }
-        Vec3 Rotation() const { return m_Rotation; }
-        Vec3 Scale() const { return m_Scale; }
-
-        void SetPosition(const Vec3& position)
-        {
-            if (position == m_Position)
-                return;
-            m_Position = position;
-            MarkPositionDirty();
-        }
-
-        void SetRotation(const Vec3& rotation)
-        {
-            if (rotation == m_Rotation)
-                return;
-            m_Rotation = rotation;
-            MarkRotationDirty();
-        }
-
-        void SetScale(const Vec3& scale)
-        {
-            if (scale == m_Scale)
-                return;
-            m_Scale = scale;
-            MarkScaleDirty();
-        }
-
-        Vec3 WorldPosition()
-        {
-            if (m_IsWorldPositionDirty)
-            {
-                Vec3 result = m_Position;
-                SceneObject so = GetOwner();
-                if (so.HasParent())
-                {
-                    so = so.GetParent();
-                    if (so.HasComponent<TransformComponent>())
-                    {
-                        auto& tc = so.GetComponent<TransformComponent>();
-                        result += so.GetComponent<TransformComponent>().WorldPosition();
-                    }
-                }
-                m_WorldPosition = result;
-            }
-
-            m_IsWorldPositionDirty = false;
-            return m_WorldPosition;
-        }
-
-        Vec3 WorldRotation()
-        {
-            if (m_IsWorldRotationDirty)
-            {
-                Vec3 result = m_Rotation;
-                SceneObject so = GetOwner();
-                if (so.HasParent())
-                {
-                    so = so.GetParent();
-                    if (so.HasComponent<TransformComponent>())
-                    {
-                        auto& tc = so.GetComponent<TransformComponent>();
-                        result += so.GetComponent<TransformComponent>().WorldRotation();
-                    }
-                }
-                m_WorldRotation = result;
-            }
-
-            m_IsWorldRotationDirty = false;
-            return m_WorldRotation;
-        }
-
-        Vec3 WorldScale()
-        {
-            if (m_IsWorldScaleDirty)
-            {
-                Vec3 result = m_Scale;
-                SceneObject so = GetOwner();
-                if (so.HasParent())
-                {
-                    so = so.GetParent();
-                    if (so.HasComponent<TransformComponent>())
-                    {
-                        auto& tc = so.GetComponent<TransformComponent>();
-                        result *= so.GetComponent<TransformComponent>().WorldScale();
-                    }
-                }
-                m_WorldScale = result;
-            }
-
-            m_IsWorldScaleDirty = false;
-            return m_WorldScale;
-        }
+        void Translate(const Vec3& translation);
+        void Rotate(const Vec3& rotation);
+        void Scale(const Vec3& scale);
+        
+        Vec3 WorldPosition();
+        Vec3 WorldRotation();
+        Quat WorldRotationQ();
+        Vec3 WorldScale();
+        
+    private:
+        void SetRotation(const Quat& rotation);
+        void SetWorldRotation(const Quat& rotation);
+        void Rotate(const Quat& rotation);
 
     private:
         entt::entity m_Owner = {entt::null};
@@ -199,10 +73,12 @@ namespace Mirage
 
         Vec3 m_Position{0.0f, 0.0f, 0.0f};
         Vec3 m_Rotation{0.0f, 0.0f, 0.0f};
+        Quat m_RotationQ{0.0f, 1.0f, 0.0f, 0.0f};
         Vec3 m_Scale{1.0f, 1.0f, 1.0f};
 
         Vec3 m_WorldPosition{0.0f, 0.0f, 0.0f};
         Vec3 m_WorldRotation{0.0f, 0.0f, 0.0f};
+        Quat m_WorldRotationQ{0.0f, 1.0f, 0.0f, 0.0f};
         Vec3 m_WorldScale{1.0f, 1.0f, 1.0f};
 
         Mat4 m_transform{1.0f};

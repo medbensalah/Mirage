@@ -18,6 +18,8 @@ namespace Mirage
 
         void OnImguiRender();
 
+        SceneObject GetSelectedSO() const { return m_SelectionContext; }
+        
     private:
             void DrawEntityNode(SceneObject so);
             void DrawComponents(SceneObject so);

@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Mirage/Events/Event.h"
-#include "Mirage/Core/Math.h"
+#include "Mirage/Math/glmTypes.h"
 
 namespace Mirage
 {

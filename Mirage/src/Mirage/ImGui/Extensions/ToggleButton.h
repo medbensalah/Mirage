@@ -42,5 +42,9 @@
         else
             draw_list->AddRectFilled(bgp, ImVec2(bgp.x + width, bgp.y + height * downScale), ImGui::GetColorU32(*v ? colors[ImGuiCol_ButtonActive] : colors[ImGuiCol_GradButtonU]), height * 0.50f * downScale);
         draw_list->AddCircleFilled(ImVec2(p.x + radius + (*v ? 1.1f : -0.1f) * (width - radius * 2.0f), p.y + radius), radius - 1.5f, ColorConvertFloat4ToU32(  colors[ImGuiCol_CheckMark]));
-        return true;
+
+        // set cursor to end
+        ImGui::SetCursorScreenPos(ImVec2(p.x + width + style.ItemInnerSpacing.x * 2 + label_size.x, p.y));
+        
+        return ImGui::IsItemClicked();
     }

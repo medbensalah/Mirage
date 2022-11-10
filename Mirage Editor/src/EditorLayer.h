@@ -1,8 +1,10 @@
 ﻿#pragma once
 
 #include "Mirage.h"
+#include "ImGui/imgui_internal.h"
 #include "Mirage/Events/KeyEvent.h"
 #include "Panels/HierarchyPanel.h"
+#include "ImGuizmo/ImGuizmo.h"
 
 namespace Mirage
 {
@@ -22,6 +24,7 @@ namespace Mirage
         void CreateDockspace();
         void CreateMenuBar();
         void CreateViewport();
+        void CreateToolBar();
 
     private:
         void ProcessShortcuts(Event& e);
@@ -39,9 +42,7 @@ namespace Mirage
 
         SceneObject m_SquareEntity;
         SceneObject m_Camera;
-
         
-
         bool m_ViewportFocused = false;
         bool m_ViewportHovered = false;
     
@@ -49,7 +50,21 @@ namespace Mirage
 
         Vec2 m_ViewportSize = {0.0f, 0.0f};
 
-        //Panels
+        
+        // ----------------------- Gizmos -----------------------
+        ImGuizmo::OPERATION m_GizmoType = (ImGuizmo::OPERATION)-1;
+        ImGuizmo::MODE m_GizmoMode = ImGuizmo::MODE::WORLD;
+        
+        // Snapping
+        bool m_TranslationSnap = false;
+        bool m_RotationSnap = false;
+        bool m_ScaleSnap = false;
+        
+        float m_TranslationSnapValue = 0.5f;
+        float m_RotationSnapValue = 15.0f;
+        float m_ScaleSnapValue = 0.25f;
+        
+        // ----------------------- Panels -----------------------
         HierarchyPanel m_HierarchyPanel;
     };
 

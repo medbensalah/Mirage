@@ -17,7 +17,8 @@ project "Mirage"
         "vendor/stb_image/**.h",        
         "vendor/stb_image/**.cpp",        
         "vendor/glm/glm/**.hpp",
-        "vendor/glm/glm/**.inl"        
+        "vendor/glm/glm/**.inl",
+         
         "vendor/ImGuizmo/ImGuizmo.h",
         "vendor/ImGuizmo/ImGuizmo.cpp"
     }
@@ -38,7 +39,8 @@ project "Mirage"
         "%{IncludeDir.glm}",
         "%{IncludeDir.stb_image}",
         "%{IncludeDir.enTT}",
-        "%{IncludeDir.yaml_cpp}"
+        "%{IncludeDir.yaml_cpp}",
+        "%{IncludeDir.ImGuizmo}"
     }
     
     links
@@ -49,6 +51,9 @@ project "Mirage"
         "yaml-cpp",
         "opengl32.lib"
     }
+
+    filter "files:vendor/ImGuizmo/**.cpp"
+        flags { "NoPCH" }
 
     filter "system:windows"
         systemversion "latest"

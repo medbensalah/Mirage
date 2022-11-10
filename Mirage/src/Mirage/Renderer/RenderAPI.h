@@ -2,7 +2,7 @@
 
 #include "Mirage/Renderer/VertexArray.h"
 #include "glm/vec4.hpp"
-#include "Mirage/Core/Math.h"
+#include "Mirage/Math/glmTypes.h"
 
 namespace Mirage
 {

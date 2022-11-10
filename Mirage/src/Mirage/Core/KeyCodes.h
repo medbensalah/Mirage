@@ -404,6 +404,23 @@ namespace Mirage
 #define GLFW_KEY_TO_MRG_KEY(x) GlfwKeyToMrgKey(x)
 #define MRG_KEY_TO_GLFW_KEY(x) MrgKeyToGlfwKey(x)
 #endif
+
+// TODO cross platform
+    //Temporary fix for windows
+    static bool IsQwerty()
+    {
+        switch (PRIMARYLANGID(LOWORD(GetKeyboardLayout(0))))
+        {
+        case LANG_FRENCH:
+            return false;
+            break;
+        case LANG_ENGLISH:
+            return true;
+            break;
+        }
+    }
+
+    
     using KeyCode = uint16_t;
 
     namespace Key

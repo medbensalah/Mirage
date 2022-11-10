@@ -16,11 +16,10 @@ namespace Mirage
         
         MRG_CORE_ASSERT(!s_Instance, "Application already exists!");
         s_Instance = this;
-        
         m_Window = Window::Create(WindowProperties(name));
-        m_Window->SetVSync(false);
         m_Window->SetEventCallback(MRG_BIND_EVENT_FN(Application::OnEvent));
 
+        m_Window->SetVSync(false);
         Renderer::Init();
 
         m_ImGuiLayer = new ImGuiLayer();

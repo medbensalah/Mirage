@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Mirage/Renderer/Shader.h"
-#include "Mirage/Core/Math.h"
+#include "Mirage/Math/glmTypes.h"
 
 //TODO: Remove
 typedef unsigned int GLenum;

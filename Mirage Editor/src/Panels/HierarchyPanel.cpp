@@ -231,39 +231,39 @@ namespace Mirage
         DrawComponent<TransformComponent>("Transform", so,[](auto& component)
         {
             Vec3 position = component.Position();
-                            Vec3 rotation = component.Rotation();
-                            Vec3 scale = component.Scale();
-                            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{7, 7});
-                            if (
-                                DrawSplitUIItem("Position", [&]()-> bool
-                                    {
-                                        return DrawVec3Control("Position", position);
-                                    }, typeid(TransformComponent).name())
-                                )
-                            {
-                                component.SetPosition(position);
-                            }
+            Vec3 rotation = component.Rotation();
+            Vec3 scale = component.Scale();
+            ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{7, 7});
+            if (
+                DrawSplitUIItem("Position", [&]()-> bool
+                {
+                    return DrawVec3Control("Position", position);
+                }, typeid(TransformComponent).name())
+            )
+            {
+                component.SetPosition(position);
+            }
 
-                            if(
-                                DrawSplitUIItem("Rotation", [&]()-> bool
-                                    {
-                                        return DrawVec3Control("Rotation",  rotation);
-                                    }, typeid(TransformComponent).name())
-                                )
-                            {
-                                component.SetRotation(rotation);
-                            }
+            if (
+                DrawSplitUIItem("Rotation", [&]()-> bool
+                {
+                    return DrawVec3Control("Rotation", rotation);
+                }, typeid(TransformComponent).name())
+            )
+            {
+                component.SetRotation(rotation);
+            }
 
-                            if(
-                                DrawSplitUIItem("Scale", [&]()-> bool
-                                    {
-                                        return DrawVec3Control("Scale", scale);
-                                    }, typeid(TransformComponent).name())
-                                )
-                            {
-                                component.SetScale(scale);
-                            }
-                            ImGui::PopStyleVar();
+            if (
+                DrawSplitUIItem("Scale", [&]()-> bool
+                {
+                    return DrawVec3Control("Scale", scale);
+                }, typeid(TransformComponent).name())
+            )
+            {
+                component.SetScale(scale);
+            }
+            ImGui::PopStyleVar();
         }
         );
 

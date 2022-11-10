@@ -20,6 +20,8 @@ namespace Mirage
         void OnUpdate(float DeltaTime);
         void OnViewportResize(uint32_t width, uint32_t height);
 
+        SceneObject GetMainCameraSO();
+
     private:
         template <typename T>
         void OnComponentAdded(SceneObject& entity, T& component);

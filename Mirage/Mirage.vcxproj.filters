@@ -28,8 +28,14 @@
     <Filter Include="src\Mirage\ImGui\Extensions">
       <UniqueIdentifier>{FA907BCC-669E-A9B2-EF84-A59D5B917569}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Mirage\Math">
+      <UniqueIdentifier>{4AE09D14-B66B-0BD9-BF7C-8ECD2B8767D9}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Mirage\Renderer">
       <UniqueIdentifier>{970FEDB8-0371-CAC6-8CDE-1079F83E0186}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Mirage\utils">
+      <UniqueIdentifier>{11FB37AB-FDF3-56FD-2626-3C82127E3609}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
@@ -42,6 +48,9 @@
     </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\ImGuizmo">
+      <UniqueIdentifier>{73BF7F4C-DF4A-ED10-E85B-700554664911}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor\glm">
       <UniqueIdentifier>{829FC5A8-6E57-07F6-D75E-E051C335A2E6}</UniqueIdentifier>
@@ -94,9 +103,6 @@
       <Filter>src\Mirage\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\Core\Log.h">
-      <Filter>src\Mirage\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Mirage\Core\Math.h">
       <Filter>src\Mirage\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\Core\MouseCodes.h">
@@ -171,6 +177,12 @@
     <ClInclude Include="src\Mirage\ImGui\ImGuiLayer.h">
       <Filter>src\Mirage\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\Math\Math.h">
+      <Filter>src\Mirage\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Math\glmTypes.h">
+      <Filter>src\Mirage\Math</Filter>
+    </ClInclude>
     <ClInclude Include="src\Mirage\Renderer\Buffer.h">
       <Filter>src\Mirage\Renderer</Filter>
     </ClInclude>
@@ -213,6 +225,9 @@
     <ClInclude Include="src\Mirage\Renderer\VertexArray.h">
       <Filter>src\Mirage\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\utils\PlatformUtils.h">
+      <Filter>src\Mirage\utils</Filter>
+    </ClInclude>
     <ClInclude Include="src\MrgPch.h">
       <Filter>src</Filter>
     </ClInclude>
@@ -239,6 +254,9 @@
     </ClInclude>
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
       <Filter>src\Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="vendor\ImGuizmo\ImGuizmo.h">
+      <Filter>vendor\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="vendor\glm\glm\common.hpp">
       <Filter>vendor\glm\glm</Filter>
@@ -1505,6 +1523,9 @@
     <ClCompile Include="src\Mirage\Core\Window.cpp">
       <Filter>src\Mirage\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Mirage\ECS\Components\TransformComponent.cpp">
+      <Filter>src\Mirage\ECS\Components</Filter>
+    </ClCompile>
     <ClCompile Include="src\Mirage\ECS\Scene.cpp">
       <Filter>src\Mirage\ECS</Filter>
     </ClCompile>
@@ -1522,6 +1543,9 @@
     </ClCompile>
     <ClCompile Include="src\Mirage\ImGui\ImGuiLayer.cpp">
       <Filter>src\Mirage\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\Math\Math.cpp">
+      <Filter>src\Mirage\Math</Filter>
     </ClCompile>
     <ClCompile Include="src\Mirage\Renderer\Buffer.cpp">
       <Filter>src\Mirage\Renderer</Filter>
@@ -1583,11 +1607,17 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindosUtils.cpp">
+      <Filter>src\Platform\Windows</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
       <Filter>src\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
       <Filter>src\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\ImGuizmo\ImGuizmo.cpp">
+      <Filter>vendor\ImGuizmo</Filter>
     </ClCompile>
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>

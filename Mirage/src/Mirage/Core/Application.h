@@ -8,7 +8,6 @@
 #include "Mirage/Events/ApplicationEvent.h"
 
 #include "Mirage/ImGui/ImGuiLayer.h"
-
 int main(int argc, char** argv);
 
 namespace Mirage

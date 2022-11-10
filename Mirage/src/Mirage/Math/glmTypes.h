@@ -3,6 +3,7 @@
 #include <glm/glm.hpp>
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
+#include "glm/gtx/quaternion.hpp"
 
 namespace Mirage
 {
@@ -22,11 +23,18 @@ namespace Mirage
 #define Mat3            glm::mat3
 #define Mat4            glm::mat4
 
-#define Invert          glm::inverse
+#define Inverse          glm::inverse
 
 #define MatTranslate    glm::translate
 #define MatRotate       glm::rotate
 #define MatScale        glm::scale
+
+
+
+
+#define Quat            glm::quat
+#define ToMat4          glm::toMat4
+#define EulerAngles   glm::eulerAngles
 
 #define Radians         glm::radians
 #define Degrees         glm::degrees

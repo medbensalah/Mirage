@@ -39,7 +39,7 @@ namespace Mirage
             * MatRotate(Mat4(1.0f), Radians(m_Rotation.y),Vec3(0.0f, 1.0f, 0.0f))
             * MatRotate(Mat4(1.0f), Radians(m_Rotation.z),Vec3(0.0f, 0.0f, 1.0f));
 
-        m_ViewMatrix = Invert(transform);
+        m_ViewMatrix = Inverse(transform);
         m_ViewProjectionMatrix = m_ProjectionMatrix * m_ViewMatrix;
     }
 }
