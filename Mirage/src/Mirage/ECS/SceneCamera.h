@@ -7,9 +7,6 @@ namespace Mirage
     class SceneCamera : public Camera
     {
     public:
-        enum ProjectionType { Perspective = 0, Orthographic = 1 };
-        
-    public:
         SceneCamera();
         virtual ~SceneCamera() = default;
 

@@ -79,8 +79,8 @@ namespace Mirage
         if (m_ViewportFocused && m_ViewportHovered)
         {
             m_CameraController.OnUpdate(DeltaTime);
-            m_EditorCamera.OnUpdate(DeltaTime);
         }
+        m_EditorCamera.OnUpdate(DeltaTime);
 
 
         // Render
@@ -195,6 +195,7 @@ namespace Mirage
         
         ImGui::Begin("ViewPort");
 
+        // ------------------------- Viewport Events -------------------------
         m_ViewportFocused = ImGui::IsWindowFocused();
         m_ViewportHovered = ImGui::IsWindowHovered();
         bool IsAnyImGuiActive = ImGui::IsAnyItemActive();
@@ -226,81 +227,92 @@ namespace Mirage
             float windowHeight = (float)ImGui::GetWindowHeight();
             ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
-            // TODO : change to editor camera
-            auto camera = m_EditorCamera;
-                ImGuizmo::AllowAxisFlip(false);
-                const Mat4 cameraProjection = camera.GetProjection();
-
-                auto& tc = selectedSO.GetComponent<TransformComponent>();
-
-                Mat4 transform = tc.GetTransform();
-                Mat4 delta;
-
-                // Snapping
-                
-                float snapValues[3];
-
-                bool snap = false;
-                if (m_GizmoType == ImGuizmo::OPERATION::TRANSLATE)
-                {
-                    snap = m_TranslationSnap;
-                    snapValues[0] = snapValues[1] = snapValues[2] = m_TranslationSnapValue;
-                }
-                if (m_GizmoType == ImGuizmo::OPERATION::ROTATE)
-                {
-                    snap = m_RotationSnap;
-                    snapValues[0] = snapValues[1] = snapValues[2] = m_RotationSnapValue;
-                }
-                if (m_GizmoType == ImGuizmo::OPERATION::SCALE)
-                {
-                    snap = m_ScaleSnap;
-                    snapValues[0] = snapValues[1] = snapValues[2] = m_ScaleSnapValue;
-                }
-                
-                snap |= Input::IsKeyPressed(Key::LeftControl);
-                
-                bool GizmoAction;
-                 
-                if (m_GizmoType == ImGuizmo::OPERATION::SCALE)
-                {
-                    GizmoAction = ImGuizmo::Manipulate(glm::value_ptr(camera.GetViewMatrix()), glm::value_ptr(cameraProjection),
-                                         ImGuizmo::OPERATION::SCALE, ImGuizmo::LOCAL,
-                                         glm::value_ptr(transform), glm::value_ptr(delta),
-                                         snap ? snapValues : nullptr);
-                }
-                else
-                {
-                    GizmoAction = ImGuizmo::Manipulate(glm::value_ptr(camera.GetViewMatrix()), glm::value_ptr(cameraProjection),
-                                         m_GizmoType, m_GizmoMode,
-                                         glm::value_ptr(transform), glm::value_ptr(delta),
-                                         snap ? snapValues : nullptr);
-                }
-                if (GizmoAction)
-                {
-                    Vec3 position, rotation, scale;
-                    Math::DecomposeTransform(delta, position, rotation, scale);
-                    rotation = Degrees(rotation);
-
-                    switch (m_GizmoType)
-                    {
-                    case ImGuizmo::OPERATION::TRANSLATE:
-                        tc.SetWorldPosition(tc.WorldPosition() + position);
-                        break;
-                    case ImGuizmo::OPERATION::ROTATE:
-                        tc.Rotate(rotation);
-                        break;
-                    case ImGuizmo::OPERATION::SCALE:
-                        Math::DecomposeTransform(transform, position, rotation, scale);
-                        tc.SetWorldScale(scale);
-                        break;
-                    }
-                }
+            ImGuizmo::AllowAxisFlip(false);
+            // Runitme Camera
+/*
+            auto runtimeCamera = m_ActiveScene->GetMainCameraSO();
+            const auto& camera = runtimeCamera.GetComponent<CameraComponent>().Camera;
+            const Mat4& cameraProjection = camera.GetProjection();
+            const Mat4& cameraView = Inverse(runtimeCamera.GetComponent<TransformComponent>().GetTransform());
             
+
+            */
+            // Editor Camera
+            const Mat4 cameraProjection = m_EditorCamera.GetProjection();
+            const Mat4& cameraView = m_EditorCamera.GetViewMatrix();
+
+            auto& tc = selectedSO.GetComponent<TransformComponent>();
+
+            Mat4 transform = tc.GetTransform();
+            Mat4 delta;
+
+            // Snapping
+
+            float snapValues[3];
+
+            bool snap = false;
+            if (m_GizmoType == ImGuizmo::OPERATION::TRANSLATE)
+            {
+                snap = m_TranslationSnap;
+                snapValues[0] = snapValues[1] = snapValues[2] = m_TranslationSnapValue;
+            }
+            if (m_GizmoType == ImGuizmo::OPERATION::ROTATE)
+            {
+                snap = m_RotationSnap;
+                snapValues[0] = snapValues[1] = snapValues[2] = m_RotationSnapValue;
+            }
+            if (m_GizmoType == ImGuizmo::OPERATION::SCALE)
+            {
+                snap = m_ScaleSnap;
+                snapValues[0] = snapValues[1] = snapValues[2] = m_ScaleSnapValue;
+            }
+
+            snap |= Input::IsKeyPressed(Key::LeftControl);
+
+            bool GizmoAction;
+
+            if (m_GizmoType == ImGuizmo::OPERATION::SCALE)
+            {
+                GizmoAction = ImGuizmo::Manipulate(glm::value_ptr(cameraView),
+                                                   glm::value_ptr(cameraProjection),
+                                                   ImGuizmo::OPERATION::SCALE, ImGuizmo::LOCAL,
+                                                   glm::value_ptr(transform), glm::value_ptr(delta),
+                                                   snap ? snapValues : nullptr);
+            }
+            else
+            {
+                GizmoAction = ImGuizmo::Manipulate(glm::value_ptr(cameraView),
+                                                   glm::value_ptr(cameraProjection),
+                                                   m_GizmoType, m_GizmoMode,
+                                                   glm::value_ptr(transform), glm::value_ptr(delta),
+                                                   snap ? snapValues : nullptr);
+            }
+            if (GizmoAction)
+            {
+                Vec3 position, rotation, scale;
+                Math::DecomposeTransform(delta, position, rotation, scale);
+                rotation = Degrees(rotation);
+
+                switch (m_GizmoType)
+                {
+                case ImGuizmo::OPERATION::TRANSLATE:
+                    tc.SetWorldPosition(tc.WorldPosition() + position);
+                    break;
+                case ImGuizmo::OPERATION::ROTATE:
+                    tc.Rotate(rotation);
+                    break;
+                case ImGuizmo::OPERATION::SCALE:
+                    Math::DecomposeTransform(transform, position, rotation, scale);
+                    tc.SetWorldScale(scale);
+                    break;
+                }
+            }
         }
-        
+
         ImGui::End();
         ImGui::PopStyleVar(1);
     }
+
     void EditorLayer::CreateToolBar()
     {
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.000f, 0.000f, 0.000f, 0.500f));
@@ -502,21 +514,63 @@ namespace Mirage
         ImGui::SameLine();
 
         
-        ImGui::Text("Speed: ");
-        ImGui::SameLine();
-        ImGui::PushItemWidth(80);
-        ImGui::SliderFloat("##EditorCameraMoveSpeed", &m_EditorCamera.m_MoveSpeed, 0.01f, 10.0f, "%.3g");
-        ImGui::PopItemWidth();
-        ImGui::SameLine();
-        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 12);
-        ImGui::Text("FOV: ");
-        ImGui::SameLine();
-        ImGui::PushItemWidth(80);
-        if(ImGui::SliderFloat("##EditorCameraFOV", &m_EditorCamera.m_FOV, 10.0f, 120.0f,"%.3g"))
+        if (m_EditorCamera.IsOrthographic())
         {
-            m_EditorCamera.UpdateProjection();
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
+            if (ImGui::Button("2D", ImVec2{40.0f, 25.0f}))
+            {
+                m_EditorCamera.m_ProjectionType = Camera::Perspective;
+                m_EditorCamera.UpdateProjection();
+                m_EditorCamera.UpdateView();
+            }
+            ImGui::PopStyleColor(3);
+            ImGui::SameLine();
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 12);
+            ImGui::Text("Speed: ");
+            ImGui::SameLine();
+            ImGui::PushItemWidth(110);
+            ImGui::SliderFloat("##EditorCameraMoveSpeed", &m_EditorCamera.m_MoveSpeed, 0.01f, 10.0f, "%.3g");
+            ImGui::PopItemWidth();
+            ImGui::SameLine();
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 12);
+            ImGui::Text("Size: ");
+            ImGui::SameLine();
+            ImGui::PushItemWidth(110);
+            if(ImGui::SliderFloat("##EditorCameraSize", &m_EditorCamera.m_OrthographicData.m_OrthographicSize, 1.0f, 50.0f,"%.3g"))
+            {
+                m_EditorCamera.UpdateProjection();
+            }
+            ImGui::PopItemWidth();
         }
-        ImGui::PopItemWidth();
+        else
+        {
+            if (ImGui::Button("2D", ImVec2{40.0f, 25.0f}))
+            {
+                m_EditorCamera.m_ProjectionType = Camera::Orthographic;
+                m_EditorCamera.UpdateProjection();
+                m_EditorCamera.UpdateView();
+            }
+            ImGui::SameLine();
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 12);
+            ImGui::Text("Speed: ");
+            ImGui::SameLine();
+            ImGui::PushItemWidth(110);
+            ImGui::SliderFloat("##EditorCameraMoveSpeed", &m_EditorCamera.m_MoveSpeed, 0.01f, 10.0f, "%.3g");
+            ImGui::PopItemWidth();
+            ImGui::SameLine();
+            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 12);
+            ImGui::Text("FOV: ");
+            ImGui::SameLine();
+            ImGui::PushItemWidth(110);
+            if(ImGui::SliderFloat("##EditorCameraFOV", &m_EditorCamera.m_PerspectiveData.m_FOV, 10.0f, 120.0f,"%.3g"))
+            {
+                m_EditorCamera.UpdateProjection();
+            }
+            ImGui::PopItemWidth();
+        }
+        
         
         
         ImGui::PopStyleColor(2);

@@ -6,6 +6,8 @@ namespace Mirage
     class Camera
     {
     public:
+        enum ProjectionType { Perspective = 0, Orthographic = 1 };
+    public:
         Camera() = default;
         Camera(const Mat4& projection)
             : m_Projection(projection)

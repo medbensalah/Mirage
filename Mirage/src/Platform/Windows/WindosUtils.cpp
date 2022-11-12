@@ -14,12 +14,15 @@ namespace Mirage
     {
         OPENFILENAMEA ofn;
         CHAR szFile[512] = { 0 };
-
+        CHAR currentDir[256] = { 0 };
+        
         ZeroMemory(&ofn, sizeof(OPENFILENAME));
         ofn.lStructSize = sizeof(OPENFILENAME);
         ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow());
         ofn.lpstrFile = szFile;
         ofn.nMaxFile = sizeof(szFile);
+        if (GetCurrentDirectoryA(256, currentDir))
+            ofn.lpstrInitialDir = currentDir;
         ofn.lpstrFilter = filter;
         ofn.nFilterIndex = 1;
         ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
@@ -35,15 +38,18 @@ namespace Mirage
     {
         OPENFILENAMEA ofn;
         CHAR szFile[512] = { 0 };
+		CHAR currentDir[256] = { 0 };
 
         ZeroMemory(&ofn, sizeof(OPENFILENAME));
         ofn.lStructSize = sizeof(OPENFILENAME);
         ofn.hwndOwner = glfwGetWin32Window((GLFWwindow*)Application::Get().GetWindow().GetNativeWindow());
         ofn.lpstrFile = szFile;
         ofn.nMaxFile = sizeof(szFile);
+        if (GetCurrentDirectoryA(256, currentDir))
+            ofn.lpstrInitialDir = currentDir;
         ofn.lpstrFilter = filter;
         ofn.nFilterIndex = 1;
-        ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+        ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
         
         if (GetSaveFileNameA(&ofn) == TRUE)
         {

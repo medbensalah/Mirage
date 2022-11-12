@@ -160,7 +160,10 @@ namespace Mirage {
 	}
 #else
 	EditorCamera::EditorCamera(float fov, float aspectRatio, float nearClip, float farClip)
-		: m_FOV(fov), m_AspectRatio(aspectRatio), m_NearClip(nearClip), m_FarClip(farClip), Camera(glm::perspective(Radians(fov), aspectRatio, nearClip, farClip))
+		: m_ProjectionType(ProjectionType::Perspective),
+		  m_PerspectiveData(PerspectiveData{fov, nearClip, farClip, Vec3{1.5f, 1.25f, 1.5f}, 10.0f}),
+		  m_OrthographicData(OrthographicData{10.0f, -1.0f, farClip, Vec3{0.0f, 0.0f, 10.0f}, 10.0f}),
+	      m_AspectRatio(aspectRatio)
 	{
 		UpdateView();
 	}
@@ -168,16 +171,25 @@ namespace Mirage {
 	void EditorCamera::UpdateProjection()
 	{
 		m_AspectRatio = m_ViewportWidth / m_ViewportHeight;
-		m_Projection = glm::perspective(Radians(m_FOV), m_AspectRatio, m_NearClip, m_FarClip);
+		switch (m_ProjectionType)
+		{
+		case ProjectionType::Perspective:
+			m_Projection = glm::perspective(Radians(m_PerspectiveData.m_FOV), m_AspectRatio, m_PerspectiveData.m_NearClip, m_PerspectiveData.m_FarClip);
+			break;
+		case ProjectionType::Orthographic:
+			float left = -0.5f * m_OrthographicData.m_OrthographicSize * m_AspectRatio;
+			float right = -left;
+			float bottom = -0.5f * m_OrthographicData.m_OrthographicSize;
+			float top = -bottom;
+			
+			m_Projection = glm::ortho(left, right, bottom, top, m_OrthographicData.m_OrthographicNear, m_OrthographicData.m_OrthographicFar);
+		}
 	}
 
 	void EditorCamera::UpdateView()
 	{
-		// m_Yaw = m_Pitch = 0.0f; // Lock the camera's rotation
-		m_Position = CalculatePosition();
-
 		Quat orientation = GetOrientation();
-		m_ViewMatrix = MatTranslate(Mat4(1.0f), m_Position) * ToMat4(orientation);
+		m_ViewMatrix = MatTranslate(Mat4(1.0f), GetPosition()) * ToMat4(orientation);
 		m_ViewMatrix = Inverse(m_ViewMatrix);
 	}
 
@@ -188,8 +200,13 @@ namespace Mirage {
 
 	float EditorCamera::ZoomSpeed()
 	{
-		float speed =  1 / (1 + glm::exp(-m_Zooming + 4.0f));
-		return speed * m_ZoomSpeed;
+		if(m_ProjectionType == ProjectionType::Orthographic)
+			return m_ZoomSpeed;
+		else
+		{
+			float speed =  1 / (1 + glm::exp(-m_PerspectiveData.m_Zooming + 4.0f));
+			return speed * m_ZoomSpeed;
+		}
 	}
 
 	void EditorCamera::OnUpdate(float deltaTime)
@@ -257,22 +274,30 @@ namespace Mirage {
 		if (Input::IsMouseButtonPressed(Mouse::ButtonRight))
 		{
 			m_MoveSpeed += e.GetYOffset() * 0.1f;
+			m_MoveSpeed = std::max(m_MoveSpeed, 0.01f);
 		}
 		else
 		{
 			float delta = e.GetYOffset();
 			Zoom(delta);
-			UpdateView();
 			return true;
 		}
 	}
 
 	void EditorCamera::Move(const Vec3& delta)
 	{
-		// Vec2 speed = PanSpeed();
-		m_Position += GetForwardDirection() *  delta.z * m_MoveSpeed;
-		m_Position += GetRightDirection() * delta.x * m_MoveSpeed;
-		m_Position += GetUpDirection() * delta.y * m_MoveSpeed;
+		if(m_ProjectionType == ProjectionType::Orthographic)
+		{
+			m_OrthographicData.m_Position += GetRightDirection() * delta.x * m_MoveSpeed;
+			m_OrthographicData.m_Position += GetForwardDirection() *  delta.z * m_MoveSpeed;
+			m_OrthographicData.m_Position += GetUpDirection() * delta.y * m_MoveSpeed;
+		}
+		else
+		{
+			m_PerspectiveData.m_Position += GetForwardDirection() *  delta.z * m_MoveSpeed;
+			m_PerspectiveData.m_Position += GetRightDirection() * delta.x * m_MoveSpeed;
+			m_PerspectiveData.m_Position += GetUpDirection() * delta.y * m_MoveSpeed;
+		}
 	}
 
 	void EditorCamera::MouseRotate(const Vec2& delta)
@@ -284,8 +309,18 @@ namespace Mirage {
 
 	void EditorCamera::Zoom(float delta)
 	{
-		m_Zooming -= delta * ZoomSpeed();
-		m_Position += GetForwardDirection() * delta * ZoomSpeed();
+		if (m_ProjectionType == ProjectionType::Orthographic)
+		{
+			m_OrthographicData.m_OrthographicSize -= delta * ZoomSpeed();
+			m_OrthographicData.m_OrthographicSize = std::max(m_OrthographicData.m_OrthographicSize, 1.0f);
+			UpdateProjection();
+		}
+		else
+		{
+			m_PerspectiveData.m_Zooming -= delta * ZoomSpeed();
+			m_PerspectiveData.m_Position += GetForwardDirection() * delta * ZoomSpeed();
+		}
+		UpdateView();
 	}
 
 	Vec3 EditorCamera::GetUpDirection() const
@@ -303,14 +338,16 @@ namespace Mirage {
 		return MatRotate(GetOrientation(), Vec3(0.0f, 0.0f, -1.0f));
 	}
 
-	Vec3 EditorCamera::CalculatePosition() const
-	{
-		return m_Position;
-	}
-
 	Quat EditorCamera::GetOrientation() const
 	{
-		return Quat(Vec3(-m_Pitch, -m_Yaw, 0.0f));
+		if (m_ProjectionType == ProjectionType::Orthographic)
+		{
+			return Quat(Vec3(0.0f, 0.0f, 0.0f));
+		}
+		else
+		{
+			return Quat(Vec3(-m_Pitch, -m_Yaw, 0.0f));
+		}
 	}
 #endif
 }
