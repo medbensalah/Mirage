@@ -185,6 +185,7 @@
     <ClInclude Include="src\Mirage\Math\glmTypes.h" />
     <ClInclude Include="src\Mirage\Renderer\Buffer.h" />
     <ClInclude Include="src\Mirage\Renderer\Camera.h" />
+    <ClInclude Include="src\Mirage\Renderer\EditorCamera.h" />
     <ClInclude Include="src\Mirage\Renderer\Framebuffer.h" />
     <ClInclude Include="src\Mirage\Renderer\Graphicscontext.h" />
     <ClInclude Include="src\Mirage\Renderer\OrthographicCamera.h" />
@@ -640,6 +641,7 @@
     <ClCompile Include="src\Mirage\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Mirage\Math\Math.cpp" />
     <ClCompile Include="src\Mirage\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Mirage\Renderer\EditorCamera.cpp" />
     <ClCompile Include="src\Mirage\Renderer\Framebuffer.cpp" />
     <ClCompile Include="src\Mirage\Renderer\GraphicsContext.cpp" />
     <ClCompile Include="src\Mirage\Renderer\OrthographicCamera.cpp" />

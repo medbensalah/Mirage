@@ -4,6 +4,7 @@
 #include "Mirage/Renderer/OrthographicCamera.h"
 
 #include "Mirage/Renderer/Primitives.h"
+#include "Mirage/Renderer/EditorCamera.h"
 
 namespace Mirage
 {
@@ -13,7 +14,8 @@ namespace Mirage
         void Shutdown();
 
         void BeginScene(const Camera& camera, const Mat4& transform);
-        void BeginScene(const OrthographicCamera& camera);
+        void BeginScene(const EditorCamera& camera);
+        void BeginScene(const OrthographicCamera& camera); //TODO: Remove this
         void EndScene();
         void StartBatch();
 

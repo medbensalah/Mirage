@@ -21,15 +21,16 @@ namespace Mirage
         virtual void OnImGuiRender() override;
         void OnEvent(Event& e) override;
 
-        void CreateDockspace();
-        void CreateMenuBar();
-        void CreateViewport();
-        void CreateToolBar();
 
     private:
         void ProcessShortcuts(Event& e);
         bool OnShortcutKeyPressed(KeyPressedEvent e);
 
+        void CreateDockspace();
+        void CreateMenuBar();
+        void CreateViewport();
+        void CreateToolBar();
+        
         void NewScene();
         void OpenScene();
         void SaveAs();
@@ -39,12 +40,11 @@ namespace Mirage
         
         Ref<Scene> m_ActiveScene;
         OrthographicCameraController m_CameraController;
-
-        SceneObject m_SquareEntity;
-        SceneObject m_Camera;
         
         bool m_ViewportFocused = false;
         bool m_ViewportHovered = false;
+
+        EditorCamera m_EditorCamera;
     
         Ref<Texture2D> m_texture;
 

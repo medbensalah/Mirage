@@ -47,7 +47,12 @@ namespace Mirage
         entity.Destroy();
     }
 
-    void Scene::OnUpdate(float DeltaTime)
+    /*
+     * TODO: Very late in dev split Scene into editor scene and runtime scene to allow for
+     * TODO: different behavior and rendering settings
+     */
+    
+    void Scene::OnUpdateRuntime(float DeltaTime)
     {
         //Update scripts
         {
@@ -81,10 +86,7 @@ namespace Mirage
                     break;
                 }
             }
-        }
-
-
-        
+        }        
         if(mainCamera)
         {
             Renderer2D::BeginScene(*mainCamera, cameraTransform);
@@ -98,6 +100,20 @@ namespace Mirage
 
             Renderer2D::EndScene();
         }
+    }
+    
+    void Scene::OnUpdateEditor(float DeltaTime, EditorCamera& camera)
+    {
+        Renderer2D::BeginScene(camera);
+        auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+        
+        for (auto entity : group)
+        {
+            auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+            Renderer2D::Draw::Quad(transform.GetTransform(), sprite.Color);
+        }
+
+        Renderer2D::EndScene();
     }
 
     void Scene::OnViewportResize(uint32_t width, uint32_t height)

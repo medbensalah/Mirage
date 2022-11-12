@@ -111,15 +111,21 @@ namespace Mirage
 
         void Shutdown()
         {
-            
             delete[] s_Data.QuadVertexBufferBase;
         }
 
         void BeginScene(const Camera& camera, const Mat4& transform)
         {
-            
-
             Mat4 viewProj = camera.GetProjection() * Inverse(transform);
+            
+            s_Data.Shader->Bind();
+            s_Data.Shader->SetMat4("u_ViewProjection", viewProj);
+
+            StartBatch();
+        }
+        void BeginScene(const EditorCamera& camera)
+        {
+            Mat4 viewProj = camera.GetViewProjection();
             
             s_Data.Shader->Bind();
             s_Data.Shader->SetMat4("u_ViewProjection", viewProj);

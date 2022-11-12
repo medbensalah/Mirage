@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "Mirage/Renderer/EditorCamera.h"
+
 #include <enTT.hpp>
 
 namespace Mirage
@@ -17,7 +19,8 @@ namespace Mirage
         SceneObject CreateChildSceneObject(entt::entity parent, const std::string& name = std::string());
         void DestroySceneObject(SceneObject& entity);
 
-        void OnUpdate(float DeltaTime);
+        void OnUpdateRuntime(float DeltaTime);
+        void OnUpdateEditor(float DeltaTime, EditorCamera& camera);
         void OnViewportResize(uint32_t width, uint32_t height);
 
         SceneObject GetMainCameraSO();
