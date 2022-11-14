@@ -168,6 +168,13 @@ namespace Mirage {
 		UpdateView();
 	}
 
+	void EditorCamera::SetProjectionType(ProjectionType projectionType)
+	{
+		m_ProjectionType = projectionType;
+        UpdateProjection();
+		UpdateView();
+	}
+
 	void EditorCamera::UpdateProjection()
 	{
 		m_AspectRatio = m_ViewportWidth / m_ViewportHeight;
@@ -229,8 +236,6 @@ namespace Mirage {
 	void EditorCamera::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
-		if(e.IsInCategory(EventCategoryMouse))
-			dispatcher.Dispatch<MouseScrollEvent>(MRG_BIND_EVENT_FN(EditorCamera::OnMouseScroll));
 		dispatcher.Dispatch<KeyPressedEvent>(MRG_BIND_EVENT_FN(EditorCamera::OnKeyPressed));
 		dispatcher.Dispatch<KeyReleasedEvent>(MRG_BIND_EVENT_FN(EditorCamera::OnKeyReleased));
 		dispatcher.Dispatch<MouseScrollEvent>(MRG_BIND_EVENT_FN(EditorCamera::OnMouseScroll));
@@ -238,6 +243,10 @@ namespace Mirage {
 
 	bool EditorCamera::OnKeyPressed(KeyPressedEvent& e)
 	{
+		if (e.GetKeyCode() == Key::D2)
+			SetProjectionType(m_ProjectionType == ProjectionType::Perspective
+				                  ? ProjectionType::Orthographic
+				                  : ProjectionType::Perspective);
 		if (Input::IsMouseButtonPressed(Mouse::ButtonRight))
 		{
 			if (e.GetKeyCode() == Key::W)

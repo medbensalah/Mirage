@@ -16,13 +16,22 @@ namespace Mirage
 
         virtual void Resize(uint32_t width, uint32_t height) override;
 
-        inline virtual uint32_t GetColorAttachmentRendererID() const override { return m_ColorAttachment; }
+        inline virtual uint32_t GetDepthAttachmentRendererID() const override { return m_DepthAttachment; }
+        inline virtual uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const override
+        {
+            MRG_CORE_ASSERT(index <= m_ColorAttachments.size());
+            return m_ColorAttachments[index];
+        }
         inline virtual const FramebufferSpecs& GetSpecs() const override { return m_Specs;}
     private:
         uint32_t m_RendererID = 0;
 
-        uint32_t m_ColorAttachment = 0;
-        uint32_t m_DepthAttachment = 0;
         FramebufferSpecs m_Specs;
+
+        std::vector<FramebufferTextureSpecs> m_ColorAttachmentSpecs;
+        FramebufferTextureSpecs m_DepthAttachmentSpec = FramebufferTextureFormat::None;
+
+        std::vector<uint32_t> m_ColorAttachments;
+        uint32_t m_DepthAttachment = 0;
     };
 }

@@ -17,6 +17,8 @@ namespace Mirage {
         // EditorCamera(ProjectionType projectionType);
         EditorCamera(float fov, float aspectRatio, float nearClip, float farClip);
 
+        void SetProjectionType(ProjectionType projectionType);
+        
         void OnUpdate(float deltaTime);
         void OnEvent(Event& e);
 

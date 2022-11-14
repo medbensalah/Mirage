@@ -39,10 +39,11 @@ namespace Mirage
 
         m_texture = Texture2D::Create("assets/textures/CheckerBoard.png");
 
-        FramebufferSpecs specs;
-        specs.Width = 1280;
-        specs.Height = 720;
-        m_Framebuffer = Framebuffer::Create(specs);
+        FramebufferSpecs fbSpecs;
+        fbSpecs.Attachments= {FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::Depth};
+        fbSpecs.Width = 1280;
+        fbSpecs.Height = 720;
+        m_Framebuffer = Framebuffer::Create(fbSpecs);
 
         m_ActiveScene = CreateRef<Scene>();
 
@@ -205,6 +206,7 @@ namespace Mirage
         // ------------------------- Scene Viewport -------------------------
         ImVec2 ViewportSize = ImGui::GetContentRegionAvail();
         m_ViewportSize = {ViewportSize.x, ViewportSize.y};
+        // uint32_t texId = m_Framebuffer->GetDepthAttachmentRendererID();
         uint32_t texId = m_Framebuffer->GetColorAttachmentRendererID();
         ImGui::Image((void*)texId, ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
 
@@ -521,9 +523,7 @@ namespace Mirage
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
             if (ImGui::Button("2D", ImVec2{40.0f, 25.0f}))
             {
-                m_EditorCamera.m_ProjectionType = Camera::Perspective;
-                m_EditorCamera.UpdateProjection();
-                m_EditorCamera.UpdateView();
+                m_EditorCamera.SetProjectionType(Camera::ProjectionType::Perspective);
             }
             ImGui::PopStyleColor(3);
             ImGui::SameLine();
@@ -548,9 +548,7 @@ namespace Mirage
         {
             if (ImGui::Button("2D", ImVec2{40.0f, 25.0f}))
             {
-                m_EditorCamera.m_ProjectionType = Camera::Orthographic;
-                m_EditorCamera.UpdateProjection();
-                m_EditorCamera.UpdateView();
+                m_EditorCamera.SetProjectionType(Camera::ProjectionType::Orthographic);
             }
             ImGui::SameLine();
             ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 12);
@@ -570,9 +568,7 @@ namespace Mirage
             }
             ImGui::PopItemWidth();
         }
-        
-        
-        
+
         ImGui::PopStyleColor(2);
     }
 
