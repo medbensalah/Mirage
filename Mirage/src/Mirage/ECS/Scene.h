@@ -24,6 +24,7 @@ namespace Mirage
         void OnViewportResize(uint32_t width, uint32_t height);
 
         SceneObject GetMainCameraSO();
+        SceneObject GetSceneObject(entt::entity entity);
 
     private:
         template <typename T>

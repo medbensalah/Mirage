@@ -10,11 +10,11 @@ namespace Mirage
         {
             typedef struct Quad
             {
-                Vec3 position;
-                Vec3 rotation;
-                Vec3 scale;
+                Mat4 transform;
                 Vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
                 Ref<Texture2D> texture;
+                Vec2 Tiling = { 1.0f, 1.0f };
+                Vec2 Offset = { 0.0f, 0.0f };
 
                 Quad() = default;
                 

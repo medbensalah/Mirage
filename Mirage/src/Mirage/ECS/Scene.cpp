@@ -95,7 +95,9 @@ namespace Mirage
             for (auto entity : group)
             {
                 auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-                Renderer2D::Draw::Quad(transform.GetTransform(), sprite.Color);
+                Renderer2D::Draw::Sprite(transform.GetTransform(), sprite, (int)entity);
+                
+                // Renderer2D::Draw::Quad(transform.GetTransform(), sprite.Color);
             }
 
             Renderer2D::EndScene();
@@ -110,7 +112,8 @@ namespace Mirage
         for (auto entity : group)
         {
             auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-            Renderer2D::Draw::Quad(transform.GetTransform(), sprite.Color);
+            // Renderer2D::Draw::Quad(transform.GetTransform(), sprite.Color);
+            Renderer2D::Draw::Sprite(transform.GetTransform(), sprite, (int)entity);
         }
 
         Renderer2D::EndScene();
@@ -145,6 +148,11 @@ namespace Mirage
             }
         }
         return {};
+    }
+
+    SceneObject Scene::GetSceneObject(entt::entity entity)
+    {
+        return SceneObject{entity, this};
     }
 
 

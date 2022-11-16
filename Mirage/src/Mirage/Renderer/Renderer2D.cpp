@@ -19,6 +19,9 @@ namespace Mirage
             float TextureIndex;
             Vec2 Tiling;
             Vec2 Offset;
+
+            // Editor only !!!
+            int EntityID = -1;
         };
         
         struct Renderer2DData
@@ -50,18 +53,17 @@ namespace Mirage
 
         void Init()
         {
-            
-            
             s_Data.QuadVertexArray = VertexArray::Create();
             s_Data.QuadVertexBuffer = VertexBuffer::Create(s_Data.MaxVertices * sizeof(QuadVertex));
             
             BufferLayout squareLayout = {
-                {ShaderDataType::Float3, "a_Position"},
-                {ShaderDataType::Float4, "a_Color"},
-                {ShaderDataType::Float2, "a_TexCoord"},
-                {ShaderDataType::Float1, "a_TexIndex"},
-                {ShaderDataType::Float2, "a_Tiling"},
-                {ShaderDataType::Float2, "a_Offset"},
+                {ShaderDataType::Float3, "a_Position"   },
+                {ShaderDataType::Float4, "a_Color"      },
+                {ShaderDataType::Float2, "a_TexCoord"   },
+                {ShaderDataType::Float1, "a_TexIndex"   },
+                {ShaderDataType::Float2, "a_Offset"     },
+                {ShaderDataType::Float2, "a_Tiling"     },
+                {ShaderDataType::Int1,   "a_EntityID"   }
             };
             s_Data.QuadVertexBuffer->SetLayout(squareLayout);
             s_Data.QuadVertexArray->AddVertexBuffer(s_Data.QuadVertexBuffer);
@@ -143,8 +145,6 @@ namespace Mirage
 
         void EndScene()
         {
-            
-            
             Flush();
         }
         
@@ -184,18 +184,12 @@ namespace Mirage
             
             s_Data.TextureSlotIndex = 1;
         }
-
-
         
         namespace Draw
         {
-            void Quad(const Mat4& transform, const Vec4& color, const Ref<Texture2D> texture, const Vec2& tiling, const Vec2& offset)
+            void Quad(const Mat4& transform, const Vec4& color, const Ref<Texture2D> texture, const Vec2& tiling, const Vec2& offset, int entityID)
             {
-                
-
-                
-                Primitives::Quad quad;
-                quad.color = color;
+                Primitives::Quad quad { transform, color, texture, tiling, offset };
 
                 constexpr size_t quadVertexCount = 4;
                 constexpr Vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
@@ -236,8 +230,9 @@ namespace Mirage
                     s_Data.QuadVertexBufferPtr->Color = quad.color;
                     s_Data.QuadVertexBufferPtr->TextureCoord = textureCoords[i];
                     s_Data.QuadVertexBufferPtr->TextureIndex = TextureIndex;
-                    s_Data.QuadVertexBufferPtr->Tiling = tiling;
-                    s_Data.QuadVertexBufferPtr->Offset = offset;
+                    s_Data.QuadVertexBufferPtr->Tiling = quad.Tiling;
+                    s_Data.QuadVertexBufferPtr->Offset = quad.Offset;
+                    s_Data.QuadVertexBufferPtr->EntityID = entityID;
                     s_Data.QuadVertexBufferPtr++;
                 }
 
@@ -246,65 +241,14 @@ namespace Mirage
                 s_Data.Stats.QuadCount++;
             }
             
-            void Quad(const Primitives::Quad& quad, const Vec2& tiling, const Vec2& offset)
+            void Quad(const Primitives::Quad& quad, int entityID)
             {
-                
-
-                constexpr size_t quadVertexCount = 4;
-                constexpr Vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
-
-                if(s_Data.QuadIndexCount >= s_Data.MaxIndices)
-                {
-                    NextBatch();
-                }
-
-                float TextureIndex = 0.0f;
-
-                if(quad.texture)
-                {
-                    for(uint32_t i = 1; i < s_Data.TextureSlotIndex; ++i)
-                    {
-                        if (*(s_Data.TextureSlots[i]) == *(quad.texture))
-                        {
-                            TextureIndex = (float)i;
-                            break;
-                        }
-                    }
-                
-                    if (TextureIndex == 0.0f)
-                    {
-                        if(s_Data.TextureSlotIndex >= Renderer2DData::MaxTextureSlots)
-                        {
-                    NextBatch();
-                        }
-                        
-                        TextureIndex = (float)s_Data.TextureSlotIndex;
-                        s_Data.TextureSlots[s_Data.TextureSlotIndex] = quad.texture;
-                        s_Data.TextureSlotIndex++;
-                    }
-                }
-
-                Mat4 transform;
-                if(quad.rotation.x || quad.rotation.y)
-                {
-                    transform = MatTranslate(Mat4(1.0f), quad.position) *
-                                     MatRotate(Mat4(1.0f), Radians(quad.rotation.x), {1.0f, 0.0f, 0.0f}) *
-                                     MatRotate(Mat4(1.0f), Radians(quad.rotation.y), {0.0f, 1.0f, 0.0f}) *
-                                     MatRotate(Mat4(1.0f), Radians(quad.rotation.z), {0.0f, 0.0f, 1.0f}) *
-                                     MatScale(Mat4(1.0f), quad.scale);
-                }
-                else
-                {
-                    transform = MatTranslate(Mat4(1.0f), quad.position) *
-                                     MatRotate(Mat4(1.0f), Radians(quad.rotation.z), {0.0f, 0.0f, 1.0f}) *
-                                     MatScale(Mat4(1.0f), quad.scale);
-                }
-
-                Quad(transform, quad.color, quad.texture, tiling, offset);
-
-                s_Data.QuadIndexCount += 6;
-
-                s_Data.Stats.QuadCount++;
+                Draw::Quad(quad.transform, quad.color, quad.texture, quad.Tiling, quad.Offset, entityID);
+            }
+            
+            void Sprite(const Mat4& transform, SpriteRendererComponent& sprite, int entityID)
+            {
+                Draw::Quad(transform, sprite.Color, sprite.Texture, sprite.Tiling, sprite.Offset, entityID);
             }
         }
 

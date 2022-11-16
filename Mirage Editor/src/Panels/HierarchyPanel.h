@@ -15,6 +15,7 @@ namespace Mirage
         HierarchyPanel(const Ref<Scene>& scene);
 
         void SetContext(const Ref<Scene>& scene);
+        void SetSelectedSO(SceneObject so);
 
         void OnImguiRender();
 

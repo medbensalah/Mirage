@@ -23,9 +23,10 @@ namespace Mirage
 
 
     private:
-        void ProcessShortcuts(Event& e);
         bool OnShortcutKeyPressed(KeyPressedEvent e);
-
+        
+        bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
+        
         void CreateDockspace();
         void CreateMenuBar();
         void CreateViewport();
@@ -49,7 +50,7 @@ namespace Mirage
         Ref<Texture2D> m_texture;
 
         Vec2 m_ViewportSize = {0.0f, 0.0f};
-
+        Vec2 m_ViewportBounds[2];
         
         // ----------------------- Gizmos -----------------------
         ImGuizmo::OPERATION m_GizmoType = (ImGuizmo::OPERATION)-1;

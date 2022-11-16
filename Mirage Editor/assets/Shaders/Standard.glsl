@@ -6,6 +6,7 @@ layout(location = 2) in vec2 a_TexCoord;
 layout(location = 3) in float a_TexIndex;
 layout(location = 4) in vec2 a_Tiling;
 layout(location = 5) in vec2 a_Offset;
+layout(location = 6) in int a_EntityID;
 
 uniform mat4 u_ViewProjection;
 
@@ -14,6 +15,7 @@ out vec2 v_TexCoord;
 out flat float v_TexIndex;
 out vec2 v_Tiling;
 out vec2 v_Offset;
+out flat int v_EntityID;
 
 void main()
 {
@@ -22,18 +24,21 @@ void main()
     v_TexIndex = a_TexIndex;
     v_Tiling = a_Tiling;
     v_Offset = a_Offset;
+    v_EntityID = a_EntityID.x;
     gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 }
 
 #type fragment
 #version 450
 layout(location = 0) out vec4 color;
+layout(location = 1) out int pickingID;
 
 in vec4 v_Color;
 in vec2 v_TexCoord;
 in flat float v_TexIndex;
 in vec2 v_Tiling;
 in vec2 v_Offset;
+in flat int v_EntityID;
 
 uniform sampler2D u_Textures[32];
 
@@ -77,4 +82,6 @@ void main()
         case 31: texColor *= texture(u_Textures[31], uv); break;
     }
     color = texColor;
+    
+    pickingID = v_EntityID;
 }

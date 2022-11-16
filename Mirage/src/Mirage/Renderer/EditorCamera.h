@@ -100,7 +100,7 @@ namespace Mirage {
         float m_Pitch = 0.56f, m_Yaw = -0.8f;
         float m_ViewportWidth = 1280, m_ViewportHeight = 720;
         
-        Vec3 m_Pan{0.0f};
+        Vec3 m_PanDelta{0.0f};
 
         friend class EditorLayer;
     };

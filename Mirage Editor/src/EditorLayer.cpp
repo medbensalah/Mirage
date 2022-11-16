@@ -40,7 +40,7 @@ namespace Mirage
         m_texture = Texture2D::Create("assets/textures/CheckerBoard.png");
 
         FramebufferSpecs fbSpecs;
-        fbSpecs.Attachments= {FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::Depth};
+        fbSpecs.Attachments= {FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth};
         fbSpecs.Width = 1280;
         fbSpecs.Height = 720;
         m_Framebuffer = Framebuffer::Create(fbSpecs);
@@ -63,8 +63,8 @@ namespace Mirage
         // MRG_TRACE("Frame time : {0:.3f} ms   -   FPS : {1:.1f}", DeltaTime * 1000.0f, 1.0f / DeltaTime);
         // MRG_TRACE("Total elapsed time : {0:.3f} s", Application::GetSeconds());
 
-
-        // Resize
+        // --------------------------------- Resize ---------------------------------
+        
         if (FramebufferSpecs spec = m_Framebuffer->GetSpecs();
             m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
             (spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
@@ -75,23 +75,24 @@ namespace Mirage
             m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
         }
 
-
-        // Update
+        // --------------------------------- Update ---------------------------------
+        
         if (m_ViewportFocused && m_ViewportHovered)
         {
             m_CameraController.OnUpdate(DeltaTime);
         }
         m_EditorCamera.OnUpdate(DeltaTime);
 
-
-        // Render
+        // --------------------------------- Render ---------------------------------
+        
         Renderer2D::ResetStats();
         m_Framebuffer->Bind();
         RenderCommand::SetClearColor({0.2f, 0.2f, 0.2f, 1.0f});
         RenderCommand::Clear();
+        m_Framebuffer->ClearAttachment(1, -1);
 
         m_ActiveScene->OnUpdateEditor(DeltaTime, m_EditorCamera);
-
+        
         m_Framebuffer->Unbind();
     }
 
@@ -195,7 +196,13 @@ namespace Mirage
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
         
         ImGui::Begin("ViewPort");
+        auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
+        auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
+        auto viewportOffset = ImGui::GetWindowPos();
+        m_ViewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
+        m_ViewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
 
+        
         // ------------------------- Viewport Events -------------------------
         m_ViewportFocused = ImGui::IsWindowFocused();
         m_ViewportHovered = ImGui::IsWindowHovered();
@@ -209,7 +216,7 @@ namespace Mirage
         // uint32_t texId = m_Framebuffer->GetDepthAttachmentRendererID();
         uint32_t texId = m_Framebuffer->GetColorAttachmentRendererID();
         ImGui::Image((void*)texId, ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
-
+        
         // ----------------------------- Toolbar -----------------------------
         ImGui::SetItemAllowOverlap();
         ImVec2 curpos(ImGui::GetWindowContentRegionMin());
@@ -225,19 +232,15 @@ namespace Mirage
             ImGuizmo::SetOrthographic(false);
             ImGuizmo::SetDrawlist();
 
-            float windowWidth = (float)ImGui::GetWindowWidth();
-            float windowHeight = (float)ImGui::GetWindowHeight();
-            ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
-
+            ImGuizmo::SetRect(m_ViewportBounds[0].x, m_ViewportBounds[0].y, m_ViewportBounds[1].x - m_ViewportBounds[0].x, m_ViewportBounds[1].y - m_ViewportBounds[0].y);
+            
             ImGuizmo::AllowAxisFlip(false);
             // Runitme Camera
-/*
+            /*
             auto runtimeCamera = m_ActiveScene->GetMainCameraSO();
             const auto& camera = runtimeCamera.GetComponent<CameraComponent>().Camera;
             const Mat4& cameraProjection = camera.GetProjection();
             const Mat4& cameraView = Inverse(runtimeCamera.GetComponent<TransformComponent>().GetTransform());
-            
-
             */
             // Editor Camera
             const Mat4 cameraProjection = m_EditorCamera.GetProjection();
@@ -314,9 +317,9 @@ namespace Mirage
         ImGui::End();
         ImGui::PopStyleVar(1);
     }
-
     void EditorLayer::CreateToolBar()
     {
+        ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 12.0f);
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.000f, 0.000f, 0.000f, 0.500f));
         ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.000f, 0.000f, 0.000f, 0.500f));
         // -------------------------- Spacing --------------------------
@@ -570,6 +573,7 @@ namespace Mirage
         }
 
         ImGui::PopStyleColor(2);
+        ImGui::PopStyleVar();
     }
 
     
@@ -615,16 +619,15 @@ namespace Mirage
         m_CameraController.OnEvent(e);
         m_EditorCamera.OnEvent(e);
         
+        EventDispatcher dispatcher(e);
+        
         // Shortcuts
-        ProcessShortcuts(e);
+        dispatcher.Dispatch<KeyPressedEvent>(MRG_BIND_EVENT_FN(EditorLayer::OnShortcutKeyPressed));
+
+        // MousePicking
+        dispatcher.Dispatch<MouseButtonPressedEvent>(MRG_BIND_EVENT_FN(EditorLayer::OnMouseButtonPressed));
     }
     
-    void EditorLayer::ProcessShortcuts(Event& e)
-    {
-        EventDispatcher dispatcher(e);
-        dispatcher.Dispatch<KeyPressedEvent>(MRG_BIND_EVENT_FN(EditorLayer::OnShortcutKeyPressed));
-    }
-
     bool EditorLayer::OnShortcutKeyPressed(KeyPressedEvent e)
     {
         if (e.GetRepeatCount() > 0)
@@ -690,7 +693,33 @@ namespace Mirage
         }
         return false;
     }
+    bool EditorLayer::OnMouseButtonPressed(MouseButtonPressedEvent& e)
+    {
+        if(ImGuizmo::IsOver() || !m_ViewportHovered)
+            return false;
+        if (e.GetButton() == Mouse::ButtonLeft)
+        {
+            auto [x, y] = ImGui::GetMousePos();
+            x -= m_ViewportBounds[0].x;
+            y -= m_ViewportBounds[0].y;
+            Vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
+        
+            int mouseX = (int)x;
+            int mouseY = (int)(viewportSize.y - y);
 
+            if (mouseX >= 0 && mouseX < viewportSize.x && mouseY >= 0 && mouseY < viewportSize.y)
+            {
+                int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
+                if (pixelData != -1)
+                {
+                    m_HierarchyPanel.SetSelectedSO({});
+                }
+                m_HierarchyPanel.SetSelectedSO(SceneObject{(entt::entity)pixelData, m_ActiveScene.get()});
+            }
+        }
+        return false;
+    }
+    
 
     void EditorLayer::NewScene()
     {

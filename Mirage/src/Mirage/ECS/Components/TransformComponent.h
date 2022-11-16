@@ -73,12 +73,12 @@ namespace Mirage
 
         Vec3 m_Position{0.0f, 0.0f, 0.0f};
         Vec3 m_Rotation{0.0f, 0.0f, 0.0f};
-        Quat m_RotationQ{0.0f, 1.0f, 0.0f, 0.0f};
+        Quat m_RotationQ{1.0f, 0.0f, 0.0f, 0.0f};
         Vec3 m_Scale{1.0f, 1.0f, 1.0f};
 
         Vec3 m_WorldPosition{0.0f, 0.0f, 0.0f};
         Vec3 m_WorldRotation{0.0f, 0.0f, 0.0f};
-        Quat m_WorldRotationQ{0.0f, 1.0f, 0.0f, 0.0f};
+        Quat m_WorldRotationQ{1.0f, 0.0f, 0.0f, 0.0f};
         Vec3 m_WorldScale{1.0f, 1.0f, 1.0f};
 
         Mat4 m_transform{1.0f};

@@ -25,6 +25,21 @@ namespace Mirage
         m_Context = scene;
     }
 
+    void HierarchyPanel::SetSelectedSO(SceneObject so)
+    {
+        if (so)
+        {
+            if (m_SelectionContext == so)
+            {
+                if (m_SelectionContext.GetParent())
+                    m_SelectionContext = m_SelectionContext.GetParent();
+                return;
+            }
+        }
+        
+        m_SelectionContext = so;
+    }
+
     void HierarchyPanel::OnImguiRender()
     {
         ImGui::Begin("Outliner");

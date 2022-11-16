@@ -73,6 +73,17 @@ namespace Mirage
             case ShaderDataType::Float2:
             case ShaderDataType::Float3:
             case ShaderDataType::Float4:
+                {
+                    glEnableVertexAttribArray(m_VertexBufferIndex);
+                    glVertexAttribPointer(m_VertexBufferIndex,
+                                          element.GetComponentCount(),
+                                          ShaderDataTypeToOpenGLBaseType(element.Type),
+                                          element.Normalized ? GL_TRUE : GL_FALSE,
+                                          layout.GetStride(),
+                                          (const void*)element.Offset);
+                    m_VertexBufferIndex++;
+                    break;
+                }
             case ShaderDataType::Int1:
             case ShaderDataType::Int2:
             case ShaderDataType::Int3:
@@ -80,10 +91,9 @@ namespace Mirage
             case ShaderDataType::Bool:
                 {
                     glEnableVertexAttribArray(m_VertexBufferIndex);
-                    glVertexAttribPointer(m_VertexBufferIndex,
+                    glVertexAttribIPointer(m_VertexBufferIndex,
                                           element.GetComponentCount(),
                                           ShaderDataTypeToOpenGLBaseType(element.Type),
-                                          element.Normalized ? GL_TRUE : GL_FALSE,
                                           layout.GetStride(),
                                           (const void*)element.Offset);
                     m_VertexBufferIndex++;
