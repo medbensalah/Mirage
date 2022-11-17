@@ -2,6 +2,7 @@
 
 #include "Mirage/Core/Core.h"
 #include "Mirage/Core/Log.h"
+#include <filesystem>
 
 #ifdef MRG_ENABLE_ASSERTS
 

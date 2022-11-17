@@ -189,6 +189,9 @@
     <ClInclude Include="src\Mirage\Renderer\Camera.h">
       <Filter>src\Mirage\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\Renderer\EditorCamera.h">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Mirage\Renderer\Framebuffer.h">
       <Filter>src\Mirage\Renderer</Filter>
     </ClInclude>
@@ -222,6 +225,9 @@
     <ClInclude Include="src\Mirage\Renderer\Texture.h">
       <Filter>src\Mirage\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\Renderer\UniformBuffer.h">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Mirage\Renderer\VertexArray.h">
       <Filter>src\Mirage\Renderer</Filter>
     </ClInclude>
@@ -247,6 +253,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLUniformBuffer.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h">
@@ -1550,6 +1559,9 @@
     <ClCompile Include="src\Mirage\Renderer\Buffer.cpp">
       <Filter>src\Mirage\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Mirage\Renderer\EditorCamera.cpp">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Mirage\Renderer\Framebuffer.cpp">
       <Filter>src\Mirage\Renderer</Filter>
     </ClCompile>
@@ -1580,6 +1592,9 @@
     <ClCompile Include="src\Mirage\Renderer\Texture.cpp">
       <Filter>src\Mirage\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Mirage\Renderer\UniformBuffer.cpp">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Mirage\Renderer\VertexArray.cpp">
       <Filter>src\Mirage\Renderer</Filter>
     </ClCompile>
@@ -1602,6 +1617,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLUniformBuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp">

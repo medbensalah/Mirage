@@ -4,6 +4,7 @@
 
 #include "Mirage/Renderer/RenderCommand.h"
 #include "Mirage/Renderer/Shader.h"
+#include "Mirage/Renderer/UniformBuffer.h"
 #include "Mirage/Renderer/VertexArray.h"
 
 namespace Mirage
@@ -46,13 +47,22 @@ namespace Mirage
 
             Vec4 QuadVertexPositions[4];
 
-            Stats Stats;
+        	Stats Stats;
+        	
+        	struct CameraData
+        	{
+        		glm::mat4 ViewProjection;
+        	};
+        	CameraData CameraBuffer;
+        	Ref<UniformBuffer> CameraUniformBuffer;
         };
         
         static Renderer2DData s_Data;
 
         void Init()
         {
+            MRG_PROFILE_FUNCTION();
+            
             s_Data.QuadVertexArray = VertexArray::Create();
             s_Data.QuadVertexBuffer = VertexBuffer::Create(s_Data.MaxVertices * sizeof(QuadVertex));
             
@@ -100,45 +110,48 @@ namespace Mirage
                 samplers[i] = i;
             
             s_Data.Shader = Shader::Create("assets/shaders/Standard.glsl");
-            s_Data.Shader->Bind();
-            s_Data.Shader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
-
+        	
             s_Data.TextureSlots[0] = s_Data.WhiteTexture;
 
             s_Data.QuadVertexPositions[0] = {-0.5f, -0.5f, 0.0f, 1.0f};
             s_Data.QuadVertexPositions[1] = { 0.5f, -0.5f, 0.0f, 1.0f};
             s_Data.QuadVertexPositions[2] = { 0.5f,  0.5f, 0.0f, 1.0f};
             s_Data.QuadVertexPositions[3] = {-0.5f,  0.5f, 0.0f, 1.0f};
+            
+        	s_Data.CameraUniformBuffer = UniformBuffer::Create(sizeof(Renderer2DData::CameraData), 0);
         }
 
         void Shutdown()
         {
+            MRG_PROFILE_FUNCTION();
+            
             delete[] s_Data.QuadVertexBufferBase;
         }
 
         void BeginScene(const Camera& camera, const Mat4& transform)
         {
-            Mat4 viewProj = camera.GetProjection() * Inverse(transform);
+            MRG_PROFILE_FUNCTION();
             
-            s_Data.Shader->Bind();
-            s_Data.Shader->SetMat4("u_ViewProjection", viewProj);
-
-            StartBatch();
-        }
-        void BeginScene(const EditorCamera& camera)
-        {
-            Mat4 viewProj = camera.GetViewProjection();
-            
-            s_Data.Shader->Bind();
-            s_Data.Shader->SetMat4("u_ViewProjection", viewProj);
+            s_Data.CameraBuffer.ViewProjection = camera.GetProjection() * Inverse(transform);
+            s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer2DData::CameraData));
 
             StartBatch();
         }
         void BeginScene(const OrthographicCamera& camera)
         {
-            
-            s_Data.Shader->Bind();
-            s_Data.Shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+        	MRG_PROFILE_FUNCTION();
+        	
+        	s_Data.Shader->Bind();
+        	s_Data.Shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+        	
+			StartBatch();
+        }
+        void BeginScene(const EditorCamera& camera)
+        {
+        	MRG_PROFILE_FUNCTION();
+        	
+        	s_Data.CameraBuffer.ViewProjection = camera.GetViewProjection();
+        	s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer2DData::CameraData));
 
             StartBatch();
         }
@@ -170,6 +183,7 @@ namespace Mirage
                 s_Data.TextureSlots[i]->Bind(i);
             }
             
+            s_Data.Shader->Bind();
             RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCount);
             
             s_Data.Stats.DrawCalls++;

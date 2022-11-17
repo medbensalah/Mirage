@@ -12,10 +12,22 @@ int main(int argc, char** argv);
 
 namespace Mirage
 {
+    struct ApplicationCommandLineArgs
+    {
+        int Count = 0;
+        char** Args = nullptr;
+
+        const char* operator[](int index) const
+        {
+            MRG_CORE_ASSERT(index < Count);
+            return Args[index];
+        }
+    };
+    
     class Application
     {
     public:
-        Application(const std::string& name = "Mirage");
+        Application(const std::string& name = "Mirage", ApplicationCommandLineArgs args = ApplicationCommandLineArgs());
         virtual ~Application();
 
         void OnEvent(Event& e);
@@ -35,6 +47,8 @@ namespace Mirage
         inline static float GetMilliseconds() { return s_Instance->time.GetElapsedTimeInMilliseconds(); }
 
         inline static float GetDeltaTime() { return s_Instance->time.DeltaTime; }
+        
+        ApplicationCommandLineArgs GetCommandLineArgs() const { return m_CommandLineArgs; }
     private:
         void Run();
 
@@ -42,6 +56,8 @@ namespace Mirage
         bool OnWindowResize(WindowResizeEvent& e);
 
     private:
+        ApplicationCommandLineArgs m_CommandLineArgs;
+        
         LayerStack m_LayerStack;
 
         Time time = Time(0.0f);
@@ -57,5 +73,5 @@ namespace Mirage
     };
 
     /* Define in client */
-    Application* CreateApplication();
+    Application* CreateApplication(ApplicationCommandLineArgs args);
 }

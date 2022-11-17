@@ -8,8 +8,8 @@ namespace Mirage
     class MirageEditor : public Application
     {
     public:
-        MirageEditor()
-            : Application("Mirage Editor")
+        MirageEditor(ApplicationCommandLineArgs args)
+            : Application("Mirage Editor", args)
         {
             PushLayer(new EditorLayer());
         }
@@ -19,8 +19,8 @@ namespace Mirage
         }
     };
 
-    Mirage::Application* CreateApplication()
+    Application* CreateApplication(ApplicationCommandLineArgs args)
     {
-        return new MirageEditor();
+        return new MirageEditor(args);
     }
 }

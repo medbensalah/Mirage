@@ -24,6 +24,5 @@ namespace Mirage
     private:
         bool m_BlockKbEvents = true;
         bool m_BlockMouseEvents = true;
-        float m_Time = 0.0f;
     };
 }

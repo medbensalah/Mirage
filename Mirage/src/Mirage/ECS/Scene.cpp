@@ -169,7 +169,8 @@ namespace Mirage
     template <>
     void Scene::OnComponentAdded<CameraComponent>(SceneObject& entity, CameraComponent& component)
     {
-        component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
+        if (m_ViewportWidth > 0 && m_ViewportHeight > 0)
+            component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
     }
     
     template <>
@@ -181,5 +182,6 @@ namespace Mirage
     void Scene::OnComponentAdded(SceneObject& entity, NativeScriptComponent& component)
     {
     }
-
+    // TODO: add & not focused to selection
+    // TODO call Time.deltatime directly
 }

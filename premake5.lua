@@ -1,4 +1,5 @@
 include "./vendor/premake/premake_customization/solution_items.lua"
+include "Dependencies.lua"
 
 workspace "Mirage"
 	architecture "x86_64"
@@ -22,17 +23,6 @@ workspace "Mirage"
 	}
 	
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
-
---include directories relative to solution directory
-IncludeDir = {}
-IncludeDir["GLFW"] = "%{wks.location}/Mirage/vendor/GLFW/include"
-IncludeDir["Glad"] = "%{wks.location}/Mirage/vendor/Glad/include"
-IncludeDir["ImGui"] = "%{wks.location}/Mirage/vendor/ImGui"
-IncludeDir["glm"] = "%{wks.location}/Mirage/vendor/glm"
-IncludeDir["stb_image"] = "%{wks.location}/Mirage/vendor/stb_image"
-IncludeDir["enTT"] = "%{wks.location}/Mirage/vendor/enTT/include"
-IncludeDir["yaml_cpp"] = "%{wks.location}/Mirage/vendor/yaml-cpp/include"
-IncludeDir["ImGuizmo"] = "%{wks.location}/Mirage/vendor/ImGuizmo"
 
 group "Dependencies"
     include "vendor/premake"

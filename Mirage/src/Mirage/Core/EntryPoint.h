@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Mirage/Core/Core.h"
+#include "Mirage/Core/Application.h"
 
 #ifdef MRG_PLATFORM_WINDOWS
 
-extern Mirage::Application* Mirage::CreateApplication();
+extern Mirage::Application* Mirage::CreateApplication(ApplicationCommandLineArgs args);
 
 int main(int argc, char** argv)
 {
@@ -12,7 +13,7 @@ int main(int argc, char** argv)
 
     MRG_PROFILE_BEGIN_SESSION("Initialization", "MirageProfile - Initialization.json");
     
-    Mirage::Application* app = Mirage::CreateApplication();
+    Mirage::Application* app = Mirage::CreateApplication({argc, argv});
 
     MRG_PROFILE_END_SESSION();
 

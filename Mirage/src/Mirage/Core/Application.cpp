@@ -10,7 +10,8 @@ namespace Mirage
 {
     Application* Application::s_Instance = nullptr;
 
-    Application::Application(const std::string& name)
+    Application::Application(const std::string& name, ApplicationCommandLineArgs args)
+        : m_CommandLineArgs(args)
     {
         MRG_PROFILE_FUNCTION();
         

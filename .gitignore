@@ -12,3 +12,8 @@
 **.vcxproj.filters
 **.vcxproj.user
 **.json
+
+# Directories
+Mirage/vendor/VulkanSDK
+Mirage Editor/assets/cache
+scripts/__pycache__

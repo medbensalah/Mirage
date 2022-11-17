@@ -1,5 +1,5 @@
 ﻿#type vertex
-#version 450
+#version 450 core
 layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec4 a_Color;
 layout(location = 2) in vec2 a_TexCoord;
@@ -8,56 +8,72 @@ layout(location = 4) in vec2 a_Tiling;
 layout(location = 5) in vec2 a_Offset;
 layout(location = 6) in int a_EntityID;
 
-uniform mat4 u_ViewProjection;
+layout(std140, binding = 0) uniform Camera
+{
+	mat4 u_ViewProjection;
+};
 
-out vec4 v_Color;
-out vec2 v_TexCoord;
-out flat float v_TexIndex;
-out vec2 v_Tiling;
-out vec2 v_Offset;
-out flat int v_EntityID;
+struct VertexOutput
+{
+	vec4 Color;
+	vec2 TexCoord;
+	float TexIndex;
+	vec2 Tiling;
+	vec2 Offset;
+};
+
+layout (location = 0) out VertexOutput Output;
+layout (location = 5) out flat int v_EntityID;
 
 void main()
 {
-    v_Color = a_Color;
-    v_TexCoord = a_TexCoord;
-    v_TexIndex = a_TexIndex;
-    v_Tiling = a_Tiling;
-    v_Offset = a_Offset;
-    v_EntityID = a_EntityID.x;
+    Output.Color = a_Color;
+    Output.TexCoord = a_TexCoord;
+    Output.TexIndex = a_TexIndex;
+    Output.Tiling = a_Tiling;
+    Output.Offset = a_Offset;
+
+    v_EntityID = a_EntityID;
+
     gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
 }
 
 #type fragment
-#version 450
+#version 450 core
+
 layout(location = 0) out vec4 color;
 layout(location = 1) out int pickingID;
 
-in vec4 v_Color;
-in vec2 v_TexCoord;
-in flat float v_TexIndex;
-in vec2 v_Tiling;
-in vec2 v_Offset;
-in flat int v_EntityID;
+struct VertexOutput
+{
+	vec4 Color;
+	vec2 TexCoord;
+	float TexIndex;
+	vec2 Tiling;
+	vec2 Offset;
+};
 
-uniform sampler2D u_Textures[32];
+layout (location = 0) in VertexOutput Input;
+layout (location = 5) in flat int v_EntityID;
+
+layout (binding = 0) uniform sampler2D u_Textures[32];
 
 void main()
 {
-    vec2 uv = v_TexCoord * v_Tiling + v_Offset;
-    vec4 texColor = v_Color;
-    switch(int(v_TexIndex))
+    vec2 uv = Input.TexCoord * Input.Tiling + Input.Offset;
+    vec4 texColor = Input.Color;
+    switch(int(Input.TexIndex))
     {
-        case 0:  texColor *= texture(u_Textures[0],  uv); break;
-        case 1:  texColor *= texture(u_Textures[1],  uv); break;
-        case 2:  texColor *= texture(u_Textures[2],  uv); break;
-        case 3:  texColor *= texture(u_Textures[3],  uv); break;
-        case 4:  texColor *= texture(u_Textures[4],  uv); break;
-        case 5:  texColor *= texture(u_Textures[5],  uv); break;
-        case 6:  texColor *= texture(u_Textures[6],  uv); break;
-        case 7:  texColor *= texture(u_Textures[7],  uv); break;
-        case 8:  texColor *= texture(u_Textures[8],  uv); break;
-        case 9:  texColor *= texture(u_Textures[9],  uv); break;
+        case 0:  texColor *= texture(u_Textures[ 0], uv); break;
+        case 1:  texColor *= texture(u_Textures[ 1], uv); break;
+        case 2:  texColor *= texture(u_Textures[ 2], uv); break;
+        case 3:  texColor *= texture(u_Textures[ 3], uv); break;
+        case 4:  texColor *= texture(u_Textures[ 4], uv); break;
+        case 5:  texColor *= texture(u_Textures[ 5], uv); break;
+        case 6:  texColor *= texture(u_Textures[ 6], uv); break;
+        case 7:  texColor *= texture(u_Textures[ 7], uv); break;
+        case 8:  texColor *= texture(u_Textures[ 8], uv); break;
+        case 9:  texColor *= texture(u_Textures[ 9], uv); break;
         case 10: texColor *= texture(u_Textures[10], uv); break;
         case 11: texColor *= texture(u_Textures[11], uv); break;
         case 12: texColor *= texture(u_Textures[12], uv); break;

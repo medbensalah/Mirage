@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include "Mirage/Renderer/EditorCamera.h"
-
 #include <enTT.hpp>
 
 namespace Mirage

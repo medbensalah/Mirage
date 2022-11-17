@@ -9,12 +9,9 @@
 #include "glm/gtx/transform2.hpp"
 #include "glm/gtx/vector_angle.inl"
 #include "Mirage/ECS/Components/CameraComponent.h"
-#include "Mirage/ECS/Components/NativeScriptComponent.h"
 #include "Mirage/ImGui/Extensions/GradientButtonV1.h"
 #include "Mirage/ImGui/Extensions/ToggleButton.h"
 
-#include "Mirage/ECS/Components/SpriteRendererComponent.h"
-#include "Mirage/ECS/Components/TagComponent.h"
 #include "Mirage/ECS/Components/TransformComponent.h"
 #include "Mirage/ImGui/Extensions/DrawingAPI.h"
 
@@ -46,6 +43,14 @@ namespace Mirage
         m_Framebuffer = Framebuffer::Create(fbSpecs);
 
         m_ActiveScene = CreateRef<Scene>();
+    	
+        auto commandLineArgs = Application::Get().GetCommandLineArgs();
+        if (commandLineArgs.Count > 1)
+        {
+            auto sceneFilePath = commandLineArgs[1];
+            SceneSerializer serializer(m_ActiveScene);
+            serializer.SerializeText(sceneFilePath);
+        }
 
         m_EditorCamera = EditorCamera(60.0f, 1.778f, 0.03f, 1000.0f);
 
@@ -575,7 +580,6 @@ namespace Mirage
         ImGui::PopStyleColor(2);
         ImGui::PopStyleVar();
     }
-
     
     void EditorLayer::OnImGuiRender()
     {
@@ -710,6 +714,7 @@ namespace Mirage
             if (mouseX >= 0 && mouseX < viewportSize.x && mouseY >= 0 && mouseY < viewportSize.y)
             {
                 int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
+            	MRG_CORE_INFO("pixel data: {0}", pixelData);
                 if (pixelData != -1)
                 {
                     m_HierarchyPanel.SetSelectedSO({});

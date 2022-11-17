@@ -33,6 +33,7 @@ namespace Mirage
 
     void SceneCamera::SetViewportSize(uint32_t width, uint32_t height)
     {
+        MRG_CORE_ASSERT(width > 0 && height > 0);
         float aspectRatio = (float)width / (float)height;
         if(aspectRatio != m_AspectRatio)
         {
