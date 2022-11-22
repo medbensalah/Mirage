@@ -22,8 +22,8 @@ namespace Mirage
             return ss.str();
         }
 
-        EVENT_CLASS_TYPE(MouseMove);
-        EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput);
+        EVENT_CLASS_TYPE(MouseMove)
+        EVENT_CLASS_CATEGORY(EventCategoryMouse | EventCategoryInput)
 
     private:
         float m_MouseX, m_MouseY;

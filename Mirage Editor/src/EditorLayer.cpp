@@ -4,6 +4,7 @@
 #include <ImGui/imgui.h>
 #include <glm/gtc/type_ptr.inl>
 
+#include "Definitions/Extensions.h"
 #include "glm/ext/scalar_common.hpp"
 #include "glm/gtx/log_base.hpp"
 #include "glm/gtx/transform2.hpp"
@@ -16,12 +17,11 @@
 #include "Mirage/ImGui/Extensions/DrawingAPI.h"
 
 #include "Mirage/ECS/SceneSerializer.h"
-#include "Mirage/Events/KeyEvent.h"
 #include "Mirage/Math/Math.h"
 #include "Mirage/utils/PlatformUtils.h"
 
 namespace Mirage
-{
+{	
     EditorLayer::EditorLayer()
         : Layer("EditorLayer"), m_CameraController(1280.0f / 720.0f, true)
     {
@@ -53,7 +53,7 @@ namespace Mirage
         }
 
         m_EditorCamera = EditorCamera(60.0f, 1.778f, 0.03f, 1000.0f);
-
+    	
         m_HierarchyPanel.SetContext(m_ActiveScene);
     }
 
@@ -200,7 +200,7 @@ namespace Mirage
         ImGui::SetNextWindowClass(&s_ViewportWindowClass);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
         
-        ImGui::Begin("ViewPort");
+    	ImGui::Begin("ViewPort");
         auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
         auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
         auto viewportOffset = ImGui::GetWindowPos();
@@ -220,21 +220,32 @@ namespace Mirage
         m_ViewportSize = {ViewportSize.x, ViewportSize.y};
         // uint32_t texId = m_Framebuffer->GetDepthAttachmentRendererID();
         uint32_t texId = m_Framebuffer->GetColorAttachmentRendererID();
-        ImGui::Image((void*)texId, ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
-        
+    	ImGui::Image((void*)texId, ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
+    	
+    	if (ImGui::BeginDragDropTarget())
+    	{
+    		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(Payloads::scene.c_str()))
+    		{
+    			const char* path = (const char*)payload->Data;
+    			MRG_CORE_INFO(path);
+    			OpenScene(path);
+    		}
+    		ImGui::EndDragDropTarget();
+    	}
+    	
         // ----------------------------- Toolbar -----------------------------
         ImGui::SetItemAllowOverlap();
-        ImVec2 curpos(ImGui::GetWindowContentRegionMin());
-        ImGui::SetCursorPos({curpos.x + 7.0f, curpos.y + 3.0f});
+        ImVec2 curPos(ImGui::GetWindowContentRegionMin());
+        ImGui::SetCursorPos({curPos.x + 7.0f, curPos.y + 3.0f});
         ImGui::BeginGroup();
         CreateToolBar();
-        ImGui::EndGroup();
+        ImGui::EndGroup();	
         
         // ----------------------------- Gizmos ------------------------------
         SceneObject selectedSO = m_HierarchyPanel.GetSelectedSO();
         if (selectedSO)
         {
-            ImGuizmo::SetOrthographic(false);
+            ImGuizmo::SetOrthographic(m_EditorCamera.IsOrthographic());
             ImGuizmo::SetDrawlist();
 
             ImGuizmo::SetRect(m_ViewportBounds[0].x, m_ViewportBounds[0].y, m_ViewportBounds[1].x - m_ViewportBounds[0].x, m_ViewportBounds[1].y - m_ViewportBounds[0].y);
@@ -327,13 +338,10 @@ namespace Mirage
         ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 12.0f);
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.000f, 0.000f, 0.000f, 0.500f));
         ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.000f, 0.000f, 0.000f, 0.500f));
-        // -------------------------- Spacing --------------------------
-        ImGuiContext& g = *GImGui;
-        const ImGuiStyle& style = g.Style;
-        const ImVec2 label_size = ImGui::CalcTextSize("Space : ", NULL, true);
-        const ImVec2 pos = ImGui::GetCursorPos();
-        ImVec2 label_pos = ImVec2(pos.x, pos.y + style.FramePadding.y);
-
+        // -------------------------- Space --------------------------
+#pragma region space
+        const ImGuiStyle& style = ImGui::GetStyle();
+        
         ImGui::AlignTextToFramePadding();
         ImGui::Text("Space : ");
         ImGui::SameLine();
@@ -364,9 +372,9 @@ namespace Mirage
         {
             m_GizmoMode = m_GizmoMode == ImGuizmo::LOCAL ? ImGuizmo::WORLD : ImGuizmo::LOCAL;
         }
-        
+#pragma endregion 
         // -------------------------- Mode --------------------------
-
+#pragma region Mode
         ImGui::SameLine();
         ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
         ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(0.30f, 0.30f, 0.30f, 1.000f));
@@ -445,7 +453,6 @@ namespace Mirage
                 m_GizmoType = (ImGuizmo::OPERATION)-1;
             }
             ImGui::PopStyleColor(3);
-            ImGui::SameLine();
         }
         else
         {
@@ -464,119 +471,186 @@ namespace Mirage
                 m_GizmoType = ImGuizmo::OPERATION::SCALE;
             }
         }
-
+#pragma endregion 
         // ------------------ Snapping ------------------
+#pragma region Snap
+    	ImGui::SameLine();
+    	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+    	ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(0.30f, 0.30f, 0.30f, 1.000f));
+    	ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
+    	ImGui::PopStyleColor();
+    	ImGui::SameLine();
+    	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+    	ImVec2 snapPopUpPos = ImGui::GetCursorPos();
+    	snapPopUpPos.y += 25.0f;
+    	if (ImGui::ColoredButtonV1("Snapping", ImVec2{100.0f, 25.0f}))
+    	{
+    		ImGui::OpenPopup("Snapping");
+    	}
+    	
+    	ImGui::SetNextWindowSize(ImVec2{ 215, 85 });
+    	ImGui::SetNextWindowPos(ImVec2{ImGui::GetWindowPos().x + snapPopUpPos.x, ImGui::GetWindowPos().y + snapPopUpPos.y});
+        if (ImGui::BeginPopup("Snapping"))
+        {
+	        ImGui::PushStyleColor(ImGuiCol_CheckMark, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
 
-        ImGui::SameLine();
-        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
-        ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(0.30f, 0.30f, 0.30f, 1.000f));
-        ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
-        ImGui::PopStyleColor();
-        ImGui::SameLine();
-        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
-        ImGui::Text("Snapping : ");
-        ImGui::SameLine();
-
-        ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{2, style.ItemSpacing.y});
-        ImGui::PushStyleColor(ImGuiCol_CheckMark, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
+        	ImGui::AlignTextToFramePadding();
+        	ImGui::SetCursorPos(ImVec2{ImGui::GetCursorPosX() + 10, ImGui::GetCursorPosY() + 3});
+	        ImGui::Text("Translation :");
+	        ImGui::SameLine();
+        	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 27);
+        	float curPos = ImGui::GetCursorPosX();
+	        ImGui::Checkbox("##TranslationSnap", &m_TranslationSnap);
+	        ImGui::SameLine();
+    		ImGui::PushItemWidth(50);
+        	ImGui::GetCursorPosX();
+    		ImGui::DragFloat("##TranslationSnapping", &m_TranslationSnapValue, 0.1f, 0.0f, 1000.0f, "%.4g");
+    		ImGui::PopItemWidth();
         
-        ImGui::Text("T: ");
-        ImGui::SameLine();
-        ImGui::Checkbox("##TranslationSnap", &m_TranslationSnap);
-        ImGui::SameLine();
-        ImGui::PushItemWidth(50);
-        ImGui::DragFloat("##TranslationSnapping", &m_TranslationSnapValue, 0.1f, 0.0f, 1000.0f, "%.3g");
-        ImGui::PopItemWidth();
-        ImGui::SameLine();
-        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 12);
+        	ImGui::AlignTextToFramePadding();
+        	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+    		ImGui::Text("Rotation : ");
+    		ImGui::SameLine();
+        	ImGui::SetCursorPosX(curPos);
+    		ImGui::Checkbox("##RotationSnap", &m_RotationSnap);
+    		ImGui::SameLine();
+    		ImGui::PushItemWidth(50);
+    		ImGui::DragFloat("##RotationSnapping", &m_RotationSnapValue, 1.0f, 0.0f, 180.0f, "%.4g");
+    		ImGui::PopItemWidth();
         
-        ImGui::Text("R: ");
-        ImGui::SameLine();
-        ImGui::Checkbox("##RotationSnap", &m_RotationSnap);
-        ImGui::SameLine();
-        ImGui::PushItemWidth(50);
-        ImGui::DragFloat("##RotationSnapping", &m_RotationSnapValue, 1.0f, 0.0f, 180.0f, "%.2g");
-        ImGui::PopItemWidth();
-        ImGui::SameLine();
-        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 12);
+        	ImGui::AlignTextToFramePadding();
+        	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+    		ImGui::Text("Scale : ");
+    		ImGui::SameLine();
+        	ImGui::SetCursorPosX(curPos);
+    		ImGui::Checkbox("##ScaleSnap", &m_ScaleSnap);
+    		ImGui::SameLine();
+    		ImGui::PushItemWidth(50);
+    		ImGui::DragFloat("##ScaleSnapping", &m_ScaleSnapValue, 0.01f, 0.0f, 1.0f, "%.4g");
+    		ImGui::PopItemWidth();
         
-        ImGui::Text("S: ");
-        ImGui::SameLine();
-        ImGui::Checkbox("##ScaleSnap", &m_ScaleSnap);
-        ImGui::SameLine();
-        ImGui::PushItemWidth(50);
-        ImGui::DragFloat("##ScaleSnapping", &m_ScaleSnapValue, 0.01f, 0.0f, 1.0f, "%.3g");
-        ImGui::PopItemWidth();
-        
-        ImGui::PopStyleColor();
-        ImGui::PopStyleVar();
-        
+    		ImGui::PopStyleColor();
+    		
+    		ImGui::EndPopup();
+    	}
+#pragma endregion 
         // -------------------------- Camera --------------------------
-
+#pragma region Camera
         ImGui::SameLine();
-        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
-        ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(0.30f, 0.30f, 0.30f, 1.000f));
-        ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
-        ImGui::PopStyleColor();
-        ImGui::SameLine();
-        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
-        ImGui::Text("Camera : ");
-        ImGui::SameLine();
-
-        
-        if (m_EditorCamera.IsOrthographic())
+        // ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+        // ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(0.30f, 0.30f, 0.30f, 1.000f));
+        // ImGui::SeparatorEx(ImGuiSeparatorFlags_Vertical);
+        // ImGui::PopStyleColor();
+        // ImGui::SameLine();
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetContentRegionAvail().x - 110);
+        // ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+        ImVec2 cameraPopUpPos = ImGui::GetCursorPos();
+        cameraPopUpPos.x -= 100.0f;
+        cameraPopUpPos.y += 25.0f;
+        if (ImGui::ColoredButtonV1("Camera", ImVec2{100.0f, 25.0f}))
         {
-            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
-            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
-            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
-            if (ImGui::Button("2D", ImVec2{40.0f, 25.0f}))
-            {
-                m_EditorCamera.SetProjectionType(Camera::ProjectionType::Perspective);
-            }
-            ImGui::PopStyleColor(3);
-            ImGui::SameLine();
-            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 12);
-            ImGui::Text("Speed: ");
-            ImGui::SameLine();
-            ImGui::PushItemWidth(110);
-            ImGui::SliderFloat("##EditorCameraMoveSpeed", &m_EditorCamera.m_MoveSpeed, 0.01f, 10.0f, "%.3g");
-            ImGui::PopItemWidth();
-            ImGui::SameLine();
-            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 12);
-            ImGui::Text("Size: ");
-            ImGui::SameLine();
-            ImGui::PushItemWidth(110);
-            if(ImGui::SliderFloat("##EditorCameraSize", &m_EditorCamera.m_OrthographicData.m_OrthographicSize, 1.0f, 50.0f,"%.3g"))
-            {
-                m_EditorCamera.UpdateProjection();
-            }
-            ImGui::PopItemWidth();
-        }
-        else
-        {
-            if (ImGui::Button("2D", ImVec2{40.0f, 25.0f}))
-            {
-                m_EditorCamera.SetProjectionType(Camera::ProjectionType::Orthographic);
-            }
-            ImGui::SameLine();
-            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 12);
-            ImGui::Text("Speed: ");
-            ImGui::SameLine();
-            ImGui::PushItemWidth(110);
-            ImGui::SliderFloat("##EditorCameraMoveSpeed", &m_EditorCamera.m_MoveSpeed, 0.01f, 10.0f, "%.3g");
-            ImGui::PopItemWidth();
-            ImGui::SameLine();
-            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 12);
-            ImGui::Text("FOV: ");
-            ImGui::SameLine();
-            ImGui::PushItemWidth(110);
-            if(ImGui::SliderFloat("##EditorCameraFOV", &m_EditorCamera.m_PerspectiveData.m_FOV, 10.0f, 120.0f,"%.3g"))
-            {
-                m_EditorCamera.UpdateProjection();
-            }
-            ImGui::PopItemWidth();
+	        ImGui::OpenPopup("Camera");
         }
 
+        ImGui::SetNextWindowSize(ImVec2{200, 85});
+        ImGui::SetNextWindowPos(ImVec2{
+	        ImGui::GetWindowPos().x + cameraPopUpPos.x, ImGui::GetWindowPos().y + cameraPopUpPos.y
+        });
+
+        if (ImGui::BeginPopup("Camera"))
+        {
+	        bool is3D = !m_EditorCamera.IsOrthographic();
+	        if (!is3D)
+	        {
+		        ImGui::AlignTextToFramePadding();
+		        ImGui::SetCursorPos(ImVec2{ImGui::GetCursorPosX() + 10, ImGui::GetCursorPosY() + 3});
+		        ImGui::Text("Mode: ");
+		        ImGui::SameLine();
+		        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 35);
+		        float curPos = ImGui::GetCursorPosX();
+		        ImGui::Text("2D");
+		        ImGui::SameLine();
+		        ImGui::PushItemWidth(110);
+		        if (ImGui::ToggleButton("##CameraMode", &is3D))
+		        {
+			        m_EditorCamera.SetProjectionType(Camera::ProjectionType::Perspective);
+		        }
+		        ImGui::PopItemWidth();
+		        ImGui::SameLine();
+		        ImGui::Text("3D");
+
+
+		        ImGui::AlignTextToFramePadding();
+		        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+		        ImGui::Text("Speed: ");
+		        ImGui::SameLine();
+		        ImGui::SetCursorPosX(curPos - 5);
+		        ImGui::PushItemWidth(100);
+		        ImGui::SliderFloat("##EditorCameraMoveSpeed", &m_EditorCamera.m_MoveSpeed, 0.01f, 10.0f, "%.3g");
+		        ImGui::PopItemWidth();
+
+
+		        ImGui::AlignTextToFramePadding();
+		        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+		        ImGui::Text("Size: ");
+		        ImGui::SameLine();
+		        ImGui::SetCursorPosX(curPos - 5);
+		        ImGui::PushItemWidth(100);
+		        if (ImGui::SliderFloat("##EditorCameraSize", &m_EditorCamera.m_OrthographicData.m_OrthographicSize,
+		                               1.0f, 50.0f, "%.3g"))
+		        {
+			        m_EditorCamera.UpdateProjection();
+		        }
+		        ImGui::PopItemWidth();
+	        }
+	        else
+	        {
+		        ImGui::AlignTextToFramePadding();
+		        ImGui::SetCursorPos(ImVec2{ImGui::GetCursorPosX() + 10, ImGui::GetCursorPosY() + 3});
+		        ImGui::Text("Mode: ");
+		        ImGui::SameLine();
+		        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 35);
+		        float curPos = ImGui::GetCursorPosX();
+		        ImGui::Text("2D");
+		        ImGui::SameLine();
+		        ImGui::PushItemWidth(110);
+		        if (ImGui::ToggleButton("##CameraMode", &is3D))
+		        {
+			        m_EditorCamera.SetProjectionType(Camera::ProjectionType::Orthographic);
+		        }
+		        ImGui::PopItemWidth();
+		        ImGui::SameLine();
+		        ImGui::Text("3D");
+
+
+		        ImGui::AlignTextToFramePadding();
+		        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+		        ImGui::Text("Speed: ");
+		        ImGui::SameLine();
+		        ImGui::SetCursorPosX(curPos - 5);
+		        ImGui::PushItemWidth(100);
+		        ImGui::SliderFloat("##EditorCameraMoveSpeed", &m_EditorCamera.m_MoveSpeed, 0.01f, 10.0f, "%.3g");
+		        ImGui::PopItemWidth();
+
+
+		        ImGui::AlignTextToFramePadding();
+		        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+		        ImGui::Text("FOV: ");
+		        ImGui::SameLine();
+		        ImGui::SetCursorPosX(curPos - 5);
+		        ImGui::PushItemWidth(100);
+		        if (ImGui::SliderFloat("##EditorCameraFOV", &m_EditorCamera.m_PerspectiveData.m_FOV, 10.0f, 120.0f,
+		                               "%.3g"))
+		        {
+			        m_EditorCamera.UpdateProjection();
+		        }
+		        ImGui::PopItemWidth();
+	        }
+
+	        ImGui::EndPopup();
+        }
+
+#pragma endregion 
         ImGui::PopStyleColor(2);
         ImGui::PopStyleVar();
     }
@@ -588,7 +662,15 @@ namespace Mirage
         CreateDockspace();
         CreateViewport();
 
-        m_HierarchyPanel.OnImguiRender();
+        m_HierarchyPanel.OnImGuiRender();
+    	m_ContentBrowserPanel.OnImGuiRender();
+
+    	if (m_ContentBrowserPanel.m_IsSceneRequested)
+    	{
+    		MRG_CORE_WARN("changing scene");
+    		OpenScene(m_ContentBrowserPanel.m_RequestedScenePath);
+    		m_ContentBrowserPanel.m_IsSceneRequested = false;
+    	}
 
         ImGui::Begin("Settings");
 
@@ -697,9 +779,15 @@ namespace Mirage
         }
         return false;
     }
+
+	bool EditorLayer::CanPick()
+    {
+	    return ImGuizmo::IsOver() || !m_ViewportFocused || !m_ViewportHovered || ImGui::IsAnyItemHovered();
+    }
+	
     bool EditorLayer::OnMouseButtonPressed(MouseButtonPressedEvent& e)
     {
-        if(ImGuizmo::IsOver() || !m_ViewportHovered)
+        if(CanPick())
             return false;
         if (e.GetButton() == Mouse::ButtonLeft)
         {
@@ -714,8 +802,7 @@ namespace Mirage
             if (mouseX >= 0 && mouseX < viewportSize.x && mouseY >= 0 && mouseY < viewportSize.y)
             {
                 int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
-            	MRG_CORE_INFO("pixel data: {0}", pixelData);
-                if (pixelData != -1)
+                if (pixelData == -1)
                 {
                     m_HierarchyPanel.SetSelectedSO({});
                 }
@@ -724,8 +811,7 @@ namespace Mirage
         }
         return false;
     }
-    
-
+	
     void EditorLayer::NewScene()
     {
         m_ActiveScene = CreateRef<Scene>();
@@ -735,28 +821,35 @@ namespace Mirage
 
     void EditorLayer::OpenScene()
     {
-        const std::string filepath = FileDialogs::OpenFile("Mirage scene (*.mrgs)\0*.mrgs\0");
+    	const char* filter = "Mirage scene (*.mrgs)\0*.mrgs\0";
+        const std::string filepath = FileDialogs::OpenFile(filter);
         
         if(!filepath.empty())
         {
-            m_ActiveScene = CreateRef<Scene>();
-            m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-            m_HierarchyPanel.SetContext(m_ActiveScene);
-                        
-            SceneSerializer serializer(m_ActiveScene);
-            serializer.DeserializeText(filepath);
+            OpenScene(filepath);
         }        
     }
 
-    void EditorLayer::SaveAs()
+    void EditorLayer::OpenScene(const std::filesystem::path& path)
     {
-        std::string filepath = FileDialogs::SaveFile("Mirage scene (*.mrgs)\0*.mrgs\0");
+    	m_ActiveScene = CreateRef<Scene>();
+    	m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+    	m_HierarchyPanel.SetContext(m_ActiveScene);
+                        
+    	SceneSerializer serializer(m_ActiveScene);
+    	serializer.DeserializeText(path.string());
+    }
+
+    void EditorLayer::SaveAs()
+    {    	
+    	const char* filter = "Mirage scene (*.mrgs)\0*.mrgs\0";
+        std::string filepath = FileDialogs::SaveFile(filter);
         if(!filepath.empty())
         {
             // check for extension
-            if (std::filesystem::path(filepath).extension() != ".mrgs")
+            if (std::filesystem::path(filepath).extension() != Extensions::scene)
             {
-                filepath.append(".mrgs");
+                filepath.append(Extensions::scene);
             }
             SceneSerializer serializer(m_ActiveScene);
             serializer.SerializeText(filepath);

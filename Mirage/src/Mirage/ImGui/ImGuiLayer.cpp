@@ -39,7 +39,7 @@ static bool isDark = true;
 
         //Rounding
         style->WindowRounding                       = 10.0f;
-        style->ChildRounding                        = 10.0f;
+        style->ChildRounding                        = 0.0f;
         style->FrameRounding                        = 5.0f;
         style->PopupRounding                        = 10.0f;
         style->ScrollbarRounding                    = 10.0f;

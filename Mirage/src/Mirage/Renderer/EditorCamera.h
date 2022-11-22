@@ -63,6 +63,7 @@ namespace Mirage {
         bool OnKeyPressed(KeyPressedEvent& e);
         bool OnKeyReleased(KeyReleasedEvent& e);
         bool OnMouseScroll(MouseScrollEvent& e);
+    	
 
         void Move(const Vec3& delta);
         void MouseRotate(const Vec2& delta);
@@ -104,5 +105,4 @@ namespace Mirage {
 
         friend class EditorLayer;
     };
-
 }

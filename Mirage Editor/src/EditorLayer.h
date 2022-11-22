@@ -4,10 +4,11 @@
 #include "ImGui/imgui_internal.h"
 #include "Mirage/Events/KeyEvent.h"
 #include "Panels/HierarchyPanel.h"
+#include "Panels/ContentBrowserPanel.h"
 #include "ImGuizmo/ImGuizmo.h"
 
 namespace Mirage
-{
+{	
     class EditorLayer : public Layer
     {
     public:
@@ -21,10 +22,11 @@ namespace Mirage
         virtual void OnImGuiRender() override;
         void OnEvent(Event& e) override;
 
-
     private:
+    	
         bool OnShortcutKeyPressed(KeyPressedEvent e);
         
+		bool CanPick();
         bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
         
         void CreateDockspace();
@@ -34,12 +36,14 @@ namespace Mirage
         
         void NewScene();
         void OpenScene();
+        void OpenScene(const std::filesystem::path& path);
         void SaveAs();
-        
+        	
     private:
         Ref<Framebuffer> m_Framebuffer;
         
         Ref<Scene> m_ActiveScene;
+
         OrthographicCameraController m_CameraController;
         
         bool m_ViewportFocused = false;
@@ -56,7 +60,7 @@ namespace Mirage
         ImGuizmo::OPERATION m_GizmoType = (ImGuizmo::OPERATION)-1;
         ImGuizmo::MODE m_GizmoMode = ImGuizmo::MODE::WORLD;
         
-        // Snapping
+        // ----------------------- Snapping -----------------------
         bool m_TranslationSnap = false;
         bool m_RotationSnap = false;
         bool m_ScaleSnap = false;
@@ -67,6 +71,7 @@ namespace Mirage
         
         // ----------------------- Panels -----------------------
         HierarchyPanel m_HierarchyPanel;
+        ContentBrowserPanel m_ContentBrowserPanel;
     };
 
 }

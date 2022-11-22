@@ -5,7 +5,6 @@
 #include "Mirage/ECS/Scene.h"
 #include "Mirage/ECS/SceneObject.h"
 
-
 namespace Mirage
 {
     class HierarchyPanel
@@ -17,7 +16,7 @@ namespace Mirage
         void SetContext(const Ref<Scene>& scene);
         void SetSelectedSO(SceneObject so);
 
-        void OnImguiRender();
+        void OnImGuiRender();
 
         SceneObject GetSelectedSO() const { return m_SelectionContext; }
         
