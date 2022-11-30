@@ -17,6 +17,7 @@ namespace Mirage
 		ContentBrowserPanel();
 
 		void OnImGuiRender();
+		void NavigateTo(const std::filesystem::path& path);
 
 	private:
 		void DrawHeader();
@@ -30,7 +31,6 @@ namespace Mirage
 		void UpdateBrowser();
 		std::vector<std::filesystem::path> Browse(const std::filesystem::path& path);
 		
-		void NavigateTo(const std::filesystem::path& path);
 		void NavigateBackward();
 		void NavigateForward();
 
@@ -68,7 +68,6 @@ namespace Mirage
 
 		Ref<Texture2D> m_DirectoryIcon;
 		Ref<Texture2D> m_FileIcon;
-
 		
 		friend class EditorLayer;
 	};

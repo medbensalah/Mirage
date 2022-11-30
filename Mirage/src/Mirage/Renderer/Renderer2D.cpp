@@ -140,9 +140,9 @@ namespace Mirage
         void BeginScene(const OrthographicCamera& camera)
         {
         	MRG_PROFILE_FUNCTION();
-        	
-        	s_Data.Shader->Bind();
-        	s_Data.Shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
+
+        	s_Data.CameraBuffer.ViewProjection = camera.GetViewProjectionMatrix();
+        	s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer2DData::CameraData));
         	
 			StartBatch();
         }

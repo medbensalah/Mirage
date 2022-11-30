@@ -7,6 +7,7 @@
 
 namespace Mirage
 {
+	// TODO : make mag and min filter configurable
     OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
         : m_Width(width), m_Height(height)
     {
@@ -18,13 +19,13 @@ namespace Mirage
         glTextureStorage2D(m_RendererID, 1, m_InternalFormat, m_Width, m_Height);
 
         glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
     }
 
-    OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
+    OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& path)
         : m_Path(path)
     {
         MRG_PROFILE_FUNCTION();
@@ -34,7 +35,7 @@ namespace Mirage
         stbi_set_flip_vertically_on_load(true);
         {
             MRG_PROFILE_SCOPE("stbi_load  -  OpenGLTexture2D::OpenGLTexture2D(const std::string&)");
-            data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+            data = stbi_load(path.string().c_str(), &width, &height, &channels, 0);
         }
         MRG_CORE_ASSERT(data, "Could not load image!");
 
@@ -58,7 +59,7 @@ namespace Mirage
         glTextureStorage2D(m_RendererID, 1, m_InternalFormat, m_Width, m_Height);
 
         glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);

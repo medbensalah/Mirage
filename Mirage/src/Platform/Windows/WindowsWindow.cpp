@@ -57,7 +57,7 @@ namespace Mirage
             
             int success = glfwInit();
             MRG_CORE_ASSERT(success, "GLFW initialization Failed!");
-            glfwSetErrorCallback(GLFWErrorCallback);
+            // glfwSetErrorCallback(GLFWErrorCallback);
             //s_GLFWInitialized = true;
         }
 

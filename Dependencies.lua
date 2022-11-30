@@ -20,6 +20,7 @@ LibraryDir = {}
 
 LibraryDir["VulkanSDK"] = "%{VULKAN_SDK}/Lib"
 LibraryDir["VulkanSDK_Debug"] = "%{wks.location}/Mirage/vendor/VulkanSDK/Lib"
+LibraryDir["VulkanSDK_DebugDLL"] = "%{wks.location}/Mirage/vendor/VulkanSDK/Bin"
 
 Library = {}
 Library["Vulkan"] = "%{LibraryDir.VulkanSDK}/vulkan-1.lib"

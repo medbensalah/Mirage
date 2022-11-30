@@ -8,7 +8,7 @@
 class Sandbox : public Mirage::Application
 {
 public:
-    Sandbox()
+    Sandbox(Mirage::ApplicationCommandLineArgs args)
     {
         // PushLayer(new ExampleLayer());
         PushLayer(new Sandbox2D());
@@ -19,7 +19,7 @@ public:
     }
 };
 
-Mirage::Application* Mirage::CreateApplication()
+Mirage::Application* Mirage::CreateApplication(Mirage::ApplicationCommandLineArgs args)
 {
-    return new Sandbox();
+	return new Sandbox(args);
 }

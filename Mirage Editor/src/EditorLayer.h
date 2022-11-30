@@ -22,11 +22,14 @@ namespace Mirage
         virtual void OnImGuiRender() override;
         void OnEvent(Event& e) override;
 
-    private:
-    	
+    private:    	
         bool OnShortcutKeyPressed(KeyPressedEvent e);
         
 		bool CanPick();
+    	bool IsInViewportSpace(Vec2 pos);
+    	VecI2 GetMouseViewportSpace();
+    	Vec3 GetMouseWorldSpace();
+    	int GetIDat(Vec2 MousePos);
         bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
         
         void CreateDockspace();
@@ -38,7 +41,11 @@ namespace Mirage
         void OpenScene();
         void OpenScene(const std::filesystem::path& path);
         void SaveAs();
-        	
+
+
+    	void OnScenePlay();
+    	void OnSceneStop();
+    	
     private:
         Ref<Framebuffer> m_Framebuffer;
         
@@ -72,6 +79,30 @@ namespace Mirage
         // ----------------------- Panels -----------------------
         HierarchyPanel m_HierarchyPanel;
         ContentBrowserPanel m_ContentBrowserPanel;
+
+    	// ----------------------- Icons -----------------------
+
+    	float m_IconSizeS = 20.0f;
+    	Ref<Texture2D> m_WorldSpaceIcon;
+    	Ref<Texture2D> m_LocalSpaceIcon;
+    	
+    	Ref<Texture2D> m_TranslationIcon;
+    	Ref<Texture2D> m_RotationIcon;
+    	Ref<Texture2D> m_ScaleIcon;
+    	
+    	enum class SceneState
+    	{
+    		Edit = 0, 
+			Play
+		};
+
+    	SceneState m_SceneState = SceneState::Edit;
+    	
+    	Ref<Texture2D> m_PlayButtonIcon;
+    	float m_PlayButtonIconSize = 25.0f;
+    	
+    	Ref<Texture2D> m_PauseButtonIcon;
+    	Ref<Texture2D> m_StopButtonIcon;
     };
 
 }

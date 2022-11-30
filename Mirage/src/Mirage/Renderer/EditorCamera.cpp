@@ -75,8 +75,11 @@ namespace Mirage {
 		m_InitialMousePosition = mouse;
 		if (Input::IsMouseButtonPressed(Mouse::ButtonRight))
 		{
-			MouseRotate(delta);
-			if(m_PanDelta != Vec3(0.0f))
+			if (delta != Vec2(0.0f))
+			{
+				MouseRotate(delta);
+			}
+			if (m_PanDelta != Vec3(0.0f))
 			{
 				bool isShiftClicked = Input::IsKeyPressed(Key::LeftShift) || Input::IsKeyPressed(Key::RightShift);
 				Move(m_PanDelta * deltaTime * (isShiftClicked? m_ShiftMultiplier : 1.0f));

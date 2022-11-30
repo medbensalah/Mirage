@@ -1,7 +1,8 @@
 ﻿#include "ContentBrowserPanel.h"
 
-#include "../EditorLayer.h"
-#include "../Definitions/Extensions.h"
+#include "../Definitions/FileExtensions.h"
+#include "../Definitions/DragnDropPayloads.h"
+#include "../Definitions/Icons.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
 #include "Mirage/Core/Log.h"
@@ -19,8 +20,8 @@ namespace Mirage
 		: m_CurrentDirectory(s_AssetsPath)
 	{
 		MarkUpdate();
-		m_DirectoryIcon = Texture2D::Create("Resources/Icons/ContentBrowser/DirectoryIcon.png");
-		m_FileIcon = Texture2D::Create("Resources/Icons/ContentBrowser/FileIcon.png");
+		m_DirectoryIcon = Texture2D::Create(Icons::Folder);
+		m_FileIcon = Texture2D::Create(Icons::File);
 	}
 
 	void ContentBrowserPanel::OnImGuiRender()
@@ -91,11 +92,12 @@ namespace Mirage
 
 		strcpy_s(pathBuf, 512, m_CurrentDirectory.string().c_str());
 		ImGui::PushItemWidth(-1);
-		pathBufDirty |= ImGui::InputText("##Path", pathBuf, 512);
+		pathBufDirty |= ImGui::InputText("##PathHeader", pathBuf, 512);
 		ImGui::PopItemWidth();
 		if (pathBufDirty && !ImGui::IsItemActive())
 		{
-			if (std::filesystem::exists(pathBuf))
+			std::filesystem::path newPath = pathBuf;
+			if (std::filesystem::exists(newPath))
 			{
 				pathBufDirty = false;
 				NavigateTo(pathBuf);
@@ -349,15 +351,29 @@ namespace Mirage
 	{
 		if (m_CurrentDirectory == path)
 			return;
+
 		m_BackWardNavigation.emplace(m_CurrentDirectory);
 		m_ForwardNavigation = std::stack<std::filesystem::path>();
-		m_CurrentDirectory = path;
+		if (is_directory(path))
+		{
+			m_CurrentDirectory = path;
+		}
+		else
+		{
+			std::filesystem::path dir = path.parent_path();
+			m_CurrentDirectory = dir;
+		}
 		m_SelectedPath = path;
 		MarkUpdate();
 	}
 
 	void ContentBrowserPanel::NavigateBackward()
 	{
+		if (ImGui::IsAnyItemActive())
+		{
+			ImGui::ClearActiveID();
+		}
+		
 		if (!m_BackWardNavigation.empty())
 		{
 			m_ForwardNavigation.emplace(m_CurrentDirectory);
@@ -370,6 +386,11 @@ namespace Mirage
 
 	void ContentBrowserPanel::NavigateForward()
 	{
+		if (ImGui::IsAnyItemActive())
+		{
+			ImGui::ClearActiveID();
+		}
+		
 		if (!m_ForwardNavigation.empty())
 		{
 			m_BackWardNavigation.emplace(m_CurrentDirectory);
@@ -389,6 +410,10 @@ namespace Mirage
 		if ( extension == Extensions::scene)
 		{
 			ImGui::SetDragDropPayload(Payloads::scene.c_str(), itemPath, sizeof(char) * strlen(itemPath), ImGuiCond_Once);
+		}
+		if ( extension == Extensions::texture)
+		{
+			ImGui::SetDragDropPayload(Payloads::texture.c_str(), itemPath, sizeof(char) * strlen(itemPath));
 		}
 	}
 

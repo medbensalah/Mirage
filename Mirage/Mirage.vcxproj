@@ -176,8 +176,8 @@
     <ClInclude Include="src\Mirage\Events\Event.h" />
     <ClInclude Include="src\Mirage\Events\KeyEvent.h" />
     <ClInclude Include="src\Mirage\Events\MouseEvent.h" />
+    <ClInclude Include="src\Mirage\ImGui\Extensions\ButtonExtensions.h" />
     <ClInclude Include="src\Mirage\ImGui\Extensions\DrawingAPI.h" />
-    <ClInclude Include="src\Mirage\ImGui\Extensions\GradientButtonV1.h" />
     <ClInclude Include="src\Mirage\ImGui\Extensions\Splitter.h" />
     <ClInclude Include="src\Mirage\ImGui\Extensions\ToggleButton.h" />
     <ClInclude Include="src\Mirage\ImGui\FontLibrary.h" />

@@ -4,13 +4,15 @@
 #include <ImGui/imgui.h>
 #include <glm/gtc/type_ptr.inl>
 
-#include "Definitions/Extensions.h"
+#include "Definitions/DragnDropPayloads.h"
+#include "Definitions/FileExtensions.h"
+#include "Definitions/Icons.h"
 #include "glm/ext/scalar_common.hpp"
 #include "glm/gtx/log_base.hpp"
 #include "glm/gtx/transform2.hpp"
 #include "glm/gtx/vector_angle.inl"
 #include "Mirage/ECS/Components/CameraComponent.h"
-#include "Mirage/ImGui/Extensions/GradientButtonV1.h"
+#include "Mirage/ImGui/Extensions/ButtonExtensions.h"
 #include "Mirage/ImGui/Extensions/ToggleButton.h"
 
 #include "Mirage/ECS/Components/TransformComponent.h"
@@ -55,6 +57,17 @@ namespace Mirage
         m_EditorCamera = EditorCamera(60.0f, 1.778f, 0.03f, 1000.0f);
     	
         m_HierarchyPanel.SetContext(m_ActiveScene);
+
+    	// ----------------------- initialize icons -----------------------
+    	m_PlayButtonIcon = Texture2D::Create(Icons::PlayButton);
+    	m_StopButtonIcon = Texture2D::Create(Icons::StopButton);
+
+		m_WorldSpaceIcon = Texture2D::Create(Icons::WorldSpaceIcon);
+		m_LocalSpaceIcon = Texture2D::Create(Icons::LocalSpaceIcon);
+    	
+    	m_TranslationIcon = Texture2D::Create(Icons::TranslationIcon);
+    	m_RotationIcon = Texture2D::Create(Icons::RotationIcon);
+    	m_ScaleIcon = Texture2D::Create(Icons::ScaleIcon);
     }
 
     void EditorLayer::OnDetach()
@@ -82,21 +95,29 @@ namespace Mirage
 
         // --------------------------------- Update ---------------------------------
         
-        if (m_ViewportFocused && m_ViewportHovered)
-        {
-            m_CameraController.OnUpdate(DeltaTime);
-        }
         m_EditorCamera.OnUpdate(DeltaTime);
 
         // --------------------------------- Render ---------------------------------
         
         Renderer2D::ResetStats();
         m_Framebuffer->Bind();
-        RenderCommand::SetClearColor({0.2f, 0.2f, 0.2f, 1.0f});
+        RenderCommand::SetClearColor({0.3f, 0.3f, 0.3f, 1.0f});
         RenderCommand::Clear();
         m_Framebuffer->ClearAttachment(1, -1);
 
-        m_ActiveScene->OnUpdateEditor(DeltaTime, m_EditorCamera);
+        switch (m_SceneState)
+        {
+        case SceneState::Edit:
+        	if (m_ViewportFocused)
+        	{
+        		m_CameraController.OnUpdate(DeltaTime);
+        	}
+	        m_ActiveScene->OnUpdateEditor(DeltaTime, m_EditorCamera);
+	        break;
+        case SceneState::Play:
+	        m_ActiveScene->OnUpdateRuntime(DeltaTime);
+	        break;
+        }
         
         m_Framebuffer->Unbind();
     }
@@ -201,7 +222,58 @@ namespace Mirage
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
         
     	ImGui::Begin("ViewPort");
-        auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
+
+    	// ------------------------- Viewport Header -------------------------
+    	auto& style = ImGui::GetStyle();
+    	float btnSizeX = m_PlayButtonIconSize + style.FramePadding.x * 2.0f;
+    	float btnSizeY = m_PlayButtonIconSize + style.FramePadding.y * 2.0f;
+    	float btnPosX = (ImGui::GetContentRegionAvail().x - btnSizeX) / 2.0f;
+    	float btnPosY = 2.0f;
+    	ImGui::SetCursorPos({btnPosX, btnPosY});
+    	
+    	bool playStopBtnsPressed = ImGui::GradientButton("##PlayStopButton", ImVec2{btnSizeX, btnSizeY});
+    	bool playStopBtnsHovered = ImGui::IsItemHovered();
+    	ImGui::SetItemAllowOverlap();
+    	ImGui::SetCursorPos({btnPosX + style.FramePadding.x, btnPosY + style.FramePadding.y});
+        if (m_SceneState == SceneState::Edit)
+        {
+        	ImGui::Image((ImTextureID)m_PlayButtonIcon->GetRendererID(), ImVec2{ m_PlayButtonIconSize, m_PlayButtonIconSize },
+			{0,1}, {1,0}, {0.03f, 0.7f, 0, 1}, {1,1,1,0.0f});
+        }
+    	else if (m_SceneState == SceneState::Play)
+    	{
+    		ImGui::Image((ImTextureID)m_StopButtonIcon->GetRendererID(), ImVec2{ m_PlayButtonIconSize, m_PlayButtonIconSize },
+			{0,1}, {1,0}, {0.7f, 0.03f, 0, 1}, {1,1,1,0.0f});
+    	}
+    	if (playStopBtnsHovered)
+        {
+	        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{8, 2});
+	        if (m_SceneState == SceneState::Edit)
+	        {
+		        ImGui::SetTooltip("Play");
+	        }
+	        else if (m_SceneState == SceneState::Play)
+	        {
+		        ImGui::SetTooltip("Stop");
+	        }
+	        ImGui::PopStyleVar();
+        }
+        if (playStopBtnsPressed)
+        {
+	        if (m_SceneState == SceneState::Edit)
+	        {
+		        OnScenePlay();
+	        }
+	        else if (m_SceneState == SceneState::Play)
+	        {
+		        OnSceneStop();
+	        }
+        }
+    	
+    	
+    	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2.0f);
+        auto viewportMinRegion = ImGui::GetCursorPos();
+        // auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
         auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
         auto viewportOffset = ImGui::GetWindowPos();
         m_ViewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
@@ -218,17 +290,48 @@ namespace Mirage
         // ------------------------- Scene Viewport -------------------------
         ImVec2 ViewportSize = ImGui::GetContentRegionAvail();
         m_ViewportSize = {ViewportSize.x, ViewportSize.y};
-        // uint32_t texId = m_Framebuffer->GetDepthAttachmentRendererID();
         uint32_t texId = m_Framebuffer->GetColorAttachmentRendererID();
+    	
     	ImGui::Image((void*)texId, ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
     	
     	if (ImGui::BeginDragDropTarget())
     	{
     		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(Payloads::scene.c_str()))
     		{
-    			const char* path = (const char*)payload->Data;
-    			MRG_CORE_INFO(path);
+	    		char path[512] = {};
+    			memcpy(path, payload->Data, payload->DataSize);
     			OpenScene(path);
+    		}
+    		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(Payloads::texture.c_str()))
+    		{
+	    		char path[512] = {};
+	            memcpy(path, payload->Data, payload->DataSize);
+    			
+	            Vec2 mousePos = GetMouseViewportSpace();
+	            int pixelData = GetIDat(mousePos);
+	            Ref<Texture2D> tex = Texture2D::Create(path); 
+	            if (pixelData == -1)
+	            {
+					SceneObject so = m_ActiveScene->CreateSceneObject();
+
+	            	// get world space mouse position
+	            	Vec3 mousePosWS = GetMouseWorldSpace();
+	            	so.GetComponent<TransformComponent>().SetPosition({mousePosWS.x, mousePosWS.y, 0.0f});
+	            	
+	            	so.AddComponent<SpriteRendererComponent>(Vec4{1,1,1,1}, tex);
+		            m_HierarchyPanel.SetSelectedSO(so);
+	            }
+                else
+                {
+                    SceneObject so = m_ActiveScene->GetSceneObject((entt::entity)pixelData);
+                    if (so.HasComponent<SpriteRendererComponent>())
+                    {
+	                    so.GetComponent<SpriteRendererComponent>().Texture = tex;
+                    }
+                    m_HierarchyPanel.SetSelectedSO(so, true);
+                }
+	            
+    			
     		}
     		ImGui::EndDragDropTarget();
     	}
@@ -236,7 +339,7 @@ namespace Mirage
         // ----------------------------- Toolbar -----------------------------
         ImGui::SetItemAllowOverlap();
         ImVec2 curPos(ImGui::GetWindowContentRegionMin());
-        ImGui::SetCursorPos({curPos.x + 7.0f, curPos.y + 3.0f});
+        ImGui::SetCursorPos({curPos.x + 7.0f, curPos.y + 37.0f});
         ImGui::BeginGroup();
         CreateToolBar();
         ImGui::EndGroup();	
@@ -336,12 +439,12 @@ namespace Mirage
     void EditorLayer::CreateToolBar()
     {
         ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 12.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_FramePadding,ImVec2{3, 3});
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.000f, 0.000f, 0.000f, 0.500f));
         ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.000f, 0.000f, 0.000f, 0.500f));
         // -------------------------- Space --------------------------
 #pragma region space
         const ImGuiStyle& style = ImGui::GetStyle();
-        
         ImGui::AlignTextToFramePadding();
         ImGui::Text("Space : ");
         ImGui::SameLine();
@@ -353,19 +456,24 @@ namespace Mirage
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
-            change = ImGui::Button("W", ImVec2{30.0f, 25.0f});
+            change = ImGui::ImageButton((ImTextureID)m_WorldSpaceIcon->GetRendererID(), ImVec2{m_IconSizeS, m_IconSizeS},
+            	{0,1}, {1,0},-1);
+            // change = ImGui::Button("W", ImVec2{30.0f, 25.0f});
             ImGui::PopStyleColor(3);
             ImGui::SameLine();
-            change |= ImGui::Button("L", ImVec2{30.0f, 25.0f});
+        	change |= ImGui::ImageButton((ImTextureID)m_LocalSpaceIcon->GetRendererID(), ImVec2{m_IconSizeS, m_IconSizeS},
+				{0,1}, {1,0},-1);
         }
         else
         {
-            change = ImGui::Button("W", ImVec2{30.0f, 25.0f});
+        	change = ImGui::ImageButton((ImTextureID)m_WorldSpaceIcon->GetRendererID(), ImVec2{m_IconSizeS, m_IconSizeS},
+				{0,1}, {1,0},-1);
             ImGui::SameLine();
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
-            change |= ImGui::Button("L", ImVec2{30.0f, 25.0f});
+        	change |= ImGui::ImageButton((ImTextureID)m_LocalSpaceIcon->GetRendererID(), ImVec2{m_IconSizeS, m_IconSizeS},
+				{0,1}, {1,0},-1);
             ImGui::PopStyleColor(3);
         }
         if (change)
@@ -394,18 +502,21 @@ namespace Mirage
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
-            if (ImGui::Button("T", ImVec2{30.0f, 25.0f}))
+        	if (ImGui::ImageButton((ImTextureID)m_TranslationIcon->GetRendererID(), ImVec2{m_IconSizeS, m_IconSizeS},
+				{0,1}, {1,0},-1 ))
             {
                 m_GizmoType = (ImGuizmo::OPERATION)-1;
             }
             ImGui::PopStyleColor(3);
             ImGui::SameLine();
-            if (ImGui::Button("R", ImVec2{30.0f, 25.0f}))
+        	if (ImGui::ImageButton((ImTextureID)m_RotationIcon->GetRendererID(), ImVec2{m_IconSizeS, m_IconSizeS},
+				{0,1}, {1,0},-1 ))
             {
                 m_GizmoType = ImGuizmo::OPERATION::ROTATE;
             }
             ImGui::SameLine();
-            if (ImGui::Button("S", ImVec2{30.0f, 25.0f}))
+        	if (ImGui::ImageButton((ImTextureID)m_ScaleIcon->GetRendererID(), ImVec2{m_IconSizeS, m_IconSizeS},
+				{0,1}, {1,0},-1 ))
             {
                 m_GizmoType = ImGuizmo::OPERATION::SCALE;
             }
@@ -413,7 +524,8 @@ namespace Mirage
         }
         else if (isRotating)
         {
-            if (ImGui::Button("T", ImVec2{30.0f, 25.0f}))
+        	if (ImGui::ImageButton((ImTextureID)m_TranslationIcon->GetRendererID(), ImVec2{m_IconSizeS, m_IconSizeS},
+				{0,1}, {1,0},-1 ))
             {
                 m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
             }
@@ -421,13 +533,15 @@ namespace Mirage
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
-            if (ImGui::Button("R", ImVec2{30.0f, 25.0f}))
+        	if (ImGui::ImageButton((ImTextureID)m_RotationIcon->GetRendererID(), ImVec2{m_IconSizeS, m_IconSizeS},
+				{0,1}, {1,0},-1 ))
             {
                 m_GizmoType = (ImGuizmo::OPERATION)-1;
             }
             ImGui::PopStyleColor(3);
             ImGui::SameLine();
-            if (ImGui::Button("S", ImVec2{30.0f, 25.0f}))
+        	if (ImGui::ImageButton((ImTextureID)m_ScaleIcon->GetRendererID(), ImVec2{m_IconSizeS, m_IconSizeS},
+				{0,1}, {1,0},-1 ))
             {
                 m_GizmoType = ImGuizmo::OPERATION::SCALE;
             }
@@ -435,12 +549,14 @@ namespace Mirage
         }
         else if (isScaling)
         {
-            if (ImGui::Button("T", ImVec2{30.0f, 25.0f}))
+        	if (ImGui::ImageButton((ImTextureID)m_TranslationIcon->GetRendererID(), ImVec2{m_IconSizeS, m_IconSizeS},
+				{0,1}, {1,0},-1 ))
             {
                 m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
             }
             ImGui::SameLine();
-            if (ImGui::Button("R", ImVec2{30.0f, 25.0f}))
+        	if (ImGui::ImageButton((ImTextureID)m_RotationIcon->GetRendererID(), ImVec2{m_IconSizeS, m_IconSizeS},
+				{0,1}, {1,0},-1 ))
             {
                 m_GizmoType = ImGuizmo::OPERATION::ROTATE;
             }
@@ -448,7 +564,8 @@ namespace Mirage
             ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
             ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
             ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
-            if (ImGui::Button("S", ImVec2{30.0f, 25.0f}))
+        	if (ImGui::ImageButton((ImTextureID)m_ScaleIcon->GetRendererID(), ImVec2{m_IconSizeS, m_IconSizeS},
+				{0,1}, {1,0},-1 ))
             {
                 m_GizmoType = (ImGuizmo::OPERATION)-1;
             }
@@ -456,21 +573,26 @@ namespace Mirage
         }
         else
         {
-            if (ImGui::Button("T", ImVec2{30.0f, 25.0f}))
+        	if (ImGui::ImageButton((ImTextureID)m_TranslationIcon->GetRendererID(), ImVec2{m_IconSizeS, m_IconSizeS},
+				{0,1}, {1,0},-1))
             {
                 m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
             }
             ImGui::SameLine();
-            if (ImGui::Button("R", ImVec2{30.0f, 25.0f}))
+        	if (ImGui::ImageButton((ImTextureID)m_RotationIcon->GetRendererID(), ImVec2{m_IconSizeS, m_IconSizeS},
+				{0,1}, {1,0},-1))
             {
                 m_GizmoType = ImGuizmo::OPERATION::ROTATE;
             }
             ImGui::SameLine();
-            if (ImGui::Button("S", ImVec2{30.0f, 25.0f}))
+        	if (ImGui::ImageButton((ImTextureID)m_ScaleIcon->GetRendererID(), ImVec2{m_IconSizeS, m_IconSizeS},
+				{0,1}, {1,0},-1))
             {
                 m_GizmoType = ImGuizmo::OPERATION::SCALE;
             }
         }
+
+		ImGui::PopStyleVar();
 #pragma endregion 
         // ------------------ Snapping ------------------
 #pragma region Snap
@@ -483,7 +605,7 @@ namespace Mirage
     	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
     	ImVec2 snapPopUpPos = ImGui::GetCursorPos();
     	snapPopUpPos.y += 25.0f;
-    	if (ImGui::ColoredButtonV1("Snapping", ImVec2{100.0f, 25.0f}))
+    	if (ImGui::GradientButton("Snapping", ImVec2{100.0f, 25.0f}))
     	{
     		ImGui::OpenPopup("Snapping");
     	}
@@ -547,7 +669,7 @@ namespace Mirage
         ImVec2 cameraPopUpPos = ImGui::GetCursorPos();
         cameraPopUpPos.x -= 100.0f;
         cameraPopUpPos.y += 25.0f;
-        if (ImGui::ColoredButtonV1("Camera", ImVec2{100.0f, 25.0f}))
+        if (ImGui::GradientButton("Camera", ImVec2{100.0f, 25.0f}))
         {
 	        ImGui::OpenPopup("Camera");
         }
@@ -782,26 +904,71 @@ namespace Mirage
 
 	bool EditorLayer::CanPick()
     {
-	    return ImGuizmo::IsOver() || !m_ViewportFocused || !m_ViewportHovered || ImGui::IsAnyItemHovered();
+	    if (m_HierarchyPanel.GetSelectedSO())
+	    {
+		    return !ImGuizmo::IsOver() && m_ViewportFocused && m_ViewportHovered && !ImGui::IsAnyItemHovered();
+	    }
+		return m_ViewportFocused && m_ViewportHovered && !ImGui::IsAnyItemHovered();
     }
+
+	bool EditorLayer::IsInViewportSpace(glm::fvec2 pos)
+    {
+    	auto [x, y] = ImGui::GetMousePos();
+    	x -= m_ViewportBounds[0].x;
+    	y -= m_ViewportBounds[0].y;
+    	Vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
+    	
+    	return (pos.x >= 0 && pos.x < viewportSize.x && pos.y >= 0 && pos.y < viewportSize.y);
+	}
 	
+	VecI2 EditorLayer::GetMouseViewportSpace()
+    {
+    	auto [x, y] = ImGui::GetMousePos();
+    	x -= m_ViewportBounds[0].x;
+    	y -= m_ViewportBounds[0].y;
+    	Vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
+        
+    	return  {(int)x, (int)(viewportSize.y - y)};
+	}
+
+	Vec3 EditorLayer::GetMouseWorldSpace()
+	{
+    	auto [x, y] = ImGui::GetMousePos();
+		x -= m_ViewportBounds[0].x;
+		y -= m_ViewportBounds[0].y;
+		Vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
+		//
+		// float mouseX = x;
+		// float mouseY = viewportSize.y - y;
+		float mouseX = (x / viewportSize.x) * 2.0f - 1.0f;
+		float mouseY = ((viewportSize.y - y) / viewportSize.y) * 2.0f - 1.0f;
+
+    	MRG_CORE_WARN("Mouse pos {0} {1}", mouseX, mouseY);
+
+		Vec4 rayClip = {mouseX * m_ViewportBounds[1].x, mouseY* m_ViewportBounds[1].y, -1.0f, 1.0f};
+		Vec4 rayEye = glm::inverse(m_EditorCamera.GetProjection()) * rayClip;
+		rayEye = {rayEye.x, rayEye.y, -1.0f, 0.0f};
+		Vec3 rayWorld = glm::normalize(glm::vec3(glm::inverse(m_EditorCamera.GetViewMatrix()) * rayEye));
+
+		return rayWorld;
+	}
+
+	int EditorLayer::GetIDat(Vec2 pos)
+    {
+    	return m_Framebuffer->ReadPixel(1, pos.x, pos.y);		
+	}
+
     bool EditorLayer::OnMouseButtonPressed(MouseButtonPressedEvent& e)
     {
-        if(CanPick())
+        if(!CanPick())
             return false;
         if (e.GetButton() == Mouse::ButtonLeft)
         {
-            auto [x, y] = ImGui::GetMousePos();
-            x -= m_ViewportBounds[0].x;
-            y -= m_ViewportBounds[0].y;
-            Vec2 viewportSize = m_ViewportBounds[1] - m_ViewportBounds[0];
-        
-            int mouseX = (int)x;
-            int mouseY = (int)(viewportSize.y - y);
-
-            if (mouseX >= 0 && mouseX < viewportSize.x && mouseY >= 0 && mouseY < viewportSize.y)
+        	Vec2 mousePos = GetMouseViewportSpace();
+            if (IsInViewportSpace(mousePos))
             {
-                int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
+            	int pixelData = GetIDat(mousePos);
+            	MRG_CORE_WARN("pixelData = {0}", pixelData);
                 if (pixelData == -1)
                 {
                     m_HierarchyPanel.SetSelectedSO({});
@@ -854,5 +1021,15 @@ namespace Mirage
             SceneSerializer serializer(m_ActiveScene);
             serializer.SerializeText(filepath);
         }
+    }
+
+    void EditorLayer::OnScenePlay()
+    {
+    	m_SceneState = SceneState::Play;
+    }
+	
+    void EditorLayer::OnSceneStop()
+    {
+    	m_SceneState = SceneState::Edit;
     }
 }
