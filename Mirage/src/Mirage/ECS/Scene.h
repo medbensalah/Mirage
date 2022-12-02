@@ -11,8 +11,8 @@ namespace Mirage
     class Scene
     {
     public:
-        Scene();
-        ~Scene();
+        Scene() = default;
+        ~Scene() = default;
 
         SceneObject CreateSceneObject(const std::string& name = std::string());
         SceneObject CreateChildSceneObject(entt::entity parent, const std::string& name = std::string());

@@ -10,17 +10,7 @@
 #include "Mirage/Renderer/Renderer2D.h"
 
 namespace Mirage
-{
-    Scene::Scene()
-    {
-        // m_Registry.on_construct<CameraComponent>().connect<&Function>();
-    }
-
-    Scene::~Scene()
-    {
-        m_Hierarchy.clear();
-    }
-    
+{    
     SceneObject Scene::CreateSceneObject(const std::string& name)
     {        
         SceneObject sceneObject = {m_Registry.create(), this};

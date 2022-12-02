@@ -345,94 +345,96 @@ namespace Mirage
         ImGui::EndGroup();	
         
         // ----------------------------- Gizmos ------------------------------
-        SceneObject selectedSO = m_HierarchyPanel.GetSelectedSO();
-        if (selectedSO)
+        if (m_SceneState != SceneState::Play)
         {
-            ImGuizmo::SetOrthographic(m_EditorCamera.IsOrthographic());
-            ImGuizmo::SetDrawlist();
+	        SceneObject selectedSO = m_HierarchyPanel.GetSelectedSO();
+        	if (selectedSO)
+        	{
+        		ImGuizmo::SetOrthographic(m_EditorCamera.IsOrthographic());
+        		ImGuizmo::SetDrawlist();
 
-            ImGuizmo::SetRect(m_ViewportBounds[0].x, m_ViewportBounds[0].y, m_ViewportBounds[1].x - m_ViewportBounds[0].x, m_ViewportBounds[1].y - m_ViewportBounds[0].y);
+        		ImGuizmo::SetRect(m_ViewportBounds[0].x, m_ViewportBounds[0].y, m_ViewportBounds[1].x - m_ViewportBounds[0].x, m_ViewportBounds[1].y - m_ViewportBounds[0].y);
             
-            ImGuizmo::AllowAxisFlip(false);
-            // Runitme Camera
-            /*
-            auto runtimeCamera = m_ActiveScene->GetMainCameraSO();
-            const auto& camera = runtimeCamera.GetComponent<CameraComponent>().Camera;
-            const Mat4& cameraProjection = camera.GetProjection();
-            const Mat4& cameraView = Inverse(runtimeCamera.GetComponent<TransformComponent>().GetTransform());
-            */
-            // Editor Camera
-            const Mat4 cameraProjection = m_EditorCamera.GetProjection();
-            const Mat4& cameraView = m_EditorCamera.GetViewMatrix();
+        		ImGuizmo::AllowAxisFlip(false);
+        		// Runitme Camera
+        		/*
+				auto runtimeCamera = m_ActiveScene->GetMainCameraSO();
+				const auto& camera = runtimeCamera.GetComponent<CameraComponent>().Camera;
+				const Mat4& cameraProjection = camera.GetProjection();
+				const Mat4& cameraView = Inverse(runtimeCamera.GetComponent<TransformComponent>().GetTransform());
+				*/
+        		// Editor Camera
+        		const Mat4 cameraProjection = m_EditorCamera.GetProjection();
+        		const Mat4& cameraView = m_EditorCamera.GetViewMatrix();
 
-            auto& tc = selectedSO.GetComponent<TransformComponent>();
+        		auto& tc = selectedSO.GetComponent<TransformComponent>();
 
-            Mat4 transform = tc.GetTransform();
-            Mat4 delta;
+        		Mat4 transform = tc.GetTransform();
+        		Mat4 delta;
 
-            // Snapping
+        		// Snapping
 
-            float snapValues[3];
+        		float snapValues[3];
 
-            bool snap = false;
-            if (m_GizmoType == ImGuizmo::OPERATION::TRANSLATE)
-            {
-                snap = m_TranslationSnap;
-                snapValues[0] = snapValues[1] = snapValues[2] = m_TranslationSnapValue;
-            }
-            if (m_GizmoType == ImGuizmo::OPERATION::ROTATE)
-            {
-                snap = m_RotationSnap;
-                snapValues[0] = snapValues[1] = snapValues[2] = m_RotationSnapValue;
-            }
-            if (m_GizmoType == ImGuizmo::OPERATION::SCALE)
-            {
-                snap = m_ScaleSnap;
-                snapValues[0] = snapValues[1] = snapValues[2] = m_ScaleSnapValue;
-            }
+        		bool snap = false;
+        		if (m_GizmoType == ImGuizmo::OPERATION::TRANSLATE)
+        		{
+        			snap = m_TranslationSnap;
+        			snapValues[0] = snapValues[1] = snapValues[2] = m_TranslationSnapValue;
+        		}
+        		if (m_GizmoType == ImGuizmo::OPERATION::ROTATE)
+        		{
+        			snap = m_RotationSnap;
+        			snapValues[0] = snapValues[1] = snapValues[2] = m_RotationSnapValue;
+        		}
+        		if (m_GizmoType == ImGuizmo::OPERATION::SCALE)
+        		{
+        			snap = m_ScaleSnap;
+        			snapValues[0] = snapValues[1] = snapValues[2] = m_ScaleSnapValue;
+        		}
 
-            snap |= Input::IsKeyPressed(Key::LeftControl);
+        		snap |= Input::IsKeyPressed(Key::LeftControl);
 
-            bool GizmoAction;
+        		bool GizmoAction;
 
-            if (m_GizmoType == ImGuizmo::OPERATION::SCALE)
-            {
-                GizmoAction = ImGuizmo::Manipulate(glm::value_ptr(cameraView),
-                                                   glm::value_ptr(cameraProjection),
-                                                   ImGuizmo::OPERATION::SCALE, ImGuizmo::LOCAL,
-                                                   glm::value_ptr(transform), glm::value_ptr(delta),
-                                                   snap ? snapValues : nullptr);
-            }
-            else
-            {
-                GizmoAction = ImGuizmo::Manipulate(glm::value_ptr(cameraView),
-                                                   glm::value_ptr(cameraProjection),
-                                                   m_GizmoType, m_GizmoMode,
-                                                   glm::value_ptr(transform), glm::value_ptr(delta),
-                                                   snap ? snapValues : nullptr);
-            }
-            if (GizmoAction)
-            {
-                Vec3 position, rotation, scale;
-                Math::DecomposeTransform(delta, position, rotation, scale);
-                rotation = Degrees(rotation);
+        		if (m_GizmoType == ImGuizmo::OPERATION::SCALE)
+        		{
+        			GizmoAction = ImGuizmo::Manipulate(glm::value_ptr(cameraView),
+													   glm::value_ptr(cameraProjection),
+													   ImGuizmo::OPERATION::SCALE, ImGuizmo::LOCAL,
+													   glm::value_ptr(transform), glm::value_ptr(delta),
+													   snap ? snapValues : nullptr);
+        		}
+        		else
+        		{
+        			GizmoAction = ImGuizmo::Manipulate(glm::value_ptr(cameraView),
+													   glm::value_ptr(cameraProjection),
+													   m_GizmoType, m_GizmoMode,
+													   glm::value_ptr(transform), glm::value_ptr(delta),
+													   snap ? snapValues : nullptr);
+        		}
+        		if (GizmoAction)
+        		{
+        			Vec3 position, rotation, scale;
+        			Math::DecomposeTransform(delta, position, rotation, scale);
+        			rotation = Degrees(rotation);
 
-                switch (m_GizmoType)
-                {
-                case ImGuizmo::OPERATION::TRANSLATE:
-                    tc.SetWorldPosition(tc.WorldPosition() + position);
-                    break;
-                case ImGuizmo::OPERATION::ROTATE:
-                    tc.Rotate(rotation);
-                    break;
-                case ImGuizmo::OPERATION::SCALE:
-                    Math::DecomposeTransform(transform, position, rotation, scale);
-                    tc.SetWorldScale(scale);
-                    break;
-                }
-            }
+        			switch (m_GizmoType)
+        			{
+        			case ImGuizmo::OPERATION::TRANSLATE:
+        				tc.SetWorldPosition(tc.WorldPosition() + position);
+        				break;
+        			case ImGuizmo::OPERATION::ROTATE:
+        				tc.Rotate(rotation);
+        				break;
+        			case ImGuizmo::OPERATION::SCALE:
+        				Math::DecomposeTransform(transform, position, rotation, scale);
+        				tc.SetWorldScale(scale);
+        				break;
+        			}
+        		}
+        	}
         }
-
         ImGui::End();
         ImGui::PopStyleVar(1);
     }
@@ -824,16 +826,19 @@ namespace Mirage
     
     void EditorLayer::OnEvent(Event& e)
     {
-        m_CameraController.OnEvent(e);
-        m_EditorCamera.OnEvent(e);
+	    m_CameraController.OnEvent(e);
+    	m_EditorCamera.OnEvent(e);
         
-        EventDispatcher dispatcher(e);
-        
-        // Shortcuts
-        dispatcher.Dispatch<KeyPressedEvent>(MRG_BIND_EVENT_FN(EditorLayer::OnShortcutKeyPressed));
+    	EventDispatcher dispatcher(e);
 
-        // MousePicking
-        dispatcher.Dispatch<MouseButtonPressedEvent>(MRG_BIND_EVENT_FN(EditorLayer::OnMouseButtonPressed));
+    	if (m_SceneState != SceneState::Play)
+    	{
+    		// Shortcuts
+    		dispatcher.Dispatch<KeyPressedEvent>(MRG_BIND_EVENT_FN(EditorLayer::OnShortcutKeyPressed));
+
+    		// MousePicking
+    		dispatcher.Dispatch<MouseButtonPressedEvent>(MRG_BIND_EVENT_FN(EditorLayer::OnMouseButtonPressed));
+    	}
     }
     
     bool EditorLayer::OnShortcutKeyPressed(KeyPressedEvent e)
