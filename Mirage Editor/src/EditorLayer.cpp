@@ -11,11 +11,11 @@
 #include "glm/gtx/log_base.hpp"
 #include "glm/gtx/transform2.hpp"
 #include "glm/gtx/vector_angle.inl"
-#include "Mirage/ECS/Components/CameraComponent.h"
+#include "Mirage/ECS/Components/Rendering/CameraComponent.h"
 #include "Mirage/ImGui/Extensions/ButtonExtensions.h"
 #include "Mirage/ImGui/Extensions/ToggleButton.h"
 
-#include "Mirage/ECS/Components/TransformComponent.h"
+#include "Mirage/ECS/Components/Base/TransformComponent.h"
 #include "Mirage/ImGui/Extensions/DrawingAPI.h"
 
 #include "Mirage/ECS/SceneSerializer.h"
@@ -867,8 +867,12 @@ namespace Mirage
                 return true;
                 break;
             case Key::S:
-                SaveAs();
-                return true;
+	            if (shift)
+	            {
+	                SaveAs();
+					return true;
+	            }
+            	Save();
                 break;
             default:
                 break;
@@ -987,6 +991,7 @@ namespace Mirage
 	
     void EditorLayer::NewScene()
     {
+    	m_ActiveScenePath = "";
         m_ActiveScene = CreateRef<Scene>();
         m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
         m_HierarchyPanel.SetContext(m_ActiveScene);
@@ -1014,35 +1019,56 @@ namespace Mirage
         SceneSerializer serializer(newScene);
         if (serializer.DeserializeText(path))
         {
+        	m_ActiveScenePath = path;
 	        m_ActiveScene = newScene;
 	        m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 	        m_HierarchyPanel.SetContext(m_ActiveScene);
         }
     }
 
-    void EditorLayer::SaveAs()
+    void EditorLayer::Save()
+    {    	
+		if (m_ActiveScenePath.empty())
+		{
+			SaveAs();
+		}
+		else
+		{
+			if (m_ActiveScenePath.extension() != Extensions::scene)
+			{
+				m_ActiveScenePath.append(Extensions::scene);
+			}
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.SerializeText(m_ActiveScenePath);
+		}
+    }
+
+	void EditorLayer::SaveAs()
     {    	
     	const char* filter = "Mirage scene (*.mrgs)\0*.mrgs\0";
-        std::string filepath = FileDialogs::SaveFile(filter);
-        if(!filepath.empty())
-        {
-            // check for extension
-            if (std::filesystem::path(filepath).extension() != Extensions::scene)
-            {
-                filepath.append(Extensions::scene);
-            }
-            SceneSerializer serializer(m_ActiveScene);
-            serializer.SerializeText(filepath);
-        }
+    	std::string filepath = FileDialogs::SaveFile(filter);
+    	if(!filepath.empty())
+    	{
+    		// check for extension
+    		if (std::filesystem::path(filepath).extension() != Extensions::scene)
+    		{
+    			filepath.append(Extensions::scene);
+    		}
+    		SceneSerializer serializer(m_ActiveScene);
+    		serializer.SerializeText(filepath);
+        	m_ActiveScenePath = filepath;
+    	}
     }
 
     void EditorLayer::OnScenePlay()
     {
     	m_SceneState = SceneState::Play;
+    	m_ActiveScene->OnRuntimeStart();
     }
 	
     void EditorLayer::OnSceneStop()
     {
     	m_SceneState = SceneState::Edit;
+    	m_ActiveScene->OnRuntimeStop();
     }
 }

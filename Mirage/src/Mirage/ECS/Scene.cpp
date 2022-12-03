@@ -2,15 +2,25 @@
 
 #include "Scene.h"
 #include "SceneObject.h"
-#include "Components/CameraComponent.h"
-#include "Components/NativeScriptComponent.h"
-#include "Components/TransformComponent.h"
-#include "Components/SpriteRendererComponent.h"
-#include "Components/TagComponent.h"
+#include "Components/Rendering/CameraComponent.h"
+#include "Components/Base/NativeScriptComponent.h"
+#include "Components/Base/TransformComponent.h"
+#include "Components/Rendering/SpriteRendererComponent.h"
+#include "Components/Base/TagComponent.h"
 #include "Mirage/Renderer/Renderer2D.h"
 
+#include "box2d/b2_world.h"
+
 namespace Mirage
-{    
+{
+	Scene::~Scene()
+	{
+		for (auto& entity : m_Hierarchy)
+		{
+			m_Registry.destroy(entity.first);
+		}
+	}
+
     SceneObject Scene::CreateSceneObject(const std::string& name)
     {        
         SceneObject sceneObject = {m_Registry.create(), this};
@@ -35,6 +45,21 @@ namespace Mirage
     void Scene::DestroySceneObject(SceneObject& entity)
     {
         entity.Destroy();
+    }
+
+    void Scene::OnRuntimeStart()
+    {
+		m_PhysicsWorld = new b2World(b2Vec2(0.0f, m_Gravity));
+		for (auto& [entity, component] : m_Registry.view<NativeScriptComponent>().each())
+		{
+			component.InstantiateScript();
+		}
+    }
+
+    void Scene::OnRuntimeStop()
+    {
+		delete m_PhysicsWorld;
+		m_PhysicsWorld = nullptr;
     }
 
     /*

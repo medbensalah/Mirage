@@ -4,9 +4,9 @@
 #include <yaml-cpp/yaml.h>
 
 #include "SceneObject.h"
-#include "Components/CameraComponent.h"
-#include "Components/SpriteRendererComponent.h"
-#include "Components/TransformComponent.h"
+#include "Components/Rendering/CameraComponent.h"
+#include "Components/Rendering/SpriteRendererComponent.h"
+#include "Components/Base/TransformComponent.h"
 
 namespace YAML
 {

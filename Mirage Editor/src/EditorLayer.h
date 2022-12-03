@@ -40,6 +40,7 @@ namespace Mirage
         void NewScene();
         void OpenScene();
         void OpenScene(const std::filesystem::path& path);
+        void Save();
         void SaveAs();
 
 
@@ -50,7 +51,9 @@ namespace Mirage
         Ref<Framebuffer> m_Framebuffer;
         
         Ref<Scene> m_ActiveScene;
+		std::filesystem::path m_ActiveScenePath;
 
+    	
         OrthographicCameraController m_CameraController;
         
         bool m_ViewportFocused = false;

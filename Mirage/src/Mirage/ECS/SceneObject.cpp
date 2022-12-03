@@ -1,8 +1,8 @@
 ﻿#include <MrgPch.h>
 #include "SceneObject.h"
 
-#include "Components/TagComponent.h"
-#include "Components/TransformComponent.h"
+#include "Components/Base/TagComponent.h"
+#include "Components/Base/TransformComponent.h"
 
 namespace Mirage
 {

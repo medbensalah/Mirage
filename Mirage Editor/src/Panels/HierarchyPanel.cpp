@@ -5,10 +5,10 @@
 #include "glm/gtc/type_ptr.hpp"
 
 #include "Mirage/Core/Log.h"
-#include "Mirage/ECS/Components/CameraComponent.h"
-#include "Mirage/ECS/Components/SpriteRendererComponent.h"
-#include "Mirage/ECS/Components/TagComponent.h"
-#include "Mirage/ECS/Components/TransformComponent.h"
+#include "Mirage/ECS/Components/Rendering/CameraComponent.h"
+#include "Mirage/ECS/Components/Rendering/SpriteRendererComponent.h"
+#include "Mirage/ECS/Components/Base/TagComponent.h"
+#include "Mirage/ECS/Components/Base/TransformComponent.h"
 #include "Mirage/ImGui/Extensions/DrawingAPI.h"
 #include "Mirage/ImGui/Extensions/ButtonExtensions.h"
 #include "../Definitions/DragnDropPayloads.h"
@@ -405,7 +405,6 @@ namespace Mirage
 								component.Texture = texture;
 							else
 								MRG_WARN("Could not load texture {0}", path);
-							// component.Texture = Texture2D::Create(path);
 						}
 						ImGui::EndDragDropTarget();
 					}

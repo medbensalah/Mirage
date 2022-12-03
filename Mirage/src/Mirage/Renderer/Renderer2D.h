@@ -1,6 +1,6 @@
 ﻿#pragma once
 
-#include "Mirage/ECS/Components/SpriteRendererComponent.h"
+#include "Mirage/ECS/Components/Rendering/SpriteRendererComponent.h"
 #include "Mirage/Renderer/Camera.h"
 #include "Mirage/Renderer/OrthographicCamera.h"
 

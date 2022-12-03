@@ -3,7 +3,7 @@
 #include "Scene.h"
 #include <enTT.hpp>
 
-#include "Components/TagComponent.h"
+#include "Mirage/ECS/Components/Base/TagComponent.h"
 
 namespace Mirage
 {
