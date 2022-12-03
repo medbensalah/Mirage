@@ -398,8 +398,8 @@ namespace Mirage
 					{
 						if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(Payloads::texture.c_str()))
 						{
-							const char* path = (const char*)payload->Data;
-							MRG_CORE_INFO(path);
+							char path[512] = {};
+							memcpy(path, payload->Data, payload->DataSize);
 							component.Texture = Texture2D::Create(path);
 						}
 						ImGui::EndDragDropTarget();

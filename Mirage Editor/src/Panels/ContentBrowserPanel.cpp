@@ -403,17 +403,17 @@ namespace Mirage
 
 	void ContentBrowserPanel::SetPayload()
 	{
-		const char* itemPath = m_SelectedPath.string().c_str();
+		std::string itemPath = m_SelectedPath.string();
 		
 		const std::string extension = m_SelectedPath.extension().string();
 
 		if ( extension == Extensions::scene)
 		{
-			ImGui::SetDragDropPayload(Payloads::scene.c_str(), itemPath, sizeof(char) * strlen(itemPath), ImGuiCond_Once);
+			ImGui::SetDragDropPayload(Payloads::scene.c_str(), itemPath.c_str(), sizeof(char) * itemPath.size(), ImGuiCond_Once);
 		}
 		if ( extension == Extensions::texture)
 		{
-			ImGui::SetDragDropPayload(Payloads::texture.c_str(), itemPath, sizeof(char) * strlen(itemPath));
+			ImGui::SetDragDropPayload(Payloads::texture.c_str(), itemPath.c_str(), sizeof(char) * itemPath.size());
 		}
 	}
 

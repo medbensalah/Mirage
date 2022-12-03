@@ -37,7 +37,7 @@ namespace Mirage
             MRG_PROFILE_SCOPE("stbi_load  -  OpenGLTexture2D::OpenGLTexture2D(const std::string&)");
             data = stbi_load(path.string().c_str(), &width, &height, &channels, 0);
         }
-        MRG_CORE_ASSERT(data, "Could not load image!");
+        MRG_CORE_ASSERT(data, "Could not load image at " + path.string());
 
         m_Width = width;
         m_Height = height;

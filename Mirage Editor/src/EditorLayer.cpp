@@ -791,7 +791,7 @@ namespace Mirage
 
     	if (m_ContentBrowserPanel.m_IsSceneRequested)
     	{
-    		MRG_CORE_WARN("changing scene");
+    		MRG_CORE_INFO("changing scene");
     		OpenScene(m_ContentBrowserPanel.m_RequestedScenePath);
     		m_ContentBrowserPanel.m_IsSceneRequested = false;
     	}
@@ -948,8 +948,6 @@ namespace Mirage
 		float mouseX = (x / viewportSize.x) * 2.0f - 1.0f;
 		float mouseY = ((viewportSize.y - y) / viewportSize.y) * 2.0f - 1.0f;
 
-    	MRG_CORE_WARN("Mouse pos {0} {1}", mouseX, mouseY);
-
 		Vec4 rayClip = {mouseX * m_ViewportBounds[1].x, mouseY* m_ViewportBounds[1].y, -1.0f, 1.0f};
 		Vec4 rayEye = glm::inverse(m_EditorCamera.GetProjection()) * rayClip;
 		rayEye = {rayEye.x, rayEye.y, -1.0f, 0.0f};
@@ -973,7 +971,7 @@ namespace Mirage
             if (IsInViewportSpace(mousePos))
             {
             	int pixelData = GetIDat(mousePos);
-            	MRG_CORE_WARN("pixelData = {0}", pixelData);
+
                 if (pixelData == -1)
                 {
                     m_HierarchyPanel.SetSelectedSO({});
