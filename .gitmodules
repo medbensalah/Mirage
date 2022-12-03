@@ -16,3 +16,6 @@
 [submodule "Mirage/vendor/ImGuizmo"]
 	path = Mirage/vendor/ImGuizmo
 	url = https://github.com/TheCherno/ImGuizmo
+[submodule "Mirage/vendor/Box2D"]
+	path = Mirage/vendor/Box2D
+	url = https://github.com/medbensalah/box2d.git

@@ -218,6 +218,7 @@ namespace Mirage
 
     void EditorLayer::CreateViewport()
     {
+        MRG_PROFILE_FUNCTION();
         ImGui::SetNextWindowClass(&s_ViewportWindowClass);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
         
@@ -441,6 +442,7 @@ namespace Mirage
     }
     void EditorLayer::CreateToolBar()
     {
+        MRG_PROFILE_FUNCTION();
         ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 12.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_FramePadding,ImVec2{3, 3});
         ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.000f, 0.000f, 0.000f, 0.500f));

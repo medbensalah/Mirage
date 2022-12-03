@@ -33,6 +33,7 @@ project "Mirage"
     {
         "src",
         "vendor/spdlog/include",
+        "%{IncludeDir.Box2D}",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
         "%{IncludeDir.ImGui}",
@@ -46,6 +47,7 @@ project "Mirage"
     
     links
     {
+    	"Box2D",
         "GLFW",
         "Glad",
         "ImGui",
