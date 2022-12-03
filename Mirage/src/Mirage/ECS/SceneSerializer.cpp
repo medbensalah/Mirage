@@ -263,7 +263,7 @@ namespace Mirage
         return true;
     }
     
-    void SceneSerializer::SerializeText(const std::string& filepath)
+    void SceneSerializer::SerializeText(const std::filesystem::path& filepath)
     {
         YAML::Emitter out;
 
@@ -290,18 +290,18 @@ namespace Mirage
         fout << out.c_str();
     }
 
-    bool SceneSerializer::DeserializeText(const std::string& filepath)
+    bool SceneSerializer::DeserializeText(const std::filesystem::path& filepath)
     {
-        // OLD CODE--------------------------------------------------------------
-        // std::ifstream stream(filepath);
-        // std::stringstream strStream;
-        // strStream << stream.rdbuf();
-        //
-        // YAML::Node data = YAML::Load(strStream.str());
-        // ----------------------------------------------------------------------
-
         bool result = true;
-        YAML::Node data = YAML::LoadFile(filepath);
+    	YAML::Node data;
+    	try
+    	{
+    		data = YAML::LoadFile(filepath.string());
+    	}
+    	catch (YAML::ParserException e)
+    	{
+    		return false;
+    	}
         if (!data["Scene"])
             return false;
 
@@ -327,12 +327,12 @@ namespace Mirage
         }
     }
 
-    void SceneSerializer::SerializeBinary(const std::string& filepath)
+    void SceneSerializer::SerializeBinary(const std::filesystem::path& filepath)
     {
         MRG_CORE_ASSERT(false, "Not implemented!");
     }
 
-    bool SceneSerializer::DeserializeBinary(const std::string& filepath)
+    bool SceneSerializer::DeserializeBinary(const std::filesystem::path& filepath)
     {
         MRG_CORE_ASSERT(false, "Not implemented!");
         return false;

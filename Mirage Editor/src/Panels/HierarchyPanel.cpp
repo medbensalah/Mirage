@@ -400,7 +400,12 @@ namespace Mirage
 						{
 							char path[512] = {};
 							memcpy(path, payload->Data, payload->DataSize);
-							component.Texture = Texture2D::Create(path);
+							Ref<Texture2D> texture = Texture2D::Create(path);
+							if (texture->IsLoaded())
+								component.Texture = texture;
+							else
+								MRG_WARN("Could not load texture {0}", path);
+							// component.Texture = Texture2D::Create(path);
 						}
 						ImGui::EndDragDropTarget();
 					}

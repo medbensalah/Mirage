@@ -309,29 +309,30 @@ namespace Mirage
     			
 	            Vec2 mousePos = GetMouseViewportSpace();
 	            int pixelData = GetIDat(mousePos);
-	            Ref<Texture2D> tex = Texture2D::Create(path); 
-	            if (pixelData == -1)
+	            Ref<Texture2D> tex = Texture2D::Create(path);
+	            if (tex->IsLoaded())
 	            {
-					SceneObject so = m_ActiveScene->CreateSceneObject();
+		            if (pixelData == -1)
+		            {
+		            	SceneObject so = m_ActiveScene->CreateSceneObject();
 
-	            	// get world space mouse position
-	            	Vec3 mousePosWS = GetMouseWorldSpace();
-	            	so.GetComponent<TransformComponent>().SetPosition({mousePosWS.x, mousePosWS.y, 0.0f});
+		            	// get world space mouse position
+		            	Vec3 mousePosWS = GetMouseWorldSpace();
+		            	so.GetComponent<TransformComponent>().SetPosition({mousePosWS.x, mousePosWS.y, 0.0f});
 	            	
-	            	so.AddComponent<SpriteRendererComponent>(Vec4{1,1,1,1}, tex);
-		            m_HierarchyPanel.SetSelectedSO(so);
+		            	so.AddComponent<SpriteRendererComponent>(Vec4{1,1,1,1}, tex);
+		            	m_HierarchyPanel.SetSelectedSO(so);
+		            }
+		            else
+		            {
+		            	SceneObject so = m_ActiveScene->GetSceneObject((entt::entity)pixelData);
+		            	if (so.HasComponent<SpriteRendererComponent>())
+		            	{
+		            		so.GetComponent<SpriteRendererComponent>().Texture = tex;
+		            	}
+		            	m_HierarchyPanel.SetSelectedSO(so, true);
+		            }
 	            }
-                else
-                {
-                    SceneObject so = m_ActiveScene->GetSceneObject((entt::entity)pixelData);
-                    if (so.HasComponent<SpriteRendererComponent>())
-                    {
-	                    so.GetComponent<SpriteRendererComponent>().Texture = tex;
-                    }
-                    m_HierarchyPanel.SetSelectedSO(so, true);
-                }
-	            
-    			
     		}
     		ImGui::EndDragDropTarget();
     	}
@@ -1002,12 +1003,19 @@ namespace Mirage
 
     void EditorLayer::OpenScene(const std::filesystem::path& path)
     {
-    	m_ActiveScene = CreateRef<Scene>();
-    	m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-    	m_HierarchyPanel.SetContext(m_ActiveScene);
-                        
-    	SceneSerializer serializer(m_ActiveScene);
-    	serializer.DeserializeText(path.string());
+    	if (path.extension().string() != Extensions::scene)
+    	{
+    		MRG_WARN("Could not load {0} - not a scene file", path.filename().string());
+    		return;
+    	}
+    	Ref<Scene> newScene = CreateRef<Scene>();
+        SceneSerializer serializer(newScene);
+        if (serializer.DeserializeText(path))
+        {
+	        m_ActiveScene = newScene;
+	        m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+	        m_HierarchyPanel.SetContext(m_ActiveScene);
+        }
     }
 
     void EditorLayer::SaveAs()
