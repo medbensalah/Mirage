@@ -7,12 +7,36 @@
 #include "Components/Base/TransformComponent.h"
 #include "Components/Rendering/SpriteRendererComponent.h"
 #include "Components/Base/TagComponent.h"
+#include "Components/Physics/RigidBody2DComponent.h"
 #include "Mirage/Renderer/Renderer2D.h"
 
 #include "box2d/b2_world.h"
+#include "box2d/b2_body.h"
+#include "box2d/b2_fixture.h"
+#include "box2d/b2_polygon_shape.h"
+#include "Components/Physics/BoxCollider2DComponent.h"
+#include "Mirage/Physics/Globals.h"
 
 namespace Mirage
 {
+	static b2BodyType MrgToB2DBodyType(RigidBody2DComponent::BodyType type)
+	{
+		switch (type)
+		{
+		case RigidBody2DComponent::BodyType::Static: return b2_staticBody;
+		case RigidBody2DComponent::BodyType::Kinematic: return b2_kinematicBody;
+		case RigidBody2DComponent::BodyType::Dynamic: return b2_dynamicBody;
+		}
+
+		MRG_CORE_ASSERT(false, "Unknown body type!!!");
+		return b2_staticBody;
+	}
+	
+	Scene::Scene()
+	{
+		
+	}
+	
 	Scene::~Scene()
 	{
 		for (auto& entity : m_Hierarchy)
@@ -49,10 +73,44 @@ namespace Mirage
 
     void Scene::OnRuntimeStart()
     {
-		m_PhysicsWorld = new b2World(b2Vec2(0.0f, m_Gravity));
-		for (auto& [entity, component] : m_Registry.view<NativeScriptComponent>().each())
+		m_PhysicsWorld = new b2World(b2Vec2(0.0f, Physics2D::Gravity));
+		
+		auto view = m_Registry.view<RigidBody2DComponent>();
+		for (auto e : view)
 		{
-			component.InstantiateScript();
+			SceneObject so = {e, this};
+			auto& transform = so.GetComponent<TransformComponent>();
+			auto& rb = so.GetComponent<RigidBody2DComponent>();
+
+			b2BodyDef bodyDef;
+			bodyDef.position.Set(transform.Position().x, transform.Position().y);
+			bodyDef.angle = transform.Rotation().z;
+			
+			bodyDef.type = MrgToB2DBodyType(rb.Type);
+			bodyDef.gravityScale = rb.GravityScale;
+			bodyDef.fixedRotation = rb.FixedRotation;
+			
+			b2Body* body = m_PhysicsWorld->CreateBody(&bodyDef);
+			rb.RuntimeBody = body;
+
+			// TODO : add istrigger (issensro)
+			
+			if (so.HasComponent<BoxCollder2DComponent>())
+			{
+				auto& collider = so.GetComponent<BoxCollder2DComponent>();
+
+				b2PolygonShape shape;
+				shape.SetAsBox(collider.Size.x * transform.Scale().x, collider.Size.y * transform.Scale().y);
+
+				b2FixtureDef fixtureDef;
+				fixtureDef.shape = &shape;
+				fixtureDef.density = collider.Density;
+				fixtureDef.friction = collider.Friction;
+				fixtureDef.restitution = collider.Bounciness;
+				fixtureDef.restitutionThreshold = collider.BouncinessThreshold;
+				
+				body->CreateFixture(&fixtureDef);
+			}
 		}
     }
 
@@ -69,7 +127,7 @@ namespace Mirage
     
     void Scene::OnUpdateRuntime(float DeltaTime)
     {
-        //Update scripts
+        // ---------------- Update scripts ----------------
         {
             m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
             {
@@ -85,7 +143,32 @@ namespace Mirage
             });
         }
 
-        //Render 2D
+		// -------------------- Physics --------------------
+		{
+			if (Physics2D::UpdateEveryFrame)
+			{
+				m_PhysicsWorld->Step(DeltaTime, Physics2D::VelocityIterations, Physics2D::PositionIterations);
+			}
+			else
+			{
+				m_PhysicsWorld->Step(Physics2D::TimeStep, Physics2D::VelocityIterations, Physics2D::PositionIterations);
+			}
+
+        	// update transform component from physics
+        	auto view = m_Registry.view<RigidBody2DComponent>();
+        	for (auto e : view)
+			{
+				SceneObject so = {e, this};
+				auto& transform = so.GetComponent<TransformComponent>();
+				auto& rb = so.GetComponent<RigidBody2DComponent>();
+
+				if (rb.Type == RigidBody2DComponent::BodyType::Static) continue;
+        		const auto& position = rb.RuntimeBody->GetPosition();
+				transform.SetPosition({position.x, position.y, transform.Position().z});
+				transform.SetRotation({transform.Rotation().x, transform.Rotation().y, Radians(rb.RuntimeBody->GetAngle())});
+			}
+		}	
+        // -------------------- Render2D --------------------
         Camera* mainCamera = nullptr;
         Mat4 cameraTransform;
         {

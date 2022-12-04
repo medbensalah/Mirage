@@ -12,6 +12,8 @@
 #include "Mirage/ImGui/Extensions/DrawingAPI.h"
 #include "Mirage/ImGui/Extensions/ButtonExtensions.h"
 #include "../Definitions/DragnDropPayloads.h"
+#include "Mirage/ECS/Components/Physics/BoxCollider2DComponent.h"
+#include "Mirage/ECS/Components/Physics/RigidBody2DComponent.h"
 
 namespace Mirage
 {
@@ -215,22 +217,41 @@ namespace Mirage
             {
                 ImGui::OpenPopup("AddComponent");
             }
-            
-            if(ImGui::BeginPopup("AddComponent"))
+
+            if (ImGui::BeginPopup("AddComponent"))
             {
-                if(ImGui::MenuItem("Camera"))
-                {
-                    if(!m_SelectionContext.HasComponent<CameraComponent>())
-                        m_SelectionContext.AddComponent<CameraComponent>();
-                    ImGui::CloseCurrentPopup();
+	            if (!m_SelectionContext.HasComponent<CameraComponent>())
+	            {
+		            if (ImGui::MenuItem("Camera"))
+		            {
+			            m_SelectionContext.AddComponent<CameraComponent>();
+			            ImGui::CloseCurrentPopup();
+		            }
                 }
-                if(ImGui::MenuItem("Sprite Renderer"))
+                if(!m_SelectionContext.HasComponent<SpriteRendererComponent>())
                 {
-                    if(!m_SelectionContext.HasComponent<SpriteRendererComponent>())
-                        m_SelectionContext.AddComponent<SpriteRendererComponent>();
-                    ImGui::CloseCurrentPopup();
+	                if(ImGui::MenuItem("Sprite Renderer"))
+	                {
+	                	m_SelectionContext.AddComponent<SpriteRendererComponent>();
+	                	ImGui::CloseCurrentPopup();
+	                }
                 }
-                
+                if(!m_SelectionContext.HasComponent<RigidBody2DComponent>())
+                {
+	                if(ImGui::MenuItem("Rigid body 2D"))
+	                {
+	                	m_SelectionContext.AddComponent<RigidBody2DComponent>();
+	                	ImGui::CloseCurrentPopup();
+	                }
+                }
+                if(!m_SelectionContext.HasComponent<BoxCollder2DComponent>())
+                {
+	                if(ImGui::MenuItem("Box collider 2D"))
+	                {
+	                	m_SelectionContext.AddComponent<BoxCollder2DComponent>();
+	                	ImGui::CloseCurrentPopup();
+	                }
+                }
                 ImGui::EndPopup();
             }
 

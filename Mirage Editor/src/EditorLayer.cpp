@@ -98,7 +98,7 @@ namespace Mirage
         m_EditorCamera.OnUpdate(DeltaTime);
 
         // --------------------------------- Render ---------------------------------
-        
+    	
         Renderer2D::ResetStats();
         m_Framebuffer->Bind();
         RenderCommand::SetClearColor({0.3f, 0.3f, 0.3f, 1.0f});

@@ -1,19 +1,24 @@
 ﻿#pragma once
 
+class b2Body;
+
 struct RigidBody2DComponent
 {
 	RigidBody2DComponent() = default;
 	RigidBody2DComponent(const RigidBody2DComponent&) = default;
 	
-	enum class SimulationType
+	enum class BodyType
 	{
 		Static	  = 0,
-		Kinematic = 2,
-		Dynamic   = 1
+		Kinematic = 1,
+		Dynamic   = 2
 	};
 
-	SimulationType Type = SimulationType::Static;
+	BodyType Type = BodyType::Static;
 	
+
+	float GravityScale = 1.0f;
 	bool FixedRotation = false;
-	void* RuntimeBody = nullptr;
+	
+	b2Body* RuntimeBody = nullptr;
 };

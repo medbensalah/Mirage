@@ -13,7 +13,7 @@ namespace Mirage
     class Scene
     {
     public:
-        Scene() = default;
+        Scene();
         ~Scene();
 
         SceneObject CreateSceneObject(const std::string& name = std::string());
@@ -29,9 +29,6 @@ namespace Mirage
 
         SceneObject GetMainCameraSO();
         SceneObject GetSceneObject(entt::entity entity);
-
-		float GetGravity() const { return m_Gravity; }
-    	void SetGravity(float gravity) { m_Gravity = gravity; }
     	
     private:
         template <typename T>
@@ -42,9 +39,6 @@ namespace Mirage
         uint32_t m_ViewportWidth = 0; uint32_t m_ViewportHeight = 0;
 
 		b2World* m_PhysicsWorld = nullptr;
-
-		float m_Gravity = -9.78f;
-
     	
         std::unordered_map<entt::entity, Relationship> m_Hierarchy;
         

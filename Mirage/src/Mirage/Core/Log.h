@@ -6,6 +6,8 @@
 #include "glm/gtx/string_cast.hpp"
 
 #pragma warning(push, 0)
+
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
 #pragma warning(pop)
@@ -45,15 +47,25 @@ inline OStream& operator<<(OStream& os, glm::qua<T, Q> quaternion)
 }
 
 /* Core Log */
-#define MRG_CORE_TRACE(...)		::Mirage::Log::GetCoreLogger()->trace(__VA_ARGS__)
-#define MRG_CORE_INFO(...)		::Mirage::Log::GetCoreLogger()->info(__VA_ARGS__)
-#define MRG_CORE_ERROR(...)		::Mirage::Log::GetCoreLogger()->error(__VA_ARGS__)
-#define MRG_CORE_WARN(...)		::Mirage::Log::GetCoreLogger()->warn(__VA_ARGS__)
-#define MRG_CORE_CRITICAL(...)	::Mirage::Log::GetCoreLogger()->critical(__VA_ARGS__)
+#define MRG_CORE_TRACE(...)		 	SPDLOG_LOGGER_TRACE(::Mirage::Log::GetCoreLogger(),__VA_ARGS__)
+#define MRG_CORE_INFO(...)		 	SPDLOG_LOGGER_INFO(::Mirage::Log::GetCoreLogger(),__VA_ARGS__)
+#define MRG_CORE_ERROR(...)		 	SPDLOG_LOGGER_ERROR(::Mirage::Log::GetCoreLogger(),__VA_ARGS__)
+#define MRG_CORE_WARN(...)		 	SPDLOG_LOGGER_WARN(::Mirage::Log::GetCoreLogger(),__VA_ARGS__)
+#define MRG_CORE_CRITICAL(...)	 	SPDLOG_LOGGER_CRITICAL(::Mirage::Log::GetCoreLogger(),__VA_ARGS__)
+// #define MRG_CORE_TRACE(...)		::Mirage::Log::GetCoreLogger()->trace(__VA_ARGS__)
+// #define MRG_CORE_INFO(...)		::Mirage::Log::GetCoreLogger()->info(__VA_ARGS__)
+// #define MRG_CORE_ERROR(...)		::Mirage::Log::GetCoreLogger()->error(__VA_ARGS__)
+// #define MRG_CORE_WARN(...)		::Mirage::Log::GetCoreLogger()->warn(__VA_ARGS__)
+// #define MRG_CORE_CRITICAL(...)	::Mirage::Log::GetCoreLogger()->critical(__VA_ARGS__)
 
 /* Client Log */
-#define MRG_TRACE(...)			::Mirage::Log::GetClientLogger()->trace(__VA_ARGS__)
-#define MRG_INFO(...)			::Mirage::Log::GetClientLogger()->info(__VA_ARGS__)
-#define MRG_ERROR(...)			::Mirage::Log::GetClientLogger()->error(__VA_ARGS__)
-#define MRG_WARN(...)			::Mirage::Log::GetClientLogger()->warn(__VA_ARGS__)
-#define MRG_CRITICAL(...)	    ::Mirage::Log::GetClientLogger()->critical(__VA_ARGS__)
+#define MRG_TRACE(...)		 	SPDLOG_LOGGER_TRACE(::Mirage::Log::GetClientLogger(),__VA_ARGS__)
+#define MRG_INFO(...)		 	SPDLOG_LOGGER_INFO(::Mirage::Log::GetClientLogger(),__VA_ARGS__)
+#define MRG_ERROR(...)		 	SPDLOG_LOGGER_ERROR(::Mirage::Log::GetClientLogger(),__VA_ARGS__)
+#define MRG_WARN(...)		 	SPDLOG_LOGGER_WARN(::Mirage::Log::GetClientLogger(),__VA_ARGS__)
+#define MRG_CRITICAL(...)	 	SPDLOG_LOGGER_CRITICAL(::Mirage::Log::GetClientLogger(),__VA_ARGS__)
+// #define MRG_TRACE(...)			::Mirage::Log::GetClientLogger()->trace(__VA_ARGS__)
+// #define MRG_INFO(...)			::Mirage::Log::GetClientLogger()->info(__VA_ARGS__)
+// #define MRG_ERROR(...)			::Mirage::Log::GetClientLogger()->error(__VA_ARGS__)
+// #define MRG_WARN(...)			::Mirage::Log::GetClientLogger()->warn(__VA_ARGS__)
+// #define MRG_CRITICAL(...)	    ::Mirage::Log::GetClientLogger()->critical(__VA_ARGS__)

@@ -19,6 +19,15 @@
     <Filter Include="src\Mirage\ECS\Components">
       <UniqueIdentifier>{D09341A1-3C56-752B-8506-04B8F1074E09}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Mirage\ECS\Components\Base">
+      <UniqueIdentifier>{5AD2DE60-46F8-A8C7-2F3E-2E931B03CE93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Mirage\ECS\Components\Physics">
+      <UniqueIdentifier>{4267F0D5-AED5-4555-F7BE-0055636C3BF1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Mirage\ECS\Components\Rendering">
+      <UniqueIdentifier>{1D61DCC5-891A-4770-127A-614A7E32FDDF}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Mirage\Events">
       <UniqueIdentifier>{95C761A2-01DE-5F38-4A55-EB59B6AA30C0}</UniqueIdentifier>
     </Filter>
@@ -120,20 +129,26 @@
     <ClInclude Include="src\Mirage\Debug\Instrumentor.h">
       <Filter>src\Mirage\Debug</Filter>
     </ClInclude>
-    <ClInclude Include="src\Mirage\ECS\Components\CameraComponent.h">
-      <Filter>src\Mirage\ECS\Components</Filter>
+    <ClInclude Include="src\Mirage\ECS\Components\Base\NativeScriptComponent.h">
+      <Filter>src\Mirage\ECS\Components\Base</Filter>
     </ClInclude>
-    <ClInclude Include="src\Mirage\ECS\Components\NativeScriptComponent.h">
-      <Filter>src\Mirage\ECS\Components</Filter>
+    <ClInclude Include="src\Mirage\ECS\Components\Base\TagComponent.h">
+      <Filter>src\Mirage\ECS\Components\Base</Filter>
     </ClInclude>
-    <ClInclude Include="src\Mirage\ECS\Components\SpriteRendererComponent.h">
-      <Filter>src\Mirage\ECS\Components</Filter>
+    <ClInclude Include="src\Mirage\ECS\Components\Base\TransformComponent.h">
+      <Filter>src\Mirage\ECS\Components\Base</Filter>
     </ClInclude>
-    <ClInclude Include="src\Mirage\ECS\Components\TagComponent.h">
-      <Filter>src\Mirage\ECS\Components</Filter>
+    <ClInclude Include="src\Mirage\ECS\Components\Physics\BoxCollider2DComponent.h">
+      <Filter>src\Mirage\ECS\Components\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Mirage\ECS\Components\TransformComponent.h">
-      <Filter>src\Mirage\ECS\Components</Filter>
+    <ClInclude Include="src\Mirage\ECS\Components\Physics\RigidBody2DComponent.h">
+      <Filter>src\Mirage\ECS\Components\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\Components\Rendering\CameraComponent.h">
+      <Filter>src\Mirage\ECS\Components\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\Components\Rendering\SpriteRendererComponent.h">
+      <Filter>src\Mirage\ECS\Components\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\ECS\Scene.h">
       <Filter>src\Mirage\ECS</Filter>
@@ -1535,8 +1550,8 @@
     <ClCompile Include="src\Mirage\Core\Window.cpp">
       <Filter>src\Mirage\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Mirage\ECS\Components\TransformComponent.cpp">
-      <Filter>src\Mirage\ECS\Components</Filter>
+    <ClCompile Include="src\Mirage\ECS\Components\Base\TransformComponent.cpp">
+      <Filter>src\Mirage\ECS\Components\Base</Filter>
     </ClCompile>
     <ClCompile Include="src\Mirage\ECS\Scene.cpp">
       <Filter>src\Mirage\ECS</Filter>
