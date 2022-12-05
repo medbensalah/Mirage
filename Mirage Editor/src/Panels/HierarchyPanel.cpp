@@ -306,13 +306,12 @@ namespace Mirage
 				auto& camera = component.Camera;
 
 				const char* projectionTypeStrings[] = {"Perspective", "Orthographic"};
-				const char* projectionTypeString = projectionTypeStrings[camera.
-					GetProjectionType()];
+				const char* projectionTypeString = projectionTypeStrings[camera.GetProjectionType()];
 				int out = (int)camera.GetProjectionType();
 
 				if (DrawSplitUIItem("Projection", [&]()-> bool
 				{
-					return DrawComboBox("Projection", projectionTypeStrings, 2,projectionTypeString, &out);
+					return DrawComboBox("##Projection", projectionTypeStrings, 2,projectionTypeString, &out);
 				}, typeid(CameraComponent).name()))
 				{
 					camera.SetProjectionType(out);
@@ -438,6 +437,63 @@ namespace Mirage
 				{
 					return ImGui::DragFloat2("##Offset", glm::value_ptr(component.Offset), 0.01f, 0.0f, 0.0f, "%.4g");
 				}, typeid(SpriteRendererComponent).name());
+			}
+        );
+    	
+        DrawComponent<RigidBody2DComponent>("Rigidbody 2D", so, [&so](auto& component)
+			{
+				const char* bodyTypeStrings[] = {"Static", "Kinematic", "Dynamic"};
+				const char* bodyTypeString = bodyTypeStrings[(int)component.Type];
+				int out = (int)component.Type;
+
+				if (DrawSplitUIItem("Body type", [&]()-> bool
+				{
+					return DrawComboBox("##BodyType", bodyTypeStrings, 3,bodyTypeString, &out);
+				}, typeid(RigidBody2DComponent).name()))
+				{
+					component.Type = (RigidBody2DComponent::BodyType)out;
+				}
+        	        		
+				DrawSplitUIItem("Gravity scale", [&component]()-> bool
+				{
+					return ImGui::DragFloat("##GravityScale", &component.GravityScale, 0.1f, 0.0f, 10000.0f, "%.3g");
+		        }, typeid(RigidBody2DComponent).name());
+        	
+				DrawSplitUIItem("Fixed rotation Z", [&component]()-> bool
+				{
+					return ImGui::Checkbox("##FixedRotationZ", &component.FixedRotation);
+				}, typeid(RigidBody2DComponent).name());
+			}
+        );
+    	
+        DrawComponent<BoxCollder2DComponent>("BoxCollider 2D", so, [&so](auto& component)
+			{
+				DrawSplitUIItem("Offset", [&component]()-> bool
+				{
+					return ImGui::DragFloat2("##Offset", glm::value_ptr(component.Offset), 0.1f, 0, 0, "%.4g");
+		        }, typeid(RigidBody2DComponent).name());
+        	
+				DrawSplitUIItem("Size", [&component]()-> bool
+				{
+					return ImGui::DragFloat2("##Size", glm::value_ptr(component.Size), 0.05f, 0, 0, "%.4g");
+		        }, typeid(RigidBody2DComponent).name());
+        	
+				DrawSplitUIItem("Density", [&component]()-> bool
+				{
+					return ImGui::DragFloat("##Density", &component.Density, 0.05f, 0, 0, "%.4g");
+		        }, typeid(RigidBody2DComponent).name());
+				DrawSplitUIItem("Friction", [&component]()-> bool
+				{
+					return ImGui::DragFloat("##Friction", &component.Friction, 0.05f, 0.0f, 1.0f, "%.4g");
+		        }, typeid(RigidBody2DComponent).name());
+				DrawSplitUIItem("Bounciness", [&component]()-> bool
+				{
+					return ImGui::DragFloat("##Bounciness", &component.Bounciness, 0.05f, 0.0f, 1.0f, "%.4g");
+		        }, typeid(RigidBody2DComponent).name());
+				DrawSplitUIItem("BouncinessThreshold", [&component]()-> bool
+				{
+					return ImGui::DragFloat("##BouncinessThreshold", &component.BouncinessThreshold, 0.05f, 0.0f, 1.0f, "%.4g");
+		        }, typeid(RigidBody2DComponent).name());
 			}
         );
     }

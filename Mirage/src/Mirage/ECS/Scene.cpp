@@ -100,7 +100,8 @@ namespace Mirage
 				auto& collider = so.GetComponent<BoxCollder2DComponent>();
 
 				b2PolygonShape shape;
-				shape.SetAsBox(collider.Size.x * transform.Scale().x, collider.Size.y * transform.Scale().y);
+				shape.SetAsBox(collider.Size.x * transform.Scale().x, collider.Size.y * transform.Scale().y,
+				               {collider.Offset.x, collider.Offset.y}, transform.Rotation().z);
 
 				b2FixtureDef fixtureDef;
 				fixtureDef.shape = &shape;
@@ -165,43 +166,49 @@ namespace Mirage
 				if (rb.Type == RigidBody2DComponent::BodyType::Static) continue;
         		const auto& position = rb.RuntimeBody->GetPosition();
 				transform.SetPosition({position.x, position.y, transform.Position().z});
-				transform.SetRotation({transform.Rotation().x, transform.Rotation().y, Radians(rb.RuntimeBody->GetAngle())});
+				transform.SetRotation({
+					transform.Rotation().x, transform.Rotation().y, Radians(rb.RuntimeBody->GetAngle())
+				});
 			}
-		}	
-        // -------------------- Render2D --------------------
-        Camera* mainCamera = nullptr;
-        Mat4 cameraTransform;
-        {
-            auto group = m_Registry.group(entt::get<TransformComponent, CameraComponent>);
-            for(auto entity : group)
-            {
-                auto [transform, cam] = group.get<TransformComponent, CameraComponent>(entity);
-                
-                if (cam.IsMain)
-                {
-                    mainCamera = &(cam.Camera);
-                    cameraTransform = transform.GetTransform();
-                    break;
-                }
-            }
-        }        
-        if(mainCamera)
-        {
-            Renderer2D::BeginScene(*mainCamera, cameraTransform);
-            auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-        
-            for (auto entity : group)
-            {
-                auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-                Renderer2D::Draw::Sprite(transform.GetTransform(), sprite, (int)entity);
-                
-                // Renderer2D::Draw::Quad(transform.GetTransform(), sprite.Color);
-            }
+		}
 
-            Renderer2D::EndScene();
-        }
+        // -------------------- Render2D --------------------
+        RenderRuntime(DeltaTime);
     }
-    
+
+    void Scene::RenderRuntime(float DeltaTime)
+    {
+	    Camera* mainCamera = nullptr;
+	    Mat4 cameraTransform;
+	    {
+		    auto group = m_Registry.group(entt::get<TransformComponent, CameraComponent>);
+		    for (auto entity : group)
+		    {
+			    auto [transform, cam] = group.get<TransformComponent, CameraComponent>(entity);
+
+			    if (cam.IsMain)
+			    {
+				    mainCamera = &(cam.Camera);
+				    cameraTransform = transform.GetTransform();
+				    break;
+			    }
+		    }
+	    }
+	    if (mainCamera)
+	    {
+		    Renderer2D::BeginScene(*mainCamera, cameraTransform);
+		    auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+
+		    for (auto entity : group)
+		    {
+			    auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+			    Renderer2D::Draw::Sprite(transform.GetTransform(), sprite, (int)entity);
+		    }
+
+		    Renderer2D::EndScene();
+	    }
+    }
+
     void Scene::OnUpdateEditor(float DeltaTime, EditorCamera& camera)
     {
         Renderer2D::BeginScene(camera);
@@ -277,9 +284,16 @@ namespace Mirage
     }
     
     template <>
+    void Scene::OnComponentAdded(SceneObject& entity, RigidBody2DComponent& component)
+    {
+    }
+    template <>
+    void Scene::OnComponentAdded(SceneObject& entity, BoxCollder2DComponent& component)
+    {
+    }
+    template <>
     void Scene::OnComponentAdded(SceneObject& entity, NativeScriptComponent& component)
     {
     }
     // TODO: add & not focused to selection
-    // TODO call Time.deltatime directly
 }

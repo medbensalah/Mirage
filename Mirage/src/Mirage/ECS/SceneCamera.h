@@ -31,6 +31,8 @@ namespace Mirage
         
         ProjectionType GetProjectionType() const { return m_ProjectionType; }
         void SetProjectionType(int type) { m_ProjectionType = (ProjectionType)type; RecalculateProjection(); }
+
+    	float GetAsectRatio() { return m_AspectRatio; }
         
     private:
         void RecalculateProjection();

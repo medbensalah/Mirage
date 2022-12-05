@@ -49,7 +49,10 @@ namespace Mirage
     	
     private:
         Ref<Framebuffer> m_Framebuffer;
-        
+        Ref<Framebuffer> m_PreviewFramebuffer;
+
+		bool m_ShowCameraPreview = false;
+    	
         Ref<Scene> m_ActiveScene;
 		std::filesystem::path m_ActiveScenePath;
 
@@ -64,6 +67,7 @@ namespace Mirage
         Ref<Texture2D> m_texture;
 
         Vec2 m_ViewportSize = {0.0f, 0.0f};
+    	Vec2 m_PreviewSize = {420.0f, 236.0f};
         Vec2 m_ViewportBounds[2];
         
         // ----------------------- Gizmos -----------------------

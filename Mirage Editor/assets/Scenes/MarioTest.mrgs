@@ -2,10 +2,37 @@ Scene: Untitled
 Entities:
   - Entity: 0
     TagComponent:
-      Tag: Entity
+      Tag: Ground
     TransformComponent:
-      Position: [0, 0, 0]
+      Position: [0, 0.693517625, 0]
+      Rotation: [0, 0, 0]
+      Scale: [7.84498978, 1, 1]
+    SpriteRendererComponent:
+      Color: [1, 0.761492848, 0.48887378, 1]
+  - Entity: 1
+    TagComponent:
+      Tag: Camera
+    TransformComponent:
+      Position: [0, 5, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
+    CameraComponent:
+      Camera:
+        ProjectionType: 1
+        PerspectiveFOV: 1.39626336
+        PerspectiveNear: 0.00999999978
+        PerspectiveFar: 1000
+        OrthographicSize: 10
+        OrthographicNear: -1
+        OrthographicFar: 1
+      Primary: true
+      FixedAspectRatio: false
+  - Entity: 2
+    TagComponent:
+      Tag: new SceneObject
+    TransformComponent:
+      Position: [0.770207703, 9.7258625, 0]
+      Rotation: [0, 0, 45]
+      Scale: [1, 1, 1]
     SpriteRendererComponent:
-      Color: [1, 0.999979734, 0.999899983, 1]
+      Color: [0.576595426, 0.859924972, 0.23602286, 1]

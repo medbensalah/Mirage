@@ -70,7 +70,7 @@ bool Mirage::DrawComboBox(const char* label, const char* strings[], int count, c
     bool result = false;
     if (ImGui::BeginCombo(label, preview))
     {
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < count; i++)
         {
             bool isSelected = preview == strings[i];
 
@@ -78,7 +78,6 @@ bool Mirage::DrawComboBox(const char* label, const char* strings[], int count, c
             {
                 preview = strings[i];
                 *out = i;
-                // fn();
                 result = true;
             }
 

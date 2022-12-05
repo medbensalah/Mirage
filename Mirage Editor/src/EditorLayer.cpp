@@ -43,6 +43,12 @@ namespace Mirage
         fbSpecs.Width = 1280;
         fbSpecs.Height = 720;
         m_Framebuffer = Framebuffer::Create(fbSpecs);
+    	
+    	FramebufferSpecs previewFbSpecs;
+    	previewFbSpecs.Attachments= {FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth};
+    	previewFbSpecs.Width = m_PreviewSize.x;
+    	previewFbSpecs.Height = m_PreviewSize.y;
+        m_PreviewFramebuffer = Framebuffer::Create(previewFbSpecs);
 
         m_ActiveScene = CreateRef<Scene>();
     	
@@ -93,6 +99,18 @@ namespace Mirage
             m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
         }
 
+    	/*
+        if (m_ShowCameraPreview)
+        {
+	        if (FramebufferSpecs spec = m_PreviewFramebuffer->GetSpecs();
+			   m_PreviewSize.x > 0.0f && m_PreviewSize.y > 0.0f && // zero sized framebuffer is invalid
+			   (spec.Width != m_PreviewSize.x || spec.Height != m_PreviewSize.y))
+	        {
+	        	m_PreviewFramebuffer->Resize((uint32_t)m_PreviewSize.x, (uint32_t)m_PreviewSize.y);
+	        	MRG_CORE_WARN("preview resized to {0} {1}", m_PreviewSize.x, m_PreviewSize.y);
+	        }
+        }
+    	*/
         // --------------------------------- Update ---------------------------------
         
         m_EditorCamera.OnUpdate(DeltaTime);
@@ -100,26 +118,49 @@ namespace Mirage
         // --------------------------------- Render ---------------------------------
     	
         Renderer2D::ResetStats();
-        m_Framebuffer->Bind();
-        RenderCommand::SetClearColor({0.3f, 0.3f, 0.3f, 1.0f});
-        RenderCommand::Clear();
-        m_Framebuffer->ClearAttachment(1, -1);
 
-        switch (m_SceneState)
+    	SceneObject so = m_HierarchyPanel.GetSelectedSO();
+    	m_ShowCameraPreview = so && so.HasComponent<CameraComponent>();
+        if (m_ShowCameraPreview)
         {
-        case SceneState::Edit:
-        	if (m_ViewportFocused)
-        	{
-        		m_CameraController.OnUpdate(DeltaTime);
-        	}
-	        m_ActiveScene->OnUpdateEditor(DeltaTime, m_EditorCamera);
-	        break;
-        case SceneState::Play:
-	        m_ActiveScene->OnUpdateRuntime(DeltaTime);
-	        break;
+        	m_PreviewFramebuffer->Bind();
+        	RenderCommand::SetClearColor({0.3f, 0.3f, 0.3f, 1.0f});
+        	RenderCommand::Clear();
+        	m_PreviewFramebuffer->ClearAttachment(1, -1);
+	        
+        	m_ActiveScene->RenderRuntime(DeltaTime);
+        	
+        	m_PreviewFramebuffer->Unbind();
+        	
+        	m_Framebuffer->Bind();
+        	RenderCommand::SetClearColor({0.3f, 0.3f, 0.3f, 1.0f});
+        	RenderCommand::Clear();
+        	m_Framebuffer->ClearAttachment(1, -1);
+
+        	if (m_SceneState == SceneState::Edit)
+        		m_ActiveScene->OnUpdateEditor(DeltaTime, m_EditorCamera);
+    	
+        	m_Framebuffer->Unbind();
         }
-        
-        m_Framebuffer->Unbind();
+    	else
+    	{
+    		m_Framebuffer->Bind();
+    		RenderCommand::SetClearColor({0.3f, 0.3f, 0.3f, 1.0f});
+    		RenderCommand::Clear();
+    		m_Framebuffer->ClearAttachment(1, -1);
+
+    		switch (m_SceneState)
+    		{
+    		case SceneState::Edit:
+    			m_ActiveScene->OnUpdateEditor(DeltaTime, m_EditorCamera);
+    			break;
+    		case SceneState::Play:
+    			m_ActiveScene->OnUpdateRuntime(DeltaTime);
+    			break;
+    		}
+    	
+    		m_Framebuffer->Unbind();
+    	}
     }
 
     static bool showDemo = false;
@@ -271,7 +312,6 @@ namespace Mirage
 	        }
         }
     	
-    	
     	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2.0f);
         auto viewportMinRegion = ImGui::GetCursorPos();
         // auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
@@ -292,7 +332,6 @@ namespace Mirage
         ImVec2 ViewportSize = ImGui::GetContentRegionAvail();
         m_ViewportSize = {ViewportSize.x, ViewportSize.y};
         uint32_t texId = m_Framebuffer->GetColorAttachmentRendererID();
-    	
     	ImGui::Image((void*)texId, ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
     	
     	if (ImGui::BeginDragDropTarget())
@@ -438,8 +477,26 @@ namespace Mirage
         	}
         }
         ImGui::End();
-        ImGui::PopStyleVar(1);
+
+    	// ----------------------------- Preview -----------------------------
+        if (m_ShowCameraPreview)
+        {
+        	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 3.0f);
+			ImGui::Begin("Game preview");
+
+        	uint32_t previewTexId = m_PreviewFramebuffer->GetColorAttachmentRendererID();
+            float sizeY = ImGui::GetContentRegionAvail().y;
+			float aspectRatio = m_HierarchyPanel.GetSelectedSO().GetComponent<CameraComponent>().Camera.GetAsectRatio();
+			float sizeX = sizeY * aspectRatio;
+        	ImGui::SetCursorPosX(ImGui::GetCursorPosX() +  (ImGui::GetContentRegionAvail().x - sizeX) / 2);
+        	ImGui::Image((void*)previewTexId, ImVec2{sizeX, sizeY}, ImVec2{0, 1}, ImVec2{1, 0});
+        	
+        	ImGui::End();
+	        ImGui::PopStyleVar();
+        }
+        ImGui::PopStyleVar();
     }
+	
     void EditorLayer::CreateToolBar()
     {
         MRG_PROFILE_FUNCTION();

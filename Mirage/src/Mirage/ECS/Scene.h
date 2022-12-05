@@ -24,6 +24,7 @@ namespace Mirage
     	void OnRuntimeStop();
 
         void OnUpdateRuntime(float DeltaTime);
+    	void RenderRuntime(float DeltaTime);
         void OnUpdateEditor(float DeltaTime, EditorCamera& camera);
         void OnViewportResize(uint32_t width, uint32_t height);
 
