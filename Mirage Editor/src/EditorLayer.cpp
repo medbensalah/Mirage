@@ -4,9 +4,9 @@
 #include <ImGui/imgui.h>
 #include <glm/gtc/type_ptr.inl>
 
-#include "Definitions/DragnDropPayloads.h"
-#include "Definitions/FileExtensions.h"
-#include "Definitions/Icons.h"
+#include "Mirage/Definitions/FileExtensions.h"
+#include "Mirage/Definitions/DragnDropPayloads.h"
+#include "Mirage/Definitions/Icons.h"
 #include "glm/ext/scalar_common.hpp"
 #include "glm/gtx/log_base.hpp"
 #include "glm/gtx/transform2.hpp"
@@ -25,7 +25,7 @@
 namespace Mirage
 {	
     EditorLayer::EditorLayer()
-        : Layer("EditorLayer"), m_CameraController(1280.0f / 720.0f, true)
+        : Layer("EditorLayer")
     {
     }
 
@@ -34,7 +34,7 @@ namespace Mirage
     void EditorLayer::OnAttach()
     {
         MRG_PROFILE_FUNCTION();
-        s_ViewportWindowClass.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoTabBar;
+        s_ViewportWindowClass.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_CentralNode;
 
         m_texture = Texture2D::Create("assets/textures/CheckerBoard.png");
 
@@ -61,7 +61,6 @@ namespace Mirage
         }
 
         m_EditorCamera = EditorCamera(60.0f, 1.778f, 0.03f, 1000.0f);
-    	
         m_HierarchyPanel.SetContext(m_ActiveScene);
 
     	// ----------------------- initialize icons -----------------------
@@ -91,76 +90,56 @@ namespace Mirage
         
         if (FramebufferSpecs spec = m_Framebuffer->GetSpecs();
             m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
-            (spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
+            ((uint32_t)spec.Width != (uint32_t)m_ViewportSize.x || (uint32_t)spec.Height != (uint32_t)m_ViewportSize.y))
         {
             m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-            m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
             m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
-            m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
         }
 
-    	/*
-        if (m_ShowCameraPreview)
+    	m_ShowPreview = m_ActiveScene->GetMainCameraSO();
+        if (m_ShowPreview)
         {
-	        if (FramebufferSpecs spec = m_PreviewFramebuffer->GetSpecs();
+	        if (FramebufferSpecs pspec = m_PreviewFramebuffer->GetSpecs();
 			   m_PreviewSize.x > 0.0f && m_PreviewSize.y > 0.0f && // zero sized framebuffer is invalid
-			   (spec.Width != m_PreviewSize.x || spec.Height != m_PreviewSize.y))
+			   ((uint32_t)pspec.Width != (uint32_t)m_PreviewSize.x || (uint32_t)pspec.Height != (uint32_t)m_PreviewSize.y))
 	        {
 	        	m_PreviewFramebuffer->Resize((uint32_t)m_PreviewSize.x, (uint32_t)m_PreviewSize.y);
-	        	MRG_CORE_WARN("preview resized to {0} {1}", m_PreviewSize.x, m_PreviewSize.y);
+	        	m_ActiveScene->OnViewportResize((uint32_t)m_PreviewSize.x, (uint32_t)m_PreviewSize.y);
+	        	m_ActiveScene->GetMainCameraSO().GetComponent<CameraComponent>().Camera.SetViewportSize((uint32_t)m_PreviewSize.x, (uint32_t)m_PreviewSize.y);
 	        }
         }
-    	*/
         // --------------------------------- Update ---------------------------------
-        
+
         m_EditorCamera.OnUpdate(DeltaTime);
 
         // --------------------------------- Render ---------------------------------
-    	
+
         Renderer2D::ResetStats();
 
-    	SceneObject so = m_HierarchyPanel.GetSelectedSO();
-    	m_ShowCameraPreview = so && so.HasComponent<CameraComponent>();
-        if (m_ShowCameraPreview)
+        SceneObject so = m_HierarchyPanel.GetSelectedSO();
+
+        m_Framebuffer->Bind();
+        RenderCommand::SetClearColor({0.3f, 0.3f, 0.3f, 1.0f});
+        RenderCommand::Clear();
+        m_Framebuffer->ClearAttachment(1, -1);
+        m_ActiveScene->OnUpdateEditor(DeltaTime, m_EditorCamera);
+        m_Framebuffer->Unbind();
+
+
+        m_PreviewFramebuffer->Bind();
+        RenderCommand::SetClearColor({0.3f, 0.3f, 0.3f, 1.0f});
+        RenderCommand::Clear();
+        m_PreviewFramebuffer->ClearAttachment(1, -1);
+        switch (m_SceneState)
         {
-        	m_PreviewFramebuffer->Bind();
-        	RenderCommand::SetClearColor({0.3f, 0.3f, 0.3f, 1.0f});
-        	RenderCommand::Clear();
-        	m_PreviewFramebuffer->ClearAttachment(1, -1);
-	        
-        	m_ActiveScene->RenderRuntime(DeltaTime);
-        	
-        	m_PreviewFramebuffer->Unbind();
-        	
-        	m_Framebuffer->Bind();
-        	RenderCommand::SetClearColor({0.3f, 0.3f, 0.3f, 1.0f});
-        	RenderCommand::Clear();
-        	m_Framebuffer->ClearAttachment(1, -1);
-
-        	if (m_SceneState == SceneState::Edit)
-        		m_ActiveScene->OnUpdateEditor(DeltaTime, m_EditorCamera);
-    	
-        	m_Framebuffer->Unbind();
+        case SceneState::Edit:
+	        m_ActiveScene->RenderRuntime(DeltaTime);
+	        break;
+        case SceneState::Play:
+	        m_ActiveScene->OnUpdateRuntime(DeltaTime);
+	        break;
         }
-    	else
-    	{
-    		m_Framebuffer->Bind();
-    		RenderCommand::SetClearColor({0.3f, 0.3f, 0.3f, 1.0f});
-    		RenderCommand::Clear();
-    		m_Framebuffer->ClearAttachment(1, -1);
-
-    		switch (m_SceneState)
-    		{
-    		case SceneState::Edit:
-    			m_ActiveScene->OnUpdateEditor(DeltaTime, m_EditorCamera);
-    			break;
-    		case SceneState::Play:
-    			m_ActiveScene->OnUpdateRuntime(DeltaTime);
-    			break;
-    		}
-    	
-    		m_Framebuffer->Unbind();
-    	}
+        m_PreviewFramebuffer->Unbind();
     }
 
     static bool showDemo = false;
@@ -263,56 +242,8 @@ namespace Mirage
         ImGui::SetNextWindowClass(&s_ViewportWindowClass);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
         
-    	ImGui::Begin("ViewPort");
+    	ImGui::Begin("Viewport");
 
-    	// ------------------------- Viewport Header -------------------------
-    	auto& style = ImGui::GetStyle();
-    	float btnSizeX = m_PlayButtonIconSize + style.FramePadding.x * 2.0f;
-    	float btnSizeY = m_PlayButtonIconSize + style.FramePadding.y * 2.0f;
-    	float btnPosX = (ImGui::GetContentRegionAvail().x - btnSizeX) / 2.0f;
-    	float btnPosY = 2.0f;
-    	ImGui::SetCursorPos({btnPosX, btnPosY});
-    	
-    	bool playStopBtnsPressed = ImGui::GradientButton("##PlayStopButton", ImVec2{btnSizeX, btnSizeY});
-    	bool playStopBtnsHovered = ImGui::IsItemHovered();
-    	ImGui::SetItemAllowOverlap();
-    	ImGui::SetCursorPos({btnPosX + style.FramePadding.x, btnPosY + style.FramePadding.y});
-        if (m_SceneState == SceneState::Edit)
-        {
-        	ImGui::Image((ImTextureID)m_PlayButtonIcon->GetRendererID(), ImVec2{ m_PlayButtonIconSize, m_PlayButtonIconSize },
-			{0,1}, {1,0}, {0.03f, 0.7f, 0, 1}, {1,1,1,0.0f});
-        }
-    	else if (m_SceneState == SceneState::Play)
-    	{
-    		ImGui::Image((ImTextureID)m_StopButtonIcon->GetRendererID(), ImVec2{ m_PlayButtonIconSize, m_PlayButtonIconSize },
-			{0,1}, {1,0}, {0.7f, 0.03f, 0, 1}, {1,1,1,0.0f});
-    	}
-    	if (playStopBtnsHovered)
-        {
-	        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{8, 2});
-	        if (m_SceneState == SceneState::Edit)
-	        {
-		        ImGui::SetTooltip("Play");
-	        }
-	        else if (m_SceneState == SceneState::Play)
-	        {
-		        ImGui::SetTooltip("Stop");
-	        }
-	        ImGui::PopStyleVar();
-        }
-        if (playStopBtnsPressed)
-        {
-	        if (m_SceneState == SceneState::Edit)
-	        {
-		        OnScenePlay();
-	        }
-	        else if (m_SceneState == SceneState::Play)
-	        {
-		        OnSceneStop();
-	        }
-        }
-    	
-    	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2.0f);
         auto viewportMinRegion = ImGui::GetCursorPos();
         // auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
         auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
@@ -380,14 +311,13 @@ namespace Mirage
         // ----------------------------- Toolbar -----------------------------
         ImGui::SetItemAllowOverlap();
         ImVec2 curPos(ImGui::GetWindowContentRegionMin());
-        ImGui::SetCursorPos({curPos.x + 7.0f, curPos.y + 37.0f});
+        ImGui::SetCursorPos({curPos.x + 7.0f, curPos.y + 3.0f});
         ImGui::BeginGroup();
         CreateToolBar();
         ImGui::EndGroup();	
         
         // ----------------------------- Gizmos ------------------------------
-        if (m_SceneState != SceneState::Play)
-        {
+      
 	        SceneObject selectedSO = m_HierarchyPanel.GetSelectedSO();
         	if (selectedSO)
         	{
@@ -475,28 +405,74 @@ namespace Mirage
         			}
         		}
         	}
-        }
+        
         ImGui::End();
-
-    	// ----------------------------- Preview -----------------------------
-        if (m_ShowCameraPreview)
-        {
-        	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 3.0f);
-			ImGui::Begin("Game preview");
-
-        	uint32_t previewTexId = m_PreviewFramebuffer->GetColorAttachmentRendererID();
-            float sizeY = ImGui::GetContentRegionAvail().y;
-			float aspectRatio = m_HierarchyPanel.GetSelectedSO().GetComponent<CameraComponent>().Camera.GetAsectRatio();
-			float sizeX = sizeY * aspectRatio;
-        	ImGui::SetCursorPosX(ImGui::GetCursorPosX() +  (ImGui::GetContentRegionAvail().x - sizeX) / 2);
-        	ImGui::Image((void*)previewTexId, ImVec2{sizeX, sizeY}, ImVec2{0, 1}, ImVec2{1, 0});
-        	
-        	ImGui::End();
-	        ImGui::PopStyleVar();
-        }
         ImGui::PopStyleVar();
     }
-	
+
+    void EditorLayer::CreateGamePreview()
+    {
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 3.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
+		ImGui::Begin("Game preview");
+    	auto& style = ImGui::GetStyle();
+    	float btnSizeX = m_PlayButtonIconSize + style.FramePadding.x * 2.0f;
+    	float btnSizeY = m_PlayButtonIconSize + style.FramePadding.y * 2.0f;
+    	float btnPosX = (ImGui::GetContentRegionAvail().x - btnSizeX) / 2.0f;
+    	float btnPosY = ImGui::GetCursorPosY() + 2.0f;
+    	ImGui::SetCursorPos({btnPosX, btnPosY});
+    	
+    	bool playStopBtnsPressed = ImGui::GradientButton("##PlayStopButton", ImVec2{btnSizeX, btnSizeY});
+    	bool playStopBtnsHovered = ImGui::IsItemHovered();
+    	ImGui::SetCursorPos({btnPosX + style.FramePadding.x, btnPosY + style.FramePadding.y});
+    	if (m_SceneState == SceneState::Edit)
+    	{
+    		ImGui::Image((ImTextureID)m_PlayButtonIcon->GetRendererID(), ImVec2{ m_PlayButtonIconSize, m_PlayButtonIconSize },
+			{0,1}, {1,0}, {0.03f, 0.7f, 0, 1}, {1,1,1,0.0f});
+    	}
+    	else if (m_SceneState == SceneState::Play)
+    	{
+    		ImGui::Image((ImTextureID)m_StopButtonIcon->GetRendererID(), ImVec2{ m_PlayButtonIconSize, m_PlayButtonIconSize },
+			{0,1}, {1,0}, {0.7f, 0.03f, 0, 1}, {1,1,1,0.0f});
+    	}
+    	if (playStopBtnsHovered)
+    	{
+    		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{8, 2});
+    		if (m_SceneState == SceneState::Edit)
+    		{
+    			ImGui::SetTooltip("Play");
+    		}
+    		else if (m_SceneState == SceneState::Play)
+    		{
+    			ImGui::SetTooltip("Stop");
+    		}
+    		ImGui::PopStyleVar();
+    	}
+    	if (playStopBtnsPressed)
+    	{
+    		if (m_SceneState == SceneState::Edit)
+    		{
+    			OnScenePlay();
+    		}
+    		else if (m_SceneState == SceneState::Play)
+    		{
+    			OnSceneStop();
+    		}
+    	}
+    	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2.0f);
+        uint32_t previewTexId = m_PreviewFramebuffer->GetColorAttachmentRendererID();
+        float sizeY = ImGui::GetContentRegionAvail().y;
+		float aspectRatio = 16.0f/ 9;
+        float sizeX = sizeY * aspectRatio;
+        m_PreviewSize = {sizeX, sizeY};
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() +  (ImGui::GetContentRegionAvail().x - sizeX) / 2);
+        ImGui::Image((void*)previewTexId, ImVec2{sizeX, sizeY}, ImVec2{0, 1}, ImVec2{1, 0});
+        
+        ImGui::End();
+        ImGui::PopStyleVar(2);
+    
+    }
+
     void EditorLayer::CreateToolBar()
     {
         MRG_PROFILE_FUNCTION();
@@ -845,6 +821,7 @@ namespace Mirage
 
         CreateDockspace();
         CreateViewport();
+    	CreateGamePreview();
 
         m_HierarchyPanel.OnImGuiRender();
     	m_ContentBrowserPanel.OnImGuiRender();
@@ -886,19 +863,16 @@ namespace Mirage
     
     void EditorLayer::OnEvent(Event& e)
     {
-	    m_CameraController.OnEvent(e);
     	m_EditorCamera.OnEvent(e);
         
     	EventDispatcher dispatcher(e);
 
-    	if (m_SceneState != SceneState::Play)
-    	{
     		// Shortcuts
     		dispatcher.Dispatch<KeyPressedEvent>(MRG_BIND_EVENT_FN(EditorLayer::OnShortcutKeyPressed));
 
     		// MousePicking
     		dispatcher.Dispatch<MouseButtonPressedEvent>(MRG_BIND_EVENT_FN(EditorLayer::OnMouseButtonPressed));
-    	}
+    	
     }
     
     bool EditorLayer::OnShortcutKeyPressed(KeyPressedEvent e)

@@ -7,6 +7,8 @@
 #include "Components/Rendering/CameraComponent.h"
 #include "Components/Rendering/SpriteRendererComponent.h"
 #include "Components/Base/TransformComponent.h"
+#include "Components/Physics/BoxCollider2DComponent.h"
+#include "Components/Physics/RigidBody2DComponent.h"
 
 namespace YAML
 {
@@ -91,6 +93,38 @@ namespace YAML
 
 namespace Mirage
 {
+	std::string RigidBody2DTypeToString(RigidBody2DComponent::BodyType type)
+	{
+		switch (type)
+		{
+		case RigidBody2DComponent::BodyType::Static:
+			return "Static";
+		case RigidBody2DComponent::BodyType::Kinematic:
+			return "Kinematic";
+		case RigidBody2DComponent::BodyType::Dynamic:
+			return "Dynamic";
+		}
+		MRG_CORE_WARN("Unknown body type while serializing, falling back to static body");
+		return "Static";
+	}
+	RigidBody2DComponent::BodyType RigidBody2DTypeFromString(std::string type)
+	{
+		if (type == "Static")
+		{
+			return RigidBody2DComponent::BodyType::Static;
+		}
+		if (type == "Kinematic")
+		{
+			return RigidBody2DComponent::BodyType::Kinematic;
+		}
+		if (type == "Dynamic")
+		{
+			return RigidBody2DComponent::BodyType::Dynamic;
+		}
+		MRG_CORE_WARN("Unknown body type while deserializing, falling back to static body");
+		return RigidBody2DComponent::BodyType::Static;
+	}
+	
     YAML::Emitter& operator<<(YAML::Emitter& out, const Vec2& v)
     {
         out << YAML::Flow;
@@ -111,8 +145,6 @@ namespace Mirage
         out << YAML::BeginSeq << v.x << v.y << v.z << v.w << YAML::EndSeq;
         return out;
     }
-
-
     
     SceneSerializer::SceneSerializer(const Ref<Scene>& scene)
         : m_Scene(scene)
@@ -177,7 +209,36 @@ namespace Mirage
 
             auto& src = so.GetComponent<SpriteRendererComponent>();
             out << YAML::Key << "Color" << YAML::Value << src.Color;
-            // out << YAML::Key << "Texture" << YAML::Value << src.TexturePath;
+            out << YAML::Key << "Texture" << YAML::Value << src.Texture->GetPath().string();
+            out << YAML::Key << "Tiling" << YAML::Value << src.Tiling;
+            out << YAML::Key << "Offset" << YAML::Value << src.Offset;
+
+            out << YAML::EndMap;
+        }
+        if (so.HasComponent<RigidBody2DComponent>())
+        {
+            out << YAML::Key << "RigidBody2DComponent";
+            out << YAML::BeginMap;
+
+            auto& rb2d = so.GetComponent<RigidBody2DComponent>();
+            out << YAML::Key << "Body type" << YAML::Value << RigidBody2DTypeToString(rb2d.Type);
+            out << YAML::Key << "Gravity scale" << YAML::Value << rb2d.GravityScale;
+            out << YAML::Key << "Fixed rotation" << YAML::Value << rb2d.FixedRotation;
+
+            out << YAML::EndMap;
+        }
+        if (so.HasComponent<BoxCollider2DComponent>())
+        {
+            out << YAML::Key << "BoxCollider2DComponent";
+            out << YAML::BeginMap;
+
+            auto& collider = so.GetComponent<BoxCollider2DComponent>();
+            out << YAML::Key << "Size" << YAML::Value << collider.Size;
+            out << YAML::Key << "Offset" << YAML::Value << collider.Offset;
+            out << YAML::Key << "Density" << YAML::Value << collider.Density;
+            out << YAML::Key << "Friction" << YAML::Value << collider.Friction;
+            out << YAML::Key << "Bounciness" << YAML::Value << collider.Bounciness;
+            out << YAML::Key << "BouncinessThreshold" << YAML::Value << collider.BouncinessThreshold;
 
             out << YAML::EndMap;
         }
@@ -201,6 +262,7 @@ namespace Mirage
         out << YAML::EndMap;
 #pragma endregion 
     }
+	
     static bool DeserializeSceneObject(YAML::detail::iterator_value& entity, SceneObject& so)
     {
         auto transformComponent = entity["TransformComponent"];
@@ -237,9 +299,33 @@ namespace Mirage
         {
             auto& src = so.AddComponent<SpriteRendererComponent>();
             src.Color = spriteRendererComponent["Color"].as<Vec4>();
-            // src.TexturePath = spriteRendererComponent["Texture"].as<std::string>();
+		    src.Texture = Texture2D::Create(spriteRendererComponent["Texture"].as<std::string>());
+        	src.Tiling = spriteRendererComponent["Tiling"].as<Vec2>();
+        	src.Offset = spriteRendererComponent["Offset"].as<Vec2>();
+        }
+		
+        auto rigidBody2DComponent = entity["RigidBody2DComponent"];
+        if (rigidBody2DComponent)
+        {
+            auto& rb2d = so.AddComponent<RigidBody2DComponent>();
+            rb2d.Type = RigidBody2DTypeFromString(rigidBody2DComponent["Body type"].as<std::string>());
+        	rb2d.GravityScale = rigidBody2DComponent["Gravity scale"].as<float>();
+        	rb2d.FixedRotation = rigidBody2DComponent["Fixed rotation"].as<bool>();
+        }
+		
+        auto boxCollider2DComponent = entity["BoxCollider2DComponent"];
+        if (boxCollider2DComponent)
+        {
+            auto& collider = so.AddComponent<BoxCollider2DComponent>();
+        	collider.Size = boxCollider2DComponent["Size"].as<Vec2>();
+        	collider.Offset = boxCollider2DComponent["Offset"].as<Vec2>();
+        	collider.Density = boxCollider2DComponent["Density"].as<float>();
+        	collider.Friction = boxCollider2DComponent["Friction"].as<float>();
+        	collider.Bounciness = boxCollider2DComponent["Bounciness"].as<float>();
+        	collider.BouncinessThreshold = boxCollider2DComponent["BouncinessThreshold"].as<float>();
         }
 
+#pragma region Children
         auto children = entity["Children"];
         if (children)
         {
@@ -259,7 +345,7 @@ namespace Mirage
                 DeserializeSceneObject(child, childSo);
             }
         }
-
+#pragma endregion 
         return true;
     }
     
@@ -277,9 +363,7 @@ namespace Mirage
             {
                 MRG_CORE_INFO("Serializing entity with ID = {0}", (uint32_t)kv.first);
                 SceneObject so = { kv.first, m_Scene.get() };
-                MRG_CORE_INFO("*");
                 SerializeSceneObject(out, so);
-                MRG_CORE_INFO("finished entity with ID = {0}", (uint32_t)kv.first);
             }
         }
         out << YAML::EndSeq;

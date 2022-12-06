@@ -11,7 +11,7 @@
 #include "Mirage/ECS/Components/Base/TransformComponent.h"
 #include "Mirage/ImGui/Extensions/DrawingAPI.h"
 #include "Mirage/ImGui/Extensions/ButtonExtensions.h"
-#include "../Definitions/DragnDropPayloads.h"
+#include "Mirage/Definitions/DragnDropPayloads.h"
 #include "Mirage/ECS/Components/Physics/BoxCollider2DComponent.h"
 #include "Mirage/ECS/Components/Physics/RigidBody2DComponent.h"
 
@@ -244,11 +244,11 @@ namespace Mirage
 	                	ImGui::CloseCurrentPopup();
 	                }
                 }
-                if(!m_SelectionContext.HasComponent<BoxCollder2DComponent>())
+                if(!m_SelectionContext.HasComponent<BoxCollider2DComponent>())
                 {
 	                if(ImGui::MenuItem("Box collider 2D"))
 	                {
-	                	m_SelectionContext.AddComponent<BoxCollder2DComponent>();
+	                	m_SelectionContext.AddComponent<BoxCollider2DComponent>();
 	                	ImGui::CloseCurrentPopup();
 	                }
                 }
@@ -466,16 +466,16 @@ namespace Mirage
 			}
         );
     	
-        DrawComponent<BoxCollder2DComponent>("BoxCollider 2D", so, [&so](auto& component)
+        DrawComponent<BoxCollider2DComponent>("BoxCollider 2D", so, [&so](auto& component)
 			{
-				DrawSplitUIItem("Offset", [&component]()-> bool
-				{
-					return ImGui::DragFloat2("##Offset", glm::value_ptr(component.Offset), 0.1f, 0, 0, "%.4g");
-		        }, typeid(RigidBody2DComponent).name());
-        	
 				DrawSplitUIItem("Size", [&component]()-> bool
 				{
 					return ImGui::DragFloat2("##Size", glm::value_ptr(component.Size), 0.05f, 0, 0, "%.4g");
+		        }, typeid(RigidBody2DComponent).name());
+        	
+				DrawSplitUIItem("Offset", [&component]()-> bool
+				{
+					return ImGui::DragFloat2("##Offset", glm::value_ptr(component.Offset), 0.1f, 0, 0, "%.4g");
 		        }, typeid(RigidBody2DComponent).name());
         	
 				DrawSplitUIItem("Density", [&component]()-> bool

@@ -84,7 +84,7 @@ namespace Mirage
 
 			b2BodyDef bodyDef;
 			bodyDef.position.Set(transform.Position().x, transform.Position().y);
-			bodyDef.angle = transform.Rotation().z;
+			bodyDef.angle = Radians(transform.Rotation().z);
 			
 			bodyDef.type = MrgToB2DBodyType(rb.Type);
 			bodyDef.gravityScale = rb.GravityScale;
@@ -95,13 +95,13 @@ namespace Mirage
 
 			// TODO : add istrigger (issensro)
 			
-			if (so.HasComponent<BoxCollder2DComponent>())
+			if (so.HasComponent<BoxCollider2DComponent>())
 			{
-				auto& collider = so.GetComponent<BoxCollder2DComponent>();
+				auto& collider = so.GetComponent<BoxCollider2DComponent>();
 
 				b2PolygonShape shape;
 				shape.SetAsBox(collider.Size.x * transform.Scale().x, collider.Size.y * transform.Scale().y,
-				               {collider.Offset.x, collider.Offset.y}, transform.Rotation().z);
+				               {collider.Offset.x, collider.Offset.y}, 0);
 
 				b2FixtureDef fixtureDef;
 				fixtureDef.shape = &shape;
@@ -113,6 +113,8 @@ namespace Mirage
 				body->CreateFixture(&fixtureDef);
 			}
 		}
+
+		m_PhysicsTimer.Reset();
     }
 
     void Scene::OnRuntimeStop()
@@ -144,33 +146,53 @@ namespace Mirage
             });
         }
 
-		// -------------------- Physics --------------------
-		{
-			if (Physics2D::UpdateEveryFrame)
-			{
-				m_PhysicsWorld->Step(DeltaTime, Physics2D::VelocityIterations, Physics2D::PositionIterations);
-			}
-			else
-			{
-				m_PhysicsWorld->Step(Physics2D::TimeStep, Physics2D::VelocityIterations, Physics2D::PositionIterations);
-			}
+        // -------------------- Physics --------------------
+        {
+	        if (Physics2D::UpdateEveryFrame)
+	        {
+		        m_PhysicsWorld->Step(DeltaTime, Physics2D::VelocityIterations, Physics2D::PositionIterations);
+		        // update transform component from physics
+		        auto view = m_Registry.view<RigidBody2DComponent>();
+		        for (auto e : view)
+		        {
+			        SceneObject so = {e, this};
+			        auto& transform = so.GetComponent<TransformComponent>();
+			        auto& rb = so.GetComponent<RigidBody2DComponent>();
 
-        	// update transform component from physics
-        	auto view = m_Registry.view<RigidBody2DComponent>();
-        	for (auto e : view)
-			{
-				SceneObject so = {e, this};
-				auto& transform = so.GetComponent<TransformComponent>();
-				auto& rb = so.GetComponent<RigidBody2DComponent>();
+			        if (rb.Type == RigidBody2DComponent::BodyType::Static) continue;
+			        const auto& position = rb.RuntimeBody->GetPosition();
+			        transform.SetPosition({position.x, position.y, transform.Position().z});
+			        transform.SetRotation({
+				        transform.Rotation().x, transform.Rotation().y, Degrees(rb.RuntimeBody->GetAngle())
+			        });
+		        }
+		        m_PhysicsTimer.Reset();
+	        }
+	        else
+	        {
+		        if (m_PhysicsTimer.Elapsed() >= Physics2D::TimeStep)
+		        {
+			        m_PhysicsWorld->Step(Physics2D::TimeStep, Physics2D::VelocityIterations,
+			                             Physics2D::PositionIterations);
+			        // update transform component from physics
+			        auto view = m_Registry.view<RigidBody2DComponent>();
+			        for (auto e : view)
+			        {
+				        SceneObject so = {e, this};
+				        auto& transform = so.GetComponent<TransformComponent>();
+				        auto& rb = so.GetComponent<RigidBody2DComponent>();
 
-				if (rb.Type == RigidBody2DComponent::BodyType::Static) continue;
-        		const auto& position = rb.RuntimeBody->GetPosition();
-				transform.SetPosition({position.x, position.y, transform.Position().z});
-				transform.SetRotation({
-					transform.Rotation().x, transform.Rotation().y, Radians(rb.RuntimeBody->GetAngle())
-				});
-			}
-		}
+				        if (rb.Type == RigidBody2DComponent::BodyType::Static) continue;
+				        const auto& position = rb.RuntimeBody->GetPosition();
+				        transform.SetPosition({position.x, position.y, transform.Position().z});
+				        transform.SetRotation({
+					        transform.Rotation().x, transform.Rotation().y, Degrees(rb.RuntimeBody->GetAngle())
+				        });
+			        }
+			        m_PhysicsTimer.Reset();
+		        }
+	        }
+        }
 
         // -------------------- Render2D --------------------
         RenderRuntime(DeltaTime);
@@ -288,7 +310,7 @@ namespace Mirage
     {
     }
     template <>
-    void Scene::OnComponentAdded(SceneObject& entity, BoxCollder2DComponent& component)
+    void Scene::OnComponentAdded(SceneObject& entity, BoxCollider2DComponent& component)
     {
     }
     template <>

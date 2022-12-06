@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "Mirage/Definitions/Textures.h"
 #include "Mirage/Math/glmTypes.h"
 #include "Mirage/Renderer/Texture.h"
 
@@ -14,9 +15,9 @@ namespace Mirage
         
         SpriteRendererComponent()
         {
-	        Texture = Texture2D::Create(1, 1);
-        	uint32_t whiteTextureData = 0xffffffff;
-        	Texture->SetData(&whiteTextureData, sizeof(uint32_t));
+	        Texture = Texture2D::Create(Textures::WhiteTexture);
+        	// uint32_t whiteTextureData = 0xffffffff;
+        	// Texture->SetData(&whiteTextureData, sizeof(uint32_t));
         }
         SpriteRendererComponent(const SpriteRendererComponent&) = default;
         SpriteRendererComponent(const Vec4& color, const Ref<Texture2D>& tex = nullptr, const Vec2& tiling = {1.0f, 1.0f}, const Vec2& offset = {0.0f, 0.0f})
@@ -24,9 +25,9 @@ namespace Mirage
         {
 	        if (tex == nullptr)
 	        {
-		        Texture = Texture2D::Create(1, 1);
-	        	uint32_t whiteTextureData = 0xffffffff;
-	        	Texture->SetData(&whiteTextureData, sizeof(uint32_t));
+		        Texture = Texture2D::Create(Textures::WhiteTexture);
+	        	// uint32_t whiteTextureData = 0xffffffff;
+	        	// Texture->SetData(&whiteTextureData, sizeof(uint32_t));
 	        }
         }
     };

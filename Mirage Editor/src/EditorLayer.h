@@ -35,6 +35,7 @@ namespace Mirage
         void CreateDockspace();
         void CreateMenuBar();
         void CreateViewport();
+        void CreateGamePreview();
         void CreateToolBar();
         
         void NewScene();
@@ -51,13 +52,10 @@ namespace Mirage
         Ref<Framebuffer> m_Framebuffer;
         Ref<Framebuffer> m_PreviewFramebuffer;
 
-		bool m_ShowCameraPreview = false;
+    	bool m_ShowPreview = false;
     	
         Ref<Scene> m_ActiveScene;
 		std::filesystem::path m_ActiveScenePath;
-
-    	
-        OrthographicCameraController m_CameraController;
         
         bool m_ViewportFocused = false;
         bool m_ViewportHovered = false;

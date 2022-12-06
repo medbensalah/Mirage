@@ -1,0 +1,14 @@
+Scene: Untitled
+Entities:
+  - Entity: 0
+    TagComponent:
+      Tag: Entity
+    TransformComponent:
+      Position: [0.716847539, -0.0508886278, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    SpriteRendererComponent:
+      Color: [1, 1, 1, 1]
+      Texture: Assets\textures\Mario.png
+      Tiling: [1, 1]
+      Offset: [0, 0]

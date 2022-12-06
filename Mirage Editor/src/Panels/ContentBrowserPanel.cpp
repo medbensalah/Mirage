@@ -1,8 +1,8 @@
 ﻿#include "ContentBrowserPanel.h"
 
-#include "../Definitions/FileExtensions.h"
-#include "../Definitions/DragnDropPayloads.h"
-#include "../Definitions/Icons.h"
+#include "Mirage/Definitions/FileExtensions.h"
+#include "Mirage/Definitions/DragnDropPayloads.h"
+#include "Mirage/Definitions/Icons.h"
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_internal.h"
 #include "Mirage/Core/Log.h"

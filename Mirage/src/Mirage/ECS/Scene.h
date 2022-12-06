@@ -3,6 +3,8 @@
 #include "Mirage/Renderer/EditorCamera.h"
 #include <enTT.hpp>
 
+#include "Mirage/Core/Time.h"
+
 class b2World;
 
 namespace Mirage
@@ -40,6 +42,7 @@ namespace Mirage
         uint32_t m_ViewportWidth = 0; uint32_t m_ViewportHeight = 0;
 
 		b2World* m_PhysicsWorld = nullptr;
+    	Timer m_PhysicsTimer;
     	
         std::unordered_map<entt::entity, Relationship> m_Hierarchy;
         

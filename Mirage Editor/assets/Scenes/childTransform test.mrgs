@@ -27,6 +27,9 @@ Entities:
       Scale: [1, 1, 1]
     SpriteRendererComponent:
       Color: [0.741176486, 0.61038065, 0, 1]
+      Texture: ..\Mirage Editor\Resources\Defaults\Textures\White.png
+      Tiling: [1, 1]
+      Offset: [0, 0]
   - Entity: 2
     TagComponent:
       Tag: Square2
@@ -36,6 +39,9 @@ Entities:
       Scale: [1, 1, 1]
     SpriteRendererComponent:
       Color: [1, 0.822387278, 0, 1]
+      Texture: ..\Mirage Editor\Resources\Defaults\Textures\White.png
+      Tiling: [1, 1]
+      Offset: [0, 0]
     Children:
       - Entity: 3
         TagComponent:
@@ -46,6 +52,9 @@ Entities:
           Scale: [1, 1, 1]
         SpriteRendererComponent:
           Color: [1, 1, 1, 1]
+          Texture: ..\Mirage Editor\Resources\Defaults\Textures\White.png
+          Tiling: [1, 1]
+          Offset: [0, 0]
         Children:
           - Entity: 4
             TagComponent:
@@ -56,6 +65,9 @@ Entities:
               Scale: [1, 1, 1]
             SpriteRendererComponent:
               Color: [0.369959414, 0, 0.964855015, 1]
+              Texture: ..\Mirage Editor\Resources\Defaults\Textures\White.png
+              Tiling: [1, 1]
+              Offset: [0, 0]
   - Entity: 5
     TagComponent:
       Tag: Square3
@@ -65,3 +77,6 @@ Entities:
       Scale: [1, 1, 1]
     SpriteRendererComponent:
       Color: [0.380392164, 0.313264132, 0, 1]
+      Texture: ..\Mirage Editor\Resources\Defaults\Textures\White.png
+      Tiling: [1, 1]
+      Offset: [0, 0]

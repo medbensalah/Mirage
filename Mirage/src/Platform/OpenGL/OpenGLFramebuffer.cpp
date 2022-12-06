@@ -214,7 +214,7 @@ namespace Mirage
         return pixelData;
     }
 
-    void OpenGLFramebuffer::ClearAttachment(uint32_t attachmentIndex, int value)
+	void OpenGLFramebuffer::ClearAttachment(uint32_t attachmentIndex, int value)
     {
         MRG_CORE_ASSERT(attachmentIndex < m_ColorAttachments.size());
 
