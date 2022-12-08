@@ -6,6 +6,7 @@
 #include "Panels/HierarchyPanel.h"
 #include "Panels/ContentBrowserPanel.h"
 #include "ImGuizmo/ImGuizmo.h"
+#include "Mirage/ECS/SceneCamera.h"
 
 namespace Mirage
 {	
@@ -60,7 +61,11 @@ namespace Mirage
         bool m_ViewportFocused = false;
         bool m_ViewportHovered = false;
 
+    	bool m_ViewportVisible = true;
+    	bool m_GamePreviewVisible = true;
+
         EditorCamera m_EditorCamera;
+    	SceneCamera m_SceneCamera;
     
         Ref<Texture2D> m_texture;
 
@@ -71,6 +76,10 @@ namespace Mirage
         // ----------------------- Gizmos -----------------------
         ImGuizmo::OPERATION m_GizmoType = (ImGuizmo::OPERATION)-1;
         ImGuizmo::MODE m_GizmoMode = ImGuizmo::MODE::WORLD;
+
+    	bool m_ShowGrid = true;
+    	float m_GridSize = 100.0f;
+    	float m_GridAlpha = 1.0f;
         
         // ----------------------- Snapping -----------------------
         bool m_TranslationSnap = false;

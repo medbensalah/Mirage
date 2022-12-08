@@ -4,7 +4,7 @@ namespace Mirage
 {
 	namespace Physics2D
 	{
-		static bool UpdateEveryFrame = false;
+		static bool UpdateEveryFrame = true;
 		static float TimeStep = 1.0f / 60.0f;
 		
 		static float Gravity = -9.78f;

@@ -199,6 +199,7 @@ namespace Mirage
 
             out << YAML::Key << "Primary" << YAML::Value << cameraComponent.IsMain;
             out << YAML::Key << "FixedAspectRatio" << YAML::Value << cameraComponent.FixedAspectRatio;
+            out << YAML::Key << "ClearColor" << YAML::Value << cameraComponent.Camera.GetClearColor();
 
             out << YAML::EndMap;
         }
@@ -292,6 +293,7 @@ namespace Mirage
             
             cc.IsMain = cameraComponent["Primary"].as<bool>();
             cc.FixedAspectRatio = cameraComponent["FixedAspectRatio"].as<bool>();
+            cc.Camera.SetClearColor(cameraComponent["ClearColor"].as<Vec4>());
         }
 
         auto spriteRendererComponent = entity["SpriteRendererComponent"];

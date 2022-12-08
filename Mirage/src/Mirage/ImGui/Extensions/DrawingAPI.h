@@ -117,7 +117,7 @@ bool Mirage::DrawVec3Control(const char* label, Vec3& vector)
     ImGui::Button("X", buttonSize);
     ImGui::PopFont();
     ImGui::SameLine();
-    result |= ImGui::DragFloat("##X", &vector.x, 0.1f, 0.0f, 0.0f, "%.3g");
+    result |= ImGui::DragFloat("##X", &vector.x, 0.1f, 0.0f, 0.0f, "%.5g");
     ImGui::PopStyleColor(3);
     ImGui::PopStyleVar();
     ImGui::SameLine();
@@ -133,7 +133,7 @@ bool Mirage::DrawVec3Control(const char* label, Vec3& vector)
     ImGui::Button("Y", buttonSize);
     ImGui::PopFont();
     ImGui::SameLine();
-    result |= ImGui::DragFloat("##Y", &vector.y, 0.1f, 0.0f, 0.0f, "%.3g");
+    result |= ImGui::DragFloat("##Y", &vector.y, 0.1f, 0.0f, 0.0f, "%.5g");
     ImGui::PopStyleColor(3);
     ImGui::PopStyleVar();
     ImGui::SameLine();
@@ -149,7 +149,7 @@ bool Mirage::DrawVec3Control(const char* label, Vec3& vector)
     ImGui::Button("Z", buttonSize);
     ImGui::PopFont();
     ImGui::SameLine();
-    result |= ImGui::DragFloat("##Z", &vector.z, 0.1f, 0.0f, 0.0f, "%.3g");
+    result |= ImGui::DragFloat("##Z", &vector.z, 0.1f, 0.0f, 0.0f, "%.5g");
     ImGui::PopStyleColor(3);
     ImGui::PopStyleVar();
     ImGui::SameLine();

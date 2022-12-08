@@ -26,22 +26,28 @@ namespace Mirage
 
 	void ContentBrowserPanel::OnImGuiRender()
 	{
-		UpdateBrowser();
-		ImGui::Begin("Content Browser", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+		if(ImGui::Begin("Content Browser", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse))
+		{
+			UpdateBrowser();
 
-		DrawHeader();
+			DrawHeader();
 
-		m_RightPanelSize = ImGui::GetContentRegionAvail().x - m_LeftPanelSize - m_SeparatorThickness;
-		ImGui::DrawSplitter(0, m_SeparatorThickness, &m_LeftPanelSize, &m_RightPanelSize, 50.0f, 100.0f);
+			m_RightPanelSize = ImGui::GetContentRegionAvail().x - m_LeftPanelSize - m_SeparatorThickness;
+			ImGui::DrawSplitter(0, m_SeparatorThickness, &m_LeftPanelSize, &m_RightPanelSize, 50.0f, 100.0f);
 
-		DrawDirectoryHierarchy();
+			DrawDirectoryHierarchy();
 
-		ImGui::SameLine();
+			ImGui::SameLine();
 
-		DrawContents();
-		DrawStatusBar();
+			DrawContents();
+			DrawStatusBar();
 
-		ImGui::End();
+			ImGui::End();
+		}
+		else
+		{
+			ImGui::End();
+		}
 	}
 
 	void ContentBrowserPanel::DrawHeader()

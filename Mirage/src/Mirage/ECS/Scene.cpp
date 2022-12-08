@@ -147,6 +147,7 @@ namespace Mirage
         }
 
         // -------------------- Physics --------------------
+
         {
 	        if (Physics2D::UpdateEveryFrame)
 	        {
@@ -172,7 +173,7 @@ namespace Mirage
 	        {
 		        if (m_PhysicsTimer.Elapsed() >= Physics2D::TimeStep)
 		        {
-			        m_PhysicsWorld->Step(Physics2D::TimeStep, Physics2D::VelocityIterations,
+			        m_PhysicsWorld->Step(m_PhysicsTimer.Elapsed(), Physics2D::VelocityIterations,
 			                             Physics2D::PositionIterations);
 			        // update transform component from physics
 			        auto view = m_Registry.view<RigidBody2DComponent>();
@@ -193,7 +194,6 @@ namespace Mirage
 		        }
 	        }
         }
-
         // -------------------- Render2D --------------------
         RenderRuntime(DeltaTime);
     }

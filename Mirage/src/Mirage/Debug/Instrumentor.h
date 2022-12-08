@@ -100,7 +100,6 @@ namespace Mirage
         }
 
     private:
-    private:
         Instrumentor()
             : m_CurrentSession(nullptr)
         {

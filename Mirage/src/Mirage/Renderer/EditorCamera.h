@@ -39,7 +39,7 @@ namespace Mirage {
             m_ViewportWidth = width; m_ViewportHeight = height; UpdateProjection();
         }
 
-        const Mat4& GetViewMatrix() const { return m_ViewMatrix; }
+        const Mat4& GetView() const { return m_ViewMatrix; }
         Mat4 GetViewProjection() const { return m_Projection * m_ViewMatrix; }
 
         Vec3 GetRightDirection() const;

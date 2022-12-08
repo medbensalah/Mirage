@@ -13,6 +13,9 @@
     <Filter Include="src\Mirage\Debug">
       <UniqueIdentifier>{07F4B8A7-F3EC-D7F9-1C1F-BD7E0877B705}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Mirage\Definitions">
+      <UniqueIdentifier>{1C4F8705-0849-B057-F1B5-4668DD4E16C4}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Mirage\ECS">
       <UniqueIdentifier>{9B4590C2-8713-84C8-70A7-F4EE5C14602D}</UniqueIdentifier>
     </Filter>
@@ -131,6 +134,18 @@
     </ClInclude>
     <ClInclude Include="src\Mirage\Debug\Instrumentor.h">
       <Filter>src\Mirage\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Definitions\DragnDropPayloads.h">
+      <Filter>src\Mirage\Definitions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Definitions\FileExtensions.h">
+      <Filter>src\Mirage\Definitions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Definitions\Icons.h">
+      <Filter>src\Mirage\Definitions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Definitions\Textures.h">
+      <Filter>src\Mirage\Definitions</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\ECS\Components\Base\NativeScriptComponent.h">
       <Filter>src\Mirage\ECS\Components\Base</Filter>

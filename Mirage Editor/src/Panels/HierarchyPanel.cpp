@@ -47,41 +47,50 @@ namespace Mirage
 
     void HierarchyPanel::OnImGuiRender()
     {
-        ImGui::Begin("Outliner");
-        
-        m_Context->m_Registry.each([&](auto entityID)
+        if (ImGui::Begin("Outliner"))
         {
-            SceneObject so{entityID, m_Context.get()};
-            if(!so.HasParent())
-            {
-                DrawEntityNode(so);
-            }
-        });
+	        m_Context->m_Registry.each([&](auto entityID)
+			{
+				SceneObject so{entityID, m_Context.get()};
+				if(!so.HasParent())
+				{
+					DrawEntityNode(so);
+				}
+			});
 
-        if (ImGui::IsMouseClicked(0) && ImGui::IsWindowHovered())
-            m_SelectionContext = {};
+        	if (ImGui::IsMouseClicked(0) && ImGui::IsWindowHovered())
+        		m_SelectionContext = {};
         
-        //Right-Click on blank space
-        if(ImGui::BeginPopupContextWindow(0, 1, false))
-        {
-            if(ImGui::MenuItem("Create empty SceneObject"))
-            {
-                m_Context->CreateSceneObject("new SceneObject");
-            }
+        	//Right-Click on blank space
+        	if(ImGui::BeginPopupContextWindow(0, 1, false))
+        	{
+        		if(ImGui::MenuItem("Create empty SceneObject"))
+        		{
+        			m_Context->CreateSceneObject("new SceneObject");
+        		}
 
-            ImGui::EndPopup();
+        		ImGui::EndPopup();
+        	}
+        
+        	ImGui::End();
         }
-        
-        ImGui::End();
-        
-        ImGui::Begin("Inspector");
-
-        if (m_SelectionContext)
+        else
         {
-            DrawComponents(m_SelectionContext);
+        	ImGui::End();
         }
+        if (ImGui::Begin("Inspector"))
+        {
+	        if (m_SelectionContext)
+	        {
+	        	DrawComponents(m_SelectionContext);
+	        }
 
-        ImGui::End();
+        	ImGui::End();
+        }
+        else
+        {
+        	ImGui::End();
+        }
     }
 
     void HierarchyPanel::DrawEntityNode(SceneObject so)
@@ -388,6 +397,14 @@ namespace Mirage
 						return ImGui::Checkbox("##FixedAspectRatio", &component.FixedAspectRatio);
 					}, typeid(CameraComponent).name());
 				}
+	        	Vec4 cc = camera.GetClearColor();
+        		if(DrawSplitUIItem("Clear color", [&]()-> bool
+					{
+						return ImGui::ColorEdit4("##ClearColor", glm::value_ptr(cc));
+					}, typeid(CameraComponent).name()))
+        		{
+        			camera.SetClearColor(cc);
+        		}
 			}
         );
 
