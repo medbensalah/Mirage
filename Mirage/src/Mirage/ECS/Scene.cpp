@@ -2,19 +2,20 @@
 
 #include "Scene.h"
 #include "SceneObject.h"
-#include "Components/Rendering/CameraComponent.h"
-#include "Components/Base/NativeScriptComponent.h"
+#include "ScriptableSceneObject.h"
 #include "Components/Base/TransformComponent.h"
-#include "Components/Rendering/SpriteRendererComponent.h"
 #include "Components/Base/TagComponent.h"
 #include "Components/Physics/RigidBody2DComponent.h"
+#include "Components/Physics/BoxCollider2DComponent.h"
+#include "Components/Rendering/SpriteRendererComponent.h"
+#include "Components/Rendering/CameraComponent.h"
+#include "Components/NativeScriptComponent.h"
 #include "Mirage/Renderer/Renderer2D.h"
 
 #include "box2d/b2_world.h"
 #include "box2d/b2_body.h"
 #include "box2d/b2_fixture.h"
 #include "box2d/b2_polygon_shape.h"
-#include "Components/Physics/BoxCollider2DComponent.h"
 #include "Mirage/Physics/Globals.h"
 
 namespace Mirage

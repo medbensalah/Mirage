@@ -4,7 +4,6 @@
 
 namespace Mirage
 {
-    
     struct CameraComponent
     {
         SceneCamera Camera;
@@ -16,5 +15,4 @@ namespace Mirage
         CameraComponent() = default;
         CameraComponent(const CameraComponent&) = default;
     };
-
 }

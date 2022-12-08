@@ -160,15 +160,16 @@
     <ClInclude Include="src\Mirage\Core\MouseCodes.h" />
     <ClInclude Include="src\Mirage\Core\PlatformDetection.h" />
     <ClInclude Include="src\Mirage\Core\Time.h" />
+    <ClInclude Include="src\Mirage\Core\UUID.h" />
     <ClInclude Include="src\Mirage\Core\Window.h" />
     <ClInclude Include="src\Mirage\Debug\Instrumentor.h" />
     <ClInclude Include="src\Mirage\Definitions\DragnDropPayloads.h" />
     <ClInclude Include="src\Mirage\Definitions\FileExtensions.h" />
     <ClInclude Include="src\Mirage\Definitions\Icons.h" />
     <ClInclude Include="src\Mirage\Definitions\Textures.h" />
-    <ClInclude Include="src\Mirage\ECS\Components\Base\NativeScriptComponent.h" />
     <ClInclude Include="src\Mirage\ECS\Components\Base\TagComponent.h" />
     <ClInclude Include="src\Mirage\ECS\Components\Base\TransformComponent.h" />
+    <ClInclude Include="src\Mirage\ECS\Components\NativeScriptComponent.h" />
     <ClInclude Include="src\Mirage\ECS\Components\Physics\BoxCollider2DComponent.h" />
     <ClInclude Include="src\Mirage\ECS\Components\Physics\RigidBody2DComponent.h" />
     <ClInclude Include="src\Mirage\ECS\Components\Rendering\CameraComponent.h" />
@@ -641,6 +642,7 @@
     <ClCompile Include="src\Mirage\Core\Layer.cpp" />
     <ClCompile Include="src\Mirage\Core\LayerStack.cpp" />
     <ClCompile Include="src\Mirage\Core\Log.cpp" />
+    <ClCompile Include="src\Mirage\Core\UUID.cpp" />
     <ClCompile Include="src\Mirage\Core\Window.cpp" />
     <ClCompile Include="src\Mirage\ECS\Components\Base\TransformComponent.cpp" />
     <ClCompile Include="src\Mirage\ECS\Scene.cpp" />
@@ -699,6 +701,9 @@
     <ProjectReference Include="vendor\yaml-cpp\yaml-cpp.vcxproj">
       <Project>{88F1A057-74BE-FB62-9DD7-E90A890331F1}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Mirage\ECS\Components\Base\IDCompoennt.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

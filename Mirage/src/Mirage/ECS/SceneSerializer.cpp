@@ -4,11 +4,12 @@
 #include <yaml-cpp/yaml.h>
 
 #include "SceneObject.h"
-#include "Components/Rendering/CameraComponent.h"
-#include "Components/Rendering/SpriteRendererComponent.h"
+#include "Components/Base/TagComponent.h"
 #include "Components/Base/TransformComponent.h"
 #include "Components/Physics/BoxCollider2DComponent.h"
 #include "Components/Physics/RigidBody2DComponent.h"
+#include "Components/Rendering/CameraComponent.h"
+#include "Components/Rendering/SpriteRendererComponent.h"
 
 namespace YAML
 {

@@ -15,7 +15,8 @@ namespace Mirage {
     public:
         EditorCamera() = default;
         // EditorCamera(ProjectionType projectionType);
-        EditorCamera(float fov, float aspectRatio, float nearClip, float farClip);
+        EditorCamera(ProjectionType projectionType);
+        // EditorCamera(float fov, float aspectRatio, float nearClip, float farClip);
 
         void SetProjectionType(ProjectionType projectionType);
         
@@ -74,14 +75,14 @@ namespace Mirage {
     private:
         struct PerspectiveData
         {
-            float m_FOV = 60.0f, m_NearClip = 0.1f, m_FarClip = 1000.0f;
+            float m_FOV = 60.0f, m_NearClip = 0.03f, m_FarClip = 1000.0f;
             Vec3 m_Position = { 0.0f, 0.0f, 10.0f };
             float m_Zooming = 10.0f;
         };
 
         struct OrthographicData
         {
-            float m_OrthographicSize = 10.0f, m_OrthographicNear = -1.0f, m_OrthographicFar = 1.0f;
+            float m_OrthographicSize = 10.0f, m_OrthographicNear = -1.0f, m_OrthographicFar = 1000.0f;
             Vec3 m_Position = { 0.0f, 0.0f, 10.0f };
             float m_Zooming = 10.0f;
         };

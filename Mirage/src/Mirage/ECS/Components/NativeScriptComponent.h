@@ -1,10 +1,9 @@
 ﻿#pragma once
 
-#include "Mirage/ECS/ScriptableSceneObject.h"
-
 namespace Mirage
 {
-
+	class ScriptableSceneObject;
+	
     struct NativeScriptComponent
     {
         ScriptableSceneObject* Instance = nullptr;

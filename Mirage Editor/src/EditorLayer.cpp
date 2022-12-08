@@ -64,7 +64,7 @@ namespace Mirage
 			serializer.SerializeText(sceneFilePath);
 		}
 
-		m_EditorCamera = EditorCamera(60.0f, 1.778f, 0.03f, 1000.0f);
+		m_EditorCamera = EditorCamera(Camera::Orthographic);
 		m_HierarchyPanel.SetContext(m_ActiveScene);
 
 		// ----------------------- initialize icons -----------------------
@@ -752,44 +752,48 @@ namespace Mirage
 			ImGui::OpenPopup("Camera");
 		}
 
-		ImGui::SetNextWindowSize(ImVec2{200, 85});
+		ImGui::SetNextWindowSize(ImVec2{200, 0});
 		ImGui::SetNextWindowPos(ImVec2{
 			ImGui::GetWindowPos().x + cameraPopUpPos.x, ImGui::GetWindowPos().y + cameraPopUpPos.y
 		});
 
 		if (ImGui::BeginPopup("Camera"))
 		{
+			ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
 			bool is3D = !m_EditorCamera.IsOrthographic();
+			
+			ImGui::AlignTextToFramePadding();
+			ImGui::SetCursorPos(ImVec2{ImGui::GetCursorPosX() + 10, ImGui::GetCursorPosY() + 3});
+			ImGui::Text("Mode: ");
+			ImGui::SameLine();
+			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 35);
+			float curPos = ImGui::GetCursorPosX();
+			ImGui::Text("2D");
+			ImGui::SameLine();
+			ImGui::PushItemWidth(110);
+			if (ImGui::ToggleButton("##CameraMode", &is3D))
+			{
+				// is 3D after click
+				m_EditorCamera.SetProjectionType(is3D? Camera::ProjectionType::Perspective : Camera::ProjectionType::Orthographic);
+			}
+			ImGui::PopItemWidth();
+			ImGui::SameLine();
+			ImGui::Text("3D");
+			
+			ImGui::Separator();
+			ImGui::Spacing();
+			
+			ImGui::AlignTextToFramePadding();
+			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+			ImGui::Text("Speed: ");
+			ImGui::SameLine();
+			ImGui::SetCursorPosX(curPos - 5);
+			ImGui::PushItemWidth(100);
+			ImGui::SliderFloat("##EditorCameraMoveSpeed", &m_EditorCamera.m_MoveSpeed, 0.01f, 10.0f, "%.5g");
+			ImGui::PopItemWidth();
+
 			if (!is3D)
 			{
-				ImGui::AlignTextToFramePadding();
-				ImGui::SetCursorPos(ImVec2{ImGui::GetCursorPosX() + 10, ImGui::GetCursorPosY() + 3});
-				ImGui::Text("Mode: ");
-				ImGui::SameLine();
-				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 35);
-				float curPos = ImGui::GetCursorPosX();
-				ImGui::Text("2D");
-				ImGui::SameLine();
-				ImGui::PushItemWidth(110);
-				if (ImGui::ToggleButton("##CameraMode", &is3D))
-				{
-					m_EditorCamera.SetProjectionType(Camera::ProjectionType::Perspective);
-				}
-				ImGui::PopItemWidth();
-				ImGui::SameLine();
-				ImGui::Text("3D");
-
-
-				ImGui::AlignTextToFramePadding();
-				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
-				ImGui::Text("Speed: ");
-				ImGui::SameLine();
-				ImGui::SetCursorPosX(curPos - 5);
-				ImGui::PushItemWidth(100);
-				ImGui::SliderFloat("##EditorCameraMoveSpeed", &m_EditorCamera.m_MoveSpeed, 0.01f, 10.0f, "%.5g");
-				ImGui::PopItemWidth();
-
-
 				ImGui::AlignTextToFramePadding();
 				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
 				ImGui::Text("Size: ");
@@ -802,37 +806,35 @@ namespace Mirage
 					m_EditorCamera.UpdateProjection();
 				}
 				ImGui::PopItemWidth();
-			}
-			else
-			{
-				ImGui::AlignTextToFramePadding();
-				ImGui::SetCursorPos(ImVec2{ImGui::GetCursorPosX() + 10, ImGui::GetCursorPosY() + 3});
-				ImGui::Text("Mode: ");
-				ImGui::SameLine();
-				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 35);
-				float curPos = ImGui::GetCursorPosX();
-				ImGui::Text("2D");
-				ImGui::SameLine();
-				ImGui::PushItemWidth(110);
-				if (ImGui::ToggleButton("##CameraMode", &is3D))
-				{
-					m_EditorCamera.SetProjectionType(Camera::ProjectionType::Orthographic);
-				}
-				ImGui::PopItemWidth();
-				ImGui::SameLine();
-				ImGui::Text("3D");
-
-
+				
+				ImGui::Separator();
+				ImGui::Spacing();
+			
 				ImGui::AlignTextToFramePadding();
 				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
-				ImGui::Text("Speed: ");
+				ImGui::Text("Near plane: ");
 				ImGui::SameLine();
 				ImGui::SetCursorPosX(curPos - 5);
 				ImGui::PushItemWidth(100);
-				ImGui::SliderFloat("##EditorCameraMoveSpeed", &m_EditorCamera.m_MoveSpeed, 0.01f, 10.0f, "%.5g");
+				if (ImGui::DragFloat("##EditorCameraNearClippingPlane", &m_EditorCamera.m_OrthographicData.m_OrthographicNear, 0.01f,0.01, 0.0f, "%.5g"))
+				{
+					m_EditorCamera.UpdateProjection();
+				}
 				ImGui::PopItemWidth();
-
-
+			
+				ImGui::AlignTextToFramePadding();
+				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+				ImGui::Text("Far plane: ");
+				ImGui::SameLine();
+				ImGui::SetCursorPosX(curPos - 5);
+				ImGui::PushItemWidth(100);
+				if (ImGui::DragFloat("##EditorCameraFarClippingPlane", &m_EditorCamera.m_OrthographicData.m_OrthographicFar, 10.0f, 0.01f, 0.0f, "%.5g"))
+				{
+					m_EditorCamera.UpdateProjection();
+				}
+			}
+			else
+			{				
 				ImGui::AlignTextToFramePadding();
 				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
 				ImGui::Text("FOV: ");
@@ -845,8 +847,38 @@ namespace Mirage
 					m_EditorCamera.UpdateProjection();
 				}
 				ImGui::PopItemWidth();
+				
+				ImGui::Separator();
+				ImGui::Spacing();
+			
+				ImGui::AlignTextToFramePadding();
+				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+				ImGui::Text("Near plane: ");
+				ImGui::SameLine();
+				ImGui::SetCursorPosX(curPos - 5);
+				ImGui::PushItemWidth(100);
+				if (ImGui::DragFloat("##EditorCameraNearClippingPlane", &m_EditorCamera.m_PerspectiveData.m_NearClip, 0.01f,0.01, 0.0f, "%.5g"))
+				{
+					m_EditorCamera.UpdateProjection();
+				}
+				ImGui::PopItemWidth();
+			
+				ImGui::AlignTextToFramePadding();
+				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+				ImGui::Text("Far plane: ");
+				ImGui::SameLine();
+				ImGui::SetCursorPosX(curPos - 5);
+				ImGui::PushItemWidth(100);
+				if (ImGui::DragFloat("##EditorCameraFarClippingPlane", &m_EditorCamera.m_PerspectiveData.m_FarClip, 0.1f, 0.01f, 0.0f, "%.5g"))
+				{
+					m_EditorCamera.UpdateProjection();
+				}
+				ImGui::PopItemWidth();
 			}
 
+			ImGui::Spacing();
+			ImGui::PopStyleColor();
+			
 			ImGui::EndPopup();
 		}
 

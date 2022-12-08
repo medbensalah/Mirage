@@ -11,14 +11,23 @@
 #include <glm/gtx/quaternion.hpp>
 
 namespace Mirage {
-	EditorCamera::EditorCamera(float fov, float aspectRatio, float nearClip, float farClip)
-		: m_ProjectionType(ProjectionType::Perspective),
-		  m_PerspectiveData(PerspectiveData{fov, nearClip, farClip, Vec3{1.5f, 1.25f, 1.5f}, 10.0f}),
-		  m_OrthographicData(OrthographicData{10.0f, -1.0f, farClip, Vec3{0.0f, 0.0f, 10.0f}, 10.0f}),
-	      m_AspectRatio(aspectRatio)
+	EditorCamera::EditorCamera(ProjectionType projectionType)
+	: m_ProjectionType(projectionType),
+	  m_PerspectiveData(PerspectiveData{60, 0.03f, 1000.0f, Vec3{1.5f, 1.25f, 1.5f}, 10.0f}),
+	  m_OrthographicData(OrthographicData{10.0f, -1.0f, 1000.0f, Vec3{0.0f, 0.0f, 10.0f}, 10.0f}),
+	  m_AspectRatio(1.778f)
 	{
 		UpdateView();
 	}
+
+	// EditorCamera::EditorCamera(float fov, float aspectRatio, float nearClip, float farClip)
+	// 	: m_ProjectionType(ProjectionType::Perspective),
+	// 	  m_PerspectiveData(PerspectiveData{fov, nearClip, farClip, Vec3{1.5f, 1.25f, 1.5f}, 10.0f}),
+	// 	  m_OrthographicData(OrthographicData{10.0f, -1.0f, farClip, Vec3{0.0f, 0.0f, 10.0f}, 10.0f}),
+	//       m_AspectRatio(aspectRatio)
+	// {
+	// 	UpdateView();
+	// }
 
 	void EditorCamera::SetProjectionType(ProjectionType projectionType)
 	{

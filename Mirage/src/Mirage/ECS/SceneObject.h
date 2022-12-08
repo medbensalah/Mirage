@@ -1,9 +1,10 @@
 ﻿#pragma once
 
+#include "Mirage/Core/UUID.h"
+#include "Mirage/ECS/Components/Base/IDCompoennt.h"
 #include "Scene.h"
-#include <enTT.hpp>
 
-#include "Mirage/ECS/Components/Base/TagComponent.h"
+#include <enTT.hpp>
 
 namespace Mirage
 {
@@ -85,6 +86,8 @@ namespace Mirage
         operator uint32_t() const { return (uint32_t)m_Entity; }
         operator entt::entity() const { return m_Entity; }
 
+		UUID GetUUID() { return GetComponent<IDComponent>().ID; }
+    	
         bool operator== (const SceneObject& other) const
         {
             return m_Entity == other.m_Entity && m_Scene == other.m_Scene;

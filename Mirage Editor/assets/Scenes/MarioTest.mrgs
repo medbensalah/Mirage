@@ -5,7 +5,7 @@ Entities:
       Tag: Ground
     TransformComponent:
       Position: [0, -3.31010556, 0]
-      Rotation: [0, 0, -13.7368336]
+      Rotation: [0, 0, -32.9167366]
       Scale: [31.4095802, 1, 1]
     SpriteRendererComponent:
       Color: [1, 0.761492848, 0.48887378, 1]
@@ -19,9 +19,9 @@ Entities:
     BoxCollider2DComponent:
       Size: [0.5, 0.5]
       Offset: [0, 0]
-      Density: 1
-      Friction: 0.5
-      Bounciness: 0.600000024
+      Density: 2
+      Friction: 0.100000001
+      Bounciness: 0.75
       BouncinessThreshold: 0.5
   - Entity: 1
     TagComponent:
@@ -46,8 +46,8 @@ Entities:
     TagComponent:
       Tag: new SceneObject
     TransformComponent:
-      Position: [3.78731942, -3.18623877, 0]
-      Rotation: [0, 0, -103.742317]
+      Position: [-12.0469856, 9.60833549, 0]
+      Rotation: [0, 0, -1601.66162]
       Scale: [1, 5.04114532, 1]
     SpriteRendererComponent:
       Color: [0.576595426, 0.859924972, 0.23602286, 1]
@@ -62,16 +62,16 @@ Entities:
       Size: [0.5, 0.5]
       Offset: [0, 0]
       Density: 9.69999981
-      Friction: 0
-      Bounciness: 0
-      BouncinessThreshold: 0.5
+      Friction: 0.150000006
+      Bounciness: 0.449999988
+      BouncinessThreshold: 0.25
   - Entity: 3
     TagComponent:
       Tag: new SceneObject
     TransformComponent:
       Position: [7.24795532, -3.62397742, 0]
       Rotation: [0, 0, -13.6999998]
-      Scale: [1.84999967, 1.84999967, 1.8499999]
+      Scale: [1.84999967, 12.7034807, 1.8499999]
     SpriteRendererComponent:
       Color: [1, 1, 1, 1]
       Texture: Resources/Defaults/Textures/White.png
@@ -85,6 +85,6 @@ Entities:
       Size: [0.5, 0.5]
       Offset: [0, 0]
       Density: 1
-      Friction: 0.800000012
-      Bounciness: 0.300000012
+      Friction: 0.200000003
+      Bounciness: 5
       BouncinessThreshold: 0.200000003
