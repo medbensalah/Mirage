@@ -1,6 +1,6 @@
 Scene: Untitled
 Entities:
-  - Entity: 0
+  - Entity: 17725123256376683801
     TagComponent:
       Tag: Entity
     TransformComponent:
@@ -12,7 +12,7 @@ Entities:
       Texture: Assets\textures\Mario.png
       Tiling: [1, 1]
       Offset: [0, 0]
-  - Entity: 1
+  - Entity: 15099914659801941184
     TagComponent:
       Tag: new SceneObject
     TransformComponent:

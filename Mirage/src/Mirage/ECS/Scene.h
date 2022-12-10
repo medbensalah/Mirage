@@ -4,6 +4,7 @@
 #include <enTT.hpp>
 
 #include "Mirage/Core/Time.h"
+#include "Mirage/Core/UUID.h"
 
 class b2World;
 
@@ -18,7 +19,11 @@ namespace Mirage
         Scene();
         ~Scene();
 
+    	static Ref<Scene> Copy(const Ref<Scene> source);
+
+        SceneObject CreateSceneObjectWithUUID(UUID uuid, const std::string& name = std::string());
         SceneObject CreateSceneObject(const std::string& name = std::string());
+        SceneObject CreateChildSceneObjectWithUUID(UUID uuid, entt::entity parent, const std::string& name = std::string());
         SceneObject CreateChildSceneObject(entt::entity parent, const std::string& name = std::string());
         void DestroySceneObject(SceneObject& entity);
 

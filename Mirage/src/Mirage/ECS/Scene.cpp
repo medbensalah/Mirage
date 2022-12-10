@@ -46,13 +46,75 @@ namespace Mirage
 		}
 	}
 
-    SceneObject Scene::CreateSceneObject(const std::string& name)
+	template <typename Component>
+	static void CopyComponents(entt::registry& dstRegistry, entt::registry& srcRegistry, const std::unordered_map<UUID, entt::entity>& map)
+	{
+		auto view = srcRegistry.view<Component>();
+		for (auto e : view)
+		{
+			UUID uuid = srcRegistry.get<IDComponent>(e).ID;
+			entt::entity dstEntityID = map.at(uuid);
+
+			auto& component = srcRegistry.get<Component>(e);
+			dstRegistry.emplace_or_replace<Component>(dstEntityID, component);
+		}
+	}
+
+	Ref<Scene> Scene::Copy(const Ref<Scene> source)
+	{		
+		Ref<Scene> scene = CreateRef<Scene>();
+
+
+		scene->m_ViewportWidth = source->m_ViewportWidth;
+		scene->m_ViewportHeight = source->m_ViewportHeight;
+
+		auto& srcReg = source->m_Registry;
+		auto& dstReg = scene->m_Registry;
+		std::unordered_map<UUID, entt::entity> entt_UUID_Map;
+
+		auto idView = srcReg.view<IDComponent>();
+		for (auto entity : idView)
+		{
+			UUID id = idView.get<IDComponent>(entity).ID;
+			const auto& name = srcReg.get<TagComponent>(entity).Tag;
+
+			SceneObject newSO = scene->CreateSceneObjectWithUUID(id, name);
+			entt_UUID_Map[id] = (entt::entity)newSO;
+		}
+
+		for (auto& kv : source->m_Hierarchy)
+		{
+			SceneObject oldSO = {kv.first, source.get()};
+			if (SceneObject parent = oldSO.GetParent())
+			{
+				SceneObject newParent = {entt_UUID_Map[parent.GetUUID()], scene.get()};
+				newParent.AddChild(entt_UUID_Map[oldSO.GetUUID()]);
+			}
+		}
+		
+		CopyComponents<TransformComponent>(dstReg, srcReg,  entt_UUID_Map);
+		CopyComponents<SpriteRendererComponent>(dstReg, srcReg,  entt_UUID_Map);
+		CopyComponents<CameraComponent>(dstReg, srcReg,  entt_UUID_Map);
+		CopyComponents<RigidBody2DComponent>(dstReg, srcReg,  entt_UUID_Map);
+		CopyComponents<BoxCollider2DComponent>(dstReg, srcReg,  entt_UUID_Map);
+		CopyComponents<NativeScriptComponent>(dstReg, srcReg,  entt_UUID_Map);
+
+		return scene;
+	}
+
+	SceneObject Scene::CreateSceneObject(const std::string& name)
+    {
+        return CreateSceneObjectWithUUID(UUID(), name);
+    }
+
+    SceneObject Scene::CreateSceneObjectWithUUID(UUID uuid, const std::string& name)
     {        
         SceneObject sceneObject = {m_Registry.create(), this};
         Relationship r;
         m_Hierarchy.emplace(sceneObject, r);
-        auto& transform = sceneObject.AddComponent<TransformComponent>(this);
+		sceneObject.AddComponent<IDComponent>(uuid);
         auto& tag = sceneObject.AddComponent<TagComponent>();
+        auto& transform = sceneObject.AddComponent<TransformComponent>(this);
         tag.Tag = name.empty() ? "Entity" : name;
         
         return sceneObject;
@@ -60,11 +122,16 @@ namespace Mirage
 
     SceneObject Scene::CreateChildSceneObject(entt::entity parent, const std::string& name)
     {
-        SceneObject so = CreateSceneObject(name);
+        return CreateChildSceneObjectWithUUID(UUID(), parent, name);
+    }
 
-        SceneObject p = {parent, this};
-        p.AddChild(so);
-        return so;
+    SceneObject Scene::CreateChildSceneObjectWithUUID(UUID uuid, entt::entity parent, const std::string& name)
+	{
+		SceneObject so = CreateSceneObjectWithUUID(uuid, name);
+
+		SceneObject p = {parent, this};
+		p.AddChild(so);
+		return so;
     }
 
     void Scene::DestroySceneObject(SceneObject& entity)
@@ -284,8 +351,18 @@ namespace Mirage
     }
 
 
+	template <typename T>
+	void Scene::OnComponentAdded(SceneObject& entity, T& component)
+	{
+	}
+	
     template <>
     void Scene::OnComponentAdded(SceneObject& entity, TagComponent& component)
+    {
+    }
+
+    template <>
+    void Scene::OnComponentAdded(SceneObject& entity, IDComponent& component)
     {
     }
     
@@ -295,7 +372,7 @@ namespace Mirage
     }
 
     template <>
-    void Scene::OnComponentAdded<CameraComponent>(SceneObject& entity, CameraComponent& component)
+    void Scene::OnComponentAdded(SceneObject& entity, CameraComponent& component)
     {
         if (m_ViewportWidth > 0 && m_ViewportHeight > 0)
             component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);

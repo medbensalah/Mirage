@@ -1,10 +1,10 @@
 Scene: Untitled
 Entities:
-  - Entity: 0
+  - Entity: 17676059062529807383
     TagComponent:
       Tag: Camera
     TransformComponent:
-      Position: [0, 1.39999998, 2.5999999]
+      Position: [0.854700983, 1.39999998, 2.5999999]
       Rotation: [-35, 0, 0]
       Scale: [1, 1, 1]
     CameraComponent:
@@ -19,11 +19,11 @@ Entities:
       Primary: true
       FixedAspectRatio: false
       ClearColor: [0.300000012, 0.300000012, 0.300000012, 1]
-  - Entity: 1
+  - Entity: 8212008298137570855
     TagComponent:
       Tag: Square 1
     TransformComponent:
-      Position: [0, 0.5, 0]
+      Position: [-1.70940197, 0.5, 0]
       Rotation: [90, 45, 0]
       Scale: [1, 1, 1]
     SpriteRendererComponent:
@@ -31,11 +31,11 @@ Entities:
       Texture: ..\Mirage Editor\Resources\Defaults\Textures\White.png
       Tiling: [1, 1]
       Offset: [0, 0]
-  - Entity: 2
+  - Entity: 13472581806455420767
     TagComponent:
       Tag: Square2
     TransformComponent:
-      Position: [-0.352999985, 0, 0.349999994]
+      Position: [-0.352999985, 1.23076916, 0.349999994]
       Rotation: [0, -45, 0]
       Scale: [1, 1, 1]
     SpriteRendererComponent:
@@ -44,11 +44,11 @@ Entities:
       Tiling: [1, 1]
       Offset: [0, 0]
     Children:
-      - Entity: 3
+      - Entity: 9855912753106756377
         TagComponent:
           Tag: Entity
         TransformComponent:
-          Position: [1.53547966, 0, -1.53548312]
+          Position: [-1.23251164, 2.56410289, 1.23250675]
           Rotation: [0, 170.379349, 0]
           Scale: [1, 1, 1]
         SpriteRendererComponent:
@@ -57,7 +57,7 @@ Entities:
           Tiling: [1, 1]
           Offset: [0, 0]
         Children:
-          - Entity: 4
+          - Entity: 11781115795105802412
             TagComponent:
               Tag: Entity
             TransformComponent:
@@ -69,7 +69,7 @@ Entities:
               Texture: ..\Mirage Editor\Resources\Defaults\Textures\White.png
               Tiling: [1, 1]
               Offset: [0, 0]
-  - Entity: 5
+  - Entity: 14095498867711384305
     TagComponent:
       Tag: Square3
     TransformComponent:

@@ -56,6 +56,7 @@ namespace Mirage
     	bool m_ShowPreview = false;
     	
         Ref<Scene> m_ActiveScene;
+        Ref<Scene> m_EditorScene;
 		std::filesystem::path m_ActiveScenePath;
         
         bool m_ViewportFocused = false;

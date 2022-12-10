@@ -154,8 +154,11 @@ namespace Mirage
 
     static void SerializeSceneObject(YAML::Emitter& out, SceneObject so)
     {
+		MRG_CORE_ASSERT(so.HasComponent<IDComponent>());
+		
+		MRG_CORE_INFO("Serializing entity with ID = {0}", so.GetUUID());
         out << YAML::BeginMap;
-        out << YAML::Key << "Entity" << YAML::Value << so.GetEntity();
+        out << YAML::Key << "Entity" << YAML::Value << so.GetUUID();
 
         if (so.HasComponent<TagComponent>())
         {
@@ -335,7 +338,7 @@ namespace Mirage
             for (auto& child : children)
             {
 
-                uint32_t uuid = child["Entity"].as<uint64_t>();
+                uint64_t uuid = child["Entity"].as<uint64_t>();
                 MRG_CORE_INFO("Deserializing entity with ID = {0}", uuid);
     
                 std::string tag;
@@ -364,7 +367,6 @@ namespace Mirage
         {
             if(kv.second.m_Parent == entt::null)
             {
-                MRG_CORE_INFO("Serializing entity with ID = {0}", (uint32_t)kv.first);
                 SceneObject so = { kv.first, m_Scene.get() };
                 SerializeSceneObject(out, so);
             }
@@ -400,7 +402,7 @@ namespace Mirage
         {
            for (auto entity : entities)
            {                
-               uint32_t uuid = entity["Entity"].as<uint64_t>();
+               uint64_t uuid = entity["Entity"].as<uint64_t>();
                MRG_CORE_INFO("Deserializing entity with ID = {0}", uuid);
     
                std::string tag;
