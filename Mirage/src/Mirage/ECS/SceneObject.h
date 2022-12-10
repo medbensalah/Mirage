@@ -6,6 +6,8 @@
 
 #include <enTT.hpp>
 
+#include "Components/Base/HierarchyComponent.h"
+
 namespace Mirage
 {
 
@@ -29,23 +31,23 @@ namespace Mirage
         
         size_t GetChildCount()
         {
-            return m_Scene->m_Hierarchy.at(m_Entity).m_Children.size();
+            return GetComponent<HierarchyComponent>().m_Children.size();
         }
         SceneObject GetChild(size_t index)
         {
-            return SceneObject(m_Scene->m_Hierarchy.at(m_Entity).m_Children[index], m_Scene);
+            return SceneObject(GetComponent<HierarchyComponent>().m_Children[index], m_Scene);
         }
         SceneObject GetParent()
         {
-            return SceneObject(m_Scene->m_Hierarchy.at(m_Entity).m_Parent, m_Scene);
+            return SceneObject(GetComponent<HierarchyComponent>().m_Parent, m_Scene);
         }
         bool HasParent()
         {
-            return m_Scene->m_Hierarchy.at(m_Entity).m_Parent != entt::null;
+            return GetComponent<HierarchyComponent>().m_Parent != entt::null;
         }
         std::vector<entt::entity> GetChildren()
         {
-            return m_Scene->m_Hierarchy.at(m_Entity).m_Children;
+            return GetComponent<HierarchyComponent>().m_Children;
         }
         
         template <typename T, typename... Args>

@@ -17,26 +17,25 @@ namespace Mirage
         {
             GetParent().RemoveChild(m_Entity);
         }
-        auto v = m_Scene->m_Hierarchy.at(m_Entity).m_Children;
+        auto v =GetComponent<HierarchyComponent>().m_Children;
         for(auto child : v)
         {
             SceneObject so = {child, m_Scene};
             so.Destroy();
         }
-        m_Scene->m_Hierarchy.erase(m_Entity);
         m_Scene->m_Registry.destroy(m_Entity);
     }
 
     void SceneObject::AddChild(entt::entity entity)
     {
-        m_Scene->m_Hierarchy.at(m_Entity).m_Children.push_back(entity);
+        GetComponent<HierarchyComponent>().m_Children.push_back(entity);
         SceneObject so = {entity, m_Scene};
         so.SetParent(m_Entity);
     }
 
     void SceneObject::RemoveChild(entt::entity child)
     {
-        auto v = &m_Scene->m_Hierarchy.at(m_Entity).m_Children;
+        auto v = &GetComponent<HierarchyComponent>().m_Children;
         auto it = std::find(v->begin(), v->end(), child);
         if (it != v->end())
         {
@@ -48,11 +47,11 @@ namespace Mirage
 
     void SceneObject::SetParent(entt::entity parent)
     {
-        m_Scene->m_Hierarchy.at(m_Entity).m_Parent = parent;
+        GetComponent<HierarchyComponent>().m_Parent = parent;
     }
 
     void SceneObject::RemoveParent()
     {
-        m_Scene->m_Hierarchy.at(m_Entity).m_Parent = entt::null;
+        GetComponent<HierarchyComponent>().m_Parent = entt::null;
     }
 }

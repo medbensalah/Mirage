@@ -1,83 +1,39 @@
 Scene: Untitled
 Entities:
-  - Entity: 17676059062529807383
+  - Entity: 8349806295518433082
     TagComponent:
-      Tag: Camera
+      Tag: Entity
     TransformComponent:
-      Position: [0.854700983, 1.39999998, 2.5999999]
-      Rotation: [-35, 0, 0]
-      Scale: [1, 1, 1]
-    CameraComponent:
-      Camera:
-        ProjectionType: 0
-        PerspectiveFOV: 0.851720631
-        PerspectiveNear: 0.00999999978
-        PerspectiveFar: 1000
-        OrthographicSize: 10
-        OrthographicNear: -1
-        OrthographicFar: 1
-      Primary: true
-      FixedAspectRatio: false
-      ClearColor: [0.300000012, 0.300000012, 0.300000012, 1]
-  - Entity: 8212008298137570855
-    TagComponent:
-      Tag: Square 1
-    TransformComponent:
-      Position: [-1.70940197, 0.5, 0]
-      Rotation: [90, 45, 0]
+      Position: [-1.23251164, 2.56410289, 1.23250675]
+      Rotation: [0, 170.379349, 0]
       Scale: [1, 1, 1]
     SpriteRendererComponent:
-      Color: [0.741176486, 0.61038065, 0, 1]
-      Texture: ..\Mirage Editor\Resources\Defaults\Textures\White.png
-      Tiling: [1, 1]
-      Offset: [0, 0]
-  - Entity: 13472581806455420767
-    TagComponent:
-      Tag: Square2
-    TransformComponent:
-      Position: [-0.352999985, 1.23076916, 0.349999994]
-      Rotation: [0, -45, 0]
-      Scale: [1, 1, 1]
-    SpriteRendererComponent:
-      Color: [1, 0.822387278, 0, 1]
+      Color: [1, 1, 1, 1]
       Texture: ..\Mirage Editor\Resources\Defaults\Textures\White.png
       Tiling: [1, 1]
       Offset: [0, 0]
     Children:
-      - Entity: 9855912753106756377
+      - Entity: 6754892028074367320
         TagComponent:
           Tag: Entity
         TransformComponent:
-          Position: [-1.23251164, 2.56410289, 1.23250675]
-          Rotation: [0, 170.379349, 0]
+          Position: [-5.60283661e-06, 0.844052851, -1.257658e-05]
+          Rotation: [44.5544395, 0, 0]
           Scale: [1, 1, 1]
         SpriteRendererComponent:
-          Color: [1, 1, 1, 1]
+          Color: [0.369959414, 0, 0.964855015, 1]
           Texture: ..\Mirage Editor\Resources\Defaults\Textures\White.png
           Tiling: [1, 1]
           Offset: [0, 0]
-        Children:
-          - Entity: 11781115795105802412
-            TagComponent:
-              Tag: Entity
-            TransformComponent:
-              Position: [-5.60283661e-06, 0.844052851, -1.257658e-05]
-              Rotation: [44.5544395, 0, 0]
-              Scale: [1, 1, 1]
-            SpriteRendererComponent:
-              Color: [0.369959414, 0, 0.964855015, 1]
-              Texture: ..\Mirage Editor\Resources\Defaults\Textures\White.png
-              Tiling: [1, 1]
-              Offset: [0, 0]
-  - Entity: 14095498867711384305
+  - Entity: 5321830905045830425
     TagComponent:
-      Tag: Square3
+      Tag: Entity
     TransformComponent:
-      Position: [0.349999994, 0, 0.349999994]
-      Rotation: [0, 45, 0]
+      Position: [-5.60283661e-06, 0.844052851, -1.257658e-05]
+      Rotation: [44.5544395, 0, 0]
       Scale: [1, 1, 1]
     SpriteRendererComponent:
-      Color: [0.380392164, 0.313264132, 0, 1]
+      Color: [0.369959414, 0, 0.964855015, 1]
       Texture: ..\Mirage Editor\Resources\Defaults\Textures\White.png
       Tiling: [1, 1]
       Offset: [0, 0]

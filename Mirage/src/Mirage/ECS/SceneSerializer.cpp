@@ -363,14 +363,14 @@ namespace Mirage
         out << YAML::Key << "Scene" << YAML::Value << "Untitled";
         
         out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
-        for(auto& kv : m_Scene->m_Hierarchy)
-        {
-            if(kv.second.m_Parent == entt::null)
-            {
-                SceneObject so = { kv.first, m_Scene.get() };
-                SerializeSceneObject(out, so);
-            }
-        }
+		m_Scene->m_Registry.each([&](entt::entity entityID)
+		{
+			SceneObject so = {entityID, m_Scene.get()};
+			if (!so.HasParent())
+			{
+				SerializeSceneObject(out, so);
+			}
+		});
         out << YAML::EndSeq;
         
         out << YAML::EndMap;

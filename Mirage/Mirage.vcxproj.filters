@@ -129,6 +129,9 @@
     <ClInclude Include="src\Mirage\Core\Time.h">
       <Filter>src\Mirage\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\Core\UUID.h">
+      <Filter>src\Mirage\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Mirage\Core\Window.h">
       <Filter>src\Mirage\Core</Filter>
     </ClInclude>
@@ -147,7 +150,7 @@
     <ClInclude Include="src\Mirage\Definitions\Textures.h">
       <Filter>src\Mirage\Definitions</Filter>
     </ClInclude>
-    <ClInclude Include="src\Mirage\ECS\Components\Base\NativeScriptComponent.h">
+    <ClInclude Include="src\Mirage\ECS\Components\Base\IDCompoennt.h">
       <Filter>src\Mirage\ECS\Components\Base</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\ECS\Components\Base\TagComponent.h">
@@ -155,6 +158,9 @@
     </ClInclude>
     <ClInclude Include="src\Mirage\ECS\Components\Base\TransformComponent.h">
       <Filter>src\Mirage\ECS\Components\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\Components\NativeScriptComponent.h">
+      <Filter>src\Mirage\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\ECS\Components\Physics\BoxCollider2DComponent.h">
       <Filter>src\Mirage\ECS\Components\Physics</Filter>
@@ -1566,6 +1572,9 @@
       <Filter>src\Mirage\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Mirage\Core\Log.cpp">
+      <Filter>src\Mirage\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\Core\UUID.cpp">
       <Filter>src\Mirage\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Mirage\Core\Window.cpp">

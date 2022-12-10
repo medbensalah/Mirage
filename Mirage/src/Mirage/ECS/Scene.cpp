@@ -16,6 +16,7 @@
 #include "box2d/b2_body.h"
 #include "box2d/b2_fixture.h"
 #include "box2d/b2_polygon_shape.h"
+#include "Components/Base/HierarchyComponent.h"
 #include "Mirage/Physics/Globals.h"
 
 namespace Mirage
@@ -40,10 +41,6 @@ namespace Mirage
 	
 	Scene::~Scene()
 	{
-		for (auto& entity : m_Hierarchy)
-		{
-			m_Registry.destroy(entity.first);
-		}
 	}
 
 	template <typename Component>
@@ -81,16 +78,6 @@ namespace Mirage
 			SceneObject newSO = scene->CreateSceneObjectWithUUID(id, name);
 			entt_UUID_Map[id] = (entt::entity)newSO;
 		}
-
-		for (auto& kv : source->m_Hierarchy)
-		{
-			SceneObject oldSO = {kv.first, source.get()};
-			if (SceneObject parent = oldSO.GetParent())
-			{
-				SceneObject newParent = {entt_UUID_Map[parent.GetUUID()], scene.get()};
-				newParent.AddChild(entt_UUID_Map[oldSO.GetUUID()]);
-			}
-		}
 		
 		CopyComponents<TransformComponent>(dstReg, srcReg,  entt_UUID_Map);
 		CopyComponents<SpriteRendererComponent>(dstReg, srcReg,  entt_UUID_Map);
@@ -110,9 +97,8 @@ namespace Mirage
     SceneObject Scene::CreateSceneObjectWithUUID(UUID uuid, const std::string& name)
     {        
         SceneObject sceneObject = {m_Registry.create(), this};
-        Relationship r;
-        m_Hierarchy.emplace(sceneObject, r);
 		sceneObject.AddComponent<IDComponent>(uuid);
+		sceneObject.AddComponent<HierarchyComponent>();
         auto& tag = sceneObject.AddComponent<TagComponent>();
         auto& transform = sceneObject.AddComponent<TransformComponent>(this);
         tag.Tag = name.empty() ? "Entity" : name;
@@ -363,6 +349,11 @@ namespace Mirage
 
     template <>
     void Scene::OnComponentAdded(SceneObject& entity, IDComponent& component)
+    {
+    }
+	
+    template <>
+    void Scene::OnComponentAdded(SceneObject& entity, HierarchyComponent& component)
     {
     }
     

@@ -49,7 +49,7 @@ namespace Mirage
 		b2World* m_PhysicsWorld = nullptr;
     	Timer m_PhysicsTimer;
     	
-        std::unordered_map<entt::entity, Relationship> m_Hierarchy;
+        // std::unordered_map<entt::entity, Relationship> m_Hierarchy;
         
         friend class SceneSerializer;
         friend class SceneObject;

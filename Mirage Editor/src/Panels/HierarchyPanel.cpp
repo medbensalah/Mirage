@@ -132,7 +132,7 @@ namespace Mirage
         
         if (opened)
         {
-	        auto v = &m_Context->m_Hierarchy.at(so).m_Children;
+	        auto v = &so.GetComponent<HierarchyComponent>().m_Children;
 	        for (auto child : *v)
 	        {
 		        DrawEntityNode({child, m_Context.get()});

@@ -2,23 +2,26 @@
 
 class b2Body;
 
-struct RigidBody2DComponent
+namespace Mirage
 {
-	RigidBody2DComponent() = default;
-	RigidBody2DComponent(const RigidBody2DComponent&) = default;
-	
-	enum class BodyType
+	struct RigidBody2DComponent
 	{
-		Static	  = 0,
-		Kinematic = 1,
-		Dynamic   = 2
+		RigidBody2DComponent() = default;
+		RigidBody2DComponent(const RigidBody2DComponent&) = default;
+	
+		enum class BodyType
+		{
+			Static	  = 0,
+			Kinematic = 1,
+			Dynamic   = 2
+		};
+
+		BodyType Type = BodyType::Static;
+	
+
+		float GravityScale = 1.0f;
+		bool FixedRotation = false;
+	
+		b2Body* RuntimeBody = nullptr;
 	};
-
-	BodyType Type = BodyType::Static;
-	
-
-	float GravityScale = 1.0f;
-	bool FixedRotation = false;
-	
-	b2Body* RuntimeBody = nullptr;
-};
+}

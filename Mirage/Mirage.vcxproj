@@ -167,6 +167,8 @@
     <ClInclude Include="src\Mirage\Definitions\FileExtensions.h" />
     <ClInclude Include="src\Mirage\Definitions\Icons.h" />
     <ClInclude Include="src\Mirage\Definitions\Textures.h" />
+    <ClInclude Include="src\Mirage\ECS\Components\Base\HierarchyComponent.h" />
+    <ClInclude Include="src\Mirage\ECS\Components\Base\IDCompoennt.h" />
     <ClInclude Include="src\Mirage\ECS\Components\Base\TagComponent.h" />
     <ClInclude Include="src\Mirage\ECS\Components\Base\TransformComponent.h" />
     <ClInclude Include="src\Mirage\ECS\Components\NativeScriptComponent.h" />
@@ -701,9 +703,6 @@
     <ProjectReference Include="vendor\yaml-cpp\yaml-cpp.vcxproj">
       <Project>{88F1A057-74BE-FB62-9DD7-E90A890331F1}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\Mirage\ECS\Components\Base\IDCompoennt.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
