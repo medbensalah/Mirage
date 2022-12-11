@@ -57,6 +57,58 @@ namespace Mirage
 		}
 	}
 
+	SceneObject CopySceneObject(SceneObject so, Ref<Scene> dst, Ref<Scene> src, std::unordered_map<UUID, entt::entity>* map)
+	{
+		UUID id = so.GetUUID();
+		const auto& name = so.GetTag();
+
+		SceneObject newSO = dst->CreateSceneObjectWithUUID(id, name);
+		(*map)[id] = (entt::entity)newSO;
+
+		TransformComponent& newTransform = newSO.GetComponent<TransformComponent>();
+		TransformComponent& transform = so.GetComponent<TransformComponent>();
+
+		newTransform.SetPosition(transform.Position());
+		newTransform.SetRotation(transform.Rotation());
+		newTransform.SetScale(transform.Scale());
+	
+		for (auto& child : so.GetChildren())
+		{
+			SceneObject c = CopySceneObject({child, src.get()}, dst, src, map);
+			newSO.AddChild(c);
+			c.SetParent(newSO);
+		}
+		return newSO;
+		
+		// if (!so.HasParent())
+		// {
+		// 	UUID id = so.GetUUID();
+		// 	const auto& name = so.GetTag();
+		//
+		// 	SceneObject newSO = dst->CreateSceneObjectWithUUID(id, name);
+		// 	(*map)[id] = (entt::entity)newSO;
+		// 	for (auto& child : so.GetChildren())
+		// 	{
+		// 		CopySceneObject({child, src.get()}, dst, src, map);
+		// 	}
+		// }
+		// else
+		// {
+		// 	UUID id = so.GetUUID();
+		// 	const auto& name = so.GetTag();
+		//
+		// 	SceneObject newSO = dst->CreateSceneObjectWithUUID(id, name);
+		// 	(*map)[id] = (entt::entity)newSO;
+		// 	SceneObject parent = {map->at(so.GetParent().GetUUID()), dst.get()};
+		// 	newSO.SetParent(parent);
+		// 	MRG_CORE_WARN("{0} is child of {1}", newSO.GetTag(), parent.GetTag());
+		// 	for (auto& child : so.GetChildren())
+		// 	{
+		// 		CopySceneObject({child, src.get()}, dst, src, map);
+		// 	}
+		// }
+	}
+	
 	Ref<Scene> Scene::Copy(const Ref<Scene> source)
 	{		
 		Ref<Scene> scene = CreateRef<Scene>();
@@ -69,23 +121,46 @@ namespace Mirage
 		auto& dstReg = scene->m_Registry;
 		std::unordered_map<UUID, entt::entity> entt_UUID_Map;
 
-		auto idView = srcReg.view<IDComponent>();
-		for (auto entity : idView)
+		for (auto& h : source->m_Hierarchy)
 		{
-			UUID id = idView.get<IDComponent>(entity).ID;
-			const auto& name = srcReg.get<TagComponent>(entity).Tag;
-
-			SceneObject newSO = scene->CreateSceneObjectWithUUID(id, name);
-			entt_UUID_Map[id] = (entt::entity)newSO;
+			CopySceneObject({h.m_entity, source.get()}, scene, source, &entt_UUID_Map);
 		}
 		
-		CopyComponents<TransformComponent>(dstReg, srcReg,  entt_UUID_Map);
+
+		// auto idView = srcReg.view<IDComponent>();
+		// auto& rb = idView.rbegin();
+		// auto& re = idView.rend();
+		// for (auto it = rb; it != re; ++it)
+		// {
+		// 	SceneObject so = { *it, source.get() };
+		// 	if (!so.HasParent())
+		// 	{
+		// 		UUID id = so.GetUUID();
+		// 		const auto& name = so.GetTag();
+		//
+		// 		SceneObject newSO = scene->CreateSceneObjectWithUUID(id, name);
+		// 		entt_UUID_Map[id] = (entt::entity)newSO;
+		// 	}
+		// }
+
+		// auto idView = srcReg.view<IDComponent>();
+		// for (auto entity : idView)
+		// {
+		// 	UUID id = idView.get<IDComponent>(entity).ID;
+		// 	const auto& name = srcReg.get<TagComponent>(entity).Tag;
+		//
+		// 	SceneObject newSO = scene->CreateSceneObjectWithUUID(id, name);
+		// 	entt_UUID_Map[id] = (entt::entity)newSO;
+		// }
+
+		// CopyComponents<TransformComponent>(dstReg, srcReg,  entt_UUID_Map);
+		
 		CopyComponents<SpriteRendererComponent>(dstReg, srcReg,  entt_UUID_Map);
 		CopyComponents<CameraComponent>(dstReg, srcReg,  entt_UUID_Map);
 		CopyComponents<RigidBody2DComponent>(dstReg, srcReg,  entt_UUID_Map);
 		CopyComponents<BoxCollider2DComponent>(dstReg, srcReg,  entt_UUID_Map);
 		CopyComponents<NativeScriptComponent>(dstReg, srcReg,  entt_UUID_Map);
-
+		
 		return scene;
 	}
 
@@ -321,7 +396,15 @@ namespace Mirage
             }
         }
     }
-    
+  //
+  //   SceneObject Scene::DuplicateSceneObject(SceneObject entity)
+  //   {
+		// SceneObject duplicate = CreateSceneObject(entity.Name());
+		// duplicate.AddComponent<TransformComponent>(entity.GetComponent<TransformComponent>());
+		// duplicate.AddComponent<SpriteRendererComponent>(entity.GetComponent<SpriteRendererComponent>());
+		// return duplicate;
+  //   }
+
     SceneObject Scene::GetMainCameraSO()
     {
         auto view = m_Registry.view<CameraComponent>();

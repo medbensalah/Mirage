@@ -165,6 +165,7 @@
     <ClInclude Include="src\Mirage\Debug\Instrumentor.h" />
     <ClInclude Include="src\Mirage\Definitions\DragnDropPayloads.h" />
     <ClInclude Include="src\Mirage\Definitions\FileExtensions.h" />
+    <ClInclude Include="src\Mirage\Definitions\Paths.h" />
     <ClInclude Include="src\Mirage\Definitions\Icons.h" />
     <ClInclude Include="src\Mirage\Definitions\Textures.h" />
     <ClInclude Include="src\Mirage\ECS\Components\Base\HierarchyComponent.h" />

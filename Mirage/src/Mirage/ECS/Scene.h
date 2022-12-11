@@ -36,6 +36,8 @@ namespace Mirage
         void OnUpdateEditor(float DeltaTime, EditorCamera& camera);
         void OnViewportResize(uint32_t width, uint32_t height);
 
+    	SceneObject DuplicateSceneObject(SceneObject entity);
+
         SceneObject GetMainCameraSO();
         SceneObject GetSceneObject(entt::entity entity);
     

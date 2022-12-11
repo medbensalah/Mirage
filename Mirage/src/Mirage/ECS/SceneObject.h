@@ -7,6 +7,7 @@
 #include <enTT.hpp>
 
 #include "Components/Base/HierarchyComponent.h"
+#include "Components/Base/TagComponent.h"
 
 namespace Mirage
 {    
@@ -22,6 +23,7 @@ namespace Mirage
         Scene* GetScene() const { return m_Scene; }
         uint32_t GetEntity() const { return (uint32_t)m_Entity; }
 		UUID GetUUID() { return GetComponent<IDComponent>().ID; }
+		std::string GetTag() { return GetComponent<TagComponent>().Tag; }
         
         size_t GetChildCount()
         {
@@ -92,11 +94,11 @@ namespace Mirage
             return !(*this == other);
         }
 
-    private:
         void AddChild(entt::entity child);
         void RemoveChild(entt::entity child);
         void SetParent(entt::entity parent);
         void UnParent();
+    private:
         
         entt::entity m_Entity{ entt::null };
         Scene* m_Scene = nullptr;

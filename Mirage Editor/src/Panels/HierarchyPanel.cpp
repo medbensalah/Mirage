@@ -47,11 +47,12 @@ namespace Mirage
 
     void HierarchyPanel::OnImGuiRender()
     {
+    	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
         if (ImGui::Begin("Outliner"))
         {
 	        for (auto& h : m_Context->m_Hierarchy)
 			{
-				SceneObject so{h.m_entity, m_Context.get()};
+				SceneObject so {h.m_entity, m_Context.get()};
 				if(!so.HasParent())
 				{
 					DrawEntityNode(so);
@@ -78,6 +79,7 @@ namespace Mirage
         {
         	ImGui::End();
         }
+	    	ImGui::PopStyleVar();
         if (ImGui::Begin("Inspector"))
         {
 	        if (m_SelectionContext)
@@ -123,6 +125,9 @@ namespace Mirage
             
             ImGui::EndPopup();
         }
+
+    	// TODO: Drag and drop
+    	// ImGui::InvisibleButton("##drag", ImVec2(ImGui::GetContentRegionAvail().x, 3.0f));
 
         if(ImGui::IsKeyPressed(ImGuiKey_Delete))
         {

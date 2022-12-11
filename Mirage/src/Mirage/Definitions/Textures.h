@@ -8,5 +8,4 @@ namespace Mirage
 	{
 		static const std::string WhiteTexture = "Resources/Defaults/Textures/White.png";
 	}
-
 }
