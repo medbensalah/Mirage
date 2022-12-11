@@ -1,6 +1,6 @@
 Scene: Untitled
 Entities:
-  - Entity: 8349806295518433082
+  - Entity: 11150212184421945645
     TagComponent:
       Tag: Entity
     TransformComponent:
@@ -13,7 +13,7 @@ Entities:
       Tiling: [1, 1]
       Offset: [0, 0]
     Children:
-      - Entity: 6754892028074367320
+      - Entity: 7495814383466940838
         TagComponent:
           Tag: Entity
         TransformComponent:
@@ -25,7 +25,7 @@ Entities:
           Texture: ..\Mirage Editor\Resources\Defaults\Textures\White.png
           Tiling: [1, 1]
           Offset: [0, 0]
-  - Entity: 5321830905045830425
+  - Entity: 2951299780761369044
     TagComponent:
       Tag: Entity
     TransformComponent:

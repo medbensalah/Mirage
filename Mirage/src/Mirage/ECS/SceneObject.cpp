@@ -26,32 +26,58 @@ namespace Mirage
         m_Scene->m_Registry.destroy(m_Entity);
     }
 
-    void SceneObject::AddChild(entt::entity entity)
+    void SceneObject::AddChild(entt::entity childe)
     {
-        GetComponent<HierarchyComponent>().m_Children.push_back(entity);
-        SceneObject so = {entity, m_Scene};
-        so.SetParent(m_Entity);
+    	SceneObject child = { childe, m_Scene };
+    	child.SetParent(m_Entity);
     }
 
-    void SceneObject::RemoveChild(entt::entity child)
+    void SceneObject::RemoveChild(entt::entity childe)
     {
-        auto v = &GetComponent<HierarchyComponent>().m_Children;
-        auto it = std::find(v->begin(), v->end(), child);
-        if (it != v->end())
-        {
-            v->erase(it);
-        }
-        SceneObject so = {child, m_Scene};
-        so.RemoveParent();
+    	SceneObject child = { childe, m_Scene };
+    	child.UnParent();
     }
 
     void SceneObject::SetParent(entt::entity parent)
     {
+	    if (HasParent())
+	    {
+		    UnParent();
+	    }
+	    else
+	    {
+		    m_Scene->m_Hierarchy.erase(GetComponent<HierarchyComponent>());
+	    }
+    	SceneObject parentSo = {parent, m_Scene};
+    	HierarchyComponent& h = parentSo.GetComponent<HierarchyComponent>();
+    	HierarchyComponent& childH = GetComponent<HierarchyComponent>();
+    	
+    	h.m_Children.push_back(m_Entity);
+    	childH.index = h.m_Children.size() - 1;
+    	h.m_ChildrenSet.insert(childH);
+    	
         GetComponent<HierarchyComponent>().m_Parent = parent;
     }
 
-    void SceneObject::RemoveParent()
+    void SceneObject::UnParent()
     {
-        GetComponent<HierarchyComponent>().m_Parent = entt::null;
+	    if (HasParent())
+	    {
+		    SceneObject parentSo = GetParent();
+	    	HierarchyComponent& h = parentSo.GetComponent<HierarchyComponent>();
+	    	HierarchyComponent& childH = GetComponent<HierarchyComponent>();
+
+	    	auto v = &h.m_Children;
+	    	auto it = std::find(v->begin(), v->end(), m_Entity);
+	    	if (it != v->end())
+	    	{
+	    		v->erase(it);
+	    	}
+    
+	    	childH.index = m_Scene->m_Hierarchy.size() - 1;
+	    	m_Scene->m_Hierarchy.insert(childH);
+    
+	    	GetComponent<HierarchyComponent>().m_Parent = entt::null;
+	    }
     }
 }

@@ -99,6 +99,11 @@ namespace Mirage
         SceneObject sceneObject = {m_Registry.create(), this};
 		sceneObject.AddComponent<IDComponent>(uuid);
 		sceneObject.AddComponent<HierarchyComponent>();
+
+		auto& hierarchy = sceneObject.GetComponent<HierarchyComponent>();
+		hierarchy.index = m_Hierarchy.size();
+		m_Hierarchy.insert(hierarchy);
+		
         auto& tag = sceneObject.AddComponent<TagComponent>();
         auto& transform = sceneObject.AddComponent<TransformComponent>(this);
         tag.Tag = name.empty() ? "Entity" : name;
@@ -355,6 +360,7 @@ namespace Mirage
     template <>
     void Scene::OnComponentAdded(SceneObject& entity, HierarchyComponent& component)
     {
+		component.m_entity = entity.m_Entity;
     }
     
     template <>

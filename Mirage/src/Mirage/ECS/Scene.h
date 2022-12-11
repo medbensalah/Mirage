@@ -10,9 +10,10 @@ class b2World;
 
 namespace Mirage
 {
-    class SceneObject;
-    class TransformComponent;
-    struct Relationship;
+	class SceneObject;
+    struct TransformComponent;
+	struct HierarchyComponent;
+	
     class Scene
     {
     public:
@@ -37,14 +38,17 @@ namespace Mirage
 
         SceneObject GetMainCameraSO();
         SceneObject GetSceneObject(entt::entity entity);
-    	
+    
     private:
         template <typename T>
         void OnComponentAdded(SceneObject& entity, T& component);
-        
+    
+    	
     private:
         entt::registry m_Registry;
-        uint32_t m_ViewportWidth = 0; uint32_t m_ViewportHeight = 0;
+    	std::set<HierarchyComponent> m_Hierarchy;
+
+    	uint32_t m_ViewportWidth = 0; uint32_t m_ViewportHeight = 0;
 
 		b2World* m_PhysicsWorld = nullptr;
     	Timer m_PhysicsTimer;
@@ -53,7 +57,8 @@ namespace Mirage
         
         friend class SceneSerializer;
         friend class SceneObject;
-        friend class TransformComponent;
+        friend struct TransformComponent;
+        friend struct HierarchyComponent;
         friend class HierarchyPanel;
     };
 }

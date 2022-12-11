@@ -9,14 +9,7 @@
 #include "Components/Base/HierarchyComponent.h"
 
 namespace Mirage
-{
-
-    struct Relationship
-    {
-        entt::entity m_Parent = entt::null;
-        std::vector<entt::entity> m_Children;
-    };
-    
+{    
     class SceneObject
     {
     public:        
@@ -28,6 +21,7 @@ namespace Mirage
 
         Scene* GetScene() const { return m_Scene; }
         uint32_t GetEntity() const { return (uint32_t)m_Entity; }
+		UUID GetUUID() { return GetComponent<IDComponent>().ID; }
         
         size_t GetChildCount()
         {
@@ -88,7 +82,6 @@ namespace Mirage
         operator uint32_t() const { return (uint32_t)m_Entity; }
         operator entt::entity() const { return m_Entity; }
 
-		UUID GetUUID() { return GetComponent<IDComponent>().ID; }
     	
         bool operator== (const SceneObject& other) const
         {
@@ -103,7 +96,7 @@ namespace Mirage
         void AddChild(entt::entity child);
         void RemoveChild(entt::entity child);
         void SetParent(entt::entity parent);
-        void RemoveParent();
+        void UnParent();
         
         entt::entity m_Entity{ entt::null };
         Scene* m_Scene = nullptr;

@@ -49,14 +49,14 @@ namespace Mirage
     {
         if (ImGui::Begin("Outliner"))
         {
-	        m_Context->m_Registry.each([&](auto entityID)
+	        for (auto& h : m_Context->m_Hierarchy)
 			{
-				SceneObject so{entityID, m_Context.get()};
+				SceneObject so{h.m_entity, m_Context.get()};
 				if(!so.HasParent())
 				{
 					DrawEntityNode(so);
 				}
-			});
+			};
 
         	if (ImGui::IsMouseClicked(0) && ImGui::IsWindowHovered())
         		m_SelectionContext = {};
@@ -132,10 +132,10 @@ namespace Mirage
         
         if (opened)
         {
-	        auto v = &so.GetComponent<HierarchyComponent>().m_Children;
+	        auto v = &so.GetComponent<HierarchyComponent>().m_ChildrenSet;
 	        for (auto child : *v)
 	        {
-		        DrawEntityNode({child, m_Context.get()});
+		        DrawEntityNode({child.m_entity, m_Context.get()});
 	        }
 
 	        ImGui::TreePop();

@@ -255,12 +255,12 @@ namespace Mirage
             return;
         }
 
-        auto& children = so.GetChildren();
+        auto& children = so.GetComponent<HierarchyComponent>().m_ChildrenSet;
 
         out << YAML::Key << "Children" << YAML::Value << YAML::BeginSeq;
         for (auto& entity : children)
         {
-            SceneObject child = {entity, so.GetScene()};
+            SceneObject child = {entity.m_entity, so.GetScene()};
             SerializeSceneObject(out, child);
         }
         out << YAML::EndSeq;
@@ -363,14 +363,14 @@ namespace Mirage
         out << YAML::Key << "Scene" << YAML::Value << "Untitled";
         
         out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
-		m_Scene->m_Registry.each([&](entt::entity entityID)
+		for (auto& h : m_Scene->m_Hierarchy)
 		{
-			SceneObject so = {entityID, m_Scene.get()};
+			SceneObject so = {h.m_entity, m_Scene.get()};
 			if (!so.HasParent())
 			{
 				SerializeSceneObject(out, so);
 			}
-		});
+		};
         out << YAML::EndSeq;
         
         out << YAML::EndMap;
