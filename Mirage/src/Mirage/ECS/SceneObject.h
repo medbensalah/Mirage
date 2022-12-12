@@ -23,7 +23,7 @@ namespace Mirage
         Scene* GetScene() const { return m_Scene; }
         uint32_t GetEntity() const { return (uint32_t)m_Entity; }
 		UUID GetUUID() { return GetComponent<IDComponent>().ID; }
-		std::string GetTag() { return GetComponent<TagComponent>().Tag; }
+		const std::string& GetName() { return GetComponent<TagComponent>().Tag; }
         
         size_t GetChildCount()
         {
@@ -51,6 +51,14 @@ namespace Mirage
         {
             MRG_CORE_ASSERT(!HasComponent<T>(), "Entity already has that component!");
             T& component = m_Scene->m_Registry.emplace<T>(m_Entity, std::forward<Args>(args)...);
+            m_Scene->OnComponentAdded<T>(*this, component);
+            return component;
+        }
+        template <typename T, typename... Args>
+        T& AddOrReplaceComponent(Args&&... args)
+        {
+            MRG_CORE_ASSERT(!HasComponent<T>(), "Entity already has that component!");
+            T& component = m_Scene->m_Registry.emplace_or_replace<T>(m_Entity, std::forward<Args>(args)...);
             m_Scene->OnComponentAdded<T>(*this, component);
             return component;
         }

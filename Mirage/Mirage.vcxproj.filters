@@ -43,9 +43,6 @@
     <Filter Include="src\Mirage\Math">
       <UniqueIdentifier>{4AE09D14-B66B-0BD9-BF7C-8ECD2B8767D9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Mirage\Physics">
-      <UniqueIdentifier>{43951F1E-2F79-E073-98D9-DAC684DCCAF5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Mirage\Renderer">
       <UniqueIdentifier>{970FEDB8-0371-CAC6-8CDE-1079F83E0186}</UniqueIdentifier>
     </Filter>
@@ -147,6 +144,12 @@
     <ClInclude Include="src\Mirage\Definitions\Icons.h">
       <Filter>src\Mirage\Definitions</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\Definitions\Paths.h">
+      <Filter>src\Mirage\Definitions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Definitions\Physics.h">
+      <Filter>src\Mirage\Definitions</Filter>
+    </ClInclude>
     <ClInclude Include="src\Mirage\Definitions\Textures.h">
       <Filter>src\Mirage\Definitions</Filter>
     </ClInclude>
@@ -210,9 +213,6 @@
     <ClInclude Include="src\Mirage\ImGui\Extensions\DrawingAPI.h">
       <Filter>src\Mirage\ImGui\Extensions</Filter>
     </ClInclude>
-    <ClInclude Include="src\Mirage\ImGui\Extensions\Splitter.h">
-      <Filter>src\Mirage\ImGui\Extensions</Filter>
-    </ClInclude>
     <ClInclude Include="src\Mirage\ImGui\Extensions\ToggleButton.h">
       <Filter>src\Mirage\ImGui\Extensions</Filter>
     </ClInclude>
@@ -227,9 +227,6 @@
     </ClInclude>
     <ClInclude Include="src\Mirage\Math\glmTypes.h">
       <Filter>src\Mirage\Math</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Mirage\Physics\Globals.h">
-      <Filter>src\Mirage\Physics</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\Renderer\Buffer.h">
       <Filter>src\Mirage\Renderer</Filter>

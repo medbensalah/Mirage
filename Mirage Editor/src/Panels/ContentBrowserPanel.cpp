@@ -7,6 +7,7 @@
 #include "ImGui/imgui_internal.h"
 #include "Mirage/Core/Log.h"
 #include "Mirage/Core/Time.h"
+#include "Mirage/ImGui/Extensions/DrawingAPI.h"
 #include "Mirage/ImGui/Extensions/Splitter.h"
 
 namespace Mirage

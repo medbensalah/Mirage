@@ -17,7 +17,7 @@
 #include "box2d/b2_fixture.h"
 #include "box2d/b2_polygon_shape.h"
 #include "Components/Base/HierarchyComponent.h"
-#include "Mirage/Physics/Globals.h"
+#include "Mirage/Definitions/Physics.h"
 
 namespace Mirage
 {
@@ -57,10 +57,10 @@ namespace Mirage
 		}
 	}
 
-	SceneObject CopySceneObject(SceneObject so, Ref<Scene> dst, Ref<Scene> src, std::unordered_map<UUID, entt::entity>* map)
+	static SceneObject CopySceneObject(SceneObject so, Ref<Scene> dst, Ref<Scene> src, std::unordered_map<UUID, entt::entity>* map)
 	{
 		UUID id = so.GetUUID();
-		const auto& name = so.GetTag();
+		const auto& name = so.GetName();
 
 		SceneObject newSO = dst->CreateSceneObjectWithUUID(id, name);
 		(*map)[id] = (entt::entity)newSO;
@@ -68,9 +68,7 @@ namespace Mirage
 		TransformComponent& newTransform = newSO.GetComponent<TransformComponent>();
 		TransformComponent& transform = so.GetComponent<TransformComponent>();
 
-		newTransform.SetPosition(transform.Position());
-		newTransform.SetRotation(transform.Rotation());
-		newTransform.SetScale(transform.Scale());
+		newTransform.Copy(transform);
 	
 		for (auto& child : so.GetChildren())
 		{
@@ -79,34 +77,40 @@ namespace Mirage
 			c.SetParent(newSO);
 		}
 		return newSO;
+	}
+	
+	template <typename Component>
+	static void CopyComponentIfExists(SceneObject dst, SceneObject src)
+	{
+		if (src.HasComponent<Component>())
+		{
+			dst.AddOrReplaceComponent<Component>(src.GetComponent<Component>());
+		}
+	}
+	
+    
+	SceneObject Scene::DuplicateSceneObject(SceneObject entity)
+	{
+		SceneObject duplicate = CreateSceneObject(entity.GetName());
+
+		if (entity.HasParent())
+		{
+			duplicate.SetParent(entity.GetParent());
+		}
 		
-		// if (!so.HasParent())
-		// {
-		// 	UUID id = so.GetUUID();
-		// 	const auto& name = so.GetTag();
-		//
-		// 	SceneObject newSO = dst->CreateSceneObjectWithUUID(id, name);
-		// 	(*map)[id] = (entt::entity)newSO;
-		// 	for (auto& child : so.GetChildren())
-		// 	{
-		// 		CopySceneObject({child, src.get()}, dst, src, map);
-		// 	}
-		// }
-		// else
-		// {
-		// 	UUID id = so.GetUUID();
-		// 	const auto& name = so.GetTag();
-		//
-		// 	SceneObject newSO = dst->CreateSceneObjectWithUUID(id, name);
-		// 	(*map)[id] = (entt::entity)newSO;
-		// 	SceneObject parent = {map->at(so.GetParent().GetUUID()), dst.get()};
-		// 	newSO.SetParent(parent);
-		// 	MRG_CORE_WARN("{0} is child of {1}", newSO.GetTag(), parent.GetTag());
-		// 	for (auto& child : so.GetChildren())
-		// 	{
-		// 		CopySceneObject({child, src.get()}, dst, src, map);
-		// 	}
-		// }
+		for (auto& child : entity.GetChildren())
+		{
+			SceneObject c = DuplicateSceneObject({child,entity.m_Scene});
+			c.SetParent(duplicate);
+		}
+		
+		duplicate.GetComponent<TransformComponent>().Copy(entity.GetComponent<TransformComponent>());
+		CopyComponentIfExists<BoxCollider2DComponent>(duplicate, entity);
+		CopyComponentIfExists<RigidBody2DComponent>(duplicate, entity);
+		CopyComponentIfExists<CameraComponent>(duplicate, entity);
+		CopyComponentIfExists<SpriteRendererComponent>(duplicate, entity);
+		CopyComponentIfExists<NativeScriptComponent>(duplicate, entity);
+		return duplicate;
 	}
 	
 	Ref<Scene> Scene::Copy(const Ref<Scene> source)
@@ -176,7 +180,7 @@ namespace Mirage
 		sceneObject.AddComponent<HierarchyComponent>();
 
 		auto& hierarchy = sceneObject.GetComponent<HierarchyComponent>();
-		hierarchy.index = m_Hierarchy.size();
+		hierarchy.m_Index = m_Hierarchy.size();
 		m_Hierarchy.insert(hierarchy);
 		
         auto& tag = sceneObject.AddComponent<TagComponent>();
@@ -208,7 +212,7 @@ namespace Mirage
     void Scene::OnRuntimeStart()
     {
 		m_PhysicsWorld = new b2World(b2Vec2(0.0f, Physics2D::Gravity));
-		
+		MRG_CORE_INFO("gravity {0}", Physics2D::Gravity);
 		auto view = m_Registry.view<RigidBody2DComponent>();
 		for (auto e : view)
 		{
@@ -305,7 +309,7 @@ namespace Mirage
 	        }
 	        else
 	        {
-		        if (m_PhysicsTimer.Elapsed() >= Physics2D::TimeStep)
+		        if (m_PhysicsTimer.Elapsed() >= (1.0f/Physics2D::FPS))
 		        {
 			        m_PhysicsWorld->Step(m_PhysicsTimer.Elapsed(), Physics2D::VelocityIterations,
 			                             Physics2D::PositionIterations);
@@ -396,14 +400,6 @@ namespace Mirage
             }
         }
     }
-  //
-  //   SceneObject Scene::DuplicateSceneObject(SceneObject entity)
-  //   {
-		// SceneObject duplicate = CreateSceneObject(entity.Name());
-		// duplicate.AddComponent<TransformComponent>(entity.GetComponent<TransformComponent>());
-		// duplicate.AddComponent<SpriteRendererComponent>(entity.GetComponent<SpriteRendererComponent>());
-		// return duplicate;
-  //   }
 
     SceneObject Scene::GetMainCameraSO()
     {

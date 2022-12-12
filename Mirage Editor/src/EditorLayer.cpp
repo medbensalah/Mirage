@@ -67,6 +67,7 @@ namespace Mirage
 
 		m_EditorCamera = EditorCamera(Camera::Orthographic);
 		m_HierarchyPanel.SetContext(m_ActiveScene);
+		m_SettingsPanel.LoadSettings();
 
 		// ----------------------- initialize icons -----------------------
 		m_PlayButtonIcon = Texture2D::Create(Icons::PlayButton);
@@ -244,6 +245,13 @@ namespace Mirage
 
 				ImGui::Separator();
 				if (ImGui::MenuItem("Exit")) { Application::Get().Close(); }
+				ImGui::EndMenu();
+			}
+			if (ImGui::BeginMenu("Settings"))
+			{
+				if (ImGui::MenuItem("Settings"))
+					showSettings = true;
+
 				ImGui::EndMenu();
 			}
 
@@ -442,7 +450,6 @@ namespace Mirage
 		ImGui::End();
 		ImGui::PopStyleVar();
 	}
-
 	void EditorLayer::CreateGamePreview()
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
@@ -507,7 +514,6 @@ namespace Mirage
 		ImGui::PopStyleVar();
 		
 	}
-
 	void EditorLayer::CreateToolBar()
 	{
 		MRG_PROFILE_FUNCTION();
@@ -894,12 +900,25 @@ namespace Mirage
 		MRG_PROFILE_FUNCTION();
 
 		CreateDockspace();
+
+		// ----------------------------- Main -----------------------------
 		CreateGamePreview();
 		CreateViewport();
-		
 		m_HierarchyPanel.OnImGuiRender();
 		m_ContentBrowserPanel.OnImGuiRender();
 
+		// ----------------------------- Main -----------------------------
+		if (showSettings)
+		{
+			m_SettingsPanel.OnImGuiRender(&showSettings);
+			if (!showSettings)
+			{
+				m_SettingsPanel.SaveSettings();
+			}
+		}
+
+
+		
 		if (m_ContentBrowserPanel.m_IsSceneRequested)
 		{
 			MRG_CORE_INFO("changing scene");
@@ -934,7 +953,7 @@ namespace Mirage
 		}
 		ImGui::End();
 	}
-
+	
 	void EditorLayer::OnEvent(Event& e)
 	{
 		m_EditorCamera.OnEvent(e);
@@ -957,9 +976,9 @@ namespace Mirage
 		bool shift = Input::IsKeyPressed(Key::LeftShift) || Input::IsKeyPressed(Key::RightShift);
 		bool rightMB = Input::IsMouseButtonPressed(Mouse::ButtonRight);
 
-		// --------------------------------- Menu ---------------------------------
 		if (ctrl)
 		{
+		// --------------------------------- Menu ---------------------------------
 			switch (e.GetKeyCode())
 			{
 			case Key::N:
@@ -978,6 +997,10 @@ namespace Mirage
 				}
 				Save();
 				break;
+		// ------------------------------- Commands -------------------------------
+			case Key::D:
+				DuplicateSelected();
+				return true;
 			default:
 				break;
 			}
@@ -1102,6 +1125,159 @@ namespace Mirage
 		return false;
 	}
 
+	void EditorLayer::DuplicateSelected()
+	{
+		SceneObject so = m_HierarchyPanel.GetSelectedSO();
+		if (so)
+		{
+#if COPY_RUNTIME_SCENE
+			m_HierarchyPanel.SetSelectedSO(m_EditorScene->DuplicateSceneObject(so));
+#else
+			m_HierarchyPanel.SetSelectedSO(m_ActiveScene->DuplicateSceneObject(so));
+#endif			
+		}
+	}
+	
+
+#if COPY_RUNTIME_SCENE
+	void EditorLayer::NewScene()
+	{
+		if (m_SceneState == SceneState::Edit)
+		{
+			m_ActiveScenePath = "";
+			m_EditorScene = CreateRef<Scene>();
+			m_EditorScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			
+			m_ActiveScene = m_EditorScene;
+			m_HierarchyPanel.SetContext(m_ActiveScene);
+		}
+		else
+		{
+			MRG_CORE_ERROR("Can't change scene in play mode");
+		}
+	}
+	
+	void EditorLayer::OpenScene()
+	{
+		const char* filter = "Mirage scene (*.mrgs)\0*.mrgs\0";
+		const std::string filepath = FileDialogs::OpenFile(filter);
+	
+		if (!filepath.empty())
+		{
+			OpenScene(filepath);
+		}
+	}
+	
+	void EditorLayer::OpenScene(const std::filesystem::path& path)
+	{
+		if (m_SceneState == SceneState::Edit)
+		{
+			if (path.extension().string() != Extensions::scene)
+			{
+				MRG_WARN("Could not load {0} - not a scene file", path.filename().string());
+				return;
+			}
+			Ref<Scene> newScene = CreateRef<Scene>();
+			SceneSerializer serializer(newScene);
+			if (serializer.DeserializeText(path))
+			{
+				m_EditorScene = newScene;
+				
+				m_ActiveScenePath = path;
+				m_EditorScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+				
+				m_ActiveScene = m_EditorScene;
+				m_HierarchyPanel.SetContext(m_ActiveScene);
+			}
+		}
+		else
+		{
+			MRG_CORE_ERROR("Can't change scene in play mode");
+		}
+	}
+	
+	void EditorLayer::Save()
+	{
+		if (m_SceneState == SceneState::Edit)
+		{
+			if (m_ActiveScenePath.empty())
+			{
+				SaveAs();
+			}
+			else
+			{
+				if (m_ActiveScenePath.extension() != Extensions::scene)
+				{
+					m_ActiveScenePath.append(Extensions::scene);
+				}
+				SceneSerializer serializer(m_ActiveScene);
+				serializer.SerializeText(m_ActiveScenePath);
+			}
+		}
+		else
+		{
+			MRG_CORE_ERROR("Can't save scene in play mode");
+		}
+	}
+	
+	void EditorLayer::SaveAs()
+	{
+		if (m_SceneState == SceneState::Edit)
+		{
+			const char* filter = "Mirage scene (*.mrgs)\0*.mrgs\0";
+			std::string filepath = FileDialogs::SaveFile(filter);
+			if (!filepath.empty())
+			{
+				// check for extension
+				if (std::filesystem::path(filepath).extension() != Extensions::scene)
+				{
+					filepath.append(Extensions::scene);
+				}
+				SceneSerializer serializer(m_ActiveScene);
+				serializer.SerializeText(filepath);
+				m_ActiveScenePath = filepath;
+			}
+		}
+		else
+		{
+			MRG_CORE_ERROR("Can't save scene in play mode");
+		}
+	}
+	
+	void EditorLayer::OnScenePlay()
+	{
+		// m_ActiveScene = Scene::Copy(m_EditorScene);
+		
+		const char* filter = "Mirage scene (*.mrgs)\0*.mrgs\0";
+		SceneSerializer serializer(m_ActiveScene);
+		serializer.SerializeText(Paths::tempScene);
+	
+		
+		m_HierarchyPanel.SetSelectedSO({});
+		
+		m_SceneState = SceneState::Play;
+		m_HierarchyPanel.SetContext(m_ActiveScene);
+		m_ActiveScene->OnRuntimeStart();
+	}
+	
+	void EditorLayer::OnSceneStop()
+	{
+		m_ActiveScene->OnRuntimeStop();
+	
+		Ref<Scene> newScene = CreateRef<Scene>();
+		SceneSerializer serializer(newScene);
+		if (serializer.DeserializeText(Paths::tempScene))
+		{
+			m_EditorScene = newScene;
+				
+			m_EditorScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+				
+			m_ActiveScene = m_EditorScene;
+			m_SceneState = SceneState::Edit;
+			m_HierarchyPanel.SetContext(m_ActiveScene);
+		}
+	}
+#else
 	void EditorLayer::NewScene()
 	{
 		if (m_SceneState == SceneState::Edit)
@@ -1210,7 +1386,7 @@ namespace Mirage
 		
 		const char* filter = "Mirage scene (*.mrgs)\0*.mrgs\0";
 		SceneSerializer serializer(m_ActiveScene);
-		serializer.SerializeText(Paths::tempScene);
+		serializer.SerializeText(Paths::TempScene);
 
 		
 		m_HierarchyPanel.SetSelectedSO({});
@@ -1226,154 +1402,15 @@ namespace Mirage
 
 		Ref<Scene> newScene = CreateRef<Scene>();
 		SceneSerializer serializer(newScene);
-		if (serializer.DeserializeText(Paths::tempScene))
+		if (serializer.DeserializeText(Paths::TempScene))
 		{
 			m_ActiveScene = newScene;
-				
-			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-
+			
 			m_HierarchyPanel.SetSelectedSO({});
 
 			m_SceneState = SceneState::Edit;
 			m_HierarchyPanel.SetContext(m_ActiveScene);
 		}
 	}
-
-	// void EditorLayer::NewScene()
-	// {
-	// 	if (m_SceneState == SceneState::Edit)
-	// 	{
-	// 		m_ActiveScenePath = "";
-	// 		m_EditorScene = CreateRef<Scene>();
-	// 		m_EditorScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-	// 		
-	// 		m_ActiveScene = m_EditorScene;
-	// 		m_HierarchyPanel.SetContext(m_ActiveScene);
-	// 	}
-	// 	else
-	// 	{
-	// 		MRG_CORE_ERROR("Can't change scene in play mode");
-	// 	}
-	// }
-	//
-	// void EditorLayer::OpenScene()
-	// {
-	// 	const char* filter = "Mirage scene (*.mrgs)\0*.mrgs\0";
-	// 	const std::string filepath = FileDialogs::OpenFile(filter);
-	//
-	// 	if (!filepath.empty())
-	// 	{
-	// 		OpenScene(filepath);
-	// 	}
-	// }
-	//
-	// void EditorLayer::OpenScene(const std::filesystem::path& path)
-	// {
-	// 	if (m_SceneState == SceneState::Edit)
-	// 	{
-	// 		if (path.extension().string() != Extensions::scene)
-	// 		{
-	// 			MRG_WARN("Could not load {0} - not a scene file", path.filename().string());
-	// 			return;
-	// 		}
-	// 		Ref<Scene> newScene = CreateRef<Scene>();
-	// 		SceneSerializer serializer(newScene);
-	// 		if (serializer.DeserializeText(path))
-	// 		{
-	// 			m_EditorScene = newScene;
-	// 			
-	// 			m_ActiveScenePath = path;
-	// 			m_EditorScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-	// 			
-	// 			m_ActiveScene = m_EditorScene;
-	// 			m_HierarchyPanel.SetContext(m_ActiveScene);
-	// 		}
-	// 	}
-	// 	else
-	// 	{
-	// 		MRG_CORE_ERROR("Can't change scene in play mode");
-	// 	}
-	// }
-	//
-	// void EditorLayer::Save()
-	// {
-	// 	if (m_SceneState == SceneState::Edit)
-	// 	{
-	// 		if (m_ActiveScenePath.empty())
-	// 		{
-	// 			SaveAs();
-	// 		}
-	// 		else
-	// 		{
-	// 			if (m_ActiveScenePath.extension() != Extensions::scene)
-	// 			{
-	// 				m_ActiveScenePath.append(Extensions::scene);
-	// 			}
-	// 			SceneSerializer serializer(m_ActiveScene);
-	// 			serializer.SerializeText(m_ActiveScenePath);
-	// 		}
-	// 	}
-	// 	else
-	// 	{
-	// 		MRG_CORE_ERROR("Can't save scene in play mode");
-	// 	}
-	// }
-	//
-	// void EditorLayer::SaveAs()
-	// {
-	// 	if (m_SceneState == SceneState::Edit)
-	// 	{
-	// 		const char* filter = "Mirage scene (*.mrgs)\0*.mrgs\0";
-	// 		std::string filepath = FileDialogs::SaveFile(filter);
-	// 		if (!filepath.empty())
-	// 		{
-	// 			// check for extension
-	// 			if (std::filesystem::path(filepath).extension() != Extensions::scene)
-	// 			{
-	// 				filepath.append(Extensions::scene);
-	// 			}
-	// 			SceneSerializer serializer(m_ActiveScene);
-	// 			serializer.SerializeText(filepath);
-	// 			m_ActiveScenePath = filepath;
-	// 		}
-	// 	}
-	// 	else
-	// 	{
-	// 		MRG_CORE_ERROR("Can't save scene in play mode");
-	// 	}
-	// }
-	//
-	// void EditorLayer::OnScenePlay()
-	// {
-	// 	// m_ActiveScene = Scene::Copy(m_EditorScene);
-	// 	
-	// 	const char* filter = "Mirage scene (*.mrgs)\0*.mrgs\0";
-	// 	SceneSerializer serializer(m_ActiveScene);
-	// 	serializer.SerializeText(Paths::tempScene);
-	//
-	// 	
-	// 	m_HierarchyPanel.SetSelectedSO({});
-	// 	
-	// 	m_SceneState = SceneState::Play;
-	// 	m_HierarchyPanel.SetContext(m_ActiveScene);
-	// 	m_ActiveScene->OnRuntimeStart();
-	// }
-	//
-	// void EditorLayer::OnSceneStop()
-	// {
-	// 	m_ActiveScene->OnRuntimeStop();
-	//
-	// 	Ref<Scene> newScene = CreateRef<Scene>();
-	// 	SceneSerializer serializer(newScene);
-	// 	if (serializer.DeserializeText(Paths::tempScene))
-	// 	{
-	// 		m_EditorScene = newScene;
-	// 			
-	// 		m_EditorScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-	// 			
-	// 		m_ActiveScene = m_EditorScene;
-	// 		m_SceneState = SceneState::Edit;
-	// 		m_HierarchyPanel.SetContext(m_ActiveScene);
-	// 	}
-	// }
+#endif
 }

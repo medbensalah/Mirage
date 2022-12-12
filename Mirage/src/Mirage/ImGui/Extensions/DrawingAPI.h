@@ -1,18 +1,18 @@
 ﻿#pragma once
 
-#include <iomanip>
-#include <sstream>
-
-#include "ImGui/imgui_internal.h"
+#include "Mirage/Math/glmTypes.h"
 #include "Mirage/ImGui/FontLibrary.h"
 
+#include "ImGui/imgui_internal.h"
+#include "ImGui/imgui.h"
+#include <functional>
 
 namespace Mirage
 {
     static float width = 60.0f;
     static bool DrawSplitUIItem(const char* label, std::function<bool()> fn, const char* Cid = "tab");
     static bool DrawComboBox(const char* label, const char* strings[], int count, const char* preview, int* out);
-
+	
     static bool DrawVec3Control(const char* label, Vec3& vector);
 }
 

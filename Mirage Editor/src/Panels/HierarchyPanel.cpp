@@ -119,9 +119,9 @@ namespace Mirage
             if(ImGui::MenuItem("Delete SceneObject"))
                 entityDeleted = true;
             if(ImGui::MenuItem("Add Child SceneObject"))
-            {
                 m_Context->CreateChildSceneObject(so);
-            }
+            if(ImGui::MenuItem("Duplicate"))
+	            SetSelectedSO(m_Context->DuplicateSceneObject(so));
             
             ImGui::EndPopup();
         }

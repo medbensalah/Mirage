@@ -1,13 +1,11 @@
 ﻿#pragma once
-
 #include "ImGui/imgui.h"
 
 namespace ImGui
 {
 	static void DrawSplitter(int split_vertically, float thickness, float* size0, float* size1, float min_size0,
-	                  float min_size1);
+					  float min_size1);
 }
-
 void ImGui::DrawSplitter(int split_vertically, float thickness, float* size0, float* size1, float min_size0, float min_size1)
 {
 	ImVec2 backup_pos = ImGui::GetCursorPos();

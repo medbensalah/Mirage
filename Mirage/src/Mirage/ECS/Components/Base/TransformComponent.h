@@ -10,7 +10,6 @@ namespace Mirage
     struct TransformComponent
     {
         TransformComponent() = default;
-
         TransformComponent(const Vec3& position)
             : m_Position(position)
         {
@@ -19,6 +18,13 @@ namespace Mirage
         TransformComponent(Scene* scene)
             : m_Scene(scene)
         {
+        }
+
+    	void Copy(const TransformComponent& other)
+        {
+        	SetPosition(other.Position());
+        	SetRotation(other.Rotation());
+        	SetScale(other.Scale());
         }
         
         Mat4 GetLocalTransform();

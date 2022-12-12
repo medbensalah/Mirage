@@ -165,8 +165,10 @@
     <ClInclude Include="src\Mirage\Debug\Instrumentor.h" />
     <ClInclude Include="src\Mirage\Definitions\DragnDropPayloads.h" />
     <ClInclude Include="src\Mirage\Definitions\FileExtensions.h" />
-    <ClInclude Include="src\Mirage\Definitions\Paths.h" />
     <ClInclude Include="src\Mirage\Definitions\Icons.h" />
+    <ClInclude Include="src\Mirage\Definitions\Paths.h" />
+    <ClInclude Include="src\Mirage\Definitions\Physics.h" />
+    <ClInclude Include="src\Mirage\Definitions\SettingsSerializer.h" />
     <ClInclude Include="src\Mirage\Definitions\Textures.h" />
     <ClInclude Include="src\Mirage\ECS\Components\Base\HierarchyComponent.h" />
     <ClInclude Include="src\Mirage\ECS\Components\Base\IDCompoennt.h" />
@@ -194,7 +196,6 @@
     <ClInclude Include="src\Mirage\ImGui\ImGuiLayer.h" />
     <ClInclude Include="src\Mirage\Math\Math.h" />
     <ClInclude Include="src\Mirage\Math\glmTypes.h" />
-    <ClInclude Include="src\Mirage\Physics\Globals.h" />
     <ClInclude Include="src\Mirage\Renderer\Buffer.h" />
     <ClInclude Include="src\Mirage\Renderer\Camera.h" />
     <ClInclude Include="src\Mirage\Renderer\EditorCamera.h" />
@@ -647,6 +648,7 @@
     <ClCompile Include="src\Mirage\Core\Log.cpp" />
     <ClCompile Include="src\Mirage\Core\UUID.cpp" />
     <ClCompile Include="src\Mirage\Core\Window.cpp" />
+    <ClCompile Include="src\Mirage\Definitions\SettingsSerializer.cpp" />
     <ClCompile Include="src\Mirage\ECS\Components\Base\TransformComponent.cpp" />
     <ClCompile Include="src\Mirage\ECS\Scene.cpp" />
     <ClCompile Include="src\Mirage\ECS\SceneCamera.cpp" />

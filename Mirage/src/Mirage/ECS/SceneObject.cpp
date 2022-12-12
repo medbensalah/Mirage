@@ -13,23 +13,31 @@ namespace Mirage
 
     void SceneObject::Destroy()
     {
-    	MRG_CORE_WARN("deleting id {0}", (uint32_t)m_Entity);
         if(HasParent())
         {
         	UnParent();
         }
+
+    	auto& h = GetComponent<HierarchyComponent>();
     	
-        auto children = GetComponent<HierarchyComponent>().m_Children;
+        auto children = h.m_Children;
         for(auto child : children)
         {
             SceneObject so = {child, m_Scene};
             so.Destroy();
         }
 
-    	m_Scene->m_Hierarchy.erase(GetComponent<HierarchyComponent>());
+    	m_Scene->m_Hierarchy.erase(h);
+    	
+    	auto childIt = m_Scene->m_Hierarchy.find(h);
+    	for (auto it = childIt; it != m_Scene->m_Hierarchy.end(); ++it)
+    	{
+    		SceneObject so = { it->m_entity, m_Scene };
+    		auto& hc = so.GetComponent<HierarchyComponent>();
+    		hc.m_Index--;
+    	}
     	
         m_Scene->m_Registry.destroy(m_Entity);
-    	MRG_CORE_WARN("finished id {0}", (uint32_t)m_Entity);
     }
 
     void SceneObject::AddChild(entt::entity childe)
@@ -59,7 +67,7 @@ namespace Mirage
     	HierarchyComponent& childH = GetComponent<HierarchyComponent>();
     	
     	h.m_Children.push_back(m_Entity);
-    	childH.index = h.m_Children.size() - 1;
+    	childH.m_Index = h.m_Children.size() - 1;
     	h.m_ChildrenSet.insert(childH);
     	
         GetComponent<HierarchyComponent>().m_Parent = parent;
@@ -78,11 +86,20 @@ namespace Mirage
 	    	{
 	    		h.m_Children.erase(it);
 	    	}
+	    	uint32_t childIndex = childH.m_Index;
+	    	
 	    	h.m_ChildrenSet.erase(childH);
+	    	auto childIt = h.m_ChildrenSet.find(childH);
+	    	for (auto it = childIt; it != h.m_ChildrenSet.end(); ++it)
+	    	{
+	    		SceneObject so = { it->m_entity, m_Scene };
+	    		auto& hc = so.GetComponent<HierarchyComponent>();
+	    		hc.m_Index--;
+	    	}
 	    	
 	    	childH.m_Parent = entt::null;
     
-	    	childH.index = m_Scene->m_Hierarchy.size();
+	    	childH.m_Index = m_Scene->m_Hierarchy.size();
 	    	m_Scene->m_Hierarchy.insert(childH);
 	    }
     }

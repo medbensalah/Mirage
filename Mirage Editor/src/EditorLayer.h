@@ -7,6 +7,7 @@
 #include "Panels/ContentBrowserPanel.h"
 #include "ImGuizmo/ImGuizmo.h"
 #include "Mirage/ECS/SceneCamera.h"
+#include "Panels/Extras/SettingsPanel.h"
 
 namespace Mirage
 {	
@@ -38,7 +39,11 @@ namespace Mirage
         void CreateViewport();
         void CreateGamePreview();
         void CreateToolBar();
-        
+
+
+    	void DuplicateSelected();
+
+    	
         void NewScene();
         void OpenScene();
         void OpenScene(const std::filesystem::path& path);
@@ -56,7 +61,10 @@ namespace Mirage
     	bool m_ShowPreview = false;
     	
         Ref<Scene> m_ActiveScene;
-        // Ref<Scene> m_EditorScene;
+#define COPY_RUNTIME_SCENE 0
+#if COPY_RUNTIME_SCENE
+        Ref<Scene> m_EditorScene;
+#endif
 		std::filesystem::path m_ActiveScenePath;
         
         bool m_ViewportFocused = false;
@@ -95,6 +103,10 @@ namespace Mirage
         HierarchyPanel m_HierarchyPanel;
         ContentBrowserPanel m_ContentBrowserPanel;
 
+    	// ----------------------- Extras -----------------------
+    	bool showSettings = false;
+        SettingsPanel m_SettingsPanel;
+    	
     	// ----------------------- Icons -----------------------
 
     	float m_IconSizeS = 20.0f;
