@@ -365,7 +365,7 @@ namespace Mirage
         out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 		for (auto& h : m_Scene->m_Hierarchy)
 		{
-			SceneObject so = {h.m_entity, m_Scene.get()};
+			SceneObject so = {h.second.m_entity, m_Scene.get()};
 			if (!so.HasParent())
 			{
 				SerializeSceneObject(out, so);

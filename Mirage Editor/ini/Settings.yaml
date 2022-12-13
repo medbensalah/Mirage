@@ -1,0 +1,9 @@
+Settings:
+  Physics:
+    UpdateEveryFrame: false
+    FPS: 18
+    Gravity: -8.64999962
+    VelocityIterations: 9
+    PositionIterations: 0
+  Window:
+    VSync: false

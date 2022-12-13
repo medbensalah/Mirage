@@ -48,7 +48,7 @@ namespace Mirage
     	
     private:
         entt::registry m_Registry;
-    	std::set<HierarchyComponent> m_Hierarchy;
+    	std::map<uint32_t, HierarchyComponent> m_Hierarchy;
 
     	uint32_t m_ViewportWidth = 0; uint32_t m_ViewportHeight = 0;
 

@@ -13,30 +13,64 @@ namespace Mirage
 
     void SceneObject::Destroy()
     {
-        if(HasParent())
-        {
-        	UnParent();
-        }
-
     	auto& h = GetComponent<HierarchyComponent>();
-    	
-        auto children = h.m_Children;
-        for(auto child : children)
-        {
-            SceneObject so = {child, m_Scene};
-            so.Destroy();
-        }
+        MRG_CORE_WARN("destroying entity: {0}", GetName());
 
-    	m_Scene->m_Hierarchy.erase(h);
-    	
-    	auto childIt = m_Scene->m_Hierarchy.find(h);
-    	for (auto it = childIt; it != m_Scene->m_Hierarchy.end(); ++it)
+		// reverse iterate children
+    	for (auto it = h.m_Children.rbegin(); it != h.m_Children.rend(); ++it)
     	{
-    		SceneObject so = { it->m_entity, m_Scene };
-    		auto& hc = so.GetComponent<HierarchyComponent>();
-    		hc.m_Index--;
+    		SceneObject so { *it, m_Scene };
+    		so.Destroy();
     	}
     	
+		h.m_Children.clear();
+    	h.m_ChildrenSet.clear();
+
+        if (HasParent())
+        {
+			auto parent = GetParent();
+			auto& parentH = parent.GetComponent<HierarchyComponent>();
+        	parentH.m_ChildrenSet.erase(h);
+        	
+        	for (uint32_t i = h.m_Index; i < parentH.m_Children.size() - 1; ++i)
+			{
+        		SceneObject so { parentH.m_Children[i + 1], m_Scene };
+        		auto& childH = so.GetComponent<HierarchyComponent>();
+				parentH.m_Children[i] = parentH.m_Children[i + 1];
+        		parentH.m_ChildrenSet.erase(childH);
+        		childH.m_Index--;
+        		parentH.m_ChildrenSet.insert(childH);
+			}
+        	parentH.m_Children.pop_back();
+        }
+        else
+        {
+			// erase h from m_Scene->m_Hierarchy
+        	// and decrement index of all siblings
+        	// auto& h = GetComponent<HierarchyComponent>();
+        	// for (uint32_t i = h.m_Index; i < m_Scene->m_Hierarchy.size() - 1; ++i)
+        	// {
+        	// 	SceneObject so { m_Scene->m_Hierarchy[i + 1].m_entity, m_Scene };
+        	// 	auto& childH = so.GetComponent<HierarchyComponent>();
+        	// 	m_Scene->m_Hierarchy[i] = m_Scene->m_Hierarchy[i + 1];
+        	// 	m_Scene->m_Hierarchy.erase(childH.m_Index);
+        	// 	childH.m_Index--;
+        	// 	m_Scene->m_Hierarchy[childH.m_Index] = childH;
+        	// }
+        	m_Scene->m_Hierarchy.erase(h.m_Index);
+        	for (uint32_t i = h.m_Index; i < m_Scene->m_Hierarchy.size(); ++i)
+        	{
+        		SceneObject so { m_Scene->m_Hierarchy[i + 1].m_entity, m_Scene };
+        		auto& childH = so.GetComponent<HierarchyComponent>();
+        		MRG_CORE_WARN("removing {0} at index {1}", so.GetName(), childH.m_Index);
+        		m_Scene->m_Hierarchy.erase(childH.m_Index);
+        		childH.m_Index--;
+        		m_Scene->m_Hierarchy[childH.m_Index] = childH;
+        		MRG_CORE_INFO("adding {0} at index {1}", so.GetName(), childH.m_Index);
+        	}
+        }
+
+		MRG_CORE_INFO("destroyed entity: {0}", GetName());
         m_Scene->m_Registry.destroy(m_Entity);
     }
 
@@ -54,14 +88,10 @@ namespace Mirage
 
     void SceneObject::SetParent(entt::entity parent)
     {
-	    if (HasParent())
-	    {
-		    UnParent();
-	    }
-	    else
-	    {
-		    m_Scene->m_Hierarchy.erase(GetComponent<HierarchyComponent>());
-	    }
+		UnParent();
+	 
+		m_Scene->m_Hierarchy.erase(GetComponent<HierarchyComponent>().m_Index);
+	    
     	SceneObject parentSo = {parent, m_Scene};
     	HierarchyComponent& h = parentSo.GetComponent<HierarchyComponent>();
     	HierarchyComponent& childH = GetComponent<HierarchyComponent>();
@@ -78,29 +108,24 @@ namespace Mirage
 	    if (HasParent())
 	    {
 		    SceneObject parentSo = GetParent();
-	    	HierarchyComponent& h = parentSo.GetComponent<HierarchyComponent>();
-	    	HierarchyComponent& childH = GetComponent<HierarchyComponent>();
-
-	    	auto it = std::find(h.m_Children.begin(), h.m_Children.end(), m_Entity);
-	    	if (it != h.m_Children.end())
-	    	{
-	    		h.m_Children.erase(it);
-	    	}
-	    	uint32_t childIndex = childH.m_Index;
+	    	HierarchyComponent& parentH = parentSo.GetComponent<HierarchyComponent>();
+	    	HierarchyComponent& h = GetComponent<HierarchyComponent>();
 	    	
-	    	h.m_ChildrenSet.erase(childH);
-	    	auto childIt = h.m_ChildrenSet.find(childH);
-	    	for (auto it = childIt; it != h.m_ChildrenSet.end(); ++it)
+	    	parentH.m_ChildrenSet.erase(h);
+	    	for (uint32_t i = h.m_Index; i < parentH.m_Children.size() - 1; ++i)
 	    	{
-	    		SceneObject so = { it->m_entity, m_Scene };
-	    		auto& hc = so.GetComponent<HierarchyComponent>();
-	    		hc.m_Index--;
+	    		SceneObject so { parentH.m_Children[i + 1], m_Scene };
+	    		auto& childH = so.GetComponent<HierarchyComponent>();
+	    		parentH.m_Children[i] = parentH.m_Children[i + 1];
+	    		parentH.m_ChildrenSet.erase(childH);
+	    		childH.m_Index--;
+	    		parentH.m_ChildrenSet.insert(childH);
 	    	}
 	    	
-	    	childH.m_Parent = entt::null;
+	    	h.m_Parent = entt::null;
     
-	    	childH.m_Index = m_Scene->m_Hierarchy.size();
-	    	m_Scene->m_Hierarchy.insert(childH);
+	    	h.m_Index = m_Scene->m_Hierarchy.size();
+	    	m_Scene->m_Hierarchy[h.m_Index] = h;
 	    }
     }
 }

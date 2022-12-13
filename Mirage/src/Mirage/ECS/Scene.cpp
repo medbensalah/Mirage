@@ -127,7 +127,7 @@ namespace Mirage
 
 		for (auto& h : source->m_Hierarchy)
 		{
-			CopySceneObject({h.m_entity, source.get()}, scene, source, &entt_UUID_Map);
+			CopySceneObject({h.second.m_entity, source.get()}, scene, source, &entt_UUID_Map);
 		}
 		
 
@@ -181,7 +181,7 @@ namespace Mirage
 
 		auto& hierarchy = sceneObject.GetComponent<HierarchyComponent>();
 		hierarchy.m_Index = m_Hierarchy.size();
-		m_Hierarchy.insert(hierarchy);
+		m_Hierarchy[hierarchy.m_Index] = hierarchy;
 		
         auto& tag = sceneObject.AddComponent<TagComponent>();
         auto& transform = sceneObject.AddComponent<TransformComponent>(this);

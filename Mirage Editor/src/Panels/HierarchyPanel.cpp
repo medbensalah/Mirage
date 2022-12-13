@@ -50,9 +50,27 @@ namespace Mirage
     	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
         if (ImGui::Begin("Outliner"))
         {
+	        if (m_SelectionContext)
+	        {
+	        	ImGui::BeginChild("Debug Scene Hierarchy", ImVec2(0, 100), true);
+	        	auto& h = m_SelectionContext.GetComponent<HierarchyComponent>();
+	        	ImGui::Text("hierarchy size  : %d", m_Context->m_Hierarchy.size());
+	        	
+	        	ImGui::Separator();
+	        	
+	        	ImGui::Text("children size  : %d", h.m_Children.size());
+	        	ImGui::Text("childrenset size  : %d", h.m_ChildrenSet.size());
+	        	ImGui::Text("index : %d", h.m_Index);
+	        	ImGui::Text("entity : %d", h.m_entity);
+	        	ImGui::EndChild();
+
+	        	ImGui::Separator();
+			}
+        	
+        	
 	        for (auto& h : m_Context->m_Hierarchy)
 			{
-				SceneObject so {h.m_entity, m_Context.get()};
+				SceneObject so {h.second.m_entity, m_Context.get()};
 				if(!so.HasParent())
 				{
 					DrawEntityNode(so);
@@ -215,15 +233,14 @@ namespace Mirage
         {
             auto& tag = so.GetComponent<TagComponent>().Tag;
             
-            char buffer[256];
-            memset(buffer, 0, sizeof(buffer));
+            char buffer[256] = {};
             strcpy_s(buffer, sizeof(buffer), tag.c_str());
             ImGui::Spacing();
             ImGui::Spacing();
             ImGui::Text("Tag");
             ImGui::SameLine();
             ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.666f);
-
+        	
             bool dirty = ImGui::InputText("##Tag", buffer, sizeof(buffer));
             ImGui::SameLine();
             float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;

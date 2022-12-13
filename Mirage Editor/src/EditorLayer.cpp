@@ -280,9 +280,21 @@ namespace Mirage
 			m_ViewportFocused = ImGui::IsWindowFocused();
 			m_ViewportHovered = ImGui::IsWindowHovered();
 			bool IsAnyImGuiActive = ImGui::IsAnyItemActive();
-			Application::Get().GetImGuiLayer()->AllowKbEvents(
-				(m_ViewportFocused || m_ViewportHovered) && !IsAnyImGuiActive);
-			Application::Get().GetImGuiLayer()->AllowMouseEvents(m_ViewportFocused || m_ViewportHovered);
+			
+			if (m_SceneState == SceneState::Edit)
+			{
+				Application::Get().GetImGuiLayer()->AllowKbEvents(!IsAnyImGuiActive);
+				Application::Get().GetImGuiLayer()->AllowMouseEvents(true);
+			}
+			else
+			{
+				Application::Get().GetImGuiLayer()->AllowKbEvents(m_ViewportFocused && m_ViewportHovered && !IsAnyImGuiActive);
+				Application::Get().GetImGuiLayer()->AllowMouseEvents(m_ViewportFocused || m_ViewportHovered);
+			}
+			
+			// Application::Get().GetImGuiLayer()->AllowKbEvents(
+			// 	(m_ViewportFocused || m_ViewportHovered) && !IsAnyImGuiActive);
+			// Application::Get().GetImGuiLayer()->AllowMouseEvents(m_ViewportFocused || m_ViewportHovered);
 
 			// ------------------------- Scene Viewport -------------------------
 			ImVec2 ViewportSize = ImGui::GetContentRegionAvail();

@@ -1,33 +1,44 @@
 Scene: Untitled
 Entities:
-  - Entity: 17725123256376683801
+  - Entity: 8397813083178476956
     TagComponent:
-      Tag: Entity
-    TransformComponent:
-      Position: [0.716847539, -0.0508886278, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    SpriteRendererComponent:
-      Color: [1, 1, 1, 1]
-      Texture: Assets\textures\Mario.png
-      Tiling: [1, 1]
-      Offset: [0, 0]
-  - Entity: 15099914659801941184
-    TagComponent:
-      Tag: new SceneObject
+      Tag: 0
     TransformComponent:
       Position: [0, 0, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
-    CameraComponent:
-      Camera:
-        ProjectionType: 1
-        PerspectiveFOV: 1.39626336
-        PerspectiveNear: 0.00999999978
-        PerspectiveFar: 1000
-        OrthographicSize: 10
-        OrthographicNear: -1
-        OrthographicFar: 100
-      Primary: true
-      FixedAspectRatio: false
-      ClearColor: [0.546392322, 0.851437688, 1, 1]
+  - Entity: 12912925493350005914
+    TagComponent:
+      Tag: 1
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 11829011816111838172
+    TagComponent:
+      Tag: 2
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 4191913939998727838
+    TagComponent:
+      Tag: 3
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 989888981644313409
+    TagComponent:
+      Tag: 4
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+  - Entity: 3026046364026972422
+    TagComponent:
+      Tag: 5
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
