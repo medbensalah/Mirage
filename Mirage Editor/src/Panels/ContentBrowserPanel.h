@@ -52,8 +52,8 @@ namespace Mirage
 		ImVec4 m_FileTintColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 		ImVec4 m_SelectedBGColor = { 0.3f, 0.3f, 0.3f, 1.0f };
 		
-		std::vector<std::filesystem::path> m_Entries;
-		std::unordered_map<ImGuiID, std::vector<std::filesystem::path>> m_BrowseCache;
+		std::vector<std::filesystem::path> m_Entries;			// All entries in the current directory
+		std::unordered_map<ImGuiID, std::vector<std::filesystem::path>> m_BrowseCache;		// Directory hierarchy
 		std::stack<std::filesystem::path> m_ForwardNavigation;
 		std::stack<std::filesystem::path> m_BackWardNavigation;
 		

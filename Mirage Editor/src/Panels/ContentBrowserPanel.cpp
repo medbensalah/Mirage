@@ -15,6 +15,7 @@ namespace Mirage
 	// TODO: Change when Project is implemented
 	static const std::filesystem::path s_AssetsPath = "Assets";
 	static Timer s_BrowserUpdateTimer;
+	static Timer s_HierarchyUpdateTimer;
 	static float s_BrowserUpdateInterval = 1.0f;
 
 	ContentBrowserPanel::ContentBrowserPanel()
@@ -295,12 +296,13 @@ namespace Mirage
 			}
 			if (opened)
 			{
-				if (ImGui::IsItemToggledOpen())
-				{
-					std::vector<std::filesystem::path> vec = Browse(path);
-					m_BrowseCache.emplace(ImGui::GetID(filename), vec);
-				}
-				std::vector<std::filesystem::path> vec = m_BrowseCache[ImGui::GetID(filename)];
+				// if (ImGui::IsItemToggledOpen())
+				// {
+					// std::vector<std::filesystem::path> vec = Browse(path);
+					// m_BrowseCache.emplace(ImGui::GetID(filename), vec);
+				// }
+				// std::vector<std::filesystem::path> vec = m_BrowseCache[ImGui::GetID(filename)];
+				std::vector<std::filesystem::path> vec = Browse(path);
 
 				for (auto& p : vec)
 				{
@@ -312,6 +314,7 @@ namespace Mirage
 			}
 		}
 	}
+
 
 	void ContentBrowserPanel::UpdateBrowser()
 	{
@@ -336,11 +339,18 @@ namespace Mirage
 				m_Entries.emplace_back(path);
 			}
 		}
+
+		m_MarkUpdate = false;
 		s_BrowserUpdateTimer.Reset();
 	}
 
 	std::vector<std::filesystem::path> ContentBrowserPanel::Browse(const std::filesystem::path& path)
 	{
+		if (s_HierarchyUpdateTimer.Elapsed() < s_BrowserUpdateInterval)
+		{
+			return m_BrowseCache[ImGui::GetID(path.filename().string().c_str())];
+		}
+
 		std::vector<std::filesystem::path> result;
 
 		for (auto& directoryEntry : std::filesystem::directory_iterator(path))
@@ -351,6 +361,8 @@ namespace Mirage
 				result.emplace_back(p);
 		}
 
+		m_BrowseCache[ImGui::GetID(path.filename().string().c_str())] = result;
+		s_HierarchyUpdateTimer.Reset();
 		return result;
 	}
 

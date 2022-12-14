@@ -938,7 +938,7 @@ namespace Mirage
 			m_ContentBrowserPanel.m_IsSceneRequested = false;
 		}
 
-		ImGui::Begin("Settings");
+		ImGui::Begin("Stats");
 
 		float deltaTime = Application::Get().GetDeltaTime();
 		ImGui::Text("Renderer2D Stats:");

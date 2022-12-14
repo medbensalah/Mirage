@@ -1,6 +1,6 @@
 Scene: Untitled
 Entities:
-  - Entity: 13801642263054754092
+  - Entity: 15539662768698529872
     TagComponent:
       Tag: Ground
     TransformComponent:
@@ -23,7 +23,7 @@ Entities:
       Friction: 0.100000001
       Bounciness: 0.699999988
       BouncinessThreshold: 0.5
-  - Entity: 1243707948998771469
+  - Entity: 4811170469968373056
     TagComponent:
       Tag: Camera
     TransformComponent:
@@ -42,7 +42,7 @@ Entities:
       Primary: true
       FixedAspectRatio: false
       ClearColor: [0.300000012, 0.300000012, 0.300000012, 1]
-  - Entity: 17417310786130002956
+  - Entity: 13683164921760449985
     TagComponent:
       Tag: o
     TransformComponent:
@@ -56,16 +56,16 @@ Entities:
       Offset: [0, 0]
     RigidBody2DComponent:
       Body type: Dynamic
-      Gravity scale: 1
+      Gravity scale: 1.79999995
       Fixed rotation: false
     BoxCollider2DComponent:
       Size: [0.5, 0.5]
       Offset: [0, 0]
       Density: 1
       Friction: 0
-      Bounciness: 0.899999976
+      Bounciness: 1
       BouncinessThreshold: 0.5
-  - Entity: 3148144956597478099
+  - Entity: 5675283642142779819
     TagComponent:
       Tag: Ground
     TransformComponent:
@@ -86,5 +86,5 @@ Entities:
       Offset: [0, 0]
       Density: 2
       Friction: 0.100000001
-      Bounciness: 0.699999988
+      Bounciness: 1
       BouncinessThreshold: 0.5

@@ -5,6 +5,7 @@
 #include "glm/gtc/type_ptr.hpp"
 
 #include "Mirage/Core/Log.h"
+#include "Mirage/Definitions/Debug.h"
 #include "Mirage/ECS/Components/Rendering/CameraComponent.h"
 #include "Mirage/ECS/Components/Rendering/SpriteRendererComponent.h"
 #include "Mirage/ECS/Components/Base/TagComponent.h"
@@ -50,22 +51,26 @@ namespace Mirage
     	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
         if (ImGui::Begin("Outliner"))
         {
-	        if (m_SelectionContext)
+	        if (Debug::HierarchyDebug)
 	        {
-	        	ImGui::BeginChild("Debug Scene Hierarchy", ImVec2(0, 100), true);
-	        	auto& h = m_SelectionContext.GetComponent<HierarchyComponent>();
+		        ImGui::BeginChild("Debug Scene Hierarchy", ImVec2(0, 100), true);
 	        	ImGui::Text("hierarchy size  : %d", m_Context->m_Hierarchy.size());
 	        	
 	        	ImGui::Separator();
+
 	        	
-	        	ImGui::Text("children size  : %d", h.m_Children.size());
-	        	ImGui::Text("childrenset size  : %d", h.m_ChildrenSet.size());
-	        	ImGui::Text("index : %d", h.m_Index);
-	        	ImGui::Text("entity : %d", h.m_entity);
+	        	if (m_SelectionContext)
+	        	{
+		        	auto& h = m_SelectionContext.GetComponent<HierarchyComponent>();
+	        		ImGui::Text("children size  : %d", h.m_Children.size());
+	        		ImGui::Text("childrenset size  : %d", h.m_ChildrenSet.size());
+	        		ImGui::Text("index : %d", h.m_Index);
+	        		ImGui::Text("entity : %d", h.m_entity);        			
+	        	}
 	        	ImGui::EndChild();
 
 	        	ImGui::Separator();
-			}
+	        }
         	
         	
 	        for (auto& h : m_Context->m_Hierarchy)
@@ -90,27 +95,19 @@ namespace Mirage
 
         		ImGui::EndPopup();
         	}
-        
-        	ImGui::End();
         }
-        else
-        {
-        	ImGui::End();
-        }
-	    	ImGui::PopStyleVar();
-        if (ImGui::Begin("Inspector"))
+        ImGui::End();
+	    ImGui::PopStyleVar();
+
+
+    	if (ImGui::Begin("Inspector"))
         {
 	        if (m_SelectionContext)
 	        {
 	        	DrawComponents(m_SelectionContext);
 	        }
-
-        	ImGui::End();
         }
-        else
-        {
-        	ImGui::End();
-        }
+        ImGui::End();
     }
 
     void HierarchyPanel::DrawEntityNode(SceneObject so)

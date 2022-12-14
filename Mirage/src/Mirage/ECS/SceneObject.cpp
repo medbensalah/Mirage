@@ -45,18 +45,6 @@ namespace Mirage
         }
         else
         {
-			// erase h from m_Scene->m_Hierarchy
-        	// and decrement index of all siblings
-        	// auto& h = GetComponent<HierarchyComponent>();
-        	// for (uint32_t i = h.m_Index; i < m_Scene->m_Hierarchy.size() - 1; ++i)
-        	// {
-        	// 	SceneObject so { m_Scene->m_Hierarchy[i + 1].m_entity, m_Scene };
-        	// 	auto& childH = so.GetComponent<HierarchyComponent>();
-        	// 	m_Scene->m_Hierarchy[i] = m_Scene->m_Hierarchy[i + 1];
-        	// 	m_Scene->m_Hierarchy.erase(childH.m_Index);
-        	// 	childH.m_Index--;
-        	// 	m_Scene->m_Hierarchy[childH.m_Index] = childH;
-        	// }
         	m_Scene->m_Hierarchy.erase(h.m_Index);
         	for (uint32_t i = h.m_Index; i < m_Scene->m_Hierarchy.size(); ++i)
         	{

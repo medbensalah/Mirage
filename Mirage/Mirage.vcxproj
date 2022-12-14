@@ -163,6 +163,7 @@
     <ClInclude Include="src\Mirage\Core\UUID.h" />
     <ClInclude Include="src\Mirage\Core\Window.h" />
     <ClInclude Include="src\Mirage\Debug\Instrumentor.h" />
+    <ClInclude Include="src\Mirage\Definitions\Debug.h" />
     <ClInclude Include="src\Mirage\Definitions\DragnDropPayloads.h" />
     <ClInclude Include="src\Mirage\Definitions\FileExtensions.h" />
     <ClInclude Include="src\Mirage\Definitions\Icons.h" />

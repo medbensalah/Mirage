@@ -135,6 +135,9 @@
     <ClInclude Include="src\Mirage\Debug\Instrumentor.h">
       <Filter>src\Mirage\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\Definitions\Debug.h">
+      <Filter>src\Mirage\Definitions</Filter>
+    </ClInclude>
     <ClInclude Include="src\Mirage\Definitions\DragnDropPayloads.h">
       <Filter>src\Mirage\Definitions</Filter>
     </ClInclude>
@@ -148,6 +151,9 @@
       <Filter>src\Mirage\Definitions</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\Definitions\Physics.h">
+      <Filter>src\Mirage\Definitions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Definitions\SettingsSerializer.h">
       <Filter>src\Mirage\Definitions</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\Definitions\Textures.h">
@@ -211,6 +217,9 @@
       <Filter>src\Mirage\ImGui\Extensions</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\ImGui\Extensions\DrawingAPI.h">
+      <Filter>src\Mirage\ImGui\Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\ImGui\Extensions\Splitter.h">
       <Filter>src\Mirage\ImGui\Extensions</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\ImGui\Extensions\ToggleButton.h">
@@ -1579,6 +1588,9 @@
     </ClCompile>
     <ClCompile Include="src\Mirage\Core\Window.cpp">
       <Filter>src\Mirage\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\Definitions\SettingsSerializer.cpp">
+      <Filter>src\Mirage\Definitions</Filter>
     </ClCompile>
     <ClCompile Include="src\Mirage\ECS\Components\Base\TransformComponent.cpp">
       <Filter>src\Mirage\ECS\Components\Base</Filter>

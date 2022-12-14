@@ -2,6 +2,7 @@
 
 #include "Mirage/Core/Application.h"
 #include "Mirage/Core/Log.h"
+#include "Mirage/Definitions/Debug.h"
 #include "Mirage/Definitions/Paths.h"
 #include "Mirage/Definitions/Physics.h"
 #include "Mirage/Definitions/SettingsSerializer.h"
@@ -14,7 +15,7 @@ namespace Mirage
 	{
 		ImGui::SetNextWindowSize(ImVec2{800, 450 }, ImGuiCond_Appearing);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 12.0f, 5.0f });
-		ImGui::Begin("SettingsPanel", show);
+		ImGui::Begin("Settings", show);
 
 		m_RightPanelSize = ImGui::GetContentRegionAvail().x - m_LeftPanelSize - m_SeparatorThickness;
 		ImGui::DrawSplitter(0, m_SeparatorThickness, &m_LeftPanelSize, &m_RightPanelSize, 50.0f, 100.0f);
@@ -98,6 +99,13 @@ namespace Mirage
 				{
 					Application::Get().GetWindow().SetVSync(vsync);
 				}
+			}
+			break;
+		case 7:
+			{
+				DrawSplitUIItem("Hierarchy debug mode", [](){
+					return ImGui::Checkbox("##HierarchyDebug", &Debug::HierarchyDebug);
+				});
 			}
 			break;
 		}
