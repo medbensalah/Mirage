@@ -109,6 +109,7 @@ namespace Mirage
 		CopyComponentIfExists<RigidBody2DComponent>(duplicate, entity);
 		CopyComponentIfExists<CameraComponent>(duplicate, entity);
 		CopyComponentIfExists<SpriteRendererComponent>(duplicate, entity);
+		CopyComponentIfExists<CircleRendererComponent>(duplicate, entity);
 		CopyComponentIfExists<NativeScriptComponent>(duplicate, entity);
 		return duplicate;
 	}
@@ -160,6 +161,7 @@ namespace Mirage
 		// CopyComponents<TransformComponent>(dstReg, srcReg,  entt_UUID_Map);
 		
 		CopyComponents<SpriteRendererComponent>(dstReg, srcReg,  entt_UUID_Map);
+		CopyComponents<CircleRendererComponent>(dstReg, srcReg,  entt_UUID_Map);
 		CopyComponents<CameraComponent>(dstReg, srcReg,  entt_UUID_Map);
 		CopyComponents<RigidBody2DComponent>(dstReg, srcReg,  entt_UUID_Map);
 		CopyComponents<BoxCollider2DComponent>(dstReg, srcReg,  entt_UUID_Map);
@@ -357,12 +359,26 @@ namespace Mirage
 	    if (mainCamera)
 	    {
 		    Renderer2D::BeginScene(*mainCamera, cameraTransform);
-		    auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-
-		    for (auto entity : group)
+	    	
 		    {
-			    auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-			    Renderer2D::Draw::Sprite(transform.GetTransform(), sprite, (int)entity);
+		    	auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+        
+		    	for (auto entity : group)
+		    	{
+		    		auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+		    		// Renderer2D::Draw::Quad(transform.GetTransform(), sprite.Color);
+		    		Renderer2D::Draw::Sprite(transform.GetTransform(), sprite, (int)entity);
+		    	}
+		    }
+		    {
+		    	auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
+        
+		    	for (auto entity : view)
+		    	{
+		    		auto [transform, circle] = view.get<TransformComponent, CircleRendererComponent>(entity);
+		    		// Renderer2D::Draw::Quad(transform.GetTransform(), sprite.Color);
+		    		Renderer2D::Draw::Circle(transform.GetTransform(), circle, (int)entity);
+		    	}
 		    }
 
 		    Renderer2D::EndScene();
@@ -372,14 +388,26 @@ namespace Mirage
     void Scene::OnUpdateEditor(float DeltaTime, EditorCamera& camera)
     {
         Renderer2D::BeginScene(camera);
-        auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+		{
+			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
         
-        for (auto entity : group)
-        {
-            auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-            // Renderer2D::Draw::Quad(transform.GetTransform(), sprite.Color);
-            Renderer2D::Draw::Sprite(transform.GetTransform(), sprite, (int)entity);
-        }
+        	for (auto entity : group)
+        	{
+        		auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+        		// Renderer2D::Draw::Quad(transform.GetTransform(), sprite.Color);
+        		Renderer2D::Draw::Sprite(transform.GetTransform(), sprite, (int)entity);
+        	}
+		}
+		{
+			auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
+        
+        	for (auto entity : view)
+        	{
+        		auto [transform, circle] = view.get<TransformComponent, CircleRendererComponent>(entity);
+        		// Renderer2D::Draw::Quad(transform.GetTransform(), sprite.Color);
+        		Renderer2D::Draw::Circle(transform.GetTransform(), circle, (int)entity);
+        	}
+		}
 
         Renderer2D::EndScene();
     }
@@ -456,6 +484,11 @@ namespace Mirage
     
     template <>
     void Scene::OnComponentAdded(SceneObject& entity, SpriteRendererComponent& component)
+    {
+    }
+	
+    template <>
+    void Scene::OnComponentAdded(SceneObject& entity, CircleRendererComponent& component)
     {
     }
     

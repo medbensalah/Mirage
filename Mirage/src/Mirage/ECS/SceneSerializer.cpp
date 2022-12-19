@@ -9,6 +9,7 @@
 #include "Components/Physics/BoxCollider2DComponent.h"
 #include "Components/Physics/RigidBody2DComponent.h"
 #include "Components/Rendering/CameraComponent.h"
+#include "Components/Rendering/CircleRendererComponent.h"
 #include "Components/Rendering/SpriteRendererComponent.h"
 
 namespace YAML
@@ -220,6 +221,21 @@ namespace Mirage
 
             out << YAML::EndMap;
         }
+        if (so.HasComponent<CircleRendererComponent>())
+        {
+            out << YAML::Key << "CircleRendererComponent";
+            out << YAML::BeginMap;
+
+            auto& crc = so.GetComponent<CircleRendererComponent>();
+        	out << YAML::Key << "Thickness" << YAML::Value << crc.Thickness;
+        	out << YAML::Key << "Fade" << YAML::Value << crc.Fade;
+            out << YAML::Key << "Color" << YAML::Value << crc.Color;
+            out << YAML::Key << "Texture" << YAML::Value << crc.Texture->GetPath().string();
+            out << YAML::Key << "Tiling" << YAML::Value << crc.Tiling;
+            out << YAML::Key << "Offset" << YAML::Value << crc.Offset;
+
+            out << YAML::EndMap;
+        }
         if (so.HasComponent<RigidBody2DComponent>())
         {
             out << YAML::Key << "RigidBody2DComponent";
@@ -270,8 +286,7 @@ namespace Mirage
 	
     static bool DeserializeSceneObject(YAML::detail::iterator_value& entity, SceneObject& so)
     {
-        auto transformComponent = entity["TransformComponent"];
-        if (transformComponent)
+	    if (auto transformComponent = entity["TransformComponent"])
         {
             // Entities always have transforms
             auto& tc = so.GetComponent<TransformComponent>();
@@ -280,8 +295,7 @@ namespace Mirage
             tc.SetScale(transformComponent["Scale"].as<Vec3>());
         }
 
-        auto cameraComponent = entity["CameraComponent"];
-        if (cameraComponent)
+        if (auto cameraComponent = entity["CameraComponent"])
         {
             auto& cc = so.AddComponent<CameraComponent>();
             auto& cameraProps = cameraComponent["Camera"];
@@ -300,8 +314,7 @@ namespace Mirage
             cc.Camera.SetClearColor(cameraComponent["ClearColor"].as<Vec4>());
         }
 
-        auto spriteRendererComponent = entity["SpriteRendererComponent"];
-        if (spriteRendererComponent)
+        if (auto spriteRendererComponent = entity["SpriteRendererComponent"])
         {
             auto& src = so.AddComponent<SpriteRendererComponent>();
             src.Color = spriteRendererComponent["Color"].as<Vec4>();
@@ -309,18 +322,27 @@ namespace Mirage
         	src.Tiling = spriteRendererComponent["Tiling"].as<Vec2>();
         	src.Offset = spriteRendererComponent["Offset"].as<Vec2>();
         }
-		
-        auto rigidBody2DComponent = entity["RigidBody2DComponent"];
-        if (rigidBody2DComponent)
+
+        if (auto circleRendererComponent = entity["CircleRendererComponent"])
+        {
+            auto& crc = so.AddComponent<CircleRendererComponent>();
+        	crc.Thickness = circleRendererComponent["Thickness"].as<float>();
+        	crc.Fade = circleRendererComponent["Fade"].as<float>();
+            crc.Color = circleRendererComponent["Color"].as<Vec4>();
+		    crc.Texture = Texture2D::Create(circleRendererComponent["Texture"].as<std::string>());
+        	crc.Tiling = circleRendererComponent["Tiling"].as<Vec2>();
+        	crc.Offset = circleRendererComponent["Offset"].as<Vec2>();
+        }
+
+	    if (auto rigidBody2DComponent = entity["RigidBody2DComponent"])
         {
             auto& rb2d = so.AddComponent<RigidBody2DComponent>();
             rb2d.Type = RigidBody2DTypeFromString(rigidBody2DComponent["Body type"].as<std::string>());
         	rb2d.GravityScale = rigidBody2DComponent["Gravity scale"].as<float>();
         	rb2d.FixedRotation = rigidBody2DComponent["Fixed rotation"].as<bool>();
         }
-		
-        auto boxCollider2DComponent = entity["BoxCollider2DComponent"];
-        if (boxCollider2DComponent)
+
+	    if (auto boxCollider2DComponent = entity["BoxCollider2DComponent"])
         {
             auto& collider = so.AddComponent<BoxCollider2DComponent>();
         	collider.Size = boxCollider2DComponent["Size"].as<Vec2>();

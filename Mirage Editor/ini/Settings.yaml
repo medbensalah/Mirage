@@ -1,7 +1,7 @@
 Settings:
   Physics:
-    UpdateEveryFrame: true
-    FPS: 18
+    UpdateEveryFrame: false
+    FPS: 120
     Gravity: -9.80000019
     VelocityIterations: 8
     PositionIterations: 3

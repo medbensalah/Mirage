@@ -15,6 +15,7 @@
 #include "Mirage/Definitions/DragnDropPayloads.h"
 #include "Mirage/ECS/Components/Physics/BoxCollider2DComponent.h"
 #include "Mirage/ECS/Components/Physics/RigidBody2DComponent.h"
+#include "Mirage/ECS/Components/Rendering/CircleRendererComponent.h"
 
 namespace Mirage
 {
@@ -238,7 +239,10 @@ namespace Mirage
             ImGui::SameLine();
             ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.666f);
         	
-            bool dirty = ImGui::InputText("##Tag", buffer, sizeof(buffer));
+        	if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
+        	{
+        		tag = std::string(buffer);
+        	}
             ImGui::SameLine();
             float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
             if(ImGui::ButtonCenteredOnLine("Add", 1.0f,{ ImGui::GetContentRegionAvail().x , lineHeight}))
@@ -264,6 +268,14 @@ namespace Mirage
 	                	ImGui::CloseCurrentPopup();
 	                }
                 }
+                if(!m_SelectionContext.HasComponent<CircleRendererComponent>())
+                {
+	                if(ImGui::MenuItem("Circle Renderer"))
+	                {
+	                	m_SelectionContext.AddComponent<CircleRendererComponent>();
+	                	ImGui::CloseCurrentPopup();
+	                }
+                }
                 if(!m_SelectionContext.HasComponent<RigidBody2DComponent>())
                 {
 	                if(ImGui::MenuItem("Rigid body 2D"))
@@ -281,11 +293,6 @@ namespace Mirage
 	                }
                 }
                 ImGui::EndPopup();
-            }
-
-            if (dirty)
-            {
-	            tag = std::string(buffer);
             }
             ImGui::Spacing();
         }
@@ -350,7 +357,7 @@ namespace Mirage
 					float vFov = Degrees(camera.GetPerspectiveVFOV());
 					if (DrawSplitUIItem("Vertical FOV", [&]()-> bool
 					{
-						return ImGui::DragFloat("##Vertical FOV", &vFov, 0.1f, 0.1f, 1000.0f, "%.1f", 1.0f);
+						return ImGui::DragFloat("##Vertical FOV", &vFov, 0.1f, 1.0f, 120.0f, "%.1f");
 					}, typeid(CameraComponent).name()))
 					{
 						camera.SetPerspectiveVFOV(Radians(vFov));
@@ -359,7 +366,7 @@ namespace Mirage
 					float nearClip = camera.GetPerspectiveNearClip();
 					if (DrawSplitUIItem("near Clip", [&]()-> bool
 					{
-						return ImGui::DragFloat("##near Clip", &nearClip, 0.1f, 0.1f, 1000.0f);
+						return ImGui::DragFloat("##near Clip", &nearClip, 0.1f, 0.01f, 0.0f);
 					}, typeid(CameraComponent).name()))
 					{
 						camera.SetPerspectiveNearClip(nearClip);
@@ -368,7 +375,7 @@ namespace Mirage
 					float farClip = camera.GetPerspectiveFarClip();
 					if (DrawSplitUIItem("Far Clip", [&]()-> bool
 					{
-						return ImGui::DragFloat("##Far Clip", &farClip, 0.1f, 0.1f, 1000.0f);
+						return ImGui::DragFloat("##Far Clip", &farClip, 0.1f, 0.01f, 0.0f);
 					}, typeid(CameraComponent).name()))
 					{
 						camera.SetPerspectiveFarClip(farClip);
@@ -379,7 +386,7 @@ namespace Mirage
 					float size = camera.GetOrthographicSize();
 					if (DrawSplitUIItem("Orthographic Size", [&]()-> bool
 					{
-						return ImGui::DragFloat("##Orthographic Size", &size, 0.1f, 0.1f, 1000.0f, "%.1f", 1.0f);
+						return ImGui::DragFloat("##Orthographic Size", &size, 0.1f, 0.1f, 1000.0f, "%.6g", 1.0f);
 					}, typeid(CameraComponent).name()))
 					{
 						camera.SetOrthographicSize(size);
@@ -388,7 +395,7 @@ namespace Mirage
 					float nearClip = camera.GetOrthographicNearClip();
 					if (DrawSplitUIItem("near Clip", [&]()-> bool
 					{
-						return ImGui::DragFloat("##near Clip", &nearClip, 0.1f, 0.1f, 1000.0f);
+						return ImGui::DragFloat("##near Clip", &nearClip, 0.1f, 0.01f, 1000.0f);
 					}, typeid(CameraComponent).name()))
 					{
 						camera.SetOrthographicNearClip(nearClip);
@@ -397,7 +404,7 @@ namespace Mirage
 					float farClip = camera.GetOrthographicFarClip();
 					if (DrawSplitUIItem("Far Clip", [&]()-> bool
 					{
-						return ImGui::DragFloat("##Far Clip", &farClip, 0.1f, 0.1f, 1000.0f);
+						return ImGui::DragFloat("##Far Clip", &farClip, 0.1f, 0.01f, 0.0f);
 					}, typeid(CameraComponent).name()))
 					{
 						camera.SetOrthographicFarClip(farClip);
@@ -475,6 +482,68 @@ namespace Mirage
 				}, typeid(SpriteRendererComponent).name());
 			}
         );
+
+        DrawComponent<CircleRendererComponent>("Circle Renderer", so, [&so](auto& component)
+			{
+				DrawSplitUIItem("Thickness", [&component]()-> bool
+				{
+					return ImGui::SliderFloat("##Thickness", &component.Thickness, 0.0f, 1.0f, "%.3g", ImGuiSliderFlags_ClampOnInput);
+		        }, typeid(CircleRendererComponent).name());
+				DrawSplitUIItem("Fade", [&component]()-> bool
+				{
+					return ImGui::SliderFloat("##Fade", &component.Fade, 0.0f, 1.0f, "%.3g", ImGuiSliderFlags_ClampOnInput);
+		        }, typeid(CircleRendererComponent).name());
+
+        	ImGui::Spacing();
+        	ImGui::Separator();
+        	ImGui::Spacing();
+        	
+				DrawSplitUIItem("Color", [&component]()-> bool
+				{
+					return ImGui::ColorEdit4("##Color", glm::value_ptr(component.Color));
+		        }, typeid(CircleRendererComponent).name());
+        	
+				static float size = 128.0f * ImGui::GetIO().FontGlobalScale;
+        	
+        		DrawSplitUIItem("Preview size", []()-> bool
+				{
+					return ImGui::DragFloat("##PreviewSize", &size, 1.0f, 16.0f, ImGui::GetContentRegionAvail().x, "%.3g");
+				}, typeid(CircleRendererComponent).name());
+				bool textureChange = DrawSplitUIItem("Texture", [&component, &so]()-> bool
+				{
+					float middlePos = (ImGui::GetContentRegionAvail().x - size) / 2.0f;
+					ImGui::SetCursorPosX(ImGui::GetCursorPosX() + middlePos);
+					bool pressed = ImGui::ImageButton((ImTextureID)component.Texture->GetRendererID(), {size, size},
+	                    {0, 1}, {1, 0}, 0,
+	                    {0, 0, 0, 0}, {component.Color.r, component.Color.g, component.Color.b, component.Color.a}
+	                    );
+					return pressed;
+				}, typeid(CircleRendererComponent).name());
+					if (ImGui::BeginDragDropTarget())
+					{
+						if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(Payloads::texture.c_str()))
+						{
+							char path[512] = {};
+							memcpy(path, payload->Data, payload->DataSize);
+							Ref<Texture2D> texture = Texture2D::Create(path);
+							if (texture->IsLoaded())
+								component.Texture = texture;
+							else
+								MRG_WARN("Could not load texture {0}", path);
+						}
+						ImGui::EndDragDropTarget();
+					}
+        		
+				DrawSplitUIItem("Tiling", [&component]()-> bool
+				{
+					return ImGui::DragFloat2("##Tiling", glm::value_ptr(component.Tiling), 0.01f, 0.0f, 0.0f, "%.4g");
+				}, typeid(CircleRendererComponent).name());
+				DrawSplitUIItem("Offset", [&component]()-> bool
+				{
+					return ImGui::DragFloat2("##Offset", glm::value_ptr(component.Offset), 0.01f, 0.0f, 0.0f, "%.4g");
+				}, typeid(CircleRendererComponent).name());
+			}
+        );
     	
         DrawComponent<RigidBody2DComponent>("Rigidbody 2D", so, [&so](auto& component)
 			{
@@ -492,7 +561,7 @@ namespace Mirage
         	        		
 				DrawSplitUIItem("Gravity scale", [&component]()-> bool
 				{
-					return ImGui::DragFloat("##GravityScale", &component.GravityScale, 0.1f, 0.0f, 10000.0f, "%.3g");
+					return ImGui::DragFloat("##GravityScale", &component.GravityScale, 0.1f, 0.0f, 0.0f, "%.3g");
 		        }, typeid(RigidBody2DComponent).name());
         	
 				DrawSplitUIItem("Fixed rotation Z", [&component]()-> bool
@@ -506,29 +575,29 @@ namespace Mirage
 			{
 				DrawSplitUIItem("Size", [&component]()-> bool
 				{
-					return ImGui::DragFloat2("##Size", glm::value_ptr(component.Size), 0.05f, 0, 0, "%.4g");
+					return ImGui::DragFloat2("##Size", glm::value_ptr(component.Size), 0.05f, 0, 0, "%.5g");
 		        }, typeid(RigidBody2DComponent).name());
         	
 				DrawSplitUIItem("Offset", [&component]()-> bool
 				{
-					return ImGui::DragFloat2("##Offset", glm::value_ptr(component.Offset), 0.1f, 0, 0, "%.4g");
+					return ImGui::DragFloat2("##Offset", glm::value_ptr(component.Offset), 0.1f, 0, 0, "%.5g");
 		        }, typeid(RigidBody2DComponent).name());
         	
 				DrawSplitUIItem("Density", [&component]()-> bool
 				{
-					return ImGui::DragFloat("##Density", &component.Density, 0.05f, 0, 0, "%.4g");
+					return ImGui::DragFloat("##Density", &component.Density, 0.05f, 0, 0, "%.5g");
 		        }, typeid(RigidBody2DComponent).name());
 				DrawSplitUIItem("Friction", [&component]()-> bool
 				{
-					return ImGui::DragFloat("##Friction", &component.Friction, 0.05f, 0.0f, 1.0f, "%.4g");
+					return ImGui::DragFloat("##Friction", &component.Friction, 0.05f, 0.0f, 0.0f, "%.5g");
 		        }, typeid(RigidBody2DComponent).name());
 				DrawSplitUIItem("Bounciness", [&component]()-> bool
 				{
-					return ImGui::DragFloat("##Bounciness", &component.Bounciness, 0.05f, 0.0f, 1.0f, "%.4g");
+					return ImGui::DragFloat("##Bounciness", &component.Bounciness, 0.05f, 0.0f, 0.0f, "%.5g");
 		        }, typeid(RigidBody2DComponent).name());
 				DrawSplitUIItem("BouncinessThreshold", [&component]()-> bool
 				{
-					return ImGui::DragFloat("##BouncinessThreshold", &component.BouncinessThreshold, 0.05f, 0.0f, 1.0f, "%.4g");
+					return ImGui::DragFloat("##BouncinessThreshold", &component.BouncinessThreshold, 0.05f, 0.0f, 0.0f, "%.4g");
 		        }, typeid(RigidBody2DComponent).name());
 			}
         );
