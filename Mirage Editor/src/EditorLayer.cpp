@@ -254,6 +254,13 @@ namespace Mirage
 
 				ImGui::EndMenu();
 			}
+			if (ImGui::BeginMenu("Windows"))
+			{
+				if (ImGui::MenuItem("Stats"))
+					m_ShowStats = true;
+
+				ImGui::EndMenu();
+			}
 
 			ImGui::EndMenuBar();
 		}
@@ -919,7 +926,7 @@ namespace Mirage
 		m_HierarchyPanel.OnImGuiRender();
 		m_ContentBrowserPanel.OnImGuiRender();
 
-		// ----------------------------- Main -----------------------------
+		// ----------------------------- Extra -----------------------------
 		if (showSettings)
 		{
 			m_SettingsPanel.OnImGuiRender(&showSettings);
@@ -938,32 +945,36 @@ namespace Mirage
 			m_ContentBrowserPanel.m_IsSceneRequested = false;
 		}
 
-		ImGui::Begin("Stats");
-
-		float deltaTime = Application::Get().GetDeltaTime();
-		ImGui::Text("Renderer2D Stats:");
-		ImGui::Indent();
-		ImGui::Text("Draw Calls: %d", Renderer2D::GetStats().DrawCalls);
-		ImGui::Text("Quads: %d", Renderer2D::GetStats().QuadCount);
-		ImGui::Text("Vertices: %d", Renderer2D::GetStats().GetVertexCount());
-		ImGui::Text("Indices: %d", Renderer2D::GetStats().GetIndexCount());
-		ImGui::Unindent();
-		ImGui::Spacing();
-		ImGui::TextDisabled("FPS : %3.1f  (%f ms)", 1.0f / deltaTime, deltaTime * 1000.0f);
-		ImGui::Spacing();
-		ImGui::Separator();
-		ImGui::Spacing();
-
-		DrawSplitUIItem("Show demo", [&]()-> bool
+		if(m_ShowStats)
 		{
-			return ImGui::ToggleButton("##ShowDemo", &showDemo);
-		});
+			ImGui::Begin("Stats", &m_ShowStats);
 
-		if (showDemo)
-		{
-			ImGui::ShowDemoWindow();
+			float deltaTime = Application::Get().GetDeltaTime();
+			ImGui::Text("Renderer2D Stats:");
+			ImGui::Indent();
+			ImGui::Text("Draw Calls: %d", Renderer2D::GetStats().DrawCalls);
+			ImGui::Text("Quads: %d", Renderer2D::GetStats().QuadCount);
+			ImGui::Text("Circles: %d", Renderer2D::GetStats().CircleCount);
+			ImGui::Text("Vertices: %d", Renderer2D::GetStats().GetVertexCount());
+			ImGui::Text("Indices: %d", Renderer2D::GetStats().GetIndexCount());
+			ImGui::Unindent();
+			ImGui::Spacing();
+			ImGui::TextDisabled("FPS : %3.1f  (%f ms)", 1.0f / deltaTime, deltaTime * 1000.0f);
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Spacing();
+
+			DrawSplitUIItem("Show demo", [&]()-> bool
+			{
+				return ImGui::ToggleButton("##ShowDemo", &showDemo);
+			});
+			ImGui::End();
+
+			if (showDemo)
+			{
+				ImGui::ShowDemoWindow(&showDemo);
+			}
 		}
-		ImGui::End();
 	}
 	
 	void EditorLayer::OnEvent(Event& e)

@@ -58,6 +58,7 @@ namespace Mirage
         Ref<Framebuffer> m_Framebuffer;
         Ref<Framebuffer> m_PreviewFramebuffer;
 
+    	bool m_ShowStats = false;
     	bool m_ShowPreview = false;
     	
         Ref<Scene> m_ActiveScene;

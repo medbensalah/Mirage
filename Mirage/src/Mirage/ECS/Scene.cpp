@@ -232,7 +232,6 @@ namespace Mirage
 			
 			b2Body* body = m_PhysicsWorld->CreateBody(&bodyDef);
 			rb.RuntimeBody = body;
-
 			// TODO : add istrigger (issensro)
 			
 			if (so.HasComponent<BoxCollider2DComponent>())

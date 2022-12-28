@@ -24,10 +24,13 @@ namespace Mirage
 		void DrawDirectoryHierarchy();
 		void DrawContents();
 		void DrawStatusBar();
+
+		Ref<Texture2D> SetIcon(std::filesystem::path path);
 		
 		void DrawDirectoryNode(std::filesystem::path path, const char* filename);
 
-		void MarkUpdate() { m_MarkUpdate = true; }
+		void MarkUpdateContents() { m_MarkUpdateContents = true; }
+		void MarkUpdateTree() { m_MarkUpdateTree = true; }
 		void UpdateBrowser();
 		std::vector<std::filesystem::path> Browse(const std::filesystem::path& path);
 		
@@ -64,10 +67,12 @@ namespace Mirage
 		int m_thumbnailSize = 64.0f;
 		float m_itemSpacing = 8.0f;
 		
-		bool m_MarkUpdate = true;
+		bool m_MarkUpdateContents = true;
+		bool m_MarkUpdateTree = true;
 
 		Ref<Texture2D> m_DirectoryIcon;
 		Ref<Texture2D> m_FileIcon;
+		Ref<Texture2D> m_MirageIcon;
 		
 		friend class EditorLayer;
 	};

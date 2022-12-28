@@ -21,15 +21,21 @@ namespace Mirage
 	ContentBrowserPanel::ContentBrowserPanel()
 		: m_CurrentDirectory(s_AssetsPath)
 	{
-		MarkUpdate();
+		MarkUpdateContents();
 		m_DirectoryIcon = Texture2D::Create(Icons::Folder);
 		m_FileIcon = Texture2D::Create(Icons::File);
+		m_MirageIcon = Texture2D::Create(Icons::Mirage);
 	}
 
 	void ContentBrowserPanel::OnImGuiRender()
 	{
 		if(ImGui::Begin("Content Browser", nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse))
 		{
+			if (!exists(m_CurrentDirectory))
+			{
+				m_CurrentDirectory = s_AssetsPath;
+				MarkUpdateContents();
+			}
 			UpdateBrowser();
 
 			DrawHeader();
@@ -176,7 +182,7 @@ namespace Mirage
 			}
 			else
 			{
-				ImGui::ImageButton((ImTextureID)m_FileIcon->GetRendererID(),
+				ImGui::ImageButton((ImTextureID)SetIcon(path)->GetRendererID(),
 				                   {(float)m_thumbnailSize, (float)m_thumbnailSize},
 				                   {0, 1}, {1, 0}, -1, ImVec4{0.0f, 0.0f, 0.0f, 0.0f},
 				                   m_FileTintColor);
@@ -281,6 +287,15 @@ namespace Mirage
 		ImGui::EndGroup();
 	}
 
+	Ref<Texture2D> ContentBrowserPanel::SetIcon(std::filesystem::path path)
+	{
+		if (path.extension().string() == Extensions::scene)
+		{
+			return m_MirageIcon;
+		}
+		return m_FileIcon;
+	}
+
 	void ContentBrowserPanel::DrawDirectoryNode(std::filesystem::path path, const char* filename)
 	{
 		if (is_directory(path))
@@ -296,14 +311,13 @@ namespace Mirage
 			}
 			if (opened)
 			{
-				// if (ImGui::IsItemToggledOpen())
-				// {
-					// std::vector<std::filesystem::path> vec = Browse(path);
-					// m_BrowseCache.emplace(ImGui::GetID(filename), vec);
-				// }
+				if (ImGui::IsItemToggledOpen())
+				{
+					MarkUpdateTree();
+				}
 				// std::vector<std::filesystem::path> vec = m_BrowseCache[ImGui::GetID(filename)];
 				std::vector<std::filesystem::path> vec = Browse(path);
-
+				
 				for (auto& p : vec)
 				{
 					std::string fStr = p.filename().string();
@@ -315,10 +329,9 @@ namespace Mirage
 		}
 	}
 
-
 	void ContentBrowserPanel::UpdateBrowser()
 	{
-		if (s_BrowserUpdateTimer.Elapsed() < s_BrowserUpdateInterval && !m_MarkUpdate)
+		if (s_BrowserUpdateTimer.Elapsed() < s_BrowserUpdateInterval && !m_MarkUpdateContents)
 		{
 			return;
 		}
@@ -340,17 +353,17 @@ namespace Mirage
 			}
 		}
 
-		m_MarkUpdate = false;
+		m_MarkUpdateContents = false;
 		s_BrowserUpdateTimer.Reset();
 	}
 
 	std::vector<std::filesystem::path> ContentBrowserPanel::Browse(const std::filesystem::path& path)
 	{
-		if (s_HierarchyUpdateTimer.Elapsed() < s_BrowserUpdateInterval)
+		if (s_HierarchyUpdateTimer.Elapsed() < s_BrowserUpdateInterval && !m_MarkUpdateTree)
 		{
 			return m_BrowseCache[ImGui::GetID(path.filename().string().c_str())];
 		}
-
+		
 		std::vector<std::filesystem::path> result;
 
 		for (auto& directoryEntry : std::filesystem::directory_iterator(path))
@@ -363,6 +376,8 @@ namespace Mirage
 
 		m_BrowseCache[ImGui::GetID(path.filename().string().c_str())] = result;
 		s_HierarchyUpdateTimer.Reset();
+
+		m_MarkUpdateTree = false;
 		return result;
 	}
 
@@ -383,7 +398,7 @@ namespace Mirage
 			m_CurrentDirectory = dir;
 		}
 		m_SelectedPath = path;
-		MarkUpdate();
+		MarkUpdateContents();
 	}
 
 	void ContentBrowserPanel::NavigateBackward()
@@ -399,7 +414,7 @@ namespace Mirage
 			m_CurrentDirectory = m_BackWardNavigation.top();
 			m_SelectedPath = m_CurrentDirectory;
 			m_BackWardNavigation.pop();
-			MarkUpdate();
+			MarkUpdateContents();
 		}
 	}
 
@@ -416,7 +431,7 @@ namespace Mirage
 			m_CurrentDirectory = m_ForwardNavigation.top();
 			m_SelectedPath = m_CurrentDirectory;
 			m_ForwardNavigation.pop();
-			MarkUpdate();
+			MarkUpdateContents();
 		}
 	}
 

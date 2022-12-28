@@ -1,6 +1,6 @@
 Scene: Untitled
 Entities:
-  - Entity: 1106831911002390745
+  - Entity: 13042715650009090082
     TagComponent:
       Tag: Ground
     TransformComponent:
@@ -21,9 +21,9 @@ Entities:
       Offset: [0, 0]
       Density: 0
       Friction: 0.100000001
-      Bounciness: 0.699999988
+      Bounciness: 1
       BouncinessThreshold: 0.5
-  - Entity: 5132105865941746511
+  - Entity: 3958491780326136867
     TagComponent:
       Tag: Camera
     TransformComponent:
@@ -42,11 +42,11 @@ Entities:
       Primary: true
       FixedAspectRatio: false
       ClearColor: [0.300000012, 0.300000012, 0.300000012, 1]
-  - Entity: 4318494744410428862
+  - Entity: 11110343943787834841
     TagComponent:
       Tag: object
     TransformComponent:
-      Position: [-5, 5, 0]
+      Position: [-13.925477, 13.3024988, 0]
       Rotation: [0, 0, 0]
       Scale: [1.73000002, 1.73000002, 1.73000002]
     SpriteRendererComponent:
@@ -61,16 +61,16 @@ Entities:
     BoxCollider2DComponent:
       Size: [0.5, 0.5]
       Offset: [0, 0]
-      Density: 1
+      Density: 10
       Friction: 0
-      Bounciness: 1
+      Bounciness: 0
       BouncinessThreshold: 0.5
-  - Entity: 18121506087010551129
+  - Entity: 476033164646701882
     TagComponent:
       Tag: Ground
     TransformComponent:
-      Position: [9.06365204, 8.44761086, 0]
-      Rotation: [0, 0, 53.0992966]
+      Position: [10.7037239, 3.21711349, 0]
+      Rotation: [0, 0, 33.0212517]
       Scale: [31.4095802, 1, 1]
     SpriteRendererComponent:
       Color: [1, 0.761492848, 0.48887378, 1]
@@ -84,21 +84,77 @@ Entities:
     BoxCollider2DComponent:
       Size: [0.5, 0.5]
       Offset: [0, 0]
-      Density: 2
+      Density: 0
       Friction: 0.100000001
       Bounciness: 1
       BouncinessThreshold: 0.5
-  - Entity: 10206902514097355047
+  - Entity: 2461335385108351676
     TagComponent:
       Tag: Circle
     TransformComponent:
-      Position: [-0.908157825, 5.50397873, 0]
+      Position: [-1.97761691, 5.05436611, 0]
       Rotation: [0, 0, 0]
-      Scale: [3.31999993, 3.31999993, 3.31999993]
+      Scale: [3, 3, 1]
+    CircleRendererComponent:
+      Thickness: 0.215000004
+      Fade: 0.319999993
+      Color: [0.971541107, 0.872674823, 1, 1]
+      Texture: Assets\textures\Default.png
+      Tiling: [1, 1]
+      Offset: [0, 0]
+  - Entity: 14060906661610404098
+    TagComponent:
+      Tag: Circle
+    TransformComponent:
+      Position: [-1.08807981, 7.98523378, 0]
+      Rotation: [0, 0, 0]
+      Scale: [3, 3, 1]
+    CircleRendererComponent:
+      Thickness: 0.215000004
+      Fade: 0
+      Color: [0.544001997, 0.911758065, 1, 1]
+      Texture: Assets\textures\Default.png
+      Tiling: [1, 1]
+      Offset: [0, 0]
+  - Entity: 399090692597194091
+    TagComponent:
+      Tag: Circle
+    TransformComponent:
+      Position: [1.51257885, 5.32352829, 0]
+      Rotation: [0, 0, 0]
+      Scale: [3, 3, 1]
+    CircleRendererComponent:
+      Thickness: 1
+      Fade: 0.439999998
+      Color: [1, 0.565926075, 0.31316644, 1]
+      Texture: Assets\textures\Default.png
+      Tiling: [1, 1]
+      Offset: [0, 0]
+  - Entity: 11863527991810267698
+    TagComponent:
+      Tag: Circle
+    TransformComponent:
+      Position: [-0.0203986168, 2.56060505, 0]
+      Rotation: [0, 0, 0]
+      Scale: [3, 3, 1]
     CircleRendererComponent:
       Thickness: 1
       Fade: 0.00499999989
-      Color: [1, 1, 1, 1]
-      Texture: Assets\textures\TestTexture.png
+      Color: [0.99999994, 0.196236297, 0.223394439, 1]
+      Texture: Assets\textures\Default.png
+      Tiling: [1, 1]
+      Offset: [0, 0]
+  - Entity: 1599971625513662818
+    TagComponent:
+      Tag: new SceneObject
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CircleRendererComponent:
+      Thickness: 0.393000007
+      Fade: 0.50999999
+      Color: [0, 1, 0.0304572582, 1]
+      Texture: Resources/Defaults/Textures/White.png
       Tiling: [1, 1]
       Offset: [0, 0]

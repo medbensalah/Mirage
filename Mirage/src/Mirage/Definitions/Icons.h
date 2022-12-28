@@ -6,6 +6,8 @@ namespace Mirage
 {
 	namespace Icons
 	{
+		static const std::string Mirage = "Resources/Icons/Mirage.png";
+		
 		static const std::string PlayButton = "Resources/Icons/General/PlayButton.png";
 		static const std::string StopButton = "Resources/Icons/General/StopButton.png";
 
