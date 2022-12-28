@@ -2,6 +2,7 @@
 
 #include "Platform/Windows/WindowsWindow.h"
 
+#include "stb_Image.h"
 #include "Mirage/Events/ApplicationEvent.h"
 #include "Mirage/Events/KeyEvent.h"
 #include "Mirage/Events/MouseEvent.h"
@@ -169,6 +170,11 @@ namespace Mirage
             MouseMoveEvent event((float)xPos, (float)yPos);
             data.EventCallback(event);
         });
+
+    	GLFWimage images[1];
+    	images[0].pixels = stbi_load("Resources/Icons/Mirage.png", &images[0].width, &images[0].height, 0, 4); //rgba channels 
+    	glfwSetWindowIcon(m_Window, 1, images); 
+    	stbi_image_free(images[0].pixels);
 
     }
 
