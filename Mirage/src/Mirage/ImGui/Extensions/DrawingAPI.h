@@ -14,17 +14,29 @@ namespace Mirage
     static bool DrawComboBox(const char* label, const char* strings[], int count, const char* preview, int* out);
 	
     static bool DrawVec3Control(const char* label, Vec3& vector);
-}
 
-namespace ImGui
-{
-    // imvec2 operators
-    inline ImVec2 operator+(const ImVec2& lhs, const ImVec2& rhs)
-    {
-        return ImVec2(lhs.x + rhs.x, lhs.y + rhs.y);
-    }
+	
+	inline ImVec2 operator+(const ImVec2& lhs, const ImVec2& rhs)
+	{
+		return ImVec2(lhs.x + rhs.x, lhs.y + rhs.y);
+	}
+	inline ImVec2 operator-(const ImVec2& lhs, const ImVec2& rhs)
+	{
+		return ImVec2(lhs.x - rhs.x, lhs.y - rhs.y);
+	}
+	inline ImVec2 operator*(const ImVec2& lhs, const ImVec2& rhs)
+	{
+		return ImVec2(lhs.x * rhs.x, lhs.y * rhs.y);
+	}
+	inline ImVec2 operator*(const ImVec2& lhs, const float& n)
+	{
+		return ImVec2(lhs.x * n, lhs.y * n);
+	}
+	inline ImVec2 operator/(const ImVec2& lhs, const float& n)
+	{
+		return ImVec2(lhs.x / n, lhs.y / n);
+	}
 }
-
 
 bool Mirage::DrawSplitUIItem(const char* label, std::function<bool()> fn, const char* Cid)
 {

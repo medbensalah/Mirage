@@ -8,6 +8,7 @@
 #include "ImGuizmo/ImGuizmo.h"
 #include "Mirage/ECS/SceneCamera.h"
 #include "Panels/Extras/SettingsPanel.h"
+#include "Panels/GraphEditor/GraphEditor.h"
 
 namespace Mirage
 {	
@@ -105,8 +106,10 @@ namespace Mirage
         ContentBrowserPanel m_ContentBrowserPanel;
 
     	// ----------------------- Extras -----------------------
-    	bool showSettings = false;
+    	bool m_ShowSettings = false;
         SettingsPanel m_SettingsPanel;
+    	bool m_ShowGraphEditor = true;
+    	Graph::GraphEditor m_GraphEditor;
     	
     	// ----------------------- Icons -----------------------
 

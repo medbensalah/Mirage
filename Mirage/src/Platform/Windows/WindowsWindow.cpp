@@ -16,7 +16,6 @@
 
 namespace Mirage
 {
-    //static bool s_GLFWInitialized = false;
     static uint8_t s_GLFWWindowCount = 0;
     
     static void GLFWErrorCallback(int error, const char* description)
@@ -58,8 +57,6 @@ namespace Mirage
             
             int success = glfwInit();
             MRG_CORE_ASSERT(success, "GLFW initialization Failed!");
-            // glfwSetErrorCallback(GLFWErrorCallback);
-            //s_GLFWInitialized = true;
         }
 
         {
@@ -181,17 +178,7 @@ namespace Mirage
     void WindowsWindow::Shutdown()
     {
         MRG_PROFILE_FUNCTION();
-        // if (m_Window != nullptr) {
-        //     glfwDestroyWindow(m_Window);
-        //     --s_GLFWWindowCount;
-        // }
-        // if (m_Window != nullptr)
-        // {
-        //     if (s_GLFWWindowCount == 0)
-        //     {
-        //         glfwTerminate();
-        //     }
-        // }
+
         glfwDestroyWindow(m_Window);
         --s_GLFWWindowCount;
         

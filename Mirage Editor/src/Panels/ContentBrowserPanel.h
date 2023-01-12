@@ -8,7 +8,6 @@
 #include "Mirage/Core/Core.h"
 #include "Mirage/Renderer/Texture.h"
 
-
 namespace Mirage
 {
 	class ContentBrowserPanel

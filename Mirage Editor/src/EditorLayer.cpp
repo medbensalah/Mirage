@@ -250,7 +250,7 @@ namespace Mirage
 			if (ImGui::BeginMenu("Settings"))
 			{
 				if (ImGui::MenuItem("Settings"))
-					showSettings = true;
+					m_ShowSettings = true;
 
 				ImGui::EndMenu();
 			}
@@ -258,6 +258,9 @@ namespace Mirage
 			{
 				if (ImGui::MenuItem("Stats"))
 					m_ShowStats = true;
+				
+				if (ImGui::MenuItem("Graph Editor"))
+					m_ShowGraphEditor = true;
 
 				ImGui::EndMenu();
 			}
@@ -927,13 +930,18 @@ namespace Mirage
 		m_ContentBrowserPanel.OnImGuiRender();
 
 		// ----------------------------- Extra -----------------------------
-		if (showSettings)
+		// TODO: destroy and create
+		if (m_ShowSettings)
 		{
-			m_SettingsPanel.OnImGuiRender(&showSettings);
-			if (!showSettings)
+			m_SettingsPanel.OnImGuiRender(&m_ShowSettings);
+			if (!m_ShowSettings)
 			{
 				m_SettingsPanel.SaveSettings();
 			}
+		}
+		if (m_ShowGraphEditor)
+		{
+			m_GraphEditor.OnImGuiRender(&m_ShowGraphEditor);
 		}
 
 
