@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 
+#include "../ContentBrowserPanel.h"
 #include "ImGui/imgui.h"
 #include "VisualComponents/Text.h"
 #include "VisualComponents/VisualComponent.h"
@@ -27,11 +28,15 @@ namespace Mirage::Graph
 		void SetSize(ImVec2 size) { m_Size = size; }
 
 	private:
+		void Drag();
+
+	private:
 		std::vector<VisualComponents::VisualComponent*> m_VisualComponents;
 		
 		std::string m_Title;
 		ImVec2 m_Position;
 		ImVec2 m_Size;
+		ImVec2 m_Drag = ImVec2{ 0, 0 };
 		float m_Scale;
 	};
 }

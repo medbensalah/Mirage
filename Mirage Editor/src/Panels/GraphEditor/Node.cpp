@@ -11,18 +11,35 @@ namespace Mirage::Graph
 		m_VisualComponents.push_back(new VisualComponents::Text(title));
 	}
 
+	static bool o = true;
 	void Node::Draw(ImVec2 offset, float zoom)
 	{
 		m_Scale = zoom;
-		ImVec2 nodePosition = m_Position + offset;
-		ImGui::SetCursorScreenPos(nodePosition);
-		ImDrawList* drawList = ImGui::GetWindowDrawList();
-
-		drawList->AddRectFilled(nodePosition, nodePosition + ImVec2(100, 100) * zoom, IM_COL32(255, 255, 255, 255));
+		ImVec2 nodePosition = (m_Position + m_Drag) * zoom + offset;
+		ImGui::SetNextWindowPos(nodePosition, ImGuiCond_Always);
+		ImGui::BeginChild(m_Title.c_str(), m_Size, true, ImGuiWindowFlags_NoScrollbar |
+		                  ImGuiWindowFlags_NoScrollWithMouse);
 		
+		ImGui::SetWindowFontScale(zoom);
+		
+		ImGui::BeginGroup();
 		for (auto& visualComponent : m_VisualComponents)
 		{
 			visualComponent->Draw(m_Scale);
+		}
+		ImGui::EndGroup();
+		Drag();
+		
+		ImGui::EndChild();
+	}
+
+	void Node::Drag()
+	{
+		m_Size = ImGui::GetItemRectSize() + 35.0f * m_Scale;
+		if (ImGui::IsWindowHovered() && ImGui::IsMouseDragging(0))
+		{
+			m_Drag = m_Drag + ImGui::GetMouseDragDelta() / m_Scale;
+			ImGui::ResetMouseDragDelta();
 		}
 	}
 }

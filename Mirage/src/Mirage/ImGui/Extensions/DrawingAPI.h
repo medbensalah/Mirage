@@ -16,6 +16,10 @@ namespace Mirage
     static bool DrawVec3Control(const char* label, Vec3& vector);
 
 	
+	inline ImVec2 operator+(const ImVec2& lhs, const float& rhs)
+	{
+		return ImVec2(lhs.x + rhs, lhs.y + rhs);
+	}
 	inline ImVec2 operator+(const ImVec2& lhs, const ImVec2& rhs)
 	{
 		return ImVec2(lhs.x + rhs.x, lhs.y + rhs.y);
@@ -31,6 +35,10 @@ namespace Mirage
 	inline ImVec2 operator*(const ImVec2& lhs, const float& n)
 	{
 		return ImVec2(lhs.x * n, lhs.y * n);
+	}
+	inline ImVec2 operator/(const ImVec2& lhs, const ImVec2& rhs)
+	{
+		return ImVec2(lhs.x / rhs.x, lhs.y / rhs.y);
 	}
 	inline ImVec2 operator/(const ImVec2& lhs, const float& n)
 	{
