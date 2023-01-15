@@ -2,10 +2,14 @@
 #include <string>
 #include <vector>
 
-#include "../ContentBrowserPanel.h"
 #include "ImGui/imgui.h"
 #include "VisualComponents/Text.h"
 #include "VisualComponents/VisualComponent.h"
+
+namespace Mirage
+{
+	class Texture2D;
+}
 
 namespace Mirage::Graph
 {
@@ -15,7 +19,8 @@ namespace Mirage::Graph
 		Node(std::string title, ImVec2 position);
 		~Node() = default;
 
-		void Draw(ImVec2 offset, float zoom);
+		void OnImGuiRender(ImVec2 origin, float zoom);
+
 
 		//getters and setters
 		std::string GetTitle() const { return m_Title; }
@@ -28,15 +33,23 @@ namespace Mirage::Graph
 		void SetSize(ImVec2 size) { m_Size = size; }
 
 	private:
-		void Drag();
+		void UpdateCoordinates();
 
+		void DrawHeader();
+		void Draw();
+		void DrawBorder();
+		
 	private:
 		std::vector<VisualComponents::VisualComponent*> m_VisualComponents;
+
+		static Ref<Texture2D> bg;
 		
 		std::string m_Title;
 		ImVec2 m_Position;
 		ImVec2 m_Size;
-		ImVec2 m_Drag = ImVec2{ 0, 0 };
-		float m_Scale;
+		float m_Zoom;
+
+		ImU32 m_HeaderColor = IM_COL32(99, 145, 242, 255);
+		// ImU32 m_HeaderColor = IM_COL32(40, 87, 188, 255);
 	};
 }

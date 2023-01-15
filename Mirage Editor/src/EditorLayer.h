@@ -8,7 +8,7 @@
 #include "ImGuizmo/ImGuizmo.h"
 #include "Mirage/ECS/SceneCamera.h"
 #include "Panels/Extras/SettingsPanel.h"
-#include "Panels/GraphEditor/GraphEditor.h"
+#include "Panels/Extras/GraphEditor/GraphEditor.h"
 
 namespace Mirage
 {	

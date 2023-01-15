@@ -10,7 +10,7 @@ namespace Mirage::VisualComponents
 	class Text : public VisualComponent
 	{
 	public:
-		Text(std::string text, ImVec4 color = ImVec4(255,0,255,255), float horizontalAlign = 0.5f, float verticalAlign = 0.5f, int fontSize = 18);
+		Text(std::string text, ImVec4 color = ImVec4(255,255,255,255), float horizontalAlign = 0.5f, float verticalAlign = 0.5f, int fontSize = 18);
 		~Text()
 		{
 		}

@@ -9,7 +9,8 @@ namespace Mirage
 	{
 	public:
 		SettingsPanel() = default;
-
+		virtual ~SettingsPanel() = default;
+		
 		void OnImGuiRender(bool* show);
 
 		void SaveSettings();

@@ -192,6 +192,7 @@
     <ClInclude Include="src\Mirage\Events\MouseEvent.h" />
     <ClInclude Include="src\Mirage\ImGui\Extensions\ButtonExtensions.h" />
     <ClInclude Include="src\Mirage\ImGui\Extensions\DrawingAPI.h" />
+    <ClInclude Include="src\Mirage\ImGui\Extensions\GraphStyle.h" />
     <ClInclude Include="src\Mirage\ImGui\Extensions\Splitter.h" />
     <ClInclude Include="src\Mirage\ImGui\Extensions\ToggleButton.h" />
     <ClInclude Include="src\Mirage\ImGui\FontLibrary.h" />

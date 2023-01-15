@@ -294,7 +294,7 @@ namespace Mirage
 			if (m_SceneState == SceneState::Edit)
 			{
 				Application::Get().GetImGuiLayer()->AllowKbEvents(!IsAnyImGuiActive);
-				Application::Get().GetImGuiLayer()->AllowMouseEvents(true);
+				Application::Get().GetImGuiLayer()->AllowMouseEvents(m_ViewportHovered);
 			}
 			else
 			{
