@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "ImGui/imgui.h"
+#include "VisualComponents/Container.h"
 #include "VisualComponents/Text.h"
 #include "VisualComponents/VisualComponent.h"
 
@@ -16,11 +17,20 @@ namespace Mirage::Graph
 	class Node
 	{
 	public:
+		ImVec2 HeaderSize;
+		ImVec2 InputContainerSize;
+		ImVec2 OutputContainerSize;
+		ImVec2 CustomContentSize;
+
+		VisualComponents::Container HeaderContainer;
+		VisualComponents::Container InputContainer;
+		VisualComponents::Container OutputContainer;
+		VisualComponents::Container CustomContentContainer;
+		
 		Node(std::string title, ImVec2 position);
 		~Node() = default;
 
 		void OnImGuiRender(ImVec2 origin, float zoom);
-
 
 		//getters and setters
 		std::string GetTitle() const { return m_Title; }
@@ -34,14 +44,15 @@ namespace Mirage::Graph
 
 	private:
 		void UpdateCoordinates();
+		void UpdateSize();
 
 		void DrawHeader();
-		void Draw();
+		void DrawInputContainer();
+		void DrawOutputContainer();
+		void DrawCustomContent();
 		void DrawBorder();
 		
 	private:
-		std::vector<VisualComponents::VisualComponent*> m_VisualComponents;
-
 		static Ref<Texture2D> bg;
 		
 		std::string m_Title;

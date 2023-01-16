@@ -10,7 +10,7 @@ namespace Mirage::VisualComponents
 	class Text : public VisualComponent
 	{
 	public:
-		Text(std::string text, ImVec4 color = ImVec4(255,255,255,255), float horizontalAlign = 0.5f, float verticalAlign = 0.5f, int fontSize = 18);
+		Text(std::string text, ImVec4 color = ImVec4(255,255,255,255), int fontSize = 18, bool bold = false);
 		~Text()
 		{
 		}
@@ -25,18 +25,10 @@ namespace Mirage::VisualComponents
 
 		ImVec4 GetColor() const { return m_Color; }
 		void SetColor(ImVec4 color) { m_Color = color; }
-
-		float GetHorizontalAlign() const { return m_HorizontalAlign; }
-		void SetHorizontalAlign(float horizontalAlign) { m_HorizontalAlign = horizontalAlign; }
-
-		float GetVerticalAlign() const { return m_VerticalAlign; }
-		void SetVerticalAlign(float verticalAlign) { m_VerticalAlign = verticalAlign; }
-
 	private:
 		std::string m_Text;
 		int m_FontSize;
 		ImVec4 m_Color;
-		float m_HorizontalAlign;
-		float m_VerticalAlign;
+		bool m_Bold;
 	};
 }

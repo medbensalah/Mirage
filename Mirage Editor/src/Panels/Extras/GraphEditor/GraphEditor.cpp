@@ -16,21 +16,19 @@ namespace Mirage::Graph
 		
 		ImGuiWindowFlags flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 		
-		ImGui::Begin("GraphEditor", show, flags);
-		
-		Pan();		
-		Zoom();
-		DrawGrid();
-		DrawDebugInfo();
-		ApplyStyleChanges();
-		DrawNodes();
-		EndStyleChanges();
-		
+		if(ImGui::Begin("GraphEditor", show, flags))
+		{
+			Pan();		
+			Zoom();
+			DrawGrid();
+			DrawDebugInfo();
+			ApplyStyleChanges();
+			DrawNodes();
+			EndStyleChanges();
+		}
 		ImGui::End();
 		ImGui::PopStyleColor();
-		ImGui::PopStyleVar(2);
-
-		
+		ImGui::PopStyleVar(2);		
 	}
 	
 	void GraphEditor::DrawGrid()

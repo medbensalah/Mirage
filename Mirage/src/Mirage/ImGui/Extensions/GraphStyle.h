@@ -9,8 +9,8 @@ namespace Mirage::Graph::Style
 	static float ThinLineWidth = 1.0f;
 
 	static ImU32 NodeColor = IM_COL32(17, 17, 17, 200);
-	static ImU32 NodeBorderColor = IM_COL32(255, 255, 255, 96);
-	static ImU32 NodeBorderColorHovered = IM_COL32(0, 183, 255, 128);
-	static ImU32 NodeBorderColorSelected = IM_COL32(255, 183, 0, 128);
+	static ImU32 NodeBorderColor = IM_COL32(128,128,128,255);
+	static ImU32 NodeBorderColorHovered = IM_COL32(0, 150, 255, 255);
+	static ImU32 NodeBorderColorFocused = IM_COL32(255, 183, 0, 255);
 };
 
