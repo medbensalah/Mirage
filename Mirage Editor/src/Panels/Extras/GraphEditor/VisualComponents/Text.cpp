@@ -14,7 +14,6 @@ namespace Mirage::VisualComponents
 		ImGui::PushStyleColor(ImGuiCol_Text, m_Color);
 		
 		ImFont* font = GetFont(m_Bold? Font::Black : Font::Regular);
-		// ImFont* font = ImGui::GetIO().Fonts->Fonts[0];
 		font->Scale = m_FontSize / font->FontSize;
 		ImGui::PushFont(font);
 		ImGui::Text(m_Text.c_str());

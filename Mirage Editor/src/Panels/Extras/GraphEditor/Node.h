@@ -59,8 +59,12 @@ namespace Mirage::Graph
 		ImVec2 m_Position;
 		ImVec2 m_Size;
 		float m_Zoom;
+		float m_InputOutputSpacing;
 
-		ImU32 m_HeaderColor = IM_COL32(99, 145, 242, 255);
-		// ImU32 m_HeaderColor = IM_COL32(40, 87, 188, 255);
+		ImU32 m_HeaderColor = IM_COL32(0, 0, 255, 196);
+
+		bool m_IsSelected = false;
+		bool m_IsHovered = false;
+		bool m_IsDragged = false;
 	};
 }

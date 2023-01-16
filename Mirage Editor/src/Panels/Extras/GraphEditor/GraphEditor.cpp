@@ -115,7 +115,7 @@ namespace Mirage::Graph
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, style.FrameBorderSize * m_Zoom);
 		
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, style.WindowRounding * m_Zoom);
-		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, style.ChildRounding * m_Zoom);
+		ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 8 * m_Zoom);
 		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, style.FrameRounding * m_Zoom);
 		ImGui::PushStyleVar(ImGuiStyleVar_PopupRounding, style.PopupRounding * m_Zoom);
 		ImGui::PushStyleVar(ImGuiStyleVar_ScrollbarRounding, style.ScrollbarRounding * m_Zoom);

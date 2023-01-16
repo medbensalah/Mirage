@@ -23,8 +23,9 @@ namespace Mirage::Graph
 		CustomContentSize = InputContainerSize = OutputContainerSize = HeaderSize = m_Size = ImVec2(0, 0);
 
 		HeaderContainer.Add(new Text(m_Title, ImColor(255, 255, 255, 255), 22.0f, true));
-		// InputContainer.Add(new Text("Input"));
-		InputContainer.Add(new Text("I"));
+		InputContainer.Add(new Text("Input"));
+		InputContainer.Add(new Text("Input"));
+		InputContainer.Add(new Text("Input"));
 
 		OutputContainer.Add(new Text("Output"));
 		OutputContainer.Add(new Text("Output"));
@@ -32,9 +33,9 @@ namespace Mirage::Graph
 		OutputContainer.Add(new Text("Output"));
 	}
 
-	static bool o = true;
 	void Node::OnImGuiRender(ImVec2 origin, float zoom)
 	{
+		float oldZoom = m_Zoom;
 		m_Zoom = zoom;
 		ImVec2 nodePosition = m_Position * zoom + origin;
 
@@ -43,16 +44,17 @@ namespace Mirage::Graph
 		{
 			ImGui::SetWindowFontScale(zoom);
 		
+			UpdateCoordinates();
 			ImGui::BeginGroup();
 			DrawHeader();
 			DrawInputContainer();
 			DrawOutputContainer();
 			DrawCustomContent();
 			ImGui::EndGroup();
+
 			UpdateSize();
 		
 			DrawBorder();
-			UpdateCoordinates();
 		}
 		ImGui::EndChild();
 
@@ -62,8 +64,8 @@ namespace Mirage::Graph
 	{
 		ImDrawList* drawList = ImGui::GetWindowDrawList();
 
-		ImVec2 uv0 = ImVec2(0, 0.25f);
-		ImVec2 uv1 = ImVec2(1, 0.5f);
+		ImVec2 uv0 = ImVec2(0, 0);
+		ImVec2 uv1 = ImVec2(1, 1);
 		
 		drawList->AddImageRounded((ImTextureID) bg->GetRendererID(),
 			ImGui::GetCursorScreenPos(),
@@ -79,30 +81,35 @@ namespace Mirage::Graph
 
 	void Node::DrawInputContainer()
 	{
-		ImGui::SetCursorPosY(HeaderSize.y);
+		ImGui::SetCursorPosY(HeaderSize.y + 5 * m_Zoom);
 		ImGui::BeginGroup();
 		ImGui::Indent();
 		InputContainer.Draw(m_Zoom);
+		ImColor col = m_HeaderColor;
+		ImGui::PushItemWidth(200 * m_Zoom);
+		if (ImGui::ColorEdit4("color", &col.Value.x))
+		{
+			m_HeaderColor = col;
+		}
 		ImGui::Unindent();
 		ImGui::EndGroup();
 		ImVec2 containerMin = ImGui::GetItemRectMin();
-		ImVec2 containerMax = ImGui::GetItemRectMax();
+		ImVec2 containerMax = ImGui::GetItemRectMax() + ImVec2(0, 10 * m_Zoom);
 		InputContainerSize = containerMax - containerMin;
 		// ImGui::GetWindowDrawList()->AddRectFilled(containerMin, containerMax, IM_COL32(0, 255, 0, 16),0,0);
 	}
 
 	void Node::DrawOutputContainer()
 	{
-		ImGui::SetCursorPosY(HeaderSize.y);
-		ImGui::SetCursorPosX(m_Size.x - OutputContainerSize.x);
+		ImGui::SetCursorPosY(HeaderSize.y + 5 * m_Zoom);
+		ImGui::SetCursorPosX(InputContainerSize.x + m_InputOutputSpacing);
 		ImGui::BeginGroup();
 		OutputContainer.Draw(m_Zoom);
 		ImGui::EndGroup();
 		ImVec2 containerMin = ImGui::GetItemRectMin();
-		ImVec2 containerMax = ImGui::GetItemRectMax();
+		ImVec2 containerMax = ImGui::GetItemRectMax() + ImVec2(15, 10) * m_Zoom;
 		OutputContainerSize = containerMax - containerMin;
 		// ImGui::GetWindowDrawList()->AddRectFilled(containerMin, containerMax, IM_COL32(255, 0, 0, 16),0,0);
-	
 	}
 
 	void Node::DrawCustomContent()
@@ -116,6 +123,7 @@ namespace Mirage::Graph
 
 		if (ImGui::IsWindowFocused())
 		{
+			m_IsSelected = true;
 			drawList->AddRect(ImGui::GetWindowPos(),
 							  ImGui::GetWindowPos() + ImGui::GetWindowContentRegionMax(),
 							  Style::NodeBorderColorFocused, ImGui::GetStyle().ChildRounding, ImDrawCornerFlags_All,
@@ -123,6 +131,7 @@ namespace Mirage::Graph
 		}
 		else if (ImGui::IsWindowHovered())
 		{
+			m_IsHovered = true;
 			drawList->AddRect(ImGui::GetWindowPos(),
 							  ImGui::GetWindowPos() + ImGui::GetWindowContentRegionMax(),
 							  Style::NodeBorderColorHovered, ImGui::GetStyle().ChildRounding, ImDrawCornerFlags_All,
@@ -137,16 +146,22 @@ namespace Mirage::Graph
 	
 	void Node::UpdateCoordinates()
 	{
-		if (ImGui::IsWindowHovered() && ImGui::IsMouseDragging(0))
+		if (m_IsDragged || ImGui::IsWindowHovered() && ImGui::GetIO().MouseClicked[0])
 		{
+			m_IsDragged = true;
 			m_Position = m_Position + ImGui::GetMouseDragDelta() / m_Zoom;
 			ImGui::ResetMouseDragDelta();
+		}
+		if (m_IsDragged && ImGui::GetIO().MouseReleased[0])
+		{
+			m_IsDragged = false;
 		}
 	}
 
 	void Node::UpdateSize()
 	{
-		HeaderSize.x = std::max(glm::max(HeaderSize.x, CustomContentSize.x), glm::max(InputContainerSize.x, OutputContainerSize.x) * 2.0f);
+		m_InputOutputSpacing = 25 * m_Zoom;
+		HeaderSize.x = std::max(glm::max(HeaderSize.x, CustomContentSize.x), InputContainerSize.x + OutputContainerSize.x + m_InputOutputSpacing);
 		m_Size.x = HeaderSize.x;
 		m_Size.y = HeaderSize.y + CustomContentSize.y + glm::max(InputContainerSize.y, OutputContainerSize.y);
 		HeaderContainer.SetSize(HeaderSize);

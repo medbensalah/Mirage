@@ -12,8 +12,9 @@ namespace Mirage::Graph
 	public:
 		GraphEditor()
 		{
-			m_NodeList.push_back(new Node("node 1", ImVec2(100, 100)));
-			m_NodeList.push_back(new Node("node 22222222555555555", ImVec2(250, 250)));
+			m_NodeList.push_back(new Node("Node 1", ImVec2(100, 100)));
+			m_NodeList.push_back(new Node("Node 2", ImVec2(250, 250)));
+			m_NodeList.push_back(new Node("Node 3", ImVec2(100, 350)));
 		}
 
 		void OnImGuiRender(bool* show);
