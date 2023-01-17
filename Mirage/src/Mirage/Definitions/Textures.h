@@ -7,6 +7,9 @@ namespace Mirage
 	namespace Textures
 	{
 		static const std::string WhiteTexture = "Resources/Defaults/Textures/White.png";
-		static const std::string NodeHeaderBackground = "Resources/Defaults/Textures/NodeHeaderBackground.png";
+
+		// ----------------- Graph Editor ----------------- //
+		static const std::string NodeHeaderBackground = "Resources/Defaults/Textures/GraphEditor/NodeHeaderBackground.png";
+		static const std::string NodePort = "Resources/Defaults/Textures/GraphEditor/Port.png";
 	}
 }

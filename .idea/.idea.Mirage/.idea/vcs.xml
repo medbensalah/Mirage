@@ -2,5 +2,12 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Mirage/vendor/Box2D" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Mirage/vendor/GLFW" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Mirage/vendor/ImGui" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Mirage/vendor/ImGuizmo" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Mirage/vendor/glm" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Mirage/vendor/spdLog" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Mirage/vendor/yaml-cpp" vcs="Git" />
   </component>
 </project>

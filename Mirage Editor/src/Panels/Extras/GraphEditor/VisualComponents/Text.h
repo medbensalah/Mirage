@@ -1,19 +1,20 @@
 ﻿#pragma once
+
 #include <string>
 
-#include "Mirage/Core/Log.h"
-#include "VisualComponent.h"
-#include "ImGui/imgui.h"
+#include "Mirage/ImGui/FontLibrary.h"
 
 namespace Mirage::VisualComponents
 {
 	class Text : public VisualComponent
 	{
 	public:
-		Text(std::string text, ImVec4 color = ImVec4(255,255,255,255), int fontSize = 18, bool bold = false);
+		Text(const std::string& text, ImVec4 color = ImVec4(255, 255, 255, 255), int fontSize = 18, bool bold = false);
+
 		~Text()
 		{
 		}
+
 		void Draw(float scale) override;
 
 		// Getters and Setters
@@ -25,6 +26,7 @@ namespace Mirage::VisualComponents
 
 		ImVec4 GetColor() const { return m_Color; }
 		void SetColor(ImVec4 color) { m_Color = color; }
+
 	private:
 		std::string m_Text;
 		int m_FontSize;

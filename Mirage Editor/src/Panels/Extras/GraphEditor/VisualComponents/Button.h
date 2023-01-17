@@ -1,5 +1,4 @@
 ﻿#pragma once
-
 #include <string>
 
 #include "VisualComponent.h"
@@ -9,12 +8,14 @@ namespace Mirage::VisualComponents
 	class Button : public VisualComponent
 	{
 	public:
-		Button(std::string label) : m_Label(label) {};
-		~Button() override {}
-		
-		void Draw(float scale) override;
+		Button(const std::string& label, ImVec2& size);
+
+		virtual ~Button() override {}
+
+		virtual void Draw(float scale) override;
 
 	private:
 		std::string m_Label;
+		ImVec2 m_Size;
 	};
 }

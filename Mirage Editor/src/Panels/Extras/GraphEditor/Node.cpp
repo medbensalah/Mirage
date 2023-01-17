@@ -5,27 +5,34 @@
 #include "Mirage/ImGui/Extensions/DrawingAPI.h"
 #include "Mirage/ImGui/Extensions/GraphStyle.h"
 #include "Mirage/Renderer/Texture.h"
-#include "VisualComponents/Text.h"
+
+#include "VisualComponents/VisualComponentsInclude.h"
 
 namespace Mirage::Graph
 {
 	using namespace VisualComponents;
-	static int i = 0;
+	bool Node::Initialized = false;
 	Ref<Texture2D> Node::bg;
 	Node::Node(std::string title, ImVec2 position)
 		: m_Title(title), m_Position(position)
 	{
-		if (!i)
+		if (!Initialized)
 		{
-			++i;
+			Initialized = true;
 			bg = Texture2D::Create(Textures::NodeHeaderBackground);
 		}
 		CustomContentSize = InputContainerSize = OutputContainerSize = HeaderSize = m_Size = ImVec2(0, 0);
 
 		HeaderContainer.Add(new Text(m_Title, ImColor(255, 255, 255, 255), 22.0f, true));
-		InputContainer.Add(new Text("Input"));
-		InputContainer.Add(new Text("Input"));
-		InputContainer.Add(new Text("Input"));
+		// InputContainer.Add(new Text("Input"));
+		// InputContainer.Add(new Text("Input"));
+		// InputContainer.Add(new Text("Input"));
+		// InputContainer.Add(new Float());
+		// InputContainer.Add(new Float2());
+		// InputContainer.Add(new Float3());
+		// InputContainer.Add(new Float4());
+		InputContainer.Add(new TextArea());
+
 
 		OutputContainer.Add(new Text("Output"));
 		OutputContainer.Add(new Text("Output"));
@@ -86,7 +93,7 @@ namespace Mirage::Graph
 		ImGui::Indent();
 		InputContainer.Draw(m_Zoom);
 		ImColor col = m_HeaderColor;
-		ImGui::PushItemWidth(200 * m_Zoom);
+		// ImGui::PushItemWidth(200 * m_Zoom);
 		if (ImGui::ColorEdit4("color", &col.Value.x))
 		{
 			m_HeaderColor = col;
@@ -146,13 +153,13 @@ namespace Mirage::Graph
 	
 	void Node::UpdateCoordinates()
 	{
-		if (m_IsDragged || ImGui::IsWindowHovered() && ImGui::GetIO().MouseClicked[0])
+		bool canDrag = m_IsDragged || (ImGui::IsWindowHovered() && !ImGui::IsAnyItemHovered() && ImGui::IsMouseClicked(0));
+		if (canDrag)
 		{
 			m_IsDragged = true;
-			m_Position = m_Position + ImGui::GetMouseDragDelta() / m_Zoom;
-			ImGui::ResetMouseDragDelta();
+			m_Position = m_Position + ImGui::GetIO().MouseDelta / m_Zoom;
 		}
-		if (m_IsDragged && ImGui::GetIO().MouseReleased[0])
+		if (canDrag && ImGui::IsMouseReleased(0))
 		{
 			m_IsDragged = false;
 		}

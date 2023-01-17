@@ -1,11 +1,9 @@
 ﻿#pragma once
 #include <string>
-#include <vector>
 
 #include "ImGui/imgui.h"
-#include "VisualComponents/Container.h"
-#include "VisualComponents/Text.h"
-#include "VisualComponents/VisualComponent.h"
+#include "Mirage/Core/Core.h"
+#include "VisualComponents/VisualComponentsInclude.h"
 
 namespace Mirage
 {
@@ -66,5 +64,7 @@ namespace Mirage::Graph
 		bool m_IsSelected = false;
 		bool m_IsHovered = false;
 		bool m_IsDragged = false;
+
+		static bool Initialized;
 	};
 }

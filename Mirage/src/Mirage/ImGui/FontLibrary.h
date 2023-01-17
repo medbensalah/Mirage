@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include "ImGui/imgui.h"
+
 namespace Mirage
 {
         enum class Font

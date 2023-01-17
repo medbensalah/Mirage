@@ -2,7 +2,6 @@
 #include <vector>
 
 #include "VisualComponent.h"
-#include "ImGui/imgui.h"
 
 namespace Mirage::VisualComponents
 {
