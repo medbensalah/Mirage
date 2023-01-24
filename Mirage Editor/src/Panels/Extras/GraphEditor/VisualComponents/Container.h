@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "VisualComponent.h"
+#include "Mirage/Core/Core.h"
 
 namespace Mirage::VisualComponents
 {
@@ -9,22 +10,26 @@ namespace Mirage::VisualComponents
 	{
 	public:
 		Container() {}
-		virtual ~Container() override {}
+		virtual ~Container() override
+		{
+			m_Components.clear();
+		}
 		void Draw(float scale) override;
 
-		void Add(VisualComponent* component);
-		void AddComponents(std::vector<VisualComponent*> components);
+		virtual Ref<VisualComponent> Add(VisualComponent* component);
+		virtual Ref<VisualComponent> Add(Ref<VisualComponent> component);
 		
-		void Remove(VisualComponent* component);
+		void Remove(Ref<VisualComponent> component);
 
 		void Clear();
 
 		void SetSize(const ImVec2& size) { m_Size = size; }
 		ImVec2 GetSize() const { return m_Size; }
 		
-	private:
-		std::vector<VisualComponent*> m_Components;
+	protected:
+		std::vector<Ref<VisualComponent>> m_Components;
 
+	private:
 		ImVec2 m_Size;
 	};
 }

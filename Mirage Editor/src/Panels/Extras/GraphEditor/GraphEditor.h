@@ -12,9 +12,10 @@ namespace Mirage::Graph
 	public:
 		GraphEditor()
 		{
-			m_NodeList.push_back(new Node("Node 1", ImVec2(100, 100)));
-			m_NodeList.push_back(new Node("Node 2", ImVec2(250, 250)));
-			m_NodeList.push_back(new Node("Node 3", ImVec2(100, 350)));
+			// TODO: change into Ref<>
+			m_NodeList.push_back(new Node(this, "Node 1", ImVec2(100, 100)));
+			m_NodeList.push_back(new Node(this, "Node 2", ImVec2(400, 250)));
+			m_NodeList.push_back(new Node(this, "Node 3", ImVec2(100, 550)));
 		}
 
 		void OnImGuiRender(bool* show);
@@ -22,9 +23,21 @@ namespace Mirage::Graph
 		ImVec2 CanvasStart();
 		ImVec2 CanvasEnd();
 
+		inline void AddLink(Ref<VisualComponents::Link> linkRef)
+		{
+			m_LinksList.push_back(linkRef);
+		}
+		inline void RemoveLink(Ref<VisualComponents::Link> linkRef)
+		{
+			MRG_CORE_INFO("size before: {0}", m_LinksList.size());
+			m_LinksList.erase(std::remove(m_LinksList.begin(), m_LinksList.end(), linkRef), m_LinksList.end());
+			MRG_CORE_INFO("size after: {0}", m_LinksList.size());
+		}
+
 	private:
 		void DrawGrid();
 		void DrawNodes();
+		void DrawLinks();
 		
 		void Pan();
 		void Zoom();
@@ -34,7 +47,7 @@ namespace Mirage::Graph
 
 		ImVec2 ScreenToCanvasPosition(const ImVec2& screenPos);
 		ImVec2 CanvasToScreenPosition(const ImVec2& graphPos);
-
+		
 		// ------------------- Debug -------------------
 		void DrawDebugInfo();
 		void DrawDebugPoint(ImVec2 pos, float thickness = 5.0f, ImU32 col = IM_COL32(0, 255, 0, 255));
@@ -43,6 +56,7 @@ namespace Mirage::Graph
 	
 	private:
 		std::vector<Node*> m_NodeList {}; 
+		std::vector<Ref<VisualComponents::Link>> m_LinksList {}; 
 		
 		
 		float m_Zoom = 1.0f;

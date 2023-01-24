@@ -1,5 +1,7 @@
 ﻿#include "Container.h"
 
+#include "Mirage/Core/Log.h"
+
 namespace Mirage::VisualComponents
 {
 	void Container::Draw(float scale)
@@ -10,19 +12,31 @@ namespace Mirage::VisualComponents
 		}
 	}
 
-	void Container::Add(VisualComponent* component)
+	Ref<VisualComponent> Container::Add(VisualComponent* component)
 	{
-		m_Components.push_back(component);
+		Ref<VisualComponent> componentPtr(component);
+		m_Components.push_back(componentPtr);
+		return componentPtr;
 	}
 
-	void Container::AddComponents(std::vector<VisualComponent*> components)
+	Ref<VisualComponent> Container::Add(Ref<VisualComponent> component)
 	{
-		m_Components.insert(m_Components.end(), components.begin(), components.end());
+		m_Components.push_back(std::move(component));
+		return component;
 	}
-
-	void Container::Remove(VisualComponent* component)
+	
+	void Container::Remove(Ref<VisualComponent> component)
 	{
-		m_Components.erase(std::remove(m_Components.begin(), m_Components.end(), component), m_Components.end());
+		m_Components.erase
+		(
+			std::remove_if
+			(
+				m_Components.begin(),
+				m_Components.end(),
+				[& component](const Ref<VisualComponent>& ps) { return ps.get() == component.get(); }
+			),
+			m_Components.end()
+		);
 	}
 
 	void Container::Clear()

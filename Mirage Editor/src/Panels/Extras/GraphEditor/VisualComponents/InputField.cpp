@@ -1,149 +1,112 @@
 ﻿#include "InputField.h"
 
+#include "ImGui/imgui_internal.h"
 #include "Mirage/Core/Log.h"
 
 namespace Mirage::VisualComponents
 {
+	
+	const float m_SingleWidth = 50;
 	int InputField::ID = 0;
 	
 	// ----------------------------------------------------------------------------- //
-	Float::Float(float* value, float min, float max, float step)
-		: m_Value(value), m_Min(min), m_Max(max), m_Step(step)
+	void Color::Draw(float scale)
 	{
-		if (m_Value == nullptr)
-			m_Value = new float(0.0f);
-		
+		constexpr float width = m_SingleWidth * 4 + 15;
+		ImGui::PushItemWidth(width * scale);		
+		ImGui::ColorEdit4(m_Label.c_str(), &m_Color->x, ImGuiColorEditFlags_NoLabel);
+		ImGui::PopItemWidth();
 	}
+
+	// ----------------------------------------------------------------------------- //
+	Float::Float(float* value, float min, float max, float step)
+		: m_Value(value), m_Min(min), m_Max(max), m_Step(step) {}
 	void Float::Draw(float scale)
 	{
-		ImGui::DragFloat(m_Label.c_str(), m_Value, m_Step, m_Min, m_Max,"%.5g");
+		constexpr float width = m_SingleWidth;
+		ImGui::PushItemWidth(width * scale);
+		ImGui::DragFloat(m_Label.c_str(), m_Value.get(), m_Step, m_Min, m_Max,"%.5g");
+		ImGui::PopItemWidth();
 	}
 	
 	Float2::Float2(float value[2], float min, float max, float step)
-		: m_Min(min), m_Max(max), m_Step(step)
-	{
-		
-		if (value == nullptr)
-			m_Value[0] = m_Value[1] = 0.0f;
-		else
-		{
-			m_Value[0] = value[0];
-			m_Value[1] = value[1];
-		}
-	}
+		: m_Value(value), m_Min(min), m_Max(max), m_Step(step) {}
 	void Float2::Draw(float scale)
 	{
-		ImGui::DragFloat2(m_Label.c_str(), m_Value, m_Step, m_Min, m_Max,"%.5g");
+		constexpr float width = m_SingleWidth * 2 + 5;
+		ImGui::PushItemWidth(width * scale);
+		ImGui::DragFloat2(m_Label.c_str(), m_Value.get(), m_Step, m_Min, m_Max,"%.5g");
+		ImGui::PopItemWidth();
 	}
 
 	Float3::Float3(float value[3], float min, float max, float step)
-		: m_Min(min), m_Max(max), m_Step(step)
-	{
-		if (value == nullptr)
-			m_Value[0] = m_Value[1] = m_Value[2] = 0.0f;
-		else
-		{
-			m_Value[0] = value[0];
-			m_Value[1] = value[1];
-			m_Value[2] = value[2];
-		}
-	}
+		: m_Value(value), m_Min(min), m_Max(max), m_Step(step) {}
 	void Float3::Draw(float scale)
 	{
-		ImGui::DragFloat3(m_Label.c_str(), m_Value, m_Step, m_Min, m_Max,"%.5g");
+		constexpr float width = m_SingleWidth * 3 + 10;
+		ImGui::PushItemWidth(width * scale);
+		ImGui::DragFloat3(m_Label.c_str(), m_Value.get(), m_Step, m_Min, m_Max,"%.5g");
+		ImGui::PopItemWidth();
 	}
 
 	Float4::Float4(float value[4], float min, float max, float step)
-		: m_Min(min), m_Max(max), m_Step(step)
-	{
-		if (value == nullptr)
-			m_Value[0] = m_Value[1] = m_Value[2] = m_Value[3] = 0.0f;
-		else
-		{
-			m_Value[0] = value[0];
-			m_Value[1] = value[1];
-			m_Value[2] = value[2];
-			m_Value[3] = value[3];
-		}
-	}
+		: m_Value(&value[0]), m_Min(min), m_Max(max), m_Step(step) {}
 	void Float4::Draw(float scale)
 	{
-		ImGui::DragFloat4(m_Label.c_str(), m_Value, m_Step, m_Min, m_Max,"%.5g");
+		constexpr float width = m_SingleWidth * 4 + 15;
+		ImGui::PushItemWidth(width * scale);
+		ImGui::DragFloat4(m_Label.c_str(), m_Value.get(), m_Step, m_Min, m_Max,"%.5g");
+		ImGui::PopItemWidth();
 	}
 	
 	// ----------------------------------------------------------------------------- //
 	Int::Int(int* value, int min, int max, int step)
-		: m_Value(value), m_Min(min), m_Max(max), m_Step(step)
-	{
-		if (m_Value == nullptr)
-			m_Value = new int(0);
-	}
+		: m_Value(value), m_Min(min), m_Max(max), m_Step(step) {}
 	void Int::Draw(float scale)
 	{
-		ImGui::DragInt(m_Label.c_str(), m_Value, m_Step, m_Min, m_Max);
+		constexpr float width = m_SingleWidth;
+		ImGui::PushItemWidth(width * scale);
+		ImGui::DragInt(m_Label.c_str(), m_Value.get(), m_Step, m_Min, m_Max);
+		ImGui::PopItemWidth();
 	}
 
 	Int2::Int2(int value[2], int min, int max, int step)
-		: m_Min(min), m_Max(max), m_Step(step)
-	{
-		if (value == nullptr)
-			m_Value[0] = m_Value[1] = 0;
-		else
-		{
-			m_Value[0] = value[0];
-			m_Value[1] = value[1];
-		}
-	}
+		: m_Value(value), m_Min(min), m_Max(max), m_Step(step) {}
 	void Int2::Draw(float scale)
 	{
-		ImGui::DragInt2(m_Label.c_str(), m_Value, m_Step, m_Min, m_Max);
+		constexpr float width = m_SingleWidth * 2 + 5;
+		ImGui::PushItemWidth(width * scale);
+		ImGui::DragInt2(m_Label.c_str(), m_Value.get(), m_Step, m_Min, m_Max);
+		ImGui::PopItemWidth();
 	}
 
 	Int3::Int3(int value[3], int min, int max, int step)
-		: m_Min(min), m_Max(max), m_Step(step)
-	{
-		if (value == nullptr)
-			m_Value[0] = m_Value[1] = m_Value[2] = 0;
-		else
-		{
-			m_Value[0] = value[0];
-			m_Value[1] = value[1];
-			m_Value[2] = value[2];
-		}
-	}
+		: m_Value(value), m_Min(min), m_Max(max), m_Step(step) {}
 	void Int3::Draw(float scale)
 	{
-		ImGui::DragInt3(m_Label.c_str(), m_Value, m_Step, m_Min, m_Max);
+		constexpr float width = m_SingleWidth * 3 + 10;
+		ImGui::PushItemWidth(width * scale);
+		ImGui::DragInt3(m_Label.c_str(), m_Value.get(), m_Step, m_Min, m_Max);
+		ImGui::PopItemWidth();
 	}
 
 	Int4::Int4(int value[4], int min, int max, int step)
-		: m_Min(min), m_Max(max), m_Step(step)
-	{
-		if (value == nullptr)
-			m_Value[0] = m_Value[1] = m_Value[2] = m_Value[3] = 0;
-		else
-		{
-			m_Value[0] = value[0];
-			m_Value[1] = value[1];
-			m_Value[2] = value[2];
-			m_Value[3] = value[3];
-		}
-	}
+		: m_Value(value), m_Min(min), m_Max(max), m_Step(step) {}
 	void Int4::Draw(float scale)
 	{
-		ImGui::DragInt4(m_Label.c_str(), m_Value, m_Step, m_Min, m_Max);
+		constexpr float width = m_SingleWidth * 4 + 15;
+		ImGui::PushItemWidth(width * scale);
+		ImGui::DragInt4(m_Label.c_str(), m_Value.get(), m_Step, m_Min, m_Max);
+		ImGui::PopItemWidth();
 	}
 	
 	// ----------------------------------------------------------------------------- //
 	Boolean::Boolean(bool* value)
-		: m_Value(value)
-	{
-		if (m_Value == nullptr)
-			m_Value = new bool(false);
-	}
+		: m_Value(value) {}
+	
 	void Boolean::Draw(float scale)
 	{
-		ImGui::Checkbox(m_Label.c_str(), m_Value);
+		ImGui::Checkbox(m_Label.c_str(), m_Value.get());
 	}
 	
 	// ----------------------------------------------------------------------------- //
@@ -200,7 +163,7 @@ namespace Mirage::VisualComponents
 	}
 	void TextArea::Draw(float scale)
 	{
-		ImGui::InputTextMultiline(m_Label.c_str(), m_Value, m_Size, ImVec2(0, 60), m_Flags, [](ImGuiInputTextCallbackData* data) -> int
+		ImGui::InputTextMultiline(m_Label.c_str(), m_Value, m_Size, ImVec2(0, 60 * scale), m_Flags, [](ImGuiInputTextCallbackData* data) -> int
 			{
 				TextArea* input = (TextArea*)data->UserData;
 				if (data->EventFlag == ImGuiInputTextFlags_CallbackResize && std::strlen(input->m_Value) >= input->m_Size)

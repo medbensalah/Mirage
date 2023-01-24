@@ -5,16 +5,16 @@
 #include "Mirage/ImGui/Extensions/DrawingAPI.h"
 #include "Mirage/ImGui/Extensions/GraphStyle.h"
 #include "Mirage/Renderer/Texture.h"
-
-#include "VisualComponents/VisualComponentsInclude.h"
+#include "VisualComponents/Port.h"
 
 namespace Mirage::Graph
 {
 	using namespace VisualComponents;
 	bool Node::Initialized = false;
+	
 	Ref<Texture2D> Node::bg;
-	Node::Node(std::string title, ImVec2 position)
-		: m_Title(title), m_Position(position)
+	Node::Node(GraphEditor* graph, std::string title, ImVec2 position)
+		: m_Graph(graph), m_Title(title), m_Position(position) 
 	{
 		if (!Initialized)
 		{
@@ -24,20 +24,15 @@ namespace Mirage::Graph
 		CustomContentSize = InputContainerSize = OutputContainerSize = HeaderSize = m_Size = ImVec2(0, 0);
 
 		HeaderContainer.Add(new Text(m_Title, ImColor(255, 255, 255, 255), 22.0f, true));
-		// InputContainer.Add(new Text("Input"));
-		// InputContainer.Add(new Text("Input"));
-		// InputContainer.Add(new Text("Input"));
-		// InputContainer.Add(new Float());
-		// InputContainer.Add(new Float2());
-		// InputContainer.Add(new Float3());
-		// InputContainer.Add(new Float4());
-		InputContainer.Add(new TextArea());
-
-
-		OutputContainer.Add(new Text("Output"));
-		OutputContainer.Add(new Text("Output"));
-		OutputContainer.Add(new Text("Output"));
-		OutputContainer.Add(new Text("Output"));
+		AddPort(PortDataType::Float, PortType::Input);
+		AddPort(PortDataType::Float, PortType::Output);
+		
+		// InputContainer.Add(new Boolean(&b));
+		// InputContainer.Add(new Float(f));
+		// InputContainer.Add(new Float2(f));
+		// InputContainer.Add(new Float3(f));
+		// v = InputContainer.Add(new Float4(f));
+		// InputContainer.Add(new Color(&color));
 	}
 
 	void Node::OnImGuiRender(ImVec2 origin, float zoom)
@@ -50,8 +45,7 @@ namespace Mirage::Graph
 		if(ImGui::BeginChild(m_Title.c_str(), m_Size, true, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse))
 		{
 			ImGui::SetWindowFontScale(zoom);
-		
-			UpdateCoordinates();
+			
 			ImGui::BeginGroup();
 			DrawHeader();
 			DrawInputContainer();
@@ -60,24 +54,21 @@ namespace Mirage::Graph
 			ImGui::EndGroup();
 
 			UpdateSize();
+			UpdateCoordinates();
 		
 			DrawBorder();
 		}
 		ImGui::EndChild();
-
 	}
 
 	void Node::DrawHeader()
 	{
 		ImDrawList* drawList = ImGui::GetWindowDrawList();
-
-		ImVec2 uv0 = ImVec2(0, 0);
-		ImVec2 uv1 = ImVec2(1, 1);
 		
 		drawList->AddImageRounded((ImTextureID) bg->GetRendererID(),
 			ImGui::GetCursorScreenPos(),
 			ImGui::GetCursorScreenPos() + HeaderSize,
-			uv0, uv1,
+			ImVec2(0, 0), ImVec2(1, 1),
 			m_HeaderColor, ImGui::GetStyle().ChildRounding, ImDrawCornerFlags_Top);
 		
 		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10.0f * m_Zoom);
@@ -90,15 +81,15 @@ namespace Mirage::Graph
 	{
 		ImGui::SetCursorPosY(HeaderSize.y + 5 * m_Zoom);
 		ImGui::BeginGroup();
-		ImGui::Indent();
+		ImGui::Indent(5 * m_Zoom);
 		InputContainer.Draw(m_Zoom);
-		ImColor col = m_HeaderColor;
-		// ImGui::PushItemWidth(200 * m_Zoom);
-		if (ImGui::ColorEdit4("color", &col.Value.x))
-		{
-			m_HeaderColor = col;
-		}
 		ImGui::Unindent();
+		// ImColor col = m_HeaderColor;
+		// ImGui::PushItemWidth(200 * m_Zoom);
+		// if (ImGui::ColorEdit4("color", &col.Value.x))
+		// {
+		// 	m_HeaderColor = col;
+		// }
 		ImGui::EndGroup();
 		ImVec2 containerMin = ImGui::GetItemRectMin();
 		ImVec2 containerMax = ImGui::GetItemRectMax() + ImVec2(0, 10 * m_Zoom);
@@ -150,7 +141,22 @@ namespace Mirage::Graph
 						  1);			
 		
 	}
-	
+
+	Ref<VisualComponents::Port> Node::AddPort(VisualComponents::PortDataType dataType, VisualComponents::PortType type)
+	{
+		Ref<VisualComponents::Port> port = CreateRef<Port>(this, dataType, type);
+		if (type == VisualComponents::PortType::Input)
+		{
+			InputContainer.Add(port);
+		}
+		else
+		{
+			OutputContainer.Add(port);
+		}
+		m_Ports.push_back(port);
+		return port;
+	}
+
 	void Node::UpdateCoordinates()
 	{
 		bool canDrag = m_IsDragged || (ImGui::IsWindowHovered() && !ImGui::IsAnyItemHovered() && ImGui::IsMouseClicked(0));
@@ -171,9 +177,9 @@ namespace Mirage::Graph
 		HeaderSize.x = std::max(glm::max(HeaderSize.x, CustomContentSize.x), InputContainerSize.x + OutputContainerSize.x + m_InputOutputSpacing);
 		m_Size.x = HeaderSize.x;
 		m_Size.y = HeaderSize.y + CustomContentSize.y + glm::max(InputContainerSize.y, OutputContainerSize.y);
-		HeaderContainer.SetSize(HeaderSize);
-		CustomContentContainer.SetSize(CustomContentSize);
-		InputContainer.SetSize(InputContainerSize);
-		OutputContainer.SetSize(OutputContainerSize);
+		// HeaderContainer.SetSize(HeaderSize);
+		// CustomContentContainer.SetSize(CustomContentSize);
+		// InputContainer.SetSize(InputContainerSize);
+		// OutputContainer.SetSize(OutputContainerSize);
 	}
 }

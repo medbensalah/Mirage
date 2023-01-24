@@ -5,6 +5,7 @@
 #include "Mirage/ImGui/Extensions/Splitter.h"
 #include "Mirage/ImGui/Extensions/DrawingAPI.h"
 #include "Mirage/ImGui/Extensions/GraphStyle.h"
+#include "VisualComponents/Port.h"
 
 namespace Mirage::Graph
 {
@@ -23,6 +24,7 @@ namespace Mirage::Graph
 			DrawGrid();
 			DrawDebugInfo();
 			ApplyStyleChanges();
+			DrawLinks();
 			DrawNodes();
 			EndStyleChanges();
 		}
@@ -61,6 +63,17 @@ namespace Mirage::Graph
 		}
 	}
 	
+	void GraphEditor::DrawLinks()
+	{
+		// we only take panning into account here because windows position is already taken into account in the node -> port's position
+		ImDrawList* drawList = ImGui::GetWindowDrawList();
+		for (auto& link : m_LinksList)
+		{
+			link->Draw(m_Pan, m_Zoom);
+		}
+	}
+
+
 	void GraphEditor::Pan()
 	{
 		if (ImGui::IsWindowHovered(ImGuiHoveredFlags_ChildWindows) && ImGui::IsMouseDragging(2))

@@ -7,6 +7,12 @@
 
 namespace Mirage
 {
+	namespace VisualComponents
+	{
+		enum class PortDataType;
+		enum class PortType;
+	}
+
 	class Texture2D;
 }
 
@@ -14,7 +20,10 @@ namespace Mirage::Graph
 {
 	class Node
 	{
+		friend class VisualComponents::Port;
 	public:
+		friend class GraphEditor;
+		
 		ImVec2 HeaderSize;
 		ImVec2 InputContainerSize;
 		ImVec2 OutputContainerSize;
@@ -25,7 +34,7 @@ namespace Mirage::Graph
 		VisualComponents::Container OutputContainer;
 		VisualComponents::Container CustomContentContainer;
 		
-		Node(std::string title, ImVec2 position);
+		Node(GraphEditor* graph, std::string title, ImVec2 position);
 		~Node() = default;
 
 		void OnImGuiRender(ImVec2 origin, float zoom);
@@ -49,7 +58,9 @@ namespace Mirage::Graph
 		void DrawOutputContainer();
 		void DrawCustomContent();
 		void DrawBorder();
-		
+
+		Ref<VisualComponents::Port> AddPort(VisualComponents::PortDataType dataType, VisualComponents::PortType type);
+	
 	private:
 		static Ref<Texture2D> bg;
 		
@@ -65,6 +76,11 @@ namespace Mirage::Graph
 		bool m_IsHovered = false;
 		bool m_IsDragged = false;
 
+		std::vector<Ref<VisualComponents::Port>>  m_Ports {};
+		// std::vector<Ref<VisualComponents::Link>> m_Links {};
+
+		GraphEditor* m_Graph;
+		
 		static bool Initialized;
 	};
 }

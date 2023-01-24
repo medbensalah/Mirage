@@ -9,6 +9,8 @@ namespace Mirage::VisualComponents
 	{
 	public:
 		VisualComponent() {}
+		VisualComponent(const VisualComponent& vc) = default;
+		
 		virtual ~VisualComponent() {}
 
 		virtual void Draw(float scale) {}
