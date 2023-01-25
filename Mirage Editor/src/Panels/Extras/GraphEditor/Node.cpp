@@ -24,8 +24,33 @@ namespace Mirage::Graph
 		CustomContentSize = InputContainerSize = OutputContainerSize = HeaderSize = m_Size = ImVec2(0, 0);
 
 		HeaderContainer.Add(new Text(m_Title, ImColor(255, 255, 255, 255), 22.0f, true));
-		AddPort(PortDataType::Float, PortType::Input);
-		AddPort(PortDataType::Float, PortType::Output);
+
+		// Add all port types
+		AddPort(PortDataType::Bool,		PortType::Input);
+		AddPort(PortDataType::Int,		PortType::Input);
+		AddPort(PortDataType::Int2, 	PortType::Input);
+		AddPort(PortDataType::Int3, 	PortType::Input);
+		AddPort(PortDataType::Int4, 	PortType::Input);
+		AddPort(PortDataType::Float, 	PortType::Input);
+		AddPort(PortDataType::Float2, 	PortType::Input);
+		AddPort(PortDataType::Float3, 	PortType::Input);
+		AddPort(PortDataType::Float4, 	PortType::Input);
+		AddPort(PortDataType::Color, 	PortType::Input);
+		AddPort(PortDataType::String,	PortType::Input);
+		
+		AddPort(PortDataType::Bool,		PortType::Output);
+		AddPort(PortDataType::Int,		PortType::Output);
+		AddPort(PortDataType::Int2, 	PortType::Output);
+		AddPort(PortDataType::Int3, 	PortType::Output);
+		AddPort(PortDataType::Int4, 	PortType::Output);
+		AddPort(PortDataType::Float, 	PortType::Output);
+		AddPort(PortDataType::Float2, 	PortType::Output);
+		AddPort(PortDataType::Float3, 	PortType::Output);
+		AddPort(PortDataType::Float4, 	PortType::Output);
+		AddPort(PortDataType::Color, 	PortType::Output);
+		AddPort(PortDataType::String,	PortType::Output);
+
+		
 		
 		// InputContainer.Add(new Boolean(&b));
 		// InputContainer.Add(new Float(f));

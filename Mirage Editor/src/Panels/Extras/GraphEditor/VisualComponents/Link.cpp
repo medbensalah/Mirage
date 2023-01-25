@@ -78,6 +78,8 @@ namespace Mirage::VisualComponents
 			m_End = port->GetPosition();
 			break;
 		}
+
+		ForwardData();
 	}
 
 	void Link::SetColor(const ImColor& color)
@@ -85,7 +87,15 @@ namespace Mirage::VisualComponents
 		m_Color = color;
 	}
 
-	void Link::Draw(ImVec2 offset, float scale)
+	void Link::ForwardData()
+	{
+		if (m_InputPort && m_OutputPort)
+		{
+			// m_InputPort->(m_OutputPort->GetData());
+		}
+	}
+
+	void Link::Draw(float scale)
 	{
 		ImDrawList* drawList = ImGui::GetWindowDrawList();
 

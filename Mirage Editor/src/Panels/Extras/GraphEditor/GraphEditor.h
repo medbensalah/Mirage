@@ -15,7 +15,6 @@ namespace Mirage::Graph
 			// TODO: change into Ref<>
 			m_NodeList.push_back(new Node(this, "Node 1", ImVec2(100, 100)));
 			m_NodeList.push_back(new Node(this, "Node 2", ImVec2(400, 250)));
-			m_NodeList.push_back(new Node(this, "Node 3", ImVec2(100, 550)));
 		}
 
 		void OnImGuiRender(bool* show);
@@ -29,9 +28,7 @@ namespace Mirage::Graph
 		}
 		inline void RemoveLink(Ref<VisualComponents::Link> linkRef)
 		{
-			MRG_CORE_INFO("size before: {0}", m_LinksList.size());
 			m_LinksList.erase(std::remove(m_LinksList.begin(), m_LinksList.end(), linkRef), m_LinksList.end());
-			MRG_CORE_INFO("size after: {0}", m_LinksList.size());
 		}
 
 	private:

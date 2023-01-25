@@ -32,13 +32,13 @@ namespace Mirage::VisualComponents
 	class Color : public InputField
 	{
 	public:
-		Color(ImVec4* color) : m_Color(color) {}
+		Color(ImColor color) : m_Color(color) {}
 		virtual ~Color() override {}
 
 		void Draw(float scale) override;
 		
 	private:
-		Ref<ImVec4> m_Color;
+		ImColor m_Color;
 
 		friend class Port;
 	};
@@ -46,13 +46,13 @@ namespace Mirage::VisualComponents
 	class Float : public InputField
 	{
 	public:
-		Float(float* value, float min = 0, float max = 0, float step = 0.1f);
+		Float(float value, float min = 0, float max = 0, float step = 0.1f);
 		virtual ~Float() override {}
 
 		void Draw(float scale) override;
 
 	private:
-		Ref<float> m_Value;
+		float m_Value_x;
 		float m_Min;
 		float m_Max;
 		float m_Step;
@@ -68,7 +68,8 @@ namespace Mirage::VisualComponents
 		void Draw(float scale) override;
 
 	private:
-		Ref<float> m_Value;
+		float m_Value_x;
+		float m_Value_y;
 		float m_Min;
 		float m_Max;
 		float m_Step;
@@ -84,7 +85,9 @@ namespace Mirage::VisualComponents
 		void Draw(float scale) override;
 
 	private:
-		Ref<float> m_Value;
+		float m_Value_x;
+		float m_Value_y;
+		float m_Value_z;
 		float m_Min;
 		float m_Max;
 		float m_Step;
@@ -100,42 +103,45 @@ namespace Mirage::VisualComponents
 		void Draw(float scale) override;
 
 	private:
-		Ref<float> m_Value;
+		float m_Value_x;
+		float m_Value_y;
+		float m_Value_z;
+		float m_Value_w;
 		float m_Min;
 		float m_Max;
 		float m_Step;
 		
 		friend class Port;
 	};
-	class FloatArray : public InputField
-	{
-	public:
-		FloatArray(float* value, int size, float min = 0, float max = 0, float step = 0.1f);
-		virtual ~FloatArray() override {}
-
-		void Draw(float scale) override;
-
-	private:
-		Ref<float> m_Value;
-		int m_Size;
-		float m_Min;
-		float m_Max;
-		float m_Step;
-		
-		friend class Port;
-	};
+	// class FloatArray : public InputField
+	// {
+	// public:
+	// 	FloatArray(float* value, int size, float min = 0, float max = 0, float step = 0.1f);
+	// 	virtual ~FloatArray() override {}
+	//
+	// 	void Draw(float scale) override;
+	//
+	// private:
+	// 	float m_Value[];
+	// 	int m_Size;
+	// 	float m_Min;
+	// 	float m_Max;
+	// 	float m_Step;
+	// 	
+	// 	friend class Port;
+	// };
 
 	
 	class Int : public InputField
 	{
 	public:
-		Int(int* value, int min = 0, int max = 0, int step = 1);
+		Int(int value, int min = 0, int max = 0, int step = 1);
 		virtual ~Int() override {}
 
 		void Draw(float scale) override;
 
 	private:
-		Ref<int> m_Value;
+		int m_Value_x;
 		int m_Min;
 		int m_Max;
 		int m_Step;
@@ -151,7 +157,8 @@ namespace Mirage::VisualComponents
 		void Draw(float scale) override;
 
 	private:
-		Ref<int> m_Value;
+		int m_Value_x;
+		int m_Value_y;
 		int m_Min;
 		int m_Max;
 		int m_Step;
@@ -167,7 +174,9 @@ namespace Mirage::VisualComponents
 		void Draw(float scale) override;
 
 	private:
-		Ref<int> m_Value;
+		int m_Value_x;
+		int m_Value_y;
+		int m_Value_z;
 		int m_Min;
 		int m_Max;
 		int m_Step;
@@ -183,7 +192,10 @@ namespace Mirage::VisualComponents
 		void Draw(float scale) override;
 
 	private:
-		Ref<int> m_Value;
+		int m_Value_x;
+		int m_Value_y;
+		int m_Value_z;
+		int m_Value_w;
 		int m_Min;
 		int m_Max;
 		int m_Step;
@@ -194,13 +206,13 @@ namespace Mirage::VisualComponents
 	class Boolean : public InputField
 	{
 	public:
-		Boolean(bool* value);
+		Boolean(bool value);
 		virtual ~Boolean() override {}
 
 		void Draw(float scale) override;
 
 	private:
-		Ref<bool> m_Value;
+		bool m_Value;
 		
 		friend class Port;
 	};

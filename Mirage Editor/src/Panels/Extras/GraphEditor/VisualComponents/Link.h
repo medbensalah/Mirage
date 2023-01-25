@@ -6,12 +6,12 @@ namespace Mirage::VisualComponents
 {
 	class Port;
 
-	class Link
+	class Link : public VisualComponent
 	{
 	public:
 		Link() {}
 		~Link() {}
-		void Draw(ImVec2 offset, float scale);
+		void Draw(float scale) override;
 		bool IsHovered(float scale);
 
 		void SetPort(Port* port);
@@ -19,6 +19,9 @@ namespace Mirage::VisualComponents
 		Port* m_InputPort = nullptr;
 		Port* m_OutputPort = nullptr;
 
+	private:
+		void ForwardData();
+		
 	private:
 		ImVec2 m_Start = { 0.0f, 0.0f };
 		ImVec2 m_End = { 0.0f, 0.0f };
@@ -34,6 +37,6 @@ namespace Mirage::VisualComponents
 		float m_HoveredThickness = 5.0f;
 		float m_GrayedThickness = 5.0f;
 		
-		float m_TgLength = 100.0f;
+		float m_TgLength = 125.0f;
 	};
 }

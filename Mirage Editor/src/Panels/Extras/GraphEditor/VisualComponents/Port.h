@@ -9,9 +9,9 @@ namespace Mirage::VisualComponents
 {
 	enum class PortDataType
 	{
-		Boolean,
+		Bool,
 		
-		Int1,
+		Int,
 		Int2,
 		Int3,
 		Int4,
@@ -44,8 +44,18 @@ namespace Mirage::VisualComponents
 		void DrawPort(float scale);
 		void Draw(float scale) override;
 
-		Ref<InputField> Add(InputField* component);
-		Ref<InputField> Add(Ref<InputField> component);
+		Ref<InputField> Add(InputField* component)
+		{
+			Ref<InputField> componentPtr(component);
+			m_Components.push_back(componentPtr);
+			return componentPtr;
+		}
+
+		Ref<InputField> Add(Ref<InputField> component)
+		{
+			m_Components.push_back(std::move(component));
+			return component;
+		}
 		
 		void Remove(Ref<VisualComponent> component);
 
@@ -74,5 +84,6 @@ namespace Mirage::VisualComponents
 		static Ref<Texture2D> s_PortTexture;
 		static Port* s_HoveredPort;
 		static bool Initialized;
+		static std::unordered_map<PortDataType, ImColor> s_Colors;
 	};
 }

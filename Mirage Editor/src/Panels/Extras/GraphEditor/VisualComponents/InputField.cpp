@@ -14,99 +14,99 @@ namespace Mirage::VisualComponents
 	{
 		constexpr float width = m_SingleWidth * 4 + 15;
 		ImGui::PushItemWidth(width * scale);		
-		ImGui::ColorEdit4(m_Label.c_str(), &m_Color->x, ImGuiColorEditFlags_NoLabel);
+		ImGui::ColorEdit4(m_Label.c_str(), &m_Color.Value.x, ImGuiColorEditFlags_NoLabel);
 		ImGui::PopItemWidth();
 	}
 
 	// ----------------------------------------------------------------------------- //
-	Float::Float(float* value, float min, float max, float step)
-		: m_Value(value), m_Min(min), m_Max(max), m_Step(step) {}
+	Float::Float(float value, float min, float max, float step)
+		: m_Value_x(value), m_Min(min), m_Max(max), m_Step(step) {}
 	void Float::Draw(float scale)
 	{
 		constexpr float width = m_SingleWidth;
 		ImGui::PushItemWidth(width * scale);
-		ImGui::DragFloat(m_Label.c_str(), m_Value.get(), m_Step, m_Min, m_Max,"%.5g");
+		ImGui::DragFloat(m_Label.c_str(), &m_Value_x, m_Step, m_Min, m_Max,"%.5g");
 		ImGui::PopItemWidth();
 	}
 	
 	Float2::Float2(float value[2], float min, float max, float step)
-		: m_Value(value), m_Min(min), m_Max(max), m_Step(step) {}
+		: m_Value_x(value[0]), m_Value_y(value[1]), m_Min(min), m_Max(max), m_Step(step) {}
 	void Float2::Draw(float scale)
 	{
 		constexpr float width = m_SingleWidth * 2 + 5;
 		ImGui::PushItemWidth(width * scale);
-		ImGui::DragFloat2(m_Label.c_str(), m_Value.get(), m_Step, m_Min, m_Max,"%.5g");
+		ImGui::DragFloat2(m_Label.c_str(), &m_Value_x, m_Step, m_Min, m_Max,"%.5g");
 		ImGui::PopItemWidth();
 	}
 
 	Float3::Float3(float value[3], float min, float max, float step)
-		: m_Value(value), m_Min(min), m_Max(max), m_Step(step) {}
+		: m_Value_x(value[0]), m_Value_y(value[1]), m_Value_z(value[2]), m_Min(min), m_Max(max), m_Step(step) {}
 	void Float3::Draw(float scale)
 	{
 		constexpr float width = m_SingleWidth * 3 + 10;
 		ImGui::PushItemWidth(width * scale);
-		ImGui::DragFloat3(m_Label.c_str(), m_Value.get(), m_Step, m_Min, m_Max,"%.5g");
+		ImGui::DragFloat3(m_Label.c_str(), &m_Value_x, m_Step, m_Min, m_Max,"%.5g");
 		ImGui::PopItemWidth();
 	}
 
 	Float4::Float4(float value[4], float min, float max, float step)
-		: m_Value(&value[0]), m_Min(min), m_Max(max), m_Step(step) {}
+		: m_Value_x(value[0]), m_Value_y(value[1]), m_Value_z(value[2]), m_Value_w(value[3]), m_Min(min), m_Max(max), m_Step(step) {}
 	void Float4::Draw(float scale)
 	{
 		constexpr float width = m_SingleWidth * 4 + 15;
 		ImGui::PushItemWidth(width * scale);
-		ImGui::DragFloat4(m_Label.c_str(), m_Value.get(), m_Step, m_Min, m_Max,"%.5g");
+		ImGui::DragFloat4(m_Label.c_str(), &m_Value_x, m_Step, m_Min, m_Max,"%.5g");
 		ImGui::PopItemWidth();
 	}
 	
 	// ----------------------------------------------------------------------------- //
-	Int::Int(int* value, int min, int max, int step)
-		: m_Value(value), m_Min(min), m_Max(max), m_Step(step) {}
+	Int::Int(int value, int min, int max, int step)
+		: m_Value_x(value), m_Min(min), m_Max(max), m_Step(step) {}
 	void Int::Draw(float scale)
 	{
 		constexpr float width = m_SingleWidth;
 		ImGui::PushItemWidth(width * scale);
-		ImGui::DragInt(m_Label.c_str(), m_Value.get(), m_Step, m_Min, m_Max);
+		ImGui::DragInt(m_Label.c_str(), &m_Value_x, m_Step, m_Min, m_Max);
 		ImGui::PopItemWidth();
 	}
 
 	Int2::Int2(int value[2], int min, int max, int step)
-		: m_Value(value), m_Min(min), m_Max(max), m_Step(step) {}
+		: m_Value_x(value[0]), m_Value_y(value[1]), m_Min(min), m_Max(max), m_Step(step) {}
 	void Int2::Draw(float scale)
 	{
 		constexpr float width = m_SingleWidth * 2 + 5;
 		ImGui::PushItemWidth(width * scale);
-		ImGui::DragInt2(m_Label.c_str(), m_Value.get(), m_Step, m_Min, m_Max);
+		ImGui::DragInt2(m_Label.c_str(), &m_Value_x, m_Step, m_Min, m_Max);
 		ImGui::PopItemWidth();
 	}
 
 	Int3::Int3(int value[3], int min, int max, int step)
-		: m_Value(value), m_Min(min), m_Max(max), m_Step(step) {}
+		: m_Value_x(value[0]), m_Value_y(value[1]), m_Value_z(value[2]), m_Min(min), m_Max(max), m_Step(step) {}
 	void Int3::Draw(float scale)
 	{
 		constexpr float width = m_SingleWidth * 3 + 10;
 		ImGui::PushItemWidth(width * scale);
-		ImGui::DragInt3(m_Label.c_str(), m_Value.get(), m_Step, m_Min, m_Max);
+		ImGui::DragInt3(m_Label.c_str(), &m_Value_x, m_Step, m_Min, m_Max);
 		ImGui::PopItemWidth();
 	}
 
 	Int4::Int4(int value[4], int min, int max, int step)
-		: m_Value(value), m_Min(min), m_Max(max), m_Step(step) {}
+		: m_Value_x(value[0]), m_Value_y(value[1]), m_Value_z(value[2]), m_Value_w(value[3]), m_Min(min), m_Max(max), m_Step(step) {}
 	void Int4::Draw(float scale)
 	{
 		constexpr float width = m_SingleWidth * 4 + 15;
 		ImGui::PushItemWidth(width * scale);
-		ImGui::DragInt4(m_Label.c_str(), m_Value.get(), m_Step, m_Min, m_Max);
+		ImGui::DragInt4(m_Label.c_str(), &m_Value_x, m_Step, m_Min, m_Max);
 		ImGui::PopItemWidth();
 	}
 	
 	// ----------------------------------------------------------------------------- //
-	Boolean::Boolean(bool* value)
+	Boolean::Boolean(bool value)
 		: m_Value(value) {}
 	
 	void Boolean::Draw(float scale)
 	{
-		ImGui::Checkbox(m_Label.c_str(), m_Value.get());
+		ImGui::Checkbox(m_Label.c_str(), &m_Value);
 	}
 	
 	// ----------------------------------------------------------------------------- //

@@ -69,7 +69,7 @@ namespace Mirage::Graph
 		ImDrawList* drawList = ImGui::GetWindowDrawList();
 		for (auto& link : m_LinksList)
 		{
-			link->Draw(m_Pan, m_Zoom);
+			link->Draw(m_Zoom);
 		}
 	}
 
