@@ -91,7 +91,8 @@ namespace Mirage::VisualComponents
 	{
 		if (m_InputPort && m_OutputPort)
 		{
-			// m_InputPort->(m_OutputPort->GetData());
+			m_OutputPort->SetData(m_InputPort->GetData());
+			MRG_CORE_INFO("data forwarded");
 		}
 	}
 
@@ -115,6 +116,6 @@ namespace Mirage::VisualComponents
 		m_StartTangent = {m_Start.x + m_TgLength * scale, m_Start.y};
 		m_EndTangent = {m_End.x - m_TgLength * scale, m_End.y};
 		
-		drawList->AddBezierCubic(m_Start, m_StartTangent, m_EndTangent, m_End, col, thickness * scale);
+		drawList->AddBezierCubic(m_Start, m_StartTangent, m_EndTangent, m_End, col, thickness * scale, 15);
 	}
 }

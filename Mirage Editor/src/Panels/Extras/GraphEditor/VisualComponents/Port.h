@@ -35,7 +35,7 @@ namespace Mirage::VisualComponents
 	class Port : public Container
 	{
 	public:
-		Port(Graph::Node* owner, PortDataType dataType, PortType portType);
+		Port(Graph::Node* owner, PortDataType dataType, PortType portType, Ref<Float4> data);
 		virtual ~Port() override {
 			m_Components.clear();
 			m_Links.clear();
@@ -58,6 +58,17 @@ namespace Mirage::VisualComponents
 		}
 		
 		void Remove(Ref<VisualComponent> component);
+		void Remove(Ref<InputField> component)
+		{
+			for (auto it = m_Components.begin(); it != m_Components.end(); it++)
+			{
+				if (*it == component)
+				{
+					m_Components.erase(it);
+					break;
+				}
+			}
+		}
 
 		void OnBeginDrag(float scale);
 		void OnDrag(float scale);
@@ -66,6 +77,14 @@ namespace Mirage::VisualComponents
 		ImVec2 GetPosition() { return m_PortPos; }
 		PortDataType GetDataType() { return m_DataType; }
 		PortType GetPortType() { return m_PortType; }
+
+		Ref<InputField> GetData() { return m_data; }
+		void SetData(Ref<InputField> data)
+		{
+			Remove(m_data);
+			m_data = data;
+			Add(m_data);
+		}
 		
 	private:
 		Graph::Node* m_Owner;

@@ -36,6 +36,8 @@ namespace Mirage::VisualComponents
 		virtual ~Color() override {}
 
 		void Draw(float scale) override;
+
+		ImColor GetData() const { return m_Color; }
 		
 	private:
 		ImColor m_Color;
@@ -50,6 +52,8 @@ namespace Mirage::VisualComponents
 		virtual ~Float() override {}
 
 		void Draw(float scale) override;
+
+		float GetData() const { return m_Value_x; }
 
 	private:
 		float m_Value_x;
@@ -66,6 +70,8 @@ namespace Mirage::VisualComponents
 		virtual ~Float2() override {}
 
 		void Draw(float scale) override;
+
+		float* GetData() const { return (float*)&m_Value_x; }
 
 	private:
 		float m_Value_x;

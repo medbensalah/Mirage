@@ -43,7 +43,7 @@ namespace Mirage::VisualComponents
 		// { PortDataType::Matrix4x3, ImColor(255, 255, 255) },
 	};
 	
-	Port::Port(Graph::Node* owner, PortDataType dataType, PortType portType)
+	Port::Port(Graph::Node* owner, PortDataType dataType, PortType portType, Ref<Float4> data)
 		: m_Owner(owner), m_DataType(dataType), m_PortType(portType)
 	{
 		if (!Initialized)
@@ -53,10 +53,13 @@ namespace Mirage::VisualComponents
 		}
 		m_Color = s_Colors[dataType];
 
+		m_data = data;
+		
 		if (m_PortType == PortType::Input)
 			Container::Add(new SameLineSpacing(15.0f));
 		
-		Add(new Color(m_Color));
+		// Add(new Color(m_Color));
+		Add(m_data);
 		if (m_PortType == PortType::Output)
 			Container::Add(new SameLineSpacing(15.0f));
 		

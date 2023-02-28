@@ -1,6 +1,6 @@
 Scene: Untitled
 Entities:
-  - Entity: 319816827610272623
+  - Entity: 17298525362832101654
     TagComponent:
       Tag: Ground
     TransformComponent:
@@ -21,9 +21,9 @@ Entities:
       Offset: [0, 0]
       Density: 0
       Friction: 0.100000001
-      Bounciness: 1
+      Bounciness: 0
       BouncinessThreshold: 0.5
-  - Entity: 17356118656283416881
+  - Entity: 15921925524984957494
     TagComponent:
       Tag: Camera
     TransformComponent:
@@ -42,7 +42,7 @@ Entities:
       Primary: true
       FixedAspectRatio: false
       ClearColor: [0.300000012, 0.300000012, 0.300000012, 1]
-  - Entity: 3392496540951409786
+  - Entity: 8716246477665159654
     TagComponent:
       Tag: object
     TransformComponent:
@@ -50,7 +50,7 @@ Entities:
       Rotation: [0, 0, 0]
       Scale: [1.73000002, 1.73000002, 1.73000002]
     SpriteRendererComponent:
-      Color: [1, 1, 1, 1]
+      Color: [0.851469815, 0.518136501, 0.518136501, 1]
       Texture: Resources/Defaults/Textures/White.png
       Tiling: [1, 1]
       Offset: [0, 0]
@@ -65,7 +65,7 @@ Entities:
       Friction: 0
       Bounciness: 0
       BouncinessThreshold: 0.5
-  - Entity: 1871745384682435414
+  - Entity: 976909510612610897
     TagComponent:
       Tag: Ground
     TransformComponent:
@@ -86,9 +86,9 @@ Entities:
       Offset: [0, 0]
       Density: 0
       Friction: 0.100000001
-      Bounciness: 1
+      Bounciness: 0
       BouncinessThreshold: 0.5
-  - Entity: 6636562134312615332
+  - Entity: 7780807279163152190
     TagComponent:
       Tag: Circle
     TransformComponent:
@@ -102,7 +102,7 @@ Entities:
       Texture: Assets\textures\Default.png
       Tiling: [1, 1]
       Offset: [0, 0]
-  - Entity: 6077485156751473976
+  - Entity: 17084249278436573686
     TagComponent:
       Tag: Circle
     TransformComponent:
@@ -116,7 +116,7 @@ Entities:
       Texture: Assets\textures\Default.png
       Tiling: [1, 1]
       Offset: [0, 0]
-  - Entity: 9113525849502921749
+  - Entity: 3648572057517062040
     TagComponent:
       Tag: Circle
     TransformComponent:
@@ -130,7 +130,7 @@ Entities:
       Texture: Assets\textures\Default.png
       Tiling: [1, 1]
       Offset: [0, 0]
-  - Entity: 17541842264024529117
+  - Entity: 16293745918249962597
     TagComponent:
       Tag: Circle
     TransformComponent:
@@ -144,7 +144,7 @@ Entities:
       Texture: Assets\textures\Default.png
       Tiling: [1, 1]
       Offset: [0, 0]
-  - Entity: 15160970425504522679
+  - Entity: 8782792455204794473
     TagComponent:
       Tag: new SceneObject
     TransformComponent:

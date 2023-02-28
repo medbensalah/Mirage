@@ -26,37 +26,41 @@ namespace Mirage::Graph
 		HeaderContainer.Add(new Text(m_Title, ImColor(255, 255, 255, 255), 22.0f, true));
 
 		// Add all port types
-		AddPort(PortDataType::Bool,		PortType::Input);
-		AddPort(PortDataType::Int,		PortType::Input);
-		AddPort(PortDataType::Int2, 	PortType::Input);
-		AddPort(PortDataType::Int3, 	PortType::Input);
-		AddPort(PortDataType::Int4, 	PortType::Input);
-		AddPort(PortDataType::Float, 	PortType::Input);
-		AddPort(PortDataType::Float2, 	PortType::Input);
-		AddPort(PortDataType::Float3, 	PortType::Input);
-		AddPort(PortDataType::Float4, 	PortType::Input);
-		AddPort(PortDataType::Color, 	PortType::Input);
-		AddPort(PortDataType::String,	PortType::Input);
-		
-		AddPort(PortDataType::Bool,		PortType::Output);
-		AddPort(PortDataType::Int,		PortType::Output);
-		AddPort(PortDataType::Int2, 	PortType::Output);
-		AddPort(PortDataType::Int3, 	PortType::Output);
-		AddPort(PortDataType::Int4, 	PortType::Output);
-		AddPort(PortDataType::Float, 	PortType::Output);
-		AddPort(PortDataType::Float2, 	PortType::Output);
-		AddPort(PortDataType::Float3, 	PortType::Output);
-		AddPort(PortDataType::Float4, 	PortType::Output);
-		AddPort(PortDataType::Color, 	PortType::Output);
-		AddPort(PortDataType::String,	PortType::Output);
+		// AddPort(PortDataType::Bool,		PortType::Input);
+		// AddPort(PortDataType::Int,		PortType::Input);
+		// AddPort(PortDataType::Int2, 	PortType::Input);
+		// AddPort(PortDataType::Int3, 	PortType::Input);
+		// AddPort(PortDataType::Int4, 	PortType::Input);
+		// AddPort(PortDataType::Float, 	PortType::Input);
+		// AddPort(PortDataType::Float2, 	PortType::Input);
+		// AddPort(PortDataType::Float3, 	PortType::Input);
+		// AddPort(PortDataType::Float4, 	PortType::Input);
+		// AddPort(PortDataType::Color, 	PortType::Input);
+		// AddPort(PortDataType::String,	PortType::Input);
+		//
+		// AddPort(PortDataType::Bool,		PortType::Output);
+		// AddPort(PortDataType::Int,		PortType::Output);
+		// AddPort(PortDataType::Int2, 	PortType::Output);
+		// AddPort(PortDataType::Int3, 	PortType::Output);
+		// AddPort(PortDataType::Int4, 	PortType::Output);
+		// AddPort(PortDataType::Float, 	PortType::Output);
+		// AddPort(PortDataType::Float2, 	PortType::Output);
+		// AddPort(PortDataType::Float3, 	PortType::Output);
+		// AddPort(PortDataType::Float4, 	PortType::Output);
+		// AddPort(PortDataType::Color, 	PortType::Output);
+		// AddPort(PortDataType::String,	PortType::Output);
+		bool b = true;
+		float f[4] = { 1.0f, 2.0f, 3.0f, 0.0f };
 
+		Ref<Float4> f4 = CreateRef<Float4>(f);
 		
-		
+		auto porti = AddPort(PortDataType::Float4,	PortType::Input, f4);
+		auto porto = AddPort(PortDataType::Float4,	PortType::Output, f4);
 		// InputContainer.Add(new Boolean(&b));
-		// InputContainer.Add(new Float(f));
+		// InputContainer.Add(new Float(f[0]));
 		// InputContainer.Add(new Float2(f));
 		// InputContainer.Add(new Float3(f));
-		// v = InputContainer.Add(new Float4(f));
+		// InputContainer.Add(new Float4(f));
 		// InputContainer.Add(new Color(&color));
 	}
 
@@ -167,9 +171,9 @@ namespace Mirage::Graph
 		
 	}
 
-	Ref<VisualComponents::Port> Node::AddPort(VisualComponents::PortDataType dataType, VisualComponents::PortType type)
+	Ref<VisualComponents::Port> Node::AddPort(VisualComponents::PortDataType dataType, VisualComponents::PortType type, Ref<Float4> data)
 	{
-		Ref<VisualComponents::Port> port = CreateRef<Port>(this, dataType, type);
+		Ref<VisualComponents::Port> port = CreateRef<Port>(this, dataType, type, data);
 		if (type == VisualComponents::PortType::Input)
 		{
 			InputContainer.Add(port);

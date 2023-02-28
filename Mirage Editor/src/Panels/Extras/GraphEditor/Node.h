@@ -59,7 +59,7 @@ namespace Mirage::Graph
 		void DrawCustomContent();
 		void DrawBorder();
 
-		Ref<VisualComponents::Port> AddPort(VisualComponents::PortDataType dataType, VisualComponents::PortType type);
+		Ref<VisualComponents::Port> AddPort(VisualComponents::PortDataType dataType, VisualComponents::PortType type, Ref<VisualComponents::Float4> data);
 	
 	private:
 		static Ref<Texture2D> bg;
