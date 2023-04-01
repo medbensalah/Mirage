@@ -40,6 +40,7 @@ namespace Mirage
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    	glEnable(GL_LINE_SMOOTH);
     }
 
     void OpenGLRenderAPI::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
@@ -62,6 +63,16 @@ namespace Mirage
     	vertexArray->Bind();
         count = count ? count : vertexArray->GetIndexBuffer()->GetCount();
         glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
-		// glBindTexture(GL_TEXTURE_2D, 0);
+    }
+
+    void OpenGLRenderAPI::DrawLines(const Ref<VertexArray>& vertexArray, uint32_t vertexCount)
+    {
+    	vertexArray->Bind();
+        glDrawArrays(GL_LINES, 0, vertexCount);
+    }
+
+    void OpenGLRenderAPI::SetineWidth(float width)
+    {
+    	glLineWidth(width);
     }
 }

@@ -108,7 +108,7 @@ namespace Mirage
     	// ----------------------- Extras -----------------------
     	bool m_ShowSettings = false;
         SettingsPanel m_SettingsPanel;
-    	bool m_ShowGraphEditor = true;
+    	bool m_ShowGraphEditor = false;
     	Graph::GraphEditor m_GraphEditor;
     	
     	// ----------------------- Icons -----------------------

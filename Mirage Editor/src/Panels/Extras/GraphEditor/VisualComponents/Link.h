@@ -37,6 +37,6 @@ namespace Mirage::VisualComponents
 		float m_HoveredThickness = 5.0f;
 		float m_GrayedThickness = 5.0f;
 		
-		float m_TgLength = 125.0f;
+		float m_TgLength = 100.0f;
 	};
 }

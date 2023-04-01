@@ -27,9 +27,17 @@ namespace Mirage
             s_RenderAPI->Clear();
         }
 
-        inline static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t count = 0)
+        inline static void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount = 0)
         {
-            s_RenderAPI->DrawIndexed(vertexArray, count);
+            s_RenderAPI->DrawIndexed(vertexArray, indexCount);
+        }
+        inline static void DrawLines(const Ref<VertexArray>& vertexArray, uint32_t vertexCount = 0)
+        {
+            s_RenderAPI->DrawLines(vertexArray, vertexCount);
+        }
+        inline static void SetLineWidth(float width)
+        {
+            s_RenderAPI->SetineWidth(width);
         }
 
     private:

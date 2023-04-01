@@ -17,8 +17,8 @@ namespace Mirage
                 Vec2 Offset = { 0.0f, 0.0f };
 
                 Quad() = default;
-                
             } Quad;
+        	
             typedef struct Circle
             {
                 Mat4 transform;
@@ -30,8 +30,8 @@ namespace Mirage
                 Vec2 Offset = { 0.0f, 0.0f };
 
                 Circle() = default;
-                
             } Circle;
+        	
         }
     }
 }

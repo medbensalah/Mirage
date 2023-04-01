@@ -379,7 +379,6 @@ namespace Mirage
 		    		Renderer2D::Draw::Circle(transform.GetTransform(), circle, (int)entity);
 		    	}
 		    }
-
 		    Renderer2D::EndScene();
 	    }
     }
@@ -395,6 +394,7 @@ namespace Mirage
         		auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
         		// Renderer2D::Draw::Quad(transform.GetTransform(), sprite.Color);
         		Renderer2D::Draw::Sprite(transform.GetTransform(), sprite, (int)entity);
+        		// Renderer2D::Draw::Rect(transform.GetTransform(), {0.0f,1.0f,0.0f,1.0f}, (int)entity);
         	}
 		}
 		{
@@ -408,6 +408,19 @@ namespace Mirage
         	}
 		}
 
+
+		Renderer2D::Draw::Rect(
+			{0.0f, 0.0f, 0.0f},
+			{3.0f, 3.0f},
+			{0.0f, 1.0f, 1.0f, 1.0f},
+			-1);
+
+		Renderer2D::Draw::Line(
+			{2.0f, 2.0f, 0.0f},
+			{5.0f, 5.0f, 0.0f},
+			{1.0f, 0.0f, 1.0f, 1.0f},
+			-1);
+	    	
         Renderer2D::EndScene();
     }
 

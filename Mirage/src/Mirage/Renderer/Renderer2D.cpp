@@ -41,6 +41,15 @@ namespace Mirage
             int EntityID = -1;
         };
         
+    	struct LineVertex
+    	{
+    		Vec3 Position;
+    		Vec4 Color;
+
+    		// Editor only !!!
+    		int EntityID = -1;
+    	};
+    	
         struct Renderer2DData
         {
             static const uint32_t MaxQuads = 500;
@@ -59,6 +68,13 @@ namespace Mirage
         	Ref<VertexArray> CircleVertexArray;
         	Ref<VertexBuffer> CircleVertexBuffer;
         	Ref<Shader> CircleShader;
+        	
+        	Ref<VertexArray> LineVertexArray;
+        	Ref<VertexBuffer> LineVertexBuffer;
+        	Ref<Shader> LineShader;
+
+
+        	
 
             uint32_t QuadIndexCount = 0;
             QuadVertex* QuadVertexBufferBase = nullptr;
@@ -67,6 +83,11 @@ namespace Mirage
             uint32_t CircleIndexCount = 0;
             CircleVertex* CircleVertexBufferBase = nullptr;
             CircleVertex* CircleVertexBufferPtr = nullptr;
+
+            uint32_t LineVertexCount = 0;
+            LineVertex* LineVertexBufferBase = nullptr;
+            LineVertex* LineVertexBufferPtr = nullptr;
+        	float LineWidth = 2.0f;
 
             std::array<Ref<Texture2D>, MaxTextureSlots> TextureSlots;
             uint32_t TextureSlotIndex = 1;
@@ -148,14 +169,19 @@ namespace Mirage
             s_Data.CircleVertexArray->SetIndexBuffer(QuadIB);		// possible to use quad IB
         	s_Data.CircleVertexBufferBase = new CircleVertex[s_Data.MaxQuadVertices];
 
+			// ------------------------------ Line ------------------------------
 
-
-
-
-
-
-
-
+        	s_Data.LineVertexArray = VertexArray::Create();
+        	s_Data.LineVertexBuffer = VertexBuffer::Create(s_Data.MaxQuadVertices * sizeof(LineVertex));
+            
+        	BufferLayout LineLayout = {
+        		{ShaderDataType::Float3, "a_Position"	},
+				{ShaderDataType::Float4, "a_Color"      	},
+				{ShaderDataType::Int1,   "a_EntityID"   	}
+        	};
+        	s_Data.LineVertexBuffer->SetLayout(LineLayout);
+        	s_Data.LineVertexArray->AddVertexBuffer(s_Data.LineVertexBuffer);
+        	s_Data.LineVertexBufferBase = new LineVertex[s_Data.MaxQuadVertices];
 
         	
 
@@ -169,6 +195,7 @@ namespace Mirage
             
             s_Data.QuadShader = Shader::Create("assets/shaders/DefaultQuad.glsl");
             s_Data.CircleShader = Shader::Create("assets/shaders/DefaultCircle.glsl");
+            s_Data.LineShader = Shader::Create("assets/shaders/DefaultLine.glsl");
         	
             s_Data.TextureSlots[0] = s_Data.WhiteTexture;
 
@@ -187,7 +214,7 @@ namespace Mirage
             delete[] s_Data.QuadVertexBufferBase;
         }
 
-        void	BeginScene(const Camera& camera, const Mat4& transform)
+        void BeginScene(const Camera& camera, const Mat4& transform)
         {
             MRG_PROFILE_FUNCTION();
             
@@ -215,39 +242,42 @@ namespace Mirage
         	StartBatch();
         }
 
-        void EndScene()
-        {
-            EndQuadScene();
-            EndCircleScene();
-        }
-        void EndQuadScene()
-        {
-            FlushQuad();
-        }
-        void EndCircleScene()
-        {
-            FlushCircle();
-        }
-        
-        void StartBatch()
+    	void StartBatch()
         {
         	StartQuadBatch();
         	StartCircleBatch();
-        }
-        void StartQuadBatch()
-        {
-            s_Data.QuadIndexCount = 0;
-            s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
+        	StartLineBatch();
 
-            s_Data.TextureSlotIndex = 1;
+        	s_Data.TextureSlotIndex = 1;
         }
-        void StartCircleBatch()
+    	void StartQuadBatch()
         {
-            s_Data.CircleIndexCount = 0;
-            s_Data.CircleVertexBufferPtr = s_Data.CircleVertexBufferBase;
-
-            s_Data.TextureSlotIndex = 1;
+        	s_Data.QuadIndexCount = 0;
+        	s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
         }
+    	void StartCircleBatch()
+        {
+        	s_Data.CircleIndexCount = 0;
+        	s_Data.CircleVertexBufferPtr = s_Data.CircleVertexBufferBase;
+        }
+    	void StartLineBatch()
+        {
+        	s_Data.LineVertexCount = 0;
+        	s_Data.LineVertexBufferPtr = s_Data.LineVertexBufferBase;
+        }
+    	
+        void EndScene()
+        {
+        	//Bind textures
+        	for(uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
+        	{
+        		s_Data.TextureSlots[i]->Bind(i);
+        	}
+        	
+            FlushQuad();
+            FlushCircle();
+            FlushLine();
+        }        
 
         void FlushQuad()
         {
@@ -256,12 +286,6 @@ namespace Mirage
 
             uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
             s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
-            
-            //Bind textures
-            for(uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
-            {
-                s_Data.TextureSlots[i]->Bind(i);
-            }
             
             s_Data.QuadShader->Bind();
             RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCount);
@@ -276,21 +300,29 @@ namespace Mirage
             uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.CircleVertexBufferPtr - (uint8_t*)s_Data.CircleVertexBufferBase);
             s_Data.CircleVertexBuffer->SetData(s_Data.CircleVertexBufferBase, dataSize);
             
-            //Bind textures
-            for(uint32_t i = 0; i < s_Data.TextureSlotIndex; i++)
-            {
-                s_Data.TextureSlots[i]->Bind(i);
-            }
-            
             s_Data.CircleShader->Bind();
             RenderCommand::DrawIndexed(s_Data.CircleVertexArray, s_Data.CircleIndexCount);
+            
+            s_Data.Stats.DrawCalls++;
+        }
+        void FlushLine()
+        {
+            if (s_Data.LineVertexCount == 0)
+                return;
+
+            uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.LineVertexBufferPtr - (uint8_t*)s_Data.LineVertexBufferBase);
+            s_Data.LineVertexBuffer->SetData(s_Data.LineVertexBufferBase, dataSize);
+            
+            s_Data.LineShader->Bind();
+        	RenderCommand::SetLineWidth(s_Data.LineWidth);
+            RenderCommand::DrawLines(s_Data.LineVertexArray, s_Data.LineVertexCount);
             
             s_Data.Stats.DrawCalls++;
         }
 
         void NextQuadBatch()
         {
-            EndQuadScene();
+            FlushQuad();
             
             s_Data.QuadIndexCount = 0;
             s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
@@ -299,10 +331,19 @@ namespace Mirage
         }
         void NextCircleBatch()
         {
-            EndCircleScene();
+            FlushCircle();
             
             s_Data.CircleIndexCount = 0;
             s_Data.CircleVertexBufferPtr = s_Data.CircleVertexBufferBase;
+            
+            s_Data.TextureSlotIndex = 1;
+        }
+        void NextLineBatch()
+        {
+            FlushLine();
+            
+            s_Data.LineVertexCount = 0;
+            s_Data.LineVertexBufferPtr = s_Data.LineVertexBufferBase;
             
             s_Data.TextureSlotIndex = 1;
         }
@@ -427,9 +468,63 @@ namespace Mirage
 	            s_Data.Stats.CircleCount++;
             }
 
-            void Sprite(const Mat4& transform, SpriteRendererComponent& sprite, int entityID)
+        	void Sprite(const Mat4& transform, SpriteRendererComponent& sprite, int entityID)
             {
-                Draw::Quad(transform, sprite.Color, sprite.Texture, sprite.Tiling, sprite.Offset, entityID);
+            	Draw::Quad(transform, sprite.Color, sprite.Texture, sprite.Tiling, sprite.Offset, entityID);
+            }
+
+            void Line(const Vec3& p0, const Vec3& p1, const Vec4& color, int entityID)
+            {
+	            s_Data.LineVertexBufferPtr->Position = p0;
+	            s_Data.LineVertexBufferPtr->Color = color;
+	            s_Data.LineVertexBufferPtr->EntityID = entityID;
+				s_Data.LineVertexBufferPtr++;
+            	
+            	s_Data.LineVertexBufferPtr->Position = p1;
+            	s_Data.LineVertexBufferPtr->Color = color;
+            	s_Data.LineVertexBufferPtr->EntityID = entityID;
+				s_Data.LineVertexBufferPtr++;
+
+				s_Data.LineVertexCount += 2;
+
+				s_Data.Stats.LineCount++;
+            }
+
+            void Rect(const glm::fvec3& position, const glm::fvec2& size, const glm::fvec4& color, int entityID)
+            {
+	            Vec3 p0 = {position.x - size.x * 0.5f, position.y - size.y * 0.5f, position.z};
+	            Vec3 p1 = {position.x + size.x * 0.5f, position.y - size.y * 0.5f, position.z};
+	            Vec3 p2 = {position.x + size.x * 0.5f, position.y + size.y * 0.5f, position.z};
+	            Vec3 p3 = {position.x - size.x * 0.5f, position.y + size.y * 0.5f, position.z};
+
+	            Draw::Line(p0, p1, color, entityID);
+	            Draw::Line(p1, p2, color, entityID);
+	            Draw::Line(p2, p3, color, entityID);
+	            Draw::Line(p3, p0, color, entityID);
+            }
+
+            void Rect(const glm::mat4& transform, const glm::fvec4& color, int entityID)
+            {
+				Vec3 RectVertices[4];
+            	for (size_t	i = 0; i < 4; i++)
+				{
+					RectVertices[i] = transform * s_Data.QuadVertexPositions[i];
+				}
+
+				Draw::Line(RectVertices[0], RectVertices[1], color, entityID);
+				Draw::Line(RectVertices[1], RectVertices[2], color, entityID);
+				Draw::Line(RectVertices[2], RectVertices[3], color, entityID);
+				Draw::Line(RectVertices[3], RectVertices[0], color, entityID);
+            }
+
+            float GetLineWidth()
+            {
+            	return s_Data.LineWidth;
+            }
+
+            void SetLineWidth(float width)
+            {
+            	s_Data.LineWidth = width;
             }
         }
 

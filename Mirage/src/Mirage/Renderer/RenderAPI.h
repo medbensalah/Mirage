@@ -25,6 +25,8 @@ namespace Mirage
         virtual void Clear() = 0;
 
         virtual void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t count = 0) = 0;
+        virtual void DrawLines(const Ref<VertexArray>& vertexArray, uint32_t vertexCount) = 0;
+        virtual void SetineWidth(float width) = 0;
 
         inline static API GetAPI() { return s_RenderAPI; }
         static Scope<RenderAPI> Create();
