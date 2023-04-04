@@ -30,21 +30,36 @@ namespace Mirage
 
 		void OnRuntimeStart();
     	void OnRuntimeStop();
+		void OnSimulationStart();
+		void OnSimulationStop();
 
         void OnUpdateRuntime(float DeltaTime);
-    	void RenderRuntime(float DeltaTime);
+        void OnUpdateSimulation(float DeltaTime, EditorCamera& camera);
         void OnUpdateEditor(float DeltaTime, EditorCamera& camera);
+
+		void RenderRuntime();
+    	
         void OnViewportResize(uint32_t width, uint32_t height);
 
     	SceneObject DuplicateSceneObject(SceneObject entity);
 
         SceneObject GetMainCameraSO();
         SceneObject GetSceneObject(entt::entity entity);
+
+    	template<typename... Components>
+    	auto GetSceneObjectsWith()
+    	{
+    		return m_Registry.view<Components...>();
+    	}
     
     private:
         template <typename T>
         void OnComponentAdded(SceneObject& entity, T& component);
-    
+
+    	void OnPhysics2DInit();
+    	void OnPhysics2DStop();
+
+    	void RenderScene(EditorCamera& camera);
     	
     private:
         entt::registry m_Registry;

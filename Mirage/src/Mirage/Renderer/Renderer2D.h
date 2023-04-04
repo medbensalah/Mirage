@@ -38,6 +38,7 @@ namespace Mirage
             void Quad(const Mat4& transform, const Vec4& color, const Ref<Texture2D> texture = nullptr, const Vec2& tiling = Vec2(1.0f), const Vec2& offset = Vec2{0.0f}, int entityID = -1);
             void Quad(const Primitives::Quad& quad, int entityID = -1);
             void Circle(const Mat4& transform, CircleRendererComponent& circle, int entityID);
+            void Circle(const Mat4& transform, const Vec4& color, float thickness, float fade, int entityID);
             void Sprite(const Mat4& transform, SpriteRendererComponent& sprite, int entityID);
             void Line(const Vec3& p0, const Vec3& p1, const Vec4& color, int entityID);
             void Rect(const Vec3& position, const Vec2& size, const Vec4& color, int entityID);

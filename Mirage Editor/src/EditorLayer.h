@@ -34,6 +34,8 @@ namespace Mirage
     	Vec3 GetMouseWorldSpace();
     	int GetIDat(Vec2 MousePos);
         bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
+
+    	void OnOverlayRender();
         
         void CreateDockspace();
         void CreateMenuBar();
@@ -54,6 +56,8 @@ namespace Mirage
 
     	void OnScenePlay();
     	void OnSceneStop();
+
+    	void OnSceneSimulate();
     	
     private:
         Ref<Framebuffer> m_Framebuffer;
@@ -83,6 +87,9 @@ namespace Mirage
         Vec2 m_ViewportSize = {0.0f, 0.0f};
     	Vec2 m_PreviewSize = {420.0f, 236.0f};
         Vec2 m_ViewportBounds[2];
+
+    	// ---------------------- Overlays ----------------------
+    	bool m_ShowPhysicsColliders = false;
         
         // ----------------------- Gizmos -----------------------
         ImGuizmo::OPERATION m_GizmoType = (ImGuizmo::OPERATION)-1;
@@ -124,12 +131,14 @@ namespace Mirage
     	enum class SceneState
     	{
     		Edit = 0, 
-			Play
+			Play,
+    		Simulate
 		};
 
     	SceneState m_SceneState = SceneState::Edit;
     	
     	Ref<Texture2D> m_PlayButtonIcon;
+    	Ref<Texture2D> m_SimulateButtonIcon;
     	float m_PlayButtonIconSize = 25.0f;
     	
     	Ref<Texture2D> m_PauseButtonIcon;

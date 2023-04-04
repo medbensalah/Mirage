@@ -7,6 +7,7 @@
 #include "Components/Base/TagComponent.h"
 #include "Components/Physics/RigidBody2DComponent.h"
 #include "Components/Physics/BoxCollider2DComponent.h"
+#include "Components/Physics/CircleCollider2DComponent.h"
 #include "Components/Rendering/SpriteRendererComponent.h"
 #include "Components/Rendering/CameraComponent.h"
 #include "Components/NativeScriptComponent.h"
@@ -16,6 +17,7 @@
 #include "box2d/b2_body.h"
 #include "box2d/b2_fixture.h"
 #include "box2d/b2_polygon_shape.h"
+#include "box2d/b2_circle_shape.h"
 #include "Components/Base/HierarchyComponent.h"
 #include "Mirage/Definitions/Physics.h"
 
@@ -106,6 +108,7 @@ namespace Mirage
 		
 		duplicate.GetComponent<TransformComponent>().Copy(entity.GetComponent<TransformComponent>());
 		CopyComponentIfExists<BoxCollider2DComponent>(duplicate, entity);
+		CopyComponentIfExists<CircleCollider2DComponent>(duplicate, entity);
 		CopyComponentIfExists<RigidBody2DComponent>(duplicate, entity);
 		CopyComponentIfExists<CameraComponent>(duplicate, entity);
 		CopyComponentIfExists<SpriteRendererComponent>(duplicate, entity);
@@ -165,6 +168,7 @@ namespace Mirage
 		CopyComponents<CameraComponent>(dstReg, srcReg,  entt_UUID_Map);
 		CopyComponents<RigidBody2DComponent>(dstReg, srcReg,  entt_UUID_Map);
 		CopyComponents<BoxCollider2DComponent>(dstReg, srcReg,  entt_UUID_Map);
+		CopyComponents<CircleCollider2DComponent>(dstReg, srcReg,  entt_UUID_Map);
 		CopyComponents<NativeScriptComponent>(dstReg, srcReg,  entt_UUID_Map);
 		
 		return scene;
@@ -213,53 +217,22 @@ namespace Mirage
 
     void Scene::OnRuntimeStart()
     {
-		m_PhysicsWorld = new b2World(b2Vec2(0.0f, Physics2D::Gravity));
-		MRG_CORE_INFO("gravity {0}", Physics2D::Gravity);
-		auto view = m_Registry.view<RigidBody2DComponent>();
-		for (auto e : view)
-		{
-			SceneObject so = {e, this};
-			auto& transform = so.GetComponent<TransformComponent>();
-			auto& rb = so.GetComponent<RigidBody2DComponent>();
-
-			b2BodyDef bodyDef;
-			bodyDef.position.Set(transform.Position().x, transform.Position().y);
-			bodyDef.angle = Radians(transform.Rotation().z);
-			
-			bodyDef.type = MrgToB2DBodyType(rb.Type);
-			bodyDef.gravityScale = rb.GravityScale;
-			bodyDef.fixedRotation = rb.FixedRotation;
-			
-			b2Body* body = m_PhysicsWorld->CreateBody(&bodyDef);
-			rb.RuntimeBody = body;
-			// TODO : add istrigger (issensro)
-			
-			if (so.HasComponent<BoxCollider2DComponent>())
-			{
-				auto& collider = so.GetComponent<BoxCollider2DComponent>();
-
-				b2PolygonShape shape;
-				shape.SetAsBox(collider.Size.x * transform.Scale().x, collider.Size.y * transform.Scale().y,
-				               {collider.Offset.x, collider.Offset.y}, 0);
-
-				b2FixtureDef fixtureDef;
-				fixtureDef.shape = &shape;
-				fixtureDef.density = collider.Density;
-				fixtureDef.friction = collider.Friction;
-				fixtureDef.restitution = collider.Bounciness;
-				fixtureDef.restitutionThreshold = collider.BouncinessThreshold;
-				
-				body->CreateFixture(&fixtureDef);
-			}
-		}
-
-		m_PhysicsTimer.Reset();
+		OnPhysics2DInit();
     }
 
     void Scene::OnRuntimeStop()
     {
-		delete m_PhysicsWorld;
-		m_PhysicsWorld = nullptr;
+	    OnPhysics2DStop();
+    }
+
+    void Scene::OnSimulationStart()
+    {
+	    OnPhysics2DInit();
+    }
+
+    void Scene::OnSimulationStop()
+    {
+	    OnPhysics2DStop();
     }
 
     /*
@@ -334,10 +307,11 @@ namespace Mirage
 	        }
         }
         // -------------------- Render2D --------------------
-        RenderRuntime(DeltaTime);
+		RenderRuntime();
     }
 
-    void Scene::RenderRuntime(float DeltaTime)
+
+    void Scene::RenderRuntime()
     {
 	    Camera* mainCamera = nullptr;
 	    Mat4 cameraTransform;
@@ -358,70 +332,89 @@ namespace Mirage
 	    if (mainCamera)
 	    {
 		    Renderer2D::BeginScene(*mainCamera, cameraTransform);
-	    	
+
 		    {
-		    	auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-        
-		    	for (auto entity : group)
-		    	{
-		    		auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-		    		// Renderer2D::Draw::Quad(transform.GetTransform(), sprite.Color);
-		    		Renderer2D::Draw::Sprite(transform.GetTransform(), sprite, (int)entity);
-		    	}
+			    auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+
+			    for (auto entity : group)
+			    {
+				    auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+				    // Renderer2D::Draw::Quad(transform.GetTransform(), sprite.Color);
+				    Renderer2D::Draw::Sprite(transform.GetTransform(), sprite, (int)entity);
+			    }
 		    }
 		    {
-		    	auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
-        
-		    	for (auto entity : view)
-		    	{
-		    		auto [transform, circle] = view.get<TransformComponent, CircleRendererComponent>(entity);
-		    		// Renderer2D::Draw::Quad(transform.GetTransform(), sprite.Color);
-		    		Renderer2D::Draw::Circle(transform.GetTransform(), circle, (int)entity);
-		    	}
+			    auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
+
+			    for (auto entity : view)
+			    {
+				    auto [transform, circle] = view.get<TransformComponent, CircleRendererComponent>(entity);
+				    // Renderer2D::Draw::Quad(transform.GetTransform(), sprite.Color);
+				    Renderer2D::Draw::Circle(transform.GetTransform(), circle, (int)entity);
+			    }
 		    }
 		    Renderer2D::EndScene();
 	    }
     }
+	
+    void Scene::OnUpdateSimulation(float DeltaTime, EditorCamera& camera)
+    {
+		// Physics
+		{
+			if (Physics2D::UpdateEveryFrame)
+			{
+				m_PhysicsWorld->Step(DeltaTime, Physics2D::VelocityIterations, Physics2D::PositionIterations);
+				// update transform component from physics
+				auto view = m_Registry.view<RigidBody2DComponent>();
+				for (auto e : view)
+				{
+					SceneObject so = {e, this};
+					auto& transform = so.GetComponent<TransformComponent>();
+					auto& rb = so.GetComponent<RigidBody2DComponent>();
 
+					if (rb.Type == RigidBody2DComponent::BodyType::Static) continue;
+					const auto& position = rb.RuntimeBody->GetPosition();
+					transform.SetPosition({position.x, position.y, transform.Position().z});
+					transform.SetRotation({
+						transform.Rotation().x, transform.Rotation().y, Degrees(rb.RuntimeBody->GetAngle())
+					});
+				}
+				m_PhysicsTimer.Reset();
+			}
+			else
+			{
+				if (m_PhysicsTimer.Elapsed() >= (1.0f/Physics2D::FPS))
+				{
+					m_PhysicsWorld->Step(m_PhysicsTimer.Elapsed(), Physics2D::VelocityIterations,
+										 Physics2D::PositionIterations);
+					// update transform component from physics
+					auto view = m_Registry.view<RigidBody2DComponent>();
+					for (auto e : view)
+					{
+						SceneObject so = {e, this};
+						auto& transform = so.GetComponent<TransformComponent>();
+						auto& rb = so.GetComponent<RigidBody2DComponent>();
+
+						if (rb.Type == RigidBody2DComponent::BodyType::Static) continue;
+						const auto& position = rb.RuntimeBody->GetPosition();
+						transform.SetPosition({position.x, position.y, transform.Position().z});
+						transform.SetRotation({
+							transform.Rotation().x, transform.Rotation().y, Degrees(rb.RuntimeBody->GetAngle())
+						});
+					}
+					m_PhysicsTimer.Reset();
+				}
+			}
+		}
+
+		//Render
+       // RenderScene(camera);
+		RenderRuntime();
+    }
+	
     void Scene::OnUpdateEditor(float DeltaTime, EditorCamera& camera)
     {
-        Renderer2D::BeginScene(camera);
-		{
-			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-        
-        	for (auto entity : group)
-        	{
-        		auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-        		// Renderer2D::Draw::Quad(transform.GetTransform(), sprite.Color);
-        		Renderer2D::Draw::Sprite(transform.GetTransform(), sprite, (int)entity);
-        		// Renderer2D::Draw::Rect(transform.GetTransform(), {0.0f,1.0f,0.0f,1.0f}, (int)entity);
-        	}
-		}
-		{
-			auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
-        
-        	for (auto entity : view)
-        	{
-        		auto [transform, circle] = view.get<TransformComponent, CircleRendererComponent>(entity);
-        		// Renderer2D::Draw::Quad(transform.GetTransform(), sprite.Color);
-        		Renderer2D::Draw::Circle(transform.GetTransform(), circle, (int)entity);
-        	}
-		}
-
-
-		Renderer2D::Draw::Rect(
-			{0.0f, 0.0f, 0.0f},
-			{3.0f, 3.0f},
-			{0.0f, 1.0f, 1.0f, 1.0f},
-			-1);
-
-		Renderer2D::Draw::Line(
-			{2.0f, 2.0f, 0.0f},
-			{5.0f, 5.0f, 0.0f},
-			{1.0f, 0.0f, 1.0f, 1.0f},
-			-1);
-	    	
-        Renderer2D::EndScene();
+       RenderScene(camera);
     }
 
     void Scene::OnViewportResize(uint32_t width, uint32_t height)
@@ -460,8 +453,101 @@ namespace Mirage
         return SceneObject{entity, this};
     }
 
+    void Scene::OnPhysics2DInit()
+    {
+		m_PhysicsWorld = new b2World(b2Vec2(0.0f, Physics2D::Gravity));
+		MRG_CORE_INFO("gravity {0}", Physics2D::Gravity);
+		auto view = m_Registry.view<RigidBody2DComponent>();
+		for (auto e : view)
+		{
+			SceneObject so = {e, this};
+			auto& transform = so.GetComponent<TransformComponent>();
+			auto& rb = so.GetComponent<RigidBody2DComponent>();
 
-	template <typename T>
+			b2BodyDef bodyDef;
+			bodyDef.position.Set(transform.Position().x, transform.Position().y);
+			bodyDef.angle = Radians(transform.Rotation().z);
+			
+			bodyDef.type = MrgToB2DBodyType(rb.Type);
+			bodyDef.gravityScale = rb.GravityScale;
+			bodyDef.fixedRotation = rb.FixedRotation;
+			
+			b2Body* body = m_PhysicsWorld->CreateBody(&bodyDef);
+			rb.RuntimeBody = body;
+			// TODO : add istrigger (issensor)
+			
+			if (so.HasComponent<BoxCollider2DComponent>())
+			{
+				auto& boxCollider2D = so.GetComponent<BoxCollider2DComponent>();
+
+				b2PolygonShape shape;
+				shape.SetAsBox(boxCollider2D.Size.x * transform.Scale().x, boxCollider2D.Size.y * transform.Scale().y,
+				               {boxCollider2D.Offset.x, boxCollider2D.Offset.y}, 0);
+
+				b2FixtureDef fixtureDef;
+				fixtureDef.shape = &shape;
+				fixtureDef.density = boxCollider2D.Density;
+				fixtureDef.friction = boxCollider2D.Friction;
+				fixtureDef.restitution = boxCollider2D.Bounciness;
+				fixtureDef.restitutionThreshold = boxCollider2D.BouncinessThreshold;
+				
+				body->CreateFixture(&fixtureDef);
+			}
+			
+			if (so.HasComponent<CircleCollider2DComponent>())
+			{
+				auto& circleCollider2D = so.GetComponent<CircleCollider2DComponent>();
+
+				b2CircleShape shape;
+				shape.m_p.Set(circleCollider2D.Offset.x, circleCollider2D.Offset.y);
+				shape.m_radius = transform.Scale().x * circleCollider2D.Radius;
+
+				b2FixtureDef fixtureDef;
+				fixtureDef.shape = &shape;
+				fixtureDef.density = circleCollider2D.Density;
+				fixtureDef.friction = circleCollider2D.Friction;
+				fixtureDef.restitution = circleCollider2D.Bounciness;
+				fixtureDef.restitutionThreshold = circleCollider2D.BouncinessThreshold;
+				
+				body->CreateFixture(&fixtureDef);
+			}
+		}
+
+		m_PhysicsTimer.Reset();
+    }
+
+    void Scene::OnPhysics2DStop()
+	{
+		delete m_PhysicsWorld;
+		m_PhysicsWorld = nullptr;
+    }
+
+    void Scene::RenderScene(EditorCamera& camera)
+    {
+	    Renderer2D::BeginScene(camera);
+	    {
+		    auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+
+		    for (auto entity : group)
+		    {
+			    auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+			    Renderer2D::Draw::Sprite(transform.GetTransform(), sprite, (int)entity);
+		    }
+	    }
+	    {
+		    auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
+
+		    for (auto entity : view)
+		    {
+			    auto [transform, circle] = view.get<TransformComponent, CircleRendererComponent>(entity);
+			    Renderer2D::Draw::Circle(transform.GetTransform(), circle, (int)entity);
+		    }
+	    }
+	    Renderer2D::EndScene();
+    }
+
+
+    template <typename T>
 	void Scene::OnComponentAdded(SceneObject& entity, T& component)
 	{
 	}
@@ -510,6 +596,10 @@ namespace Mirage
     }
     template <>
     void Scene::OnComponentAdded(SceneObject& entity, BoxCollider2DComponent& component)
+    {
+    }
+    template <>
+    void Scene::OnComponentAdded(SceneObject& entity, CircleCollider2DComponent& component)
     {
     }
     template <>

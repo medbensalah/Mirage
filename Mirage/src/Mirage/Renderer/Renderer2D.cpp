@@ -468,7 +468,66 @@ namespace Mirage
 	            s_Data.Stats.CircleCount++;
             }
 
-        	void Sprite(const Mat4& transform, SpriteRendererComponent& sprite, int entityID)
+            void Circle(const glm::mat4& transform, const glm::fvec4& color, float thickness, float fade, int entityID)
+            {
+	            Primitives::Circle circlep{
+		            transform, thickness, fade, color
+	            };
+	            constexpr size_t circleVertexCount = 4;
+	            constexpr Vec2 textureCoords[] = {{0.0f, 0.0f}, {1.0f, 0.0f}, {1.0f, 1.0f}, {0.0f, 1.0f}};
+
+	            // TODO: make flush for circles
+	            if (s_Data.CircleIndexCount >= s_Data.MaxCircleIndices)
+	            {
+		            NextCircleBatch();
+	            }
+
+	            float TextureIndex = 0.0f;
+	            if (circlep.texture)
+	            {
+		            for (uint32_t i = 1; i < s_Data.TextureSlotIndex; ++i)
+		            {
+			            if (*(s_Data.TextureSlots[i]) == *(circlep.texture))
+			            {
+				            TextureIndex = (float)i;
+				            break;
+			            }
+		            }
+
+		            if (TextureIndex == 0.0f)
+		            {
+			            if (s_Data.TextureSlotIndex >= Renderer2DData::MaxTextureSlots)
+			            {
+				            NextCircleBatch();
+			            }
+
+			            TextureIndex = (float)s_Data.TextureSlotIndex;
+			            s_Data.TextureSlots[s_Data.TextureSlotIndex] = circlep.texture;
+			            s_Data.TextureSlotIndex++;
+		            }
+	            }
+
+	            for (size_t i = 0; i < circleVertexCount; i++)
+	            {
+		            s_Data.CircleVertexBufferPtr->WorldPosition = transform * s_Data.QuadVertexPositions[i];
+		            s_Data.CircleVertexBufferPtr->LocalPosition = s_Data.QuadVertexPositions[i] * 2.0f;
+		            s_Data.CircleVertexBufferPtr->Thickness = circlep.thickness;
+		            s_Data.CircleVertexBufferPtr->Fade = circlep.fade;
+		            s_Data.CircleVertexBufferPtr->Color = circlep.color;
+		            s_Data.CircleVertexBufferPtr->TextureCoord = textureCoords[i];
+		            s_Data.CircleVertexBufferPtr->TextureIndex = TextureIndex;
+		            s_Data.CircleVertexBufferPtr->Tiling = circlep.Tiling;
+		            s_Data.CircleVertexBufferPtr->Offset = circlep.Offset;
+		            s_Data.CircleVertexBufferPtr->EntityID = entityID;
+		            s_Data.CircleVertexBufferPtr++;
+	            }
+
+	            s_Data.CircleIndexCount += 6;
+
+	            s_Data.Stats.CircleCount++;
+            }
+
+            void Sprite(const Mat4& transform, SpriteRendererComponent& sprite, int entityID)
             {
             	Draw::Quad(transform, sprite.Color, sprite.Texture, sprite.Tiling, sprite.Offset, entityID);
             }

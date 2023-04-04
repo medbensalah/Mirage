@@ -7,6 +7,7 @@
 #include "Components/Base/TagComponent.h"
 #include "Components/Base/TransformComponent.h"
 #include "Components/Physics/BoxCollider2DComponent.h"
+#include "Components/Physics/CircleCollider2DComponent.h"
 #include "Components/Physics/RigidBody2DComponent.h"
 #include "Components/Rendering/CameraComponent.h"
 #include "Components/Rendering/CircleRendererComponent.h"
@@ -263,6 +264,21 @@ namespace Mirage
 
             out << YAML::EndMap;
         }
+        if (so.HasComponent<CircleCollider2DComponent>())
+        {
+            out << YAML::Key << "CircleCollider2DComponent";
+            out << YAML::BeginMap;
+
+            auto& collider = so.GetComponent<CircleCollider2DComponent>();
+            out << YAML::Key << "Radius" << YAML::Value << collider.Radius;
+            out << YAML::Key << "Offset" << YAML::Value << collider.Offset;
+            out << YAML::Key << "Density" << YAML::Value << collider.Density;
+            out << YAML::Key << "Friction" << YAML::Value << collider.Friction;
+            out << YAML::Key << "Bounciness" << YAML::Value << collider.Bounciness;
+            out << YAML::Key << "BouncinessThreshold" << YAML::Value << collider.BouncinessThreshold;
+
+            out << YAML::EndMap;
+        }
 
 #pragma region Children
         if (so.GetChildCount() == 0)
@@ -351,6 +367,17 @@ namespace Mirage
         	collider.Friction = boxCollider2DComponent["Friction"].as<float>();
         	collider.Bounciness = boxCollider2DComponent["Bounciness"].as<float>();
         	collider.BouncinessThreshold = boxCollider2DComponent["BouncinessThreshold"].as<float>();
+        }
+
+	    if (auto circleCollider2DComponent = entity["CircleCollider2DComponent"])
+        {
+            auto& collider = so.AddComponent<CircleCollider2DComponent>();
+        	collider.Radius = circleCollider2DComponent["Radius"].as<float>();
+        	collider.Offset = circleCollider2DComponent["Offset"].as<Vec2>();
+        	collider.Density = circleCollider2DComponent["Density"].as<float>();
+        	collider.Friction = circleCollider2DComponent["Friction"].as<float>();
+        	collider.Bounciness = circleCollider2DComponent["Bounciness"].as<float>();
+        	collider.BouncinessThreshold = circleCollider2DComponent["BouncinessThreshold"].as<float>();
         }
 
 #pragma region Children

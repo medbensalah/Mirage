@@ -177,6 +177,9 @@
     <ClInclude Include="src\Mirage\ECS\Components\Physics\BoxCollider2DComponent.h">
       <Filter>src\Mirage\ECS\Components\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\Components\Physics\CircleCollider2DComponent.h">
+      <Filter>src\Mirage\ECS\Components\Physics</Filter>
+    </ClInclude>
     <ClInclude Include="src\Mirage\ECS\Components\Physics\RigidBody2DComponent.h">
       <Filter>src\Mirage\ECS\Components\Physics</Filter>
     </ClInclude>

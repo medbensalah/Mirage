@@ -14,6 +14,7 @@
 #include "Mirage/ImGui/Extensions/ButtonExtensions.h"
 #include "Mirage/Definitions/DragnDropPayloads.h"
 #include "Mirage/ECS/Components/Physics/BoxCollider2DComponent.h"
+#include "Mirage/ECS/Components/Physics/CircleCollider2DComponent.h"
 #include "Mirage/ECS/Components/Physics/RigidBody2DComponent.h"
 #include "Mirage/ECS/Components/Rendering/CircleRendererComponent.h"
 
@@ -289,6 +290,14 @@ namespace Mirage
 	                if(ImGui::MenuItem("Box collider 2D"))
 	                {
 	                	m_SelectionContext.AddComponent<BoxCollider2DComponent>();
+	                	ImGui::CloseCurrentPopup();
+	                }
+                }
+                if(!m_SelectionContext.HasComponent<CircleCollider2DComponent>())
+                {
+	                if(ImGui::MenuItem("Circle collider 2D"))
+	                {
+	                	m_SelectionContext.AddComponent<CircleCollider2DComponent>();
 	                	ImGui::CloseCurrentPopup();
 	                }
                 }
@@ -576,29 +585,60 @@ namespace Mirage
 				DrawSplitUIItem("Size", [&component]()-> bool
 				{
 					return ImGui::DragFloat2("##Size", glm::value_ptr(component.Size), 0.05f, 0, 0, "%.5g");
-		        }, typeid(RigidBody2DComponent).name());
+		        }, typeid(BoxCollider2DComponent).name());
         	
 				DrawSplitUIItem("Offset", [&component]()-> bool
 				{
 					return ImGui::DragFloat2("##Offset", glm::value_ptr(component.Offset), 0.1f, 0, 0, "%.5g");
-		        }, typeid(RigidBody2DComponent).name());
+		        }, typeid(BoxCollider2DComponent).name());
         	
 				DrawSplitUIItem("Density", [&component]()-> bool
 				{
 					return ImGui::DragFloat("##Density", &component.Density, 0.05f, 0, 0, "%.5g");
-		        }, typeid(RigidBody2DComponent).name());
+		        }, typeid(BoxCollider2DComponent).name());
 				DrawSplitUIItem("Friction", [&component]()-> bool
 				{
 					return ImGui::DragFloat("##Friction", &component.Friction, 0.05f, 0.0f, 0.0f, "%.5g");
-		        }, typeid(RigidBody2DComponent).name());
+		        }, typeid(BoxCollider2DComponent).name());
 				DrawSplitUIItem("Bounciness", [&component]()-> bool
 				{
 					return ImGui::DragFloat("##Bounciness", &component.Bounciness, 0.05f, 0.0f, 0.0f, "%.5g");
-		        }, typeid(RigidBody2DComponent).name());
+		        }, typeid(BoxCollider2DComponent).name());
 				DrawSplitUIItem("BouncinessThreshold", [&component]()-> bool
 				{
 					return ImGui::DragFloat("##BouncinessThreshold", &component.BouncinessThreshold, 0.05f, 0.0f, 0.0f, "%.4g");
-		        }, typeid(RigidBody2DComponent).name());
+		        }, typeid(BoxCollider2DComponent).name());
+			}
+        );
+    	
+        DrawComponent<CircleCollider2DComponent>("CircleCollider 2D", so, [&so](auto& component)
+			{
+				DrawSplitUIItem("Radius", [&component]()-> bool
+				{
+					return ImGui::DragFloat("##Radius", &component.Radius, 0.05f, 0, 0, "%.5g");
+		        }, typeid(CircleCollider2DComponent).name());
+        	
+				DrawSplitUIItem("Offset", [&component]()-> bool
+				{
+					return ImGui::DragFloat2("##Offset", glm::value_ptr(component.Offset), 0.1f, 0, 0, "%.5g");
+		        }, typeid(CircleCollider2DComponent).name());
+        	
+				DrawSplitUIItem("Density", [&component]()-> bool
+				{
+					return ImGui::DragFloat("##Density", &component.Density, 0.05f, 0, 0, "%.5g");
+		        }, typeid(CircleCollider2DComponent).name());
+				DrawSplitUIItem("Friction", [&component]()-> bool
+				{
+					return ImGui::DragFloat("##Friction", &component.Friction, 0.05f, 0.0f, 0.0f, "%.5g");
+		        }, typeid(CircleCollider2DComponent).name());
+				DrawSplitUIItem("Bounciness", [&component]()-> bool
+				{
+					return ImGui::DragFloat("##Bounciness", &component.Bounciness, 0.05f, 0.0f, 0.0f, "%.5g");
+		        }, typeid(CircleCollider2DComponent).name());
+				DrawSplitUIItem("BouncinessThreshold", [&component]()-> bool
+				{
+					return ImGui::DragFloat("##BouncinessThreshold", &component.BouncinessThreshold, 0.05f, 0.0f, 0.0f, "%.4g");
+		        }, typeid(CircleCollider2DComponent).name());
 			}
         );
     }

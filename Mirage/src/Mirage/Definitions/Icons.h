@@ -9,6 +9,7 @@ namespace Mirage
 		static const std::string Mirage = "Resources/Icons/Mirage.png";
 		
 		static const std::string PlayButton = "Resources/Icons/General/PlayButton.png";
+		static const std::string SimulateButton = "Resources/Icons/General/SimulateButton.png";
 		static const std::string StopButton = "Resources/Icons/General/StopButton.png";
 
 		static const std::string WorldSpaceIcon = "Resources/Icons/General/WorldSpace.png";

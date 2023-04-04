@@ -20,6 +20,8 @@
 #include "Mirage/ImGui/Extensions/DrawingAPI.h"
 
 #include "Mirage/ECS/SceneSerializer.h"
+#include "Mirage/ECS/Components/Physics/BoxCollider2DComponent.h"
+#include "Mirage/ECS/Components/Physics/CircleCollider2DComponent.h"
 #include "Mirage/Math/Math.h"
 #include "Mirage/utils/PlatformUtils.h"
 
@@ -71,6 +73,7 @@ namespace Mirage
 
 		// ----------------------- initialize icons -----------------------
 		m_PlayButtonIcon = Texture2D::Create(Icons::PlayButton);
+		m_SimulateButtonIcon = Texture2D::Create(Icons::SimulateButton);
 		m_StopButtonIcon = Texture2D::Create(Icons::StopButton);
 
 		m_WorldSpaceIcon = Texture2D::Create(Icons::WorldSpaceIcon);
@@ -136,6 +139,7 @@ namespace Mirage
 			RenderCommand::Clear();
 			m_Framebuffer->ClearAttachment(1, -1);
 			m_ActiveScene->OnUpdateEditor(DeltaTime, m_EditorCamera);
+			OnOverlayRender();
 			m_Framebuffer->Unbind();
 		}
 
@@ -148,10 +152,13 @@ namespace Mirage
 			switch (m_SceneState)
 			{
 			case SceneState::Edit:
-				m_ActiveScene->RenderRuntime(DeltaTime);
+				m_ActiveScene->RenderRuntime();
 				break;
 			case SceneState::Play:
 				m_ActiveScene->OnUpdateRuntime(DeltaTime);
+				break;
+			case SceneState::Simulate:
+				m_ActiveScene->OnUpdateSimulation(DeltaTime, m_EditorCamera);
 				break;
 			}
 			m_PreviewFramebuffer->Unbind();
@@ -480,12 +487,13 @@ namespace Mirage
 			auto& style = ImGui::GetStyle();
 			float btnSizeX = m_PlayButtonIconSize + style.FramePadding.x * 2.0f;
 			float btnSizeY = m_PlayButtonIconSize + style.FramePadding.y * 2.0f;
-			float btnPosX = (ImGui::GetContentRegionAvail().x - btnSizeX) / 2.0f;
+			float btnPosX = (ImGui::GetContentRegionAvail().x - btnSizeX * 2.0f) / 2.0f;
 			float btnPosY = ImGui::GetCursorPosY() + 2.0f;
-			ImGui::SetCursorPos({btnPosX, btnPosY});
 
-			bool playStopBtnsPressed = ImGui::GradientButton("##PlayStopButton", ImVec2{btnSizeX, btnSizeY});
-			bool playStopBtnsHovered = ImGui::IsItemHovered();
+			// Play button
+			ImGui::SetCursorPos({btnPosX, btnPosY});
+			bool playStopBtnPressed = ImGui::GradientButton("##PlayStopButton", ImVec2{btnSizeX, btnSizeY});
+			bool playStopBtnHovered = ImGui::IsItemHovered();
 			ImGui::SetCursorPos({btnPosX + style.FramePadding.x, btnPosY + style.FramePadding.y});
 			if (m_SceneState == SceneState::Edit)
 			{
@@ -499,7 +507,40 @@ namespace Mirage
 				             ImVec2{m_PlayButtonIconSize, m_PlayButtonIconSize},
 				             {0, 1}, {1, 0}, {0.7f, 0.03f, 0, 1}, {1, 1, 1, 0.0f});
 			}
-			if (playStopBtnsHovered)
+			else
+			{
+				ImGui::Image((ImTextureID)m_PlayButtonIcon->GetRendererID(),
+							 ImVec2{m_PlayButtonIconSize, m_PlayButtonIconSize},
+							 {0, 1}, {1, 0}, {0.7f, 0.7f, 0.7, 1}, {1, 1, 1, 0.0f});
+			}
+			
+			// Simulate button
+			ImGui::SetCursorPos({btnPosX + btnSizeX, btnPosY});
+			bool simulateStopBtnPressed = ImGui::GradientButton("##SimulateButton", ImVec2{btnSizeX, btnSizeY});
+			bool simulateStopBtnHovered = ImGui::IsItemHovered();
+			ImGui::SetCursorPos({btnPosX + btnSizeX + style.FramePadding.x, btnPosY + style.FramePadding.y});
+			if (m_SceneState == SceneState::Edit)
+			{
+				ImGui::Image((ImTextureID)m_SimulateButtonIcon->GetRendererID(),
+							 ImVec2{m_PlayButtonIconSize, m_PlayButtonIconSize},
+							 {0, 1}, {1, 0}, {0.03f, 0.7f, 0, 1}, {1, 1, 1, 0.0f});
+			}
+			else if (m_SceneState == SceneState::Simulate)
+			{
+				ImGui::Image((ImTextureID)m_StopButtonIcon->GetRendererID(),
+							 ImVec2{m_PlayButtonIconSize, m_PlayButtonIconSize},
+							 {0, 1}, {1, 0}, {0.7f, 0.03f, 0, 1}, {1, 1, 1, 0.0f});
+			}
+			else
+			{
+				ImGui::Image((ImTextureID)m_SimulateButtonIcon->GetRendererID(),
+							 ImVec2{m_PlayButtonIconSize, m_PlayButtonIconSize},
+							 {0, 1}, {1, 0}, {0.7f, 0.7f, 0.7, 1}, {1, 1, 1, 0.0f});
+			}
+
+
+
+			if (playStopBtnHovered)
 			{
 				ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{8, 2});
 				if (m_SceneState == SceneState::Edit)
@@ -512,7 +553,7 @@ namespace Mirage
 				}
 				ImGui::PopStyleVar();
 			}
-			if (playStopBtnsPressed)
+			if (playStopBtnPressed)
 			{
 				if (m_SceneState == SceneState::Edit)
 				{
@@ -523,13 +564,40 @@ namespace Mirage
 					OnSceneStop();
 				}
 			}
-			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2.0f);
+			
+			if (simulateStopBtnHovered)
+			{
+				ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{8, 2});
+				if (m_SceneState == SceneState::Edit)
+				{
+					ImGui::SetTooltip("Simulate");
+				}
+				else if (m_SceneState == SceneState::Simulate)
+				{
+					ImGui::SetTooltip("Stop");
+				}
+				ImGui::PopStyleVar();
+			}
+			if (simulateStopBtnPressed)
+			{
+				if (m_SceneState == SceneState::Edit)
+				{
+					OnSceneSimulate();
+				}
+				else if (m_SceneState == SceneState::Simulate)
+				{
+					OnSceneStop();
+				}
+			}
+
+			ImGui::SetCursorPosY(btnPosY + btnSizeY +  style.FramePadding.y);
+
 			uint32_t previewTexId = m_PreviewFramebuffer->GetColorAttachmentRendererID();
 			float sizeY = ImGui::GetContentRegionAvail().y;
 			float aspectRatio = 16.0f / 9;
 			float sizeX = sizeY * aspectRatio;
 			m_PreviewSize = {sizeX, sizeY};
-			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + (ImGui::GetContentRegionAvail().x - sizeX) / 2);
+			ImGui::SetCursorPosX((ImGui::GetWindowWidth() - sizeX) / 2.0f);
 			ImGui::Image((void*)previewTexId, ImVec2{sizeX, sizeY}, ImVec2{0, 1}, ImVec2{1, 0});
 		}
 		ImGui::End();
@@ -884,7 +952,7 @@ namespace Mirage
 				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
 				ImGui::Text("Near plane: ");
 				ImGui::SameLine();
-				ImGui::SetCursorPosX(curPos - 5);
+				ImGui::SetCursorPosX(curPos + 5);
 				ImGui::PushItemWidth(100);
 				if (ImGui::DragFloat("##EditorCameraNearClippingPlane", &m_EditorCamera.m_PerspectiveData.m_NearClip, 0.01f,0.01, 0.0f, "%.5g"))
 				{
@@ -906,6 +974,23 @@ namespace Mirage
 			}
 
 			ImGui::Spacing();
+			
+			ImGui::Separator();
+			ImGui::Spacing();
+			
+			ImGui::AlignTextToFramePadding();
+			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+			ImGui::Text("Physics Overlay: ");
+			ImGui::SameLine();
+			ImGui::SetCursorPosX(curPos + 25);
+			ImGui::PushItemWidth(-1);
+			ImGui::Checkbox("##OverlayPhysicsColliders", &m_ShowPhysicsColliders);
+			ImGui::PopItemWidth();
+
+
+			
+			ImGui::Spacing();
+			
 			ImGui::PopStyleColor();
 			
 			ImGui::EndPopup();
@@ -1154,6 +1239,37 @@ namespace Mirage
 			}
 		}
 		return false;
+	}
+
+	void EditorLayer::OnOverlayRender()
+	{
+		Renderer2D::BeginScene(m_EditorCamera);
+		if (m_ShowPhysicsColliders)
+		{
+			{
+				auto view = m_ActiveScene->GetSceneObjectsWith<TransformComponent, CircleCollider2DComponent>();
+				for (auto entity : view)
+				{
+					auto [t, cc2d] = view.get<TransformComponent, CircleCollider2DComponent>(entity);
+					Vec3 position = t.Position() + Vec3(cc2d.Offset, 0.001f);
+					Vec3 scale = t.Scale() * cc2d.Radius * 2.0f;
+					Mat4 tr = glm::translate(Mat4(1.0f), position) *
+						glm::scale(Mat4(1.0f), scale);
+					float thickness = 0.1f / scale.x;
+					Renderer2D::Draw::Circle(tr, {0.25f, 1.0f, 0.25f, 1.0f}, thickness, 0.0f, -1);
+				}
+			}
+			{
+				auto view = m_ActiveScene->GetSceneObjectsWith<TransformComponent, BoxCollider2DComponent>();
+				for (auto entity : view)
+				{
+					auto [t, bc2d] = view.get<TransformComponent, BoxCollider2DComponent>(entity);
+					Mat4 tr = glm::translate(t.GetTransform(), Vec3(0.0f, 0.0f, 0.001f));
+					Renderer2D::Draw::Rect(tr, {0.25f, 1.0f, 0.25f, 1.0f}, -1);
+				}
+			}
+		}
+		Renderer2D::EndScene();
 	}
 
 	void EditorLayer::DuplicateSelected()
@@ -1415,7 +1531,7 @@ namespace Mirage
 	{
 		// m_ActiveScene = Scene::Copy(m_EditorScene);
 		
-		const char* filter = "Mirage scene (*.mrgs)\0*.mrgs\0";
+		// const char* filter = "Mirage scene (*.mrgs)\0*.mrgs\0";
 		SceneSerializer serializer(m_ActiveScene);
 		serializer.SerializeText(Paths::TempScene);
 
@@ -1429,7 +1545,16 @@ namespace Mirage
 
 	void EditorLayer::OnSceneStop()
 	{
-		m_ActiveScene->OnRuntimeStop();
+		MRG_CORE_ASSERT(m_SceneState == SceneState::Play || m_SceneState == SceneState::Simulate, "Scene state Unknown")
+		
+		if (m_SceneState == SceneState::Play)
+		{
+			m_ActiveScene->OnRuntimeStop();
+		}
+		else if (m_SceneState == SceneState::Simulate)
+		{
+			m_ActiveScene->OnSimulationStop();
+		}
 
 		Ref<Scene> newScene = CreateRef<Scene>();
 		SceneSerializer serializer(newScene);
@@ -1442,6 +1567,22 @@ namespace Mirage
 			m_SceneState = SceneState::Edit;
 			m_HierarchyPanel.SetContext(m_ActiveScene);
 		}
+	}
+
+	void EditorLayer::OnSceneSimulate()
+	{
+		// m_ActiveScene = Scene::Copy(m_EditorScene);
+		
+		// const char* filter = "Mirage scene (*.mrgs)\0*.mrgs\0";
+		SceneSerializer serializer(m_ActiveScene);
+		serializer.SerializeText(Paths::TempScene);
+
+		
+		m_HierarchyPanel.SetSelectedSO({});
+		
+		m_SceneState = SceneState::Simulate;
+		m_HierarchyPanel.SetContext(m_ActiveScene);
+		m_ActiveScene->OnSimulationStart();
 	}
 #endif
 }
