@@ -159,6 +159,9 @@
     <ClInclude Include="src\Mirage\Definitions\Textures.h">
       <Filter>src\Mirage\Definitions</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\Components\AllComponents.h">
+      <Filter>src\Mirage\ECS\Components</Filter>
+    </ClInclude>
     <ClInclude Include="src\Mirage\ECS\Components\Base\HierarchyComponent.h">
       <Filter>src\Mirage\ECS\Components\Base</Filter>
     </ClInclude>

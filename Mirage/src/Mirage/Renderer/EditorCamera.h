@@ -96,7 +96,7 @@ namespace Mirage {
         Mat4 m_ViewMatrix;
 
         Vec2 m_InitialMousePosition = { 0.0f, 0.0f };
-        float m_MoveSpeed = 2.0f;
+        float m_MoveSpeed = 5.0f;
         float m_ShiftMultiplier = 3.0f;
         float m_ZoomSpeed = 0.25f;
         float m_Pitch = 0.56f, m_Yaw = -0.8f;

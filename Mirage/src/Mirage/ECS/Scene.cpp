@@ -18,6 +18,7 @@
 #include "box2d/b2_fixture.h"
 #include "box2d/b2_polygon_shape.h"
 #include "box2d/b2_circle_shape.h"
+#include "Components/AllComponents.h"
 #include "Components/Base/HierarchyComponent.h"
 #include "Mirage/Definitions/Physics.h"
 
@@ -43,20 +44,37 @@ namespace Mirage
 	
 	Scene::~Scene()
 	{
+		delete m_PhysicsWorld;
 	}
 
-	template <typename Component>
-	static void CopyComponents(entt::registry& dstRegistry, entt::registry& srcRegistry, const std::unordered_map<UUID, entt::entity>& map)
+	template <typename... Component>
+	static void CopyComponent(entt::registry& dstRegistry, entt::registry& srcRegistry, const std::unordered_map<UUID, entt::entity>& map)
 	{
-		auto view = srcRegistry.view<Component>();
-		for (auto e : view)
+		// auto view = srcRegistry.view<Component>();
+		// for (auto e : view)
+		// {
+		// 	UUID uuid = srcRegistry.get<IDComponent>(e).ID;
+		// 	entt::entity dstEntityID = map.at(uuid);
+		//
+		// 	auto& component = srcRegistry.get<Component>(e);
+		// 	dstRegistry.emplace_or_replace<Component>(dstEntityID, component);
+		// }
+		([&]()
 		{
-			UUID uuid = srcRegistry.get<IDComponent>(e).ID;
-			entt::entity dstEntityID = map.at(uuid);
+			auto view = srcRegistry.view<Component>();
+			for (auto srcEntity : view)
+			{
+				entt::entity dstEntity = map.at(srcRegistry.get<IDComponent>(srcEntity).ID);
+				auto& srcComponent = srcRegistry.get<Component>(srcEntity);
+				dstRegistry.emplace_or_replace<Component>(dstEntity, srcComponent);
+			}
+		}(), ...);
+	}
 
-			auto& component = srcRegistry.get<Component>(e);
-			dstRegistry.emplace_or_replace<Component>(dstEntityID, component);
-		}
+	template<typename... Component>
+	static void CopyComponent(ComponentGroup<Component...>, entt::registry& dst, entt::registry& src, const std::unordered_map<UUID, entt::entity>& enttMap)
+	{
+		CopyComponent<Component...>(dst, src, enttMap);
 	}
 
 	static SceneObject CopySceneObject(SceneObject so, Ref<Scene> dst, Ref<Scene> src, std::unordered_map<UUID, entt::entity>* map)
@@ -80,41 +98,62 @@ namespace Mirage
 		}
 		return newSO;
 	}
-	
-	template <typename Component>
-	static void CopyComponentIfExists(SceneObject dst, SceneObject src)
+	//
+	// template <typename Component>
+	// static void CopyComponentIfExists(SceneObject dst, SceneObject src)
+	// {
+	// 	if (src.HasComponent<Component>())
+	// 	{
+	// 		dst.AddOrReplaceComponent<Component>(src.GetComponent<Component>());
+	// 	}
+	// }
+	template<typename... Component>
+		static void CopyComponentIfExists(SceneObject dst, SceneObject src)
 	{
-		if (src.HasComponent<Component>())
+		([&]()
 		{
-			dst.AddOrReplaceComponent<Component>(src.GetComponent<Component>());
-		}
+			if (src.HasComponent<Component>())
+				dst.AddOrReplaceComponent<Component>(src.GetComponent<Component>());
+		}(), ...);
 	}
-	
+
+	template<typename... Component>
+	static void CopyComponentIfExists(ComponentGroup<Component...>, SceneObject dst, SceneObject src)
+	{
+		CopyComponentIfExists<Component...>(dst, src);
+	}
     
+	// SceneObject Scene::DuplicateSceneObject(SceneObject entity)
+	// {
+	// 	SceneObject duplicate = CreateSceneObject(entity.GetName());
+	//
+	// 	if (entity.HasParent())
+	// 	{
+	// 		duplicate.SetParent(entity.GetParent());
+	// 	}
+	// 	
+	// 	for (auto& child : entity.GetChildren())
+	// 	{
+	// 		SceneObject c = DuplicateSceneObject({child,entity.m_Scene});
+	// 		c.SetParent(duplicate);
+	// 	}
+	// 	
+	// 	duplicate.GetComponent<TransformComponent>().Copy(entity.GetComponent<TransformComponent>());
+	// 	CopyComponentIfExists<BoxCollider2DComponent>(duplicate, entity);
+	// 	CopyComponentIfExists<CircleCollider2DComponent>(duplicate, entity);
+	// 	CopyComponentIfExists<RigidBody2DComponent>(duplicate, entity);
+	// 	CopyComponentIfExists<CameraComponent>(duplicate, entity);
+	// 	CopyComponentIfExists<SpriteRendererComponent>(duplicate, entity);
+	// 	CopyComponentIfExists<CircleRendererComponent>(duplicate, entity);
+	// 	CopyComponentIfExists<NativeScriptComponent>(duplicate, entity);
+	// 	return duplicate;
+	// }
+
 	SceneObject Scene::DuplicateSceneObject(SceneObject entity)
 	{
-		SceneObject duplicate = CreateSceneObject(entity.GetName());
-
-		if (entity.HasParent())
-		{
-			duplicate.SetParent(entity.GetParent());
-		}
-		
-		for (auto& child : entity.GetChildren())
-		{
-			SceneObject c = DuplicateSceneObject({child,entity.m_Scene});
-			c.SetParent(duplicate);
-		}
-		
-		duplicate.GetComponent<TransformComponent>().Copy(entity.GetComponent<TransformComponent>());
-		CopyComponentIfExists<BoxCollider2DComponent>(duplicate, entity);
-		CopyComponentIfExists<CircleCollider2DComponent>(duplicate, entity);
-		CopyComponentIfExists<RigidBody2DComponent>(duplicate, entity);
-		CopyComponentIfExists<CameraComponent>(duplicate, entity);
-		CopyComponentIfExists<SpriteRendererComponent>(duplicate, entity);
-		CopyComponentIfExists<CircleRendererComponent>(duplicate, entity);
-		CopyComponentIfExists<NativeScriptComponent>(duplicate, entity);
-		return duplicate;
+		SceneObject newEntity = CreateSceneObject(entity.GetName());
+		CopyComponentIfExists(AllComponents{}, newEntity, entity);
+		return newEntity;
 	}
 	
 	Ref<Scene> Scene::Copy(const Ref<Scene> source)
@@ -133,6 +172,7 @@ namespace Mirage
 		{
 			CopySceneObject({h.second.m_entity, source.get()}, scene, source, &entt_UUID_Map);
 		}
+		
 		
 
 		// auto idView = srcReg.view<IDComponent>();
@@ -163,14 +203,15 @@ namespace Mirage
 
 		// CopyComponents<TransformComponent>(dstReg, srcReg,  entt_UUID_Map);
 		
-		CopyComponents<SpriteRendererComponent>(dstReg, srcReg,  entt_UUID_Map);
-		CopyComponents<CircleRendererComponent>(dstReg, srcReg,  entt_UUID_Map);
-		CopyComponents<CameraComponent>(dstReg, srcReg,  entt_UUID_Map);
-		CopyComponents<RigidBody2DComponent>(dstReg, srcReg,  entt_UUID_Map);
-		CopyComponents<BoxCollider2DComponent>(dstReg, srcReg,  entt_UUID_Map);
-		CopyComponents<CircleCollider2DComponent>(dstReg, srcReg,  entt_UUID_Map);
-		CopyComponents<NativeScriptComponent>(dstReg, srcReg,  entt_UUID_Map);
+		// CopyComponents<SpriteRendererComponent>(dstReg, srcReg,  entt_UUID_Map);
+		// CopyComponents<CircleRendererComponent>(dstReg, srcReg,  entt_UUID_Map);
+		// CopyComponents<CameraComponent>(dstReg, srcReg,  entt_UUID_Map);
+		// CopyComponents<RigidBody2DComponent>(dstReg, srcReg,  entt_UUID_Map);
+		// CopyComponents<BoxCollider2DComponent>(dstReg, srcReg,  entt_UUID_Map);
+		// CopyComponents<CircleCollider2DComponent>(dstReg, srcReg,  entt_UUID_Map);
+		// CopyComponents<NativeScriptComponent>(dstReg, srcReg,  entt_UUID_Map);
 		
+		CopyComponent(AllComponents{}, dstReg, srcReg, entt_UUID_Map);
 		return scene;
 	}
 
@@ -606,5 +647,6 @@ namespace Mirage
     void Scene::OnComponentAdded(SceneObject& entity, NativeScriptComponent& component)
     {
     }
+	
     // TODO: add & not focused to selection
 }

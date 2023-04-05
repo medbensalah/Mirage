@@ -1085,7 +1085,7 @@ namespace Mirage
 
 	bool EditorLayer::OnShortcutKeyPressed(KeyPressedEvent e)
 	{
-		if (e.GetRepeatCount() > 0)
+		if (e.IsRepeat() > 0)
 			return false;
 
 		bool ctrl = Input::IsKeyPressed(Key::LeftControl) || Input::IsKeyPressed(Key::RightControl);

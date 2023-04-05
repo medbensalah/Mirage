@@ -6,4 +6,4 @@ Settings:
     VelocityIterations: 8
     PositionIterations: 3
   Window:
-    VSync: true
+    VSync: false
