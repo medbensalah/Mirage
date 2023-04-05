@@ -5,6 +5,7 @@
 #include "Mirage/Core/Time.h"
 #include "GLFW/glfw3.h"
 #include "Mirage/Renderer/Renderer.h"
+#include "Mirage/utils/PlatformUtils.h"
 
 namespace Mirage
 {
@@ -78,8 +79,8 @@ namespace Mirage
         while (m_Running)
         {
             MRG_PROFILE_SCOPE("RUN LOOP");
-            time.Update((float)glfwGetTime());
-
+            time.Update(TimeUtils::GetTime());
+        	
             if(!m_Minimized)
             {
                 {

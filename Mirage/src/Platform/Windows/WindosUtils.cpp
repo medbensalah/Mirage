@@ -10,6 +10,11 @@
 
 namespace Mirage
 {
+	float TimeUtils::GetTime()
+	{
+		return glfwGetTime();
+	}
+
     std::string FileDialogs::OpenFile(const char* filter)
     {
         OPENFILENAMEA ofn;

@@ -438,6 +438,7 @@ namespace Mirage
     	}
     	catch (YAML::ParserException e)
     	{
+			MRG_CORE_ERROR("Failed to load .mrgs file '{0}'\n     {1}", filepath, e.what());
     		return false;
     	}
         if (!data["Scene"])

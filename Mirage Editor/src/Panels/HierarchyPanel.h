@@ -21,6 +21,9 @@ namespace Mirage
         SceneObject GetSelectedSO() const { return m_SelectionContext; }
         
     private:
+    		template<typename T>
+			void DisplayAddComponentEntry(const std::string& entryName);
+    	
             void DrawEntityNode(SceneObject so);
             void DrawComponents(SceneObject so);
     private:
@@ -28,5 +31,4 @@ namespace Mirage
 
         SceneObject m_SelectionContext;
     };
-    
 }

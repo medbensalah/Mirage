@@ -591,6 +591,7 @@ namespace Mirage
     template <typename T>
 	void Scene::OnComponentAdded(SceneObject& entity, T& component)
 	{
+		static_assert(sizeof(T) == 0);
 	}
 	
     template <>

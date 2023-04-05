@@ -1243,32 +1243,46 @@ namespace Mirage
 
 	void EditorLayer::OnOverlayRender()
 	{
+		// TODO: refactor after adding render passes to make them show on top
+		// TODO: and the selection outline ttopmost
+		
 		Renderer2D::BeginScene(m_EditorCamera);
 		if (m_ShowPhysicsColliders)
 		{
+			//Rendering circle colliders
 			{
 				auto view = m_ActiveScene->GetSceneObjectsWith<TransformComponent, CircleCollider2DComponent>();
 				for (auto entity : view)
 				{
 					auto [t, cc2d] = view.get<TransformComponent, CircleCollider2DComponent>(entity);
-					Vec3 position = t.Position() + Vec3(cc2d.Offset, 0.001f);
+					Vec3 position = t.Position() + Vec3(cc2d.Offset, 0.0f);
 					Vec3 scale = t.Scale() * cc2d.Radius * 2.0f;
+					float thickness = 0.1f / scale.x + 0.1f;
+					scale += 0.05f;
+					
 					Mat4 tr = glm::translate(Mat4(1.0f), position) *
 						glm::scale(Mat4(1.0f), scale);
-					float thickness = 0.1f / scale.x;
-					Renderer2D::Draw::Circle(tr, {0.25f, 1.0f, 0.25f, 1.0f}, thickness, 0.0f, -1);
+					Renderer2D::Draw::Circle(tr, {0.77f, 1.0f, 0.27f, 1.0f}, thickness, 0.0f, -1);
 				}
 			}
+			//Rendering box colliders
 			{
 				auto view = m_ActiveScene->GetSceneObjectsWith<TransformComponent, BoxCollider2DComponent>();
 				for (auto entity : view)
 				{
 					auto [t, bc2d] = view.get<TransformComponent, BoxCollider2DComponent>(entity);
-					Mat4 tr = glm::translate(t.GetTransform(), Vec3(0.0f, 0.0f, 0.001f));
-					Renderer2D::Draw::Rect(tr, {0.25f, 1.0f, 0.25f, 1.0f}, -1);
+					// Mat4 tr = glm::translate(t.GetTransform(), Vec3(0.0f, 0.0f, 0.001f));
+					Renderer2D::Draw::Rect(t.GetTransform(), {0.77f, 1.0f, 0.27f, 1.0f}, -1);
 				}
 			}
 		}
+
+		// Draw selected sceneObject outline
+		if (SceneObject selectedEntity = m_HierarchyPanel.GetSelectedSO()) {
+			TransformComponent transform = selectedEntity.GetComponent<TransformComponent>();
+			Renderer2D::Draw::Rect(transform.GetTransform(), {1.0f, 0.6f, 0.23f, 1.0f});
+		}
+		
 		Renderer2D::EndScene();
 	}
 
