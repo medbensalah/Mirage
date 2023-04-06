@@ -1247,6 +1247,13 @@ namespace Mirage
 		// TODO: and the selection outline ttopmost
 		
 		Renderer2D::BeginScene(m_EditorCamera);
+
+		// Draw selected sceneObject outline
+		if (SceneObject selectedEntity = m_HierarchyPanel.GetSelectedSO()) {
+			TransformComponent transform = selectedEntity.GetComponent<TransformComponent>();
+			Renderer2D::Draw::Rect(transform.GetTransform(), {1.0f, 0.6f, 0.23f, 1.0f});
+		}
+		
 		if (m_ShowPhysicsColliders)
 		{
 			//Rendering circle colliders
@@ -1275,12 +1282,6 @@ namespace Mirage
 					Renderer2D::Draw::Rect(t.GetTransform(), {0.77f, 1.0f, 0.27f, 1.0f}, -1);
 				}
 			}
-		}
-
-		// Draw selected sceneObject outline
-		if (SceneObject selectedEntity = m_HierarchyPanel.GetSelectedSO()) {
-			TransformComponent transform = selectedEntity.GetComponent<TransformComponent>();
-			Renderer2D::Draw::Rect(transform.GetTransform(), {1.0f, 0.6f, 0.23f, 1.0f});
 		}
 		
 		Renderer2D::EndScene();

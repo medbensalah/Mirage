@@ -27,6 +27,8 @@ void Sandbox2D::OnDetach()
 
 uint32_t max = 1000;
 
+Mat4 tr = MatTranslate(Mat4(1.0f), Vec3(0.0f, 0.0f, 0.0f)) * MatScale(Mat4(1.0f), Vec3(0.25f, 0.25f, 1.0f));
+
 void Sandbox2D::OnUpdate(float DeltaTime)
 {
     MRG_PROFILE_FUNCTION();
@@ -42,8 +44,8 @@ void Sandbox2D::OnUpdate(float DeltaTime)
     {
         MRG_PROFILE_SCOPE("Renderer Clear");
         
-        Mirage::RenderCommand::SetClearColor({0.0f,0.0f,0.0f,1.0f});
-        // Mirage::RenderCommand::SetClearColor({0.15f, 0.15f, 0.15f, 1.0f});
+        // Mirage::RenderCommand::SetClearColor({0.0f,0.0f,0.0f,1.0f});
+        Mirage::RenderCommand::SetClearColor({0.15f, 0.15f, 0.15f, 1.0f});
         Mirage::RenderCommand::Clear();
     }
 
@@ -53,22 +55,17 @@ void Sandbox2D::OnUpdate(float DeltaTime)
         
         Mirage::Renderer2D::Draw::Quad(quad);
 
-        //
-        // for(float y = -5.0f; y < 5.0f; y += 0.5f)
-        // {
-        //     for(float x = -5.0f; x < 5.0f; x += 0.5f)
-        //     {
-        //         Vec2 color = {(x + 5.0f) / 10.0f, (y + 5.0f) / 10.0f};
-        //         Mirage::Renderer2D::Draw::Quad(
-        //             {
-        //                 Vec3(0.0f),
-        //                 Vec3(0.0f),
-        //                 Vec3(0.45f),
-        //                 {color.x, color.y,1.0f, 1.0f}
-        //             });
-        //     }
-        // }
-        //     
+    	
+        
+        for(float y = -10.0f; y < 10.0f; y += 0.5f)
+        {
+            for(float x = -10.0f; x < 10.0f; x += 0.5f)
+            {
+                Vec4 color = { (x + 10.0f) / 20.0f, 0.4f, (y + 10.0f) / 20.0f, 1.0f };
+                Mirage::Renderer2D::Draw::Quad(MatTranslate(tr, Vec3(x * 3.0f, y * 3.0f, 0.0f)), color);
+                // Mirage::Renderer2D::Draw::Quad(glm::translate(quad.transform, Vec3(x, y, 0.0f)), color, m_texture);
+            }
+        }
         
         Mirage::Renderer2D::EndScene();
     }

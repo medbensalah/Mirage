@@ -94,6 +94,23 @@ namespace Mirage
         		{
         			m_Context->CreateSceneObject("new SceneObject");
         		}
+                else if (ImGui::MenuItem("Create Camera"))
+                {
+                	SceneObject so = m_Context->CreateSceneObject("Camera");
+                	so.AddComponent<CameraComponent>();
+                }
+                else if (ImGui::MenuItem("Create Sprite"))
+                {
+                	SceneObject so = m_Context->CreateSceneObject("Sprite");
+                	so.AddComponent<SpriteRendererComponent>();
+                	so.AddComponent<BoxCollider2DComponent>();
+                }
+                else if (ImGui::MenuItem("Create Circle"))
+                {
+                	SceneObject so = m_Context->CreateSceneObject("Circle");
+                	so.AddComponent<CircleRendererComponent>();
+                	so.AddComponent<CircleCollider2DComponent>();
+                }
 
         		ImGui::EndPopup();
         	}
