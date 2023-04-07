@@ -1,6 +1,6 @@
 Scene: Untitled
 Entities:
-  - Entity: 15746643262301652896
+  - Entity: 3196923954564580370
     TagComponent:
       Tag: Ground
     TransformComponent:
@@ -23,7 +23,7 @@ Entities:
       Friction: 0.100000001
       Bounciness: 1
       BouncinessThreshold: 0.5
-  - Entity: 5327413187562390139
+  - Entity: 1004791805422216064
     TagComponent:
       Tag: Camera
     TransformComponent:
@@ -42,7 +42,7 @@ Entities:
       Primary: true
       FixedAspectRatio: false
       ClearColor: [0.300000012, 0.300000012, 0.300000012, 1]
-  - Entity: 18209802136596456237
+  - Entity: 5654520262347526870
     TagComponent:
       Tag: object
     TransformComponent:
@@ -65,7 +65,7 @@ Entities:
       Friction: 0
       Bounciness: 0
       BouncinessThreshold: 0.5
-  - Entity: 5273979529815378143
+  - Entity: 5215930872971413839
     TagComponent:
       Tag: Ground
     TransformComponent:
@@ -88,7 +88,7 @@ Entities:
       Friction: 0.100000001
       Bounciness: 1
       BouncinessThreshold: 0.5
-  - Entity: 4643063370622494951
+  - Entity: 3566590226466486901
     TagComponent:
       Tag: Circle
     TransformComponent:
@@ -102,7 +102,7 @@ Entities:
       Texture: Assets\textures\Default.png
       Tiling: [1, 1]
       Offset: [0, 0]
-  - Entity: 6517707329928658377
+  - Entity: 4997067896412829407
     TagComponent:
       Tag: Circle
     TransformComponent:
@@ -116,7 +116,7 @@ Entities:
       Texture: Assets\textures\Default.png
       Tiling: [1, 1]
       Offset: [0, 0]
-  - Entity: 2302577740059617035
+  - Entity: 1163571084017152899
     TagComponent:
       Tag: Circle
     TransformComponent:
@@ -130,12 +130,12 @@ Entities:
       Texture: Assets\textures\Default.png
       Tiling: [1, 1]
       Offset: [0, 0]
-  - Entity: 3972446579114684554
+  - Entity: 11965614157958615189
     TagComponent:
       Tag: Circle
     TransformComponent:
       Position: [3.46132755, 1.05728245, 0]
-      Rotation: [0, 0, 0]
+      Rotation: [0, 0, 54.2999992]
       Scale: [3, 3, 1]
     CircleRendererComponent:
       Thickness: 1
@@ -149,8 +149,8 @@ Entities:
       Gravity scale: 1
       Fixed rotation: false
     CircleCollider2DComponent:
-      Radius: 0.5
-      Offset: [0, 0]
+      Radius: 2.3499999
+      Offset: [5, 13.8999996]
       Density: 1
       Friction: 0
       Bounciness: 0

@@ -1264,12 +1264,12 @@ namespace Mirage
 					auto [t, cc2d] = view.get<TransformComponent, CircleCollider2DComponent>(entity);
 					Vec3 position = t.Position() + Vec3(cc2d.Offset, 0.0f);
 					Vec3 scale = t.Scale() * cc2d.Radius * 2.0f;
-					float thickness = 0.1f / scale.x + 0.1f;
-					scale += 0.05f;
 					
-					Mat4 tr = glm::translate(Mat4(1.0f), position) *
-						glm::scale(Mat4(1.0f), scale);
-					Renderer2D::Draw::Circle(tr, {0.77f, 1.0f, 0.27f, 1.0f}, thickness, 0.0f, -1);
+					Mat4 transform = glm::translate(glm::mat4(1.0f), t.WorldPosition())
+						* glm::rotate(glm::mat4(1.0f), Radians(t.WorldRotation().z), glm::vec3(0.0f, 0.0f, 1.0f))
+						* glm::translate(glm::mat4(1.0f),  Vec3(cc2d.Offset, 0.0f))
+						* glm::scale(glm::mat4(1.0f), scale);
+					Renderer2D::Draw::Circle(transform, {0.77f, 1.0f, 0.27f, 1.0f}, 0.1f, 0.0f, -1);
 				}
 			}
 			//Rendering box colliders
