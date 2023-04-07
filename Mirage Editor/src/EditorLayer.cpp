@@ -59,7 +59,7 @@ namespace Mirage
 
 		m_ActiveScene = CreateRef<Scene>();
 
-		auto commandLineArgs = Application::Get().GetCommandLineArgs();
+		auto commandLineArgs = Application::Get().GetSpecification().CommandLineArgs;
 		if (commandLineArgs.Count > 1)
 		{
 			auto sceneFilePath = commandLineArgs[1];
@@ -1278,8 +1278,14 @@ namespace Mirage
 				for (auto entity : view)
 				{
 					auto [t, bc2d] = view.get<TransformComponent, BoxCollider2DComponent>(entity);
-					// Mat4 tr = glm::translate(t.GetTransform(), Vec3(0.0f, 0.0f, 0.001f));
-					Renderer2D::Draw::Rect(t.GetTransform(), {0.77f, 1.0f, 0.27f, 1.0f}, -1);
+
+					Vec3 scale = t.WorldScale() * Vec3(bc2d.Size * 2.0f, 1.0f);
+					
+					Mat4 transform = glm::translate(glm::mat4(1.0f), t.WorldPosition())
+						* glm::rotate(glm::mat4(1.0f), Radians(t.WorldRotation().z), glm::vec3(0.0f, 0.0f, 1.0f))
+						* glm::translate(glm::mat4(1.0f),  Vec3(bc2d.Offset, 0.0f))
+						* glm::scale(glm::mat4(1.0f), scale);
+					Renderer2D::Draw::Rect(transform, {0.77f, 1.0f, 0.27f, 1.0f}, -1);
 				}
 			}
 		}

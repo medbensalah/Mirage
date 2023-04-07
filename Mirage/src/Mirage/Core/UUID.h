@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include <xhash>
-
 namespace Mirage
 {
 	class UUID
@@ -20,12 +18,13 @@ namespace Mirage
 
 namespace std
 {
+	template <typename T> struct hash;
 	template<>
 	struct hash<Mirage::UUID>
 	{
 		size_t operator()(const Mirage::UUID& uuid) const
 		{
-			return hash<uint64_t>()((uint64_t)uuid);
+			return (uint64_t)uuid;
 		}
 	};
 }

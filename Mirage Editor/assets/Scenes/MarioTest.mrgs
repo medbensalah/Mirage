@@ -1,6 +1,6 @@
 Scene: Untitled
 Entities:
-  - Entity: 6069966518413687380
+  - Entity: 15746643262301652896
     TagComponent:
       Tag: Ground
     TransformComponent:
@@ -23,7 +23,7 @@ Entities:
       Friction: 0.100000001
       Bounciness: 1
       BouncinessThreshold: 0.5
-  - Entity: 12136891126685873769
+  - Entity: 5327413187562390139
     TagComponent:
       Tag: Camera
     TransformComponent:
@@ -42,16 +42,16 @@ Entities:
       Primary: true
       FixedAspectRatio: false
       ClearColor: [0.300000012, 0.300000012, 0.300000012, 1]
-  - Entity: 16762328767719085719
+  - Entity: 18209802136596456237
     TagComponent:
       Tag: object
     TransformComponent:
-      Position: [-13.925477, 13.3024988, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1.73000002, 1.73000002, 1.73000002]
+      Position: [-10.5, 9.5, 0]
+      Rotation: [0, 0, 41.0999985]
+      Scale: [1, 1, 1]
     SpriteRendererComponent:
       Color: [1, 1, 1, 1]
-      Texture: Assets\textures\Mario.png
+      Texture: Assets\textures\Default.png
       Tiling: [1, 1]
       Offset: [0, 0]
     RigidBody2DComponent:
@@ -59,13 +59,13 @@ Entities:
       Gravity scale: 1
       Fixed rotation: false
     BoxCollider2DComponent:
-      Size: [0.5, 0.5]
-      Offset: [0, 0]
+      Size: [1.70000005, 0.5]
+      Offset: [5.30000019, -1.60000002]
       Density: 10
       Friction: 0
       Bounciness: 0
       BouncinessThreshold: 0.5
-  - Entity: 11684846542094022864
+  - Entity: 5273979529815378143
     TagComponent:
       Tag: Ground
     TransformComponent:
@@ -88,7 +88,7 @@ Entities:
       Friction: 0.100000001
       Bounciness: 1
       BouncinessThreshold: 0.5
-  - Entity: 16766549981885236599
+  - Entity: 4643063370622494951
     TagComponent:
       Tag: Circle
     TransformComponent:
@@ -102,7 +102,7 @@ Entities:
       Texture: Assets\textures\Default.png
       Tiling: [1, 1]
       Offset: [0, 0]
-  - Entity: 9543886489060032004
+  - Entity: 6517707329928658377
     TagComponent:
       Tag: Circle
     TransformComponent:
@@ -116,7 +116,7 @@ Entities:
       Texture: Assets\textures\Default.png
       Tiling: [1, 1]
       Offset: [0, 0]
-  - Entity: 11783912417269053184
+  - Entity: 2302577740059617035
     TagComponent:
       Tag: Circle
     TransformComponent:
@@ -130,7 +130,7 @@ Entities:
       Texture: Assets\textures\Default.png
       Tiling: [1, 1]
       Offset: [0, 0]
-  - Entity: 17714485146856727294
+  - Entity: 3972446579114684554
     TagComponent:
       Tag: Circle
     TransformComponent:
