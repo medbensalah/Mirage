@@ -23,11 +23,18 @@ namespace Mirage
             return Args[index];
         }
     };
+
+	struct ApplicationSpecification
+	{
+		std::string Name = "Mirage";
+		std::filesystem::path WorkingDirectory;
+		ApplicationCommandLineArgs CommandLineArgs;
+	};
     
     class Application
     {
     public:
-        Application(const std::string& name = "Mirage", ApplicationCommandLineArgs args = ApplicationCommandLineArgs());
+        Application(const ApplicationSpecification& specification);
         virtual ~Application();
 
         void OnEvent(Event& e);
@@ -48,7 +55,7 @@ namespace Mirage
 
         inline static float GetDeltaTime() { return s_Instance->time.DeltaTime; }
         
-        ApplicationCommandLineArgs GetCommandLineArgs() const { return m_CommandLineArgs; }
+        const ApplicationSpecification& GetSpecification() const { return m_Specification; }
     private:
         void Run();
 
@@ -56,7 +63,7 @@ namespace Mirage
         bool OnWindowResize(WindowResizeEvent& e);
 
     private:
-        ApplicationCommandLineArgs m_CommandLineArgs;
+        ApplicationSpecification m_Specification;
         
         LayerStack m_LayerStack;
 

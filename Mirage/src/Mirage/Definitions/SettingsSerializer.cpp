@@ -6,6 +6,7 @@
 #include "Paths.h"
 #include "Physics.h"
 #include "Mirage/Core/Application.h"
+#include "Mirage/Renderer/Renderer2D.h"
 
 namespace Mirage
 {
@@ -29,6 +30,11 @@ namespace Mirage
 				out << YAML::Key << "Window";
 				out << YAML::Value << YAML::BeginMap;
 					out << YAML::Key << "VSync" << YAML::Value << Application::Get().GetWindow().IsVSync();
+				out << YAML::EndMap;
+		
+				out << YAML::Key << "Debug";
+				out << YAML::Value << YAML::BeginMap;
+					out << YAML::Key << "Line width" << YAML::Value << Renderer2D::Draw::GetLineWidth();
 				out << YAML::EndMap;
 			out << YAML::EndMap;
 		out << YAML::EndMap;
@@ -76,6 +82,13 @@ namespace Mirage
 					auto vsync = window["VSync"];
 					if (vsync)
 						Application::Get().GetWindow().SetVSync(vsync.as<bool>());
+				}
+				auto debug = settings["Debug"];
+				if (debug)
+				{
+					auto lineWidth = debug["Line width"];
+					if (lineWidth)
+						Renderer2D::Draw::SetLineWidth(lineWidth.as<float>());
 				}
 			}
 		}

@@ -25,6 +25,8 @@ namespace Mirage
 		float m_RightPanelSize;
 		float m_SeparatorThickness = 8.0f;
 
+		float m_lineWidth = 4.0f;
+
 		std::unordered_map<int, std::string> m_Entries =
 		{
 			{0, "Physics"},

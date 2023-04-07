@@ -8,7 +8,8 @@
 class Sandbox : public Mirage::Application
 {
 public:
-    Sandbox(Mirage::ApplicationCommandLineArgs args)
+    Sandbox(const Mirage::ApplicationSpecification& specification)
+	    : Mirage::Application(specification)
     {
         // PushLayer(new ExampleLayer());
         PushLayer(new Sandbox2D());
@@ -21,5 +22,11 @@ public:
 
 Mirage::Application* Mirage::CreateApplication(Mirage::ApplicationCommandLineArgs args)
 {
-	return new Sandbox(args);
+	ApplicationSpecification specification;
+	
+	specification.Name = "Sandbox";
+	specification.WorkingDirectory = "../Mirage Editor";
+	specification.CommandLineArgs = args;
+	
+	return new Sandbox(specification);
 }

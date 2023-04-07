@@ -8,6 +8,7 @@
 #include "Mirage/Definitions/SettingsSerializer.h"
 #include "Mirage/ImGui/Extensions/Splitter.h"
 #include "Mirage/ImGui/Extensions/DrawingAPI.h"
+#include "Mirage/Renderer/Renderer2D.h"
 
 namespace Mirage
 {
@@ -106,6 +107,13 @@ namespace Mirage
 				DrawSplitUIItem("Hierarchy debug mode", [](){
 					return ImGui::Checkbox("##HierarchyDebug", &Debug::HierarchyDebug);
 				});
+				if(DrawSplitUIItem("Debug line width", [this](){
+					m_lineWidth = Renderer2D::Draw::GetLineWidth();
+					return ImGui::DragFloat("##DebugLineWidth", &m_lineWidth, 0.05f, 0.0f, 0.0f);
+				}))
+				{
+					Renderer2D::Draw::SetLineWidth(m_lineWidth);
+				}
 			}
 			break;
 		}

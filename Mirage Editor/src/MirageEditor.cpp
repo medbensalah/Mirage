@@ -8,8 +8,8 @@ namespace Mirage
     class MirageEditor : public Application
     {
     public:
-        MirageEditor(ApplicationCommandLineArgs args)
-            : Application("Mirage Editor", args)
+        MirageEditor(ApplicationSpecification specification)
+            : Application(specification)
         {
             PushLayer(new EditorLayer());
         }
@@ -21,6 +21,12 @@ namespace Mirage
 
     Application* CreateApplication(ApplicationCommandLineArgs args)
     {
-        return new MirageEditor(args);
+    	ApplicationSpecification specification;
+	
+    	specification.Name = "Mirage Editor";
+    	specification.WorkingDirectory = std::filesystem::current_path();
+    	specification.CommandLineArgs = args;
+	
+        return new MirageEditor(specification);
     }
 }

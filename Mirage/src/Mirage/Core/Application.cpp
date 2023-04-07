@@ -11,14 +11,21 @@ namespace Mirage
 {
     Application* Application::s_Instance = nullptr;
 
-    Application::Application(const std::string& name, ApplicationCommandLineArgs args)
-        : m_CommandLineArgs(args)
+    Application::Application(const ApplicationSpecification& specification)
+        : m_Specification(specification)
     {
         MRG_PROFILE_FUNCTION();
         
         MRG_CORE_ASSERT(!s_Instance, "Application already exists!");
         s_Instance = this;
-        m_Window = Window::Create(WindowProperties(name));
+
+		// Set working directory
+        if (!specification.WorkingDirectory.empty())
+        {
+			std::filesystem::current_path(specification.WorkingDirectory);
+        }
+    	
+        m_Window = Window::Create(WindowProperties(specification.Name));
         m_Window->SetEventCallback(MRG_BIND_EVENT_FN(Application::OnEvent));
 
         m_Window->SetVSync(false);

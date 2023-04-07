@@ -7,3 +7,5 @@ Settings:
     PositionIterations: 3
   Window:
     VSync: false
+  Debug:
+    Line width: 3
