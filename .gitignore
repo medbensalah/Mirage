@@ -1,6 +1,8 @@
 # Binaries
 **/bin/
 **/bin-int/
+bin-int/
+intermediates/
 
 # Mirage files
 *.log
@@ -11,6 +13,7 @@
 **.vcxproj
 **.vcxproj.filters
 **.vcxproj.user
+**.csproj
 **.json
 
 # Directories

@@ -25,6 +25,7 @@ namespace Mirage
 
 	void ScriptingEngine::Shutdown()
 	{
+		ShutdownMono();
 		delete s_Data;
 	}
 
@@ -150,9 +151,9 @@ namespace Mirage
 
 	void ScriptingEngine::ShutdownMono()
 	{
-		mono_domain_unload(s_Data->AppDomain);
+		// mono_domain_unload(s_Data->AppDomain);
 		s_Data->AppDomain = nullptr;
-		mono_jit_cleanup(s_Data->RootDomain);
+		// mono_jit_cleanup(s_Data->RootDomain);
 		s_Data->RootDomain = nullptr;
 	}
 
