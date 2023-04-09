@@ -1,6 +1,6 @@
 Scene: Untitled
 Entities:
-  - Entity: 3196923954564580370
+  - Entity: 5833671816948330068
     TagComponent:
       Tag: Ground
     TransformComponent:
@@ -23,7 +23,7 @@ Entities:
       Friction: 0.100000001
       Bounciness: 1
       BouncinessThreshold: 0.5
-  - Entity: 1004791805422216064
+  - Entity: 6790398966473303929
     TagComponent:
       Tag: Camera
     TransformComponent:
@@ -42,7 +42,7 @@ Entities:
       Primary: true
       FixedAspectRatio: false
       ClearColor: [0.300000012, 0.300000012, 0.300000012, 1]
-  - Entity: 5654520262347526870
+  - Entity: 15505606494138313452
     TagComponent:
       Tag: object
     TransformComponent:
@@ -59,13 +59,13 @@ Entities:
       Gravity scale: 1
       Fixed rotation: false
     BoxCollider2DComponent:
-      Size: [1.70000005, 0.5]
-      Offset: [5.30000019, -1.60000002]
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
       Density: 10
       Friction: 0
       Bounciness: 0
       BouncinessThreshold: 0.5
-  - Entity: 5215930872971413839
+  - Entity: 12358877541330568403
     TagComponent:
       Tag: Ground
     TransformComponent:
@@ -88,7 +88,7 @@ Entities:
       Friction: 0.100000001
       Bounciness: 1
       BouncinessThreshold: 0.5
-  - Entity: 3566590226466486901
+  - Entity: 2810850241011801650
     TagComponent:
       Tag: Circle
     TransformComponent:
@@ -102,7 +102,7 @@ Entities:
       Texture: Assets\textures\Default.png
       Tiling: [1, 1]
       Offset: [0, 0]
-  - Entity: 4997067896412829407
+  - Entity: 7917569280810956
     TagComponent:
       Tag: Circle
     TransformComponent:
@@ -116,7 +116,7 @@ Entities:
       Texture: Assets\textures\Default.png
       Tiling: [1, 1]
       Offset: [0, 0]
-  - Entity: 1163571084017152899
+  - Entity: 9243041504260256427
     TagComponent:
       Tag: Circle
     TransformComponent:
@@ -130,7 +130,7 @@ Entities:
       Texture: Assets\textures\Default.png
       Tiling: [1, 1]
       Offset: [0, 0]
-  - Entity: 11965614157958615189
+  - Entity: 2314324778588416902
     TagComponent:
       Tag: Circle
     TransformComponent:
@@ -149,8 +149,8 @@ Entities:
       Gravity scale: 1
       Fixed rotation: false
     CircleCollider2DComponent:
-      Radius: 2.3499999
-      Offset: [5, 13.8999996]
+      Radius: 0.50999999
+      Offset: [0, 0]
       Density: 1
       Friction: 0
       Bounciness: 0

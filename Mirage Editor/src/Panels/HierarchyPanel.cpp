@@ -50,6 +50,7 @@ namespace Mirage
 
     void HierarchyPanel::OnImGuiRender()
     {
+		m_IsOdd = true;
     	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
         if (ImGui::Begin("Outliner"))
         {
@@ -73,8 +74,6 @@ namespace Mirage
 
 	        	ImGui::Separator();
 	        }
-        	
-        	
 	        for (auto& h : m_Context->m_Hierarchy)
 			{
 				SceneObject so {h.second.m_entity, m_Context.get()};
@@ -134,11 +133,24 @@ namespace Mirage
         auto& tag = so.GetComponent<TagComponent>().Tag;
 
         ImGuiTreeNodeFlags flags =
-            ImGuiTreeNodeFlags_SpanFullWidth |
+            ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_Framed |
             (so.GetChildCount() ? ImGuiTreeNodeFlags_OpenOnArrow : ImGuiTreeNodeFlags_Leaf) |
             ((m_SelectionContext == so) ? ImGuiTreeNodeFlags_Selected : 0);
 
+        // change color of odd and even rows
+        if (m_SelectionContext != so)
+        {
+	        ImGui::PushStyleColor(ImGuiCol_Header,
+	                              m_IsOdd ? ImVec4(0.2f, 0.2f, 0.2f, 1.0f) : ImVec4(0.125f, 0.125f, 0.125f, 1.0f));
+        }
+
         bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)so, flags, tag.c_str());
+        if (m_SelectionContext != so)
+        {
+	        ImGui::PopStyleColor();
+        }
+        m_IsOdd = !m_IsOdd;
+
 
         if (ImGui::IsItemClicked())
         {
@@ -146,8 +158,7 @@ namespace Mirage
         }
 
         bool entityDeleted = false;
-        
-        
+    	
         if(ImGui::BeginPopupContextItem())
         {
             if(ImGui::MenuItem("Delete SceneObject"))

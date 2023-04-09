@@ -33,6 +33,17 @@ group "Dependencies"
     include "Mirage/vendor/yaml-cpp"
 group ""
 
-include "Mirage"
-include "Sandbox"
-include "Mirage Editor"
+group "Core"
+	include "Mirage"
+	include "Mirage-Scripting-Core"
+group ""
+
+
+group "Tools"
+	include "Mirage Editor"
+group ""
+
+
+group "Misc"
+	include "Sandbox"
+group ""

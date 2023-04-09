@@ -27,6 +27,7 @@ namespace Mirage
             void DrawEntityNode(SceneObject so);
             void DrawComponents(SceneObject so);
     private:
+    	bool m_IsOdd = true;
         Ref<Scene> m_Context;
 
         SceneObject m_SelectionContext;

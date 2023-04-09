@@ -1,0 +1,6 @@
+D:\dev\Mirage\Mirage Editor\Resources\Scripts\intermediates\Release\Mirage-Scripting-Core.csproj.AssemblyReference.cache
+D:\dev\Mirage\Mirage Editor\Resources\Scripts\intermediates\Release\Mirage-Scripting-Core.csproj.CoreCompileInputs.cache
+D:\dev\Mirage\Mirage Editor\Resources\Scripts\intermediates\Release\Mirage-Scripting-Core.dll
+D:\dev\Mirage\Mirage Editor\Resources\Scripts\intermediates\Release\Mirage-Scripting-Core.pdb
+D:\dev\Mirage\Mirage Editor\Resources\Scripts\Mirage-Scripting-Core.dll
+D:\dev\Mirage\Mirage Editor\Resources\Scripts\Mirage-Scripting-Core.pdb
