@@ -11,7 +11,6 @@
         <option value="$PROJECT_DIR$/bin" />
         <option value="$PROJECT_DIR$/bin-int" />
         <option value="$PROJECT_DIR$/vendor" />
-        <option value="$PROJECT_DIR$/Mirage/vendor" />
       </list>
     </option>
   </component>
