@@ -23,11 +23,11 @@ namespace Mirage
 		[MethodImpl(MethodImplOptions.InternalCall)]
 		internal extern static void CppLogFuncVec3(ref Vector3 vec);
 	}
-	public class Main
+	public class SceneObject
 	{
 		public float FloatVar { get; set; }
 
-		public Main()
+		public SceneObject()
 		{
 			Console.WriteLine("Main constructor");
 			
@@ -57,7 +57,7 @@ namespace Mirage
 			Console.WriteLine($"{message} from C# Main");
 		}
 
-		~Main()
+		~SceneObject()
 		{
 			Console.WriteLine("Main destructor");
 		}

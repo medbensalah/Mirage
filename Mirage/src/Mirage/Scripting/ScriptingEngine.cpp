@@ -24,7 +24,7 @@ namespace Mirage
 
 			std::streampos end = stream.tellg();
 			stream.seekg(0, std::ios::beg);
-			uint32_t size = end - stream.tellg();
+			uint64_t size = end - stream.tellg();
 
 			if (size == 0)
 			{
@@ -81,6 +81,8 @@ namespace Mirage
 		}
 	}
 
+
+
 	struct ScriptEngineData
 	{
 		MonoDomain* RootDomain = nullptr;
@@ -88,9 +90,12 @@ namespace Mirage
 
 		MonoAssembly* CoreAssembly = nullptr;
 		MonoImage* CoreAssemblyImage = nullptr;
+
+		ScriptClass SceneObjectClass;
 	};
 
 	static ScriptEngineData* s_Data = nullptr;
+
 
 	void ScriptingEngine::Init()
 	{
@@ -101,37 +106,38 @@ namespace Mirage
 
 		ScriptGlue::RegisterFunctions();
 
-		MonoClass* monoClass = mono_class_from_name(s_Data->CoreAssemblyImage, "Mirage", "Main");
+		s_Data->SceneObjectClass = ScriptClass("Mirage", "SceneObject");
+
 		// 1. Create object
-		MonoObject* instance = mono_object_new(s_Data->AppDomain, monoClass);
-		mono_runtime_object_init(instance);
+		MonoObject* instance = s_Data->SceneObjectClass.Instantiate();
 
 		// 2. Call function
-		MonoMethod* printMessage = mono_class_get_method_from_name(monoClass, "PrintMessage", 0);
+		MonoMethod* printMessage = s_Data->SceneObjectClass.GetMethod("PrintMessage", 0);
+		s_Data->SceneObjectClass.InvokeMethod(instance, printMessage);
 		mono_runtime_invoke(printMessage, instance, nullptr, nullptr);
 
 		// 3. Call function with parameters
-		MonoMethod* prinInt = mono_class_get_method_from_name(monoClass, "PrintInt", 1);
+		MonoMethod* prinInt = s_Data->SceneObjectClass.GetMethod("PrintInt", 1);
 		int val = 5;
 		void* params[1] = {
 			&val
 		};
-		mono_runtime_invoke(prinInt, instance, params, nullptr);
+		s_Data->SceneObjectClass.InvokeMethod(instance, prinInt, params);
 
 
-		MonoMethod* prinInts = mono_class_get_method_from_name(monoClass, "PrintInts", 2);
+		MonoMethod* prinInts = s_Data->SceneObjectClass.GetMethod("PrintInts", 2);
 		int val1 = 15;
 		int val2 = 51;
 		void* params2[2] = {
 			&val1, &val2
 		};
-		mono_runtime_invoke(prinInts, instance, params2, nullptr);
+		s_Data->SceneObjectClass.InvokeMethod(instance, prinInts, params2);
 
 		MonoString* monoStr = mono_string_new(s_Data->AppDomain, "Hello World from C++");
-		MonoMethod* printCustomMessage = mono_class_get_method_from_name(monoClass, "PrintCustomMessage", 1);
+		MonoMethod* printCustomMessage = s_Data->SceneObjectClass.GetMethod("PrintCustomMessage", 1);
 
 		void* strParam = monoStr;
-		mono_runtime_invoke(printCustomMessage, instance, &strParam, nullptr);
+		s_Data->SceneObjectClass.InvokeMethod(instance, printCustomMessage, &strParam);
 	}
 
 	void ScriptingEngine::Shutdown()
@@ -170,5 +176,32 @@ namespace Mirage
 		MonoImage* assemblyImage = mono_assembly_get_image(s_Data->CoreAssembly);
 		s_Data->CoreAssemblyImage = assemblyImage;
 		// Utils::PrintAssemblyTypes(s_Data->CoreAssembly);
+	}
+
+	MonoObject* ScriptingEngine::InstantiateClass(MonoClass* monoClass)
+	{
+		MonoObject* instance = mono_object_new(s_Data->AppDomain, monoClass);
+		mono_runtime_object_init(instance);
+		return instance;
+	}
+	
+	ScriptClass::ScriptClass(const std::string& nameSpace, const std::string& name)
+		: m_NameSpace(nameSpace), m_Name(name)
+	{
+		m_Class = mono_class_from_name(s_Data->CoreAssemblyImage, m_NameSpace.c_str(), m_Name.c_str());
+	}
+
+	MonoObject* ScriptClass::Instantiate()
+	{
+		return ScriptingEngine::InstantiateClass(m_Class);
+	}
+	MonoMethod* ScriptClass::GetMethod(const std::string& name, int numParams)
+	{
+		return mono_class_get_method_from_name(m_Class, name.c_str(), numParams);
+	}
+
+	MonoObject* ScriptClass::InvokeMethod(MonoObject* instance, MonoMethod* method, void** params)
+	{
+		return mono_runtime_invoke(method, instance, params, nullptr);
 	}
 }
