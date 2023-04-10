@@ -12,15 +12,15 @@ namespace Mirage
 	static void CppLogFunc(MonoString* CSstr, int val)
 	{
 		char* cstr = mono_string_to_utf8(CSstr);
-		mono_free(cstr);
 		std::string str(cstr);
+		mono_free(cstr);
 		MRG_CORE_INFO("C++ logging from C# call: {} {}", str, val);
 	}
 
 	static void CppLogFuncVec3(Vec3* vec, Vec3* outVal)
 	{
 		MRG_CORE_INFO("C++ logging from C# call vec: {}", *vec);
-		*outVal = glm::cross(*vec, Vec3(vec->x, vec->y, -vec->z));
+		// *outVal = glm::cross(*vec, Vec3(vec->x, vec->y, -vec->z));
 	}
 
 	void ScriptGlue::RegisterFunctions()

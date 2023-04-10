@@ -91,7 +91,7 @@ namespace Mirage
         	{
         		if(ImGui::MenuItem("Create empty SceneObject"))
         		{
-        			m_Context->CreateSceneObject("new SceneObject");
+        			SceneObject so = m_Context->CreateSceneObject("new SceneObject");
         		}
                 else if (ImGui::MenuItem("Create Camera"))
                 {
@@ -182,11 +182,13 @@ namespace Mirage
         
         if (opened)
         {
+        	ImGui::Indent(45.0f);
 	        auto v = &so.GetComponent<HierarchyComponent>().m_ChildrenSet;
 	        for (auto child : *v)
 	        {
 		        DrawEntityNode({child.m_entity, m_Context.get()});
 	        }
+        		        ImGui::Unindent(45.0f);
 
 	        ImGui::TreePop();
         }

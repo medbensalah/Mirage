@@ -226,14 +226,17 @@ namespace Mirage
 		sceneObject.AddComponent<IDComponent>(uuid);
 		sceneObject.AddComponent<HierarchyComponent>();
 
+		auto& tag = sceneObject.AddComponent<TagComponent>();
+		tag.Tag = name.empty() ? "Entity" : name;
+		
+		auto& tr = sceneObject.AddComponent<TransformComponent>(this);
+		// for some reason it does not work without this line
+		tr.GetTransform();
+		
 		auto& hierarchy = sceneObject.GetComponent<HierarchyComponent>();
 		hierarchy.m_Index = m_Hierarchy.size();
 		m_Hierarchy[hierarchy.m_Index] = hierarchy;
 		
-        auto& tag = sceneObject.AddComponent<TagComponent>();
-        auto& transform = sceneObject.AddComponent<TransformComponent>(this);
-        tag.Tag = name.empty() ? "Entity" : name;
-        
         return sceneObject;
     }
 

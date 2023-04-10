@@ -395,7 +395,7 @@ namespace Mirage
                 if (tagComponent)
                     tag = tagComponent["Tag"].as<std::string>();
                 
-                SceneObject childSo = so.GetScene()->CreateChildSceneObject(so, tag);
+                SceneObject childSo = so.GetScene()->CreateChildSceneObjectWithUUID(uuid, so, tag);
                 
                 DeserializeSceneObject(child, childSo);
             }
@@ -460,7 +460,7 @@ namespace Mirage
                if (tagComponent)
                    tag = tagComponent["Tag"].as<std::string>();
     
-               SceneObject so = m_Scene->CreateSceneObject(tag);
+               SceneObject so = m_Scene->CreateSceneObjectWithUUID(uuid, tag);
                result &= DeserializeSceneObject(entity, so);
            }
         }

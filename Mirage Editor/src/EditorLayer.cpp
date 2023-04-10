@@ -1243,16 +1243,12 @@ namespace Mirage
 
 	void EditorLayer::OnOverlayRender()
 	{
+		//disable depth test
+		glDisable(GL_DEPTH_TEST);
 		// TODO: refactor after adding render passes to make them show on top
 		// TODO: and the selection outline ttopmost
 		
 		Renderer2D::BeginScene(m_EditorCamera);
-
-		// Draw selected sceneObject outline
-		if (SceneObject selectedEntity = m_HierarchyPanel.GetSelectedSO()) {
-			TransformComponent transform = selectedEntity.GetComponent<TransformComponent>();
-			Renderer2D::Draw::Rect(transform.GetTransform(), {1.0f, 0.6f, 0.23f, 1.0f});
-		}
 		
 		if (m_ShowPhysicsColliders)
 		{
@@ -1269,7 +1265,8 @@ namespace Mirage
 						* glm::rotate(glm::mat4(1.0f), Radians(t.WorldRotation().z), glm::vec3(0.0f, 0.0f, 1.0f))
 						* glm::translate(glm::mat4(1.0f),  Vec3(cc2d.Offset, 0.0f))
 						* glm::scale(glm::mat4(1.0f), scale);
-					Renderer2D::Draw::Circle(transform, {0.77f, 1.0f, 0.27f, 1.0f}, 0.1f, 0.0f, -1);
+					float thickness = 0.05f / scale.x * Renderer2D::Draw::GetLineWidth();
+					Renderer2D::Draw::Circle(transform, {0.77f, 1.0f, 0.27f, 1.0f}, thickness, 0.0f, -1);
 				}
 			}
 			//Rendering box colliders
@@ -1289,8 +1286,17 @@ namespace Mirage
 				}
 			}
 		}
+
+		// Draw selected sceneObject outline
+		SceneObject so = m_HierarchyPanel.GetSelectedSO();
+		if (so) {
+			TransformComponent transform = so.GetComponent<TransformComponent>();
+			Renderer2D::Draw::Rect(transform.GetTransform(), {1.0f, 0.6f, 0.23f, 1.0f});
+		}
+		
 		
 		Renderer2D::EndScene();
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	void EditorLayer::DuplicateSelected()
