@@ -1,6 +1,6 @@
 Settings:
   Physics:
-    UpdateEveryFrame: false
+    UpdateEveryFrame: true
     FPS: 60
     Gravity: -9.80000019
     VelocityIterations: 8
@@ -8,4 +8,4 @@ Settings:
   Window:
     VSync: false
   Debug:
-    Line width: 3
+    Line width: 2

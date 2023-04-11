@@ -11,6 +11,7 @@
 #include "Components/Rendering/SpriteRendererComponent.h"
 #include "Components/Rendering/CameraComponent.h"
 #include "Components/NativeScriptComponent.h"
+#include "Components/ScriptComponent.h"
 #include "Mirage/Renderer/Renderer2D.h"
 
 #include "box2d/b2_world.h"
@@ -21,6 +22,7 @@
 #include "Components/AllComponents.h"
 #include "Components/Base/HierarchyComponent.h"
 #include "Mirage/Definitions/Physics.h"
+#include "Mirage/Scripting/ScriptingEngine.h"
 
 namespace Mirage
 {
@@ -262,11 +264,26 @@ namespace Mirage
     void Scene::OnRuntimeStart()
     {
 		OnPhysics2DInit();
+
+		//scripts
+		{
+			ScriptingEngine::OnRuntimeStart(this);
+			//instantiae all script behaviors
+			auto view = m_Registry.view<ScriptComponent>();
+			for (auto e : view)
+			{
+				SceneObject so = {e, this};
+				ScriptingEngine::OnCreateBehavior(so);
+			}
+		}
     }
 
     void Scene::OnRuntimeStop()
     {
 	    OnPhysics2DStop();
+
+		//scripts
+		ScriptingEngine::OnRuntimeStop();
     }
 
     void Scene::OnSimulationStart()
@@ -287,6 +304,19 @@ namespace Mirage
     void Scene::OnUpdateRuntime(float DeltaTime)
     {
         // ---------------- Update scripts ----------------
+
+		//scripts
+		{
+			// C# behavior OnUpdate
+			auto view = m_Registry.view<ScriptComponent>();
+			for (auto e : view)
+			{
+				SceneObject so = {e, this};
+				ScriptingEngine::OnUpdateBehavior(so, DeltaTime);
+			}
+		}
+
+		// native scripts
         {
             m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
             {
@@ -649,6 +679,10 @@ namespace Mirage
     }
     template <>
     void Scene::OnComponentAdded(SceneObject& entity, NativeScriptComponent& component)
+    {
+    }
+    template <>
+    void Scene::OnComponentAdded(SceneObject& entity, ScriptComponent& component)
     {
     }
 	

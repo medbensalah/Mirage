@@ -2,6 +2,8 @@
 
 #include "ScriptingEngine.h"
 #include "ScriptGlue.h"
+#include "Mirage/ECS/SceneObject.h"
+#include "Mirage/ECS/Components/ScriptComponent.h"
 
 #include "Mirage/Math/glmTypes.h"
 #include "mono/jit/jit.h"
@@ -40,7 +42,6 @@ namespace Mirage
 			return buffer;
 		}
 
-
 		void PrintAssemblyTypes(MonoAssembly* assembly)
 		{
 			MonoImage* image = mono_assembly_get_image(assembly);
@@ -51,6 +52,7 @@ namespace Mirage
 			{
 				uint32_t cols[MONO_TYPEDEF_SIZE];
 				mono_metadata_decode_row(typeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE);
+
 
 				const char* nameSpace = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
 				const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
@@ -82,7 +84,6 @@ namespace Mirage
 	}
 
 
-
 	struct ScriptEngineData
 	{
 		MonoDomain* RootDomain = nullptr;
@@ -91,7 +92,13 @@ namespace Mirage
 		MonoAssembly* CoreAssembly = nullptr;
 		MonoImage* CoreAssemblyImage = nullptr;
 
-		ScriptClass SceneObjectClass;
+		ScriptClass BehaviorClass;
+
+		std::unordered_map<std::string, Ref<ScriptClass>> BehaviorClasses;
+		std::unordered_map<UUID, Ref<ScriptInstance>> BehaviorInstances;
+
+		//Runtime
+		Scene* SceneContext = nullptr;
 	};
 
 	static ScriptEngineData* s_Data = nullptr;
@@ -103,41 +110,45 @@ namespace Mirage
 		InitMono();
 
 		LoadAssembly("Resources/Scripts/Mirage-Scripting-Core.dll");
-
+		LoadAssemblyClasses(s_Data->CoreAssembly);
+		//DEBUG ONLY	
+		// auto& classes = s_Data->BehaviorClasses;
 		ScriptGlue::RegisterFunctions();
 
-		s_Data->SceneObjectClass = ScriptClass("Mirage", "SceneObject");
+
+#if 0
+		s_Data->BehaviorClass = ScriptClass("Mirage", "Behavior");
 
 		// 1. Create object
-		MonoObject* instance = s_Data->SceneObjectClass.Instantiate();
+		MonoObject* instance = s_Data->BehaviorClass.Instantiate();
 
 		// 2. Call function
-		MonoMethod* printMessage = s_Data->SceneObjectClass.GetMethod("PrintMessage", 0);
-		s_Data->SceneObjectClass.InvokeMethod(instance, printMessage);
-		mono_runtime_invoke(printMessage, instance, nullptr, nullptr);
+		MonoMethod* printMessage = s_Data->BehaviorClass.GetMethod("PrintMessage", 0);
+		s_Data->BehaviorClass.InvokeMethod(instance, printMessage);
 
 		// 3. Call function with parameters
-		MonoMethod* prinInt = s_Data->SceneObjectClass.GetMethod("PrintInt", 1);
+		MonoMethod* prinInt = s_Data->BehaviorClass.GetMethod("PrintInt", 1);
 		int val = 5;
 		void* params[1] = {
 			&val
 		};
-		s_Data->SceneObjectClass.InvokeMethod(instance, prinInt, params);
+		s_Data->BehaviorClass.InvokeMethod(instance, prinInt, params);
 
 
-		MonoMethod* prinInts = s_Data->SceneObjectClass.GetMethod("PrintInts", 2);
+		MonoMethod* prinInts = s_Data->BehaviorClass.GetMethod("PrintInts", 2);
 		int val1 = 15;
 		int val2 = 51;
 		void* params2[2] = {
 			&val1, &val2
 		};
-		s_Data->SceneObjectClass.InvokeMethod(instance, prinInts, params2);
+		s_Data->BehaviorClass.InvokeMethod(instance, prinInts, params2);
 
 		MonoString* monoStr = mono_string_new(s_Data->AppDomain, "Hello World from C++");
-		MonoMethod* printCustomMessage = s_Data->SceneObjectClass.GetMethod("PrintCustomMessage", 1);
+		MonoMethod* printCustomMessage = s_Data->BehaviorClass.GetMethod("PrintCustomMessage", 1);
 
 		void* strParam = monoStr;
-		s_Data->SceneObjectClass.InvokeMethod(instance, printCustomMessage, &strParam);
+		s_Data->BehaviorClass.InvokeMethod(instance, printCustomMessage, &strParam);
+#endif
 	}
 
 	void ScriptingEngine::Shutdown()
@@ -178,23 +189,104 @@ namespace Mirage
 		// Utils::PrintAssemblyTypes(s_Data->CoreAssembly);
 	}
 
+	void ScriptingEngine::OnRuntimeStart(Scene* scene)
+	{
+		s_Data->SceneContext = scene;
+	}
+
+	void ScriptingEngine::OnRuntimeStop()
+	{
+		s_Data->SceneContext = nullptr;
+		s_Data->BehaviorInstances.clear();
+	}
+
+	bool ScriptingEngine::ClassExists(const std::string& fullname)
+	{
+		return s_Data->BehaviorClasses.find(fullname) != s_Data->BehaviorClasses.end();
+	}
+
+	void ScriptingEngine::OnCreateBehavior(SceneObject so)
+	{
+		const auto& script = so.GetComponent<ScriptComponent>();
+		if (ClassExists(script.ClassName))
+		{
+			Ref<ScriptInstance> instance = CreateRef<ScriptInstance>(s_Data->BehaviorClasses[script.ClassName]);
+			s_Data->BehaviorInstances[so.GetUUID()] = instance;
+
+			instance->InvokeOnCreate();
+		}
+	}
+
+	void ScriptingEngine::OnUpdateBehavior(SceneObject so, float deltaTime)
+	{
+		UUID uuid = so.GetUUID();
+		MRG_CORE_ASSERT(s_Data->BehaviorInstances.find(uuid) != s_Data->BehaviorInstances.end(), "Behavior instance not found");
+
+		Ref<ScriptInstance> instance = s_Data->BehaviorInstances[uuid];
+		instance->InvokeOnUpdate(deltaTime);
+	}
+
+	std::unordered_map<std::string, Ref<ScriptClass>> ScriptingEngine::GetBehaviorClasses()
+	{
+		return s_Data->BehaviorClasses;
+	}
+
+
+	void ScriptingEngine::LoadAssemblyClasses(MonoAssembly* assembly)
+	{
+		s_Data->BehaviorClasses.clear();
+		
+		MonoImage* image = mono_assembly_get_image(assembly);
+		const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
+		int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
+		
+		MonoClass* soKlass = mono_class_from_name(image, "Mirage", "Behavior");
+
+		for (int32_t i = 0; i < numTypes; i++)
+		{
+			uint32_t cols[MONO_TYPEDEF_SIZE];
+			mono_metadata_decode_row(typeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE);
+			
+			const char* nameSpace = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
+			const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
+
+			MonoClass* klass = mono_class_from_name(image, nameSpace, name);
+			if (klass == soKlass)
+			{
+				continue;
+			}
+			if (mono_class_is_subclass_of(klass, soKlass, 0))
+			{
+				std::string fullname;
+				if (strlen(nameSpace) != 0)
+					fullname = fmt::format("{}.{}", nameSpace, name);
+				else
+					fullname = name;
+				MRG_CORE_TRACE(fullname);
+				s_Data->BehaviorClasses[fullname] = CreateRef<ScriptClass>(nameSpace, name);
+			}
+		}
+	}
+
 	MonoObject* ScriptingEngine::InstantiateClass(MonoClass* monoClass)
 	{
 		MonoObject* instance = mono_object_new(s_Data->AppDomain, monoClass);
 		mono_runtime_object_init(instance);
 		return instance;
 	}
-	
+
+#pragma region ScriptClass
 	ScriptClass::ScriptClass(const std::string& nameSpace, const std::string& name)
 		: m_NameSpace(nameSpace), m_Name(name)
 	{
 		m_Class = mono_class_from_name(s_Data->CoreAssemblyImage, m_NameSpace.c_str(), m_Name.c_str());
 	}
-
+	
 	MonoObject* ScriptClass::Instantiate()
 	{
 		return ScriptingEngine::InstantiateClass(m_Class);
 	}
+
 	MonoMethod* ScriptClass::GetMethod(const std::string& name, int numParams)
 	{
 		return mono_class_get_method_from_name(m_Class, name.c_str(), numParams);
@@ -204,4 +296,26 @@ namespace Mirage
 	{
 		return mono_runtime_invoke(method, instance, params, nullptr);
 	}
+#pragma endregion
+
+#pragma region ScriptClass
+	ScriptInstance::ScriptInstance(Ref<ScriptClass> scriptClass)
+		:m_ScriptClass(scriptClass)
+	{
+		m_Instance = m_ScriptClass->Instantiate();
+		m_OnCreateMethod = m_ScriptClass->GetMethod("OnCreate", 0);
+		m_OnUpdateMethod = m_ScriptClass->GetMethod("OnUpdate", 1);
+	}
+
+	void ScriptInstance::InvokeOnCreate()
+	{
+		m_ScriptClass->InvokeMethod(m_Instance, m_OnCreateMethod);
+	}
+
+	void ScriptInstance::InvokeOnUpdate(float deltaTime)
+	{
+		void* param = &deltaTime;
+		m_ScriptClass->InvokeMethod(m_Instance, m_OnUpdateMethod, &param);
+	}
+#pragma endregion
 }

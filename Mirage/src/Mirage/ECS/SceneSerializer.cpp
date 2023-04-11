@@ -4,6 +4,7 @@
 #include <yaml-cpp/yaml.h>
 
 #include "SceneObject.h"
+#include "Components/ScriptComponent.h"
 #include "Components/Base/TagComponent.h"
 #include "Components/Base/TransformComponent.h"
 #include "Components/Physics/BoxCollider2DComponent.h"
@@ -209,6 +210,17 @@ namespace Mirage
 
             out << YAML::EndMap;
         }
+        if (so.HasComponent<ScriptComponent>())
+        {
+            out << YAML::Key << "ScriptComponent";
+            out << YAML::BeginMap;
+
+            auto& scriptComponent = so.GetComponent<ScriptComponent>();
+        	
+            out << YAML::Key << "Name" << YAML::Value << scriptComponent.ClassName;
+
+            out << YAML::EndMap;
+        }
         if (so.HasComponent<SpriteRendererComponent>())
         {
             out << YAML::Key << "SpriteRendererComponent";
@@ -328,6 +340,12 @@ namespace Mirage
             cc.IsMain = cameraComponent["Primary"].as<bool>();
             cc.FixedAspectRatio = cameraComponent["FixedAspectRatio"].as<bool>();
             cc.Camera.SetClearColor(cameraComponent["ClearColor"].as<Vec4>());
+        }
+
+        if (auto scriptComponent = entity["ScriptComponent"])
+        {
+            auto& sc = so.AddComponent<ScriptComponent>();
+            sc.ClassName = scriptComponent["Name"].as<std::string>();
         }
 
         if (auto spriteRendererComponent = entity["SpriteRendererComponent"])

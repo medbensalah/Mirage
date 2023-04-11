@@ -13,10 +13,12 @@
 #include "Mirage/ImGui/Extensions/DrawingAPI.h"
 #include "Mirage/ImGui/Extensions/ButtonExtensions.h"
 #include "Mirage/Definitions/DragnDropPayloads.h"
+#include "Mirage/ECS/Components/ScriptComponent.h"
 #include "Mirage/ECS/Components/Physics/BoxCollider2DComponent.h"
 #include "Mirage/ECS/Components/Physics/CircleCollider2DComponent.h"
 #include "Mirage/ECS/Components/Physics/RigidBody2DComponent.h"
 #include "Mirage/ECS/Components/Rendering/CircleRendererComponent.h"
+#include "Mirage/Scripting/ScriptingEngine.h"
 
 namespace Mirage
 {
@@ -284,6 +286,7 @@ namespace Mirage
             if (ImGui::BeginPopup("AddComponent"))
             {
             	DisplayAddComponentEntry<CameraComponent>("Camera");
+            	DisplayAddComponentEntry<ScriptComponent>("Script");
             	DisplayAddComponentEntry<SpriteRendererComponent>("Sprite Renderer");
             	DisplayAddComponentEntry<CircleRendererComponent>("Circle Renderer");
             	DisplayAddComponentEntry<RigidBody2DComponent>("Rigidbody 2D");
@@ -433,6 +436,33 @@ namespace Mirage
 			}
         );
 
+
+    	DrawComponent<ScriptComponent>("Script", so, [&so](auto& component)
+			{
+    			bool scriptClassExists =  ScriptingEngine::ClassExists(component.ClassName);
+				const auto& behaviorClasses = ScriptingEngine::GetBehaviorClasses();
+    			
+    			static char buffer[64];
+    			strcpy_s(buffer, 64, component.ClassName.c_str());
+
+                if (!scriptClassExists)
+                {
+	                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{0.9f, 0.2f, 0.3f, 1.0f});
+                }
+				if(DrawSplitUIItem("Class", [&component]()-> bool
+				{
+					return ImGui::InputText("##ScriptClassName", buffer, 64, ImGuiInputTextFlags_EnterReturnsTrue);
+				}, typeid(ScriptComponent).name()))
+				{
+					component.ClassName = buffer;
+				}
+                if (!scriptClassExists)
+                {
+	                ImGui::PopStyleColor();
+                }
+			}
+		);
+    	
         DrawComponent<SpriteRendererComponent>("Sprite Renderer", so, [&so](auto& component)
 			{
 				DrawSplitUIItem("Color", [&component]()-> bool

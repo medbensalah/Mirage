@@ -183,6 +183,7 @@
     <ClInclude Include="src\Mirage\ECS\Components\Rendering\CameraComponent.h" />
     <ClInclude Include="src\Mirage\ECS\Components\Rendering\CircleRendererComponent.h" />
     <ClInclude Include="src\Mirage\ECS\Components\Rendering\SpriteRendererComponent.h" />
+    <ClInclude Include="src\Mirage\ECS\Components\ScriptComponent.h" />
     <ClInclude Include="src\Mirage\ECS\Scene.h" />
     <ClInclude Include="src\Mirage\ECS\SceneCamera.h" />
     <ClInclude Include="src\Mirage\ECS\SceneObject.h" />

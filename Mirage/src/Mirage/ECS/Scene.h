@@ -58,7 +58,7 @@ namespace Mirage
 
     	void OnPhysics2DInit();
     	void OnPhysics2DStop();
-
+    	
     	void RenderScene(EditorCamera& camera);
     	
     private:

@@ -1,8 +1,9 @@
 ﻿using System;
+using Mirage;
 
 namespace Sandbox
 {
-	public class Player
+	public class Player : Behavior
 	{
 		void OnCreate()
 		{
@@ -11,7 +12,7 @@ namespace Sandbox
 		
 		void OnUpdate(float deltaTime)
 		{
-			Console.WriteLine("Player updated {deltaTime}");
+			Console.WriteLine($"Player updated: {deltaTime}");
 		}
 	}
 }

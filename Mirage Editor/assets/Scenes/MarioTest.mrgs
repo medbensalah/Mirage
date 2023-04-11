@@ -44,11 +44,13 @@ Entities:
       ClearColor: [0.300000012, 0.300000012, 0.300000012, 1]
   - Entity: 15505606494138313452
     TagComponent:
-      Tag: object
+      Tag: Player
     TransformComponent:
       Position: [-10.5, 9.5, 0]
       Rotation: [0, 0, 41.0999985]
       Scale: [1, 1, 1]
+    ScriptComponent:
+      Name: Sandbox.Player
     SpriteRendererComponent:
       Color: [1, 1, 1, 1]
       Texture: Assets\textures\Default.png

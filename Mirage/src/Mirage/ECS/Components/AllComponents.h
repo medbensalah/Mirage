@@ -10,6 +10,7 @@ namespace Mirage
 	struct RigidBody2DComponent;
 	struct BoxCollider2DComponent;
 	struct CircleCollider2DComponent;
+	struct ScriptComponent;
 
 	template <typename... Component>
 	struct ComponentGroup
@@ -17,7 +18,8 @@ namespace Mirage
 	};
 
 	using AllComponents =
-	ComponentGroup<TransformComponent, SpriteRendererComponent,
-	               CircleRendererComponent, CameraComponent, NativeScriptComponent,
+	ComponentGroup<TransformComponent,
+				   SpriteRendererComponent, CircleRendererComponent, CameraComponent,
+				   ScriptComponent, NativeScriptComponent,
 	               RigidBody2DComponent, BoxCollider2DComponent, CircleCollider2DComponent>;
 }

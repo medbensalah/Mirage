@@ -14,8 +14,6 @@ namespace Mirage
     void SceneObject::Destroy()
     {
     	auto& h = GetComponent<HierarchyComponent>();
-        MRG_CORE_WARN("destroying entity: {0}", GetName());
-
 		// reverse iterate children
     	for (auto it = h.m_Children.rbegin(); it != h.m_Children.rend(); ++it)
     	{
@@ -58,7 +56,6 @@ namespace Mirage
         	}
         }
 
-		MRG_CORE_INFO("destroyed entity: {0}", GetName());
         m_Scene->m_Registry.destroy(m_Entity);
     }
 
