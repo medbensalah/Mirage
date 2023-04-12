@@ -238,6 +238,8 @@ namespace Mirage
 		auto& hierarchy = sceneObject.GetComponent<HierarchyComponent>();
 		hierarchy.m_Index = m_Hierarchy.size();
 		m_Hierarchy[hierarchy.m_Index] = hierarchy;
+
+		m_entt_uuid_map[uuid] = sceneObject;
 		
         return sceneObject;
     }
@@ -258,6 +260,7 @@ namespace Mirage
 
     void Scene::DestroySceneObject(SceneObject& entity)
     {
+		m_entt_uuid_map.erase(entity.GetUUID());
         entity.Destroy();
     }
 
@@ -305,17 +308,15 @@ namespace Mirage
     {
         // ---------------- Update scripts ----------------
 
-		//scripts
-		{
-			// C# behavior OnUpdate
-			auto view = m_Registry.view<ScriptComponent>();
-			for (auto e : view)
-			{
-				SceneObject so = {e, this};
-				ScriptingEngine::OnUpdateBehavior(so, DeltaTime);
-			}
-		}
-
+        auto CSview = m_Registry.view<ScriptComponent>();
+        //scripts
+        // C# behavior OnUpdate
+        for (auto e : CSview)
+        {
+	        SceneObject so = {e, this};
+	        ScriptingEngine::OnUpdateBehavior(so, DeltaTime);
+        }
+/*
 		// native scripts
         {
             m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
@@ -331,7 +332,7 @@ namespace Mirage
                 nsc.Instance->OnUpdate(DeltaTime);
             });
         }
-
+*/
         // -------------------- Physics --------------------
 
         {
@@ -353,6 +354,12 @@ namespace Mirage
 				        transform.Rotation().x, transform.Rotation().y, Degrees(rb.RuntimeBody->GetAngle())
 			        });
 		        }
+	        	
+	        	for (auto e : CSview)
+	        	{
+	        		SceneObject so = {e, this};
+	        		ScriptingEngine::OnPhysicsUpdateBehavior(so, DeltaTime);
+	        	}
 		        m_PhysicsTimer.Reset();
 	        }
 	        else
@@ -376,6 +383,11 @@ namespace Mirage
 					        transform.Rotation().x, transform.Rotation().y, Degrees(rb.RuntimeBody->GetAngle())
 				        });
 			        }
+		        	for (auto e : CSview)
+		        	{
+		        		SceneObject so = {e, this};
+		        		ScriptingEngine::OnPhysicsUpdateBehavior(so, m_PhysicsTimer.Elapsed());
+		        	}
 			        m_PhysicsTimer.Reset();
 		        }
 	        }
@@ -525,6 +537,14 @@ namespace Mirage
     SceneObject Scene::GetSceneObject(entt::entity entity)
     {
         return SceneObject{entity, this};
+    }
+
+    SceneObject Scene::GetSceneObjectByUUID(UUID uuid)
+    {
+	    if (m_entt_uuid_map.find(uuid) != m_entt_uuid_map.end())
+		    return SceneObject{m_entt_uuid_map[uuid], this};
+
+		return {};
     }
 
     void Scene::OnPhysics2DInit()

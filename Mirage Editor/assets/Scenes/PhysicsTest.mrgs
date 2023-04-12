@@ -46,16 +46,18 @@ Entities:
     TagComponent:
       Tag: Player
     TransformComponent:
-      Position: [-3.107831, 2.02757096, 0]
-      Rotation: [0, 0, 0]
+      Position: [-3.55337596, 5.33202505, 0]
+      Rotation: [0, 0, 41.0999985]
       Scale: [1, 1, 1]
-    ScriptComponent:
-      Name: Sandbox.Player
     SpriteRendererComponent:
       Color: [1, 1, 1, 1]
       Texture: Assets\textures\Default.png
       Tiling: [1, 1]
       Offset: [0, 0]
+    RigidBody2DComponent:
+      Body type: Dynamic
+      Gravity scale: 1
+      Fixed rotation: false
     BoxCollider2DComponent:
       Size: [0.5, 0.5]
       Offset: [0, 0]
@@ -90,7 +92,7 @@ Entities:
     TagComponent:
       Tag: Circle
     TransformComponent:
-      Position: [3.86921883, 3.93245411, 0]
+      Position: [6.61674261, 8.2393856, 0]
       Rotation: [0, 0, 54.2999992]
       Scale: [3, 3, 1]
     CircleRendererComponent:

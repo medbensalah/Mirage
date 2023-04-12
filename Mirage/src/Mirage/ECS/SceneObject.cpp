@@ -48,11 +48,9 @@ namespace Mirage
         	{
         		SceneObject so { m_Scene->m_Hierarchy[i + 1].m_entity, m_Scene };
         		auto& childH = so.GetComponent<HierarchyComponent>();
-        		MRG_CORE_WARN("removing {0} at index {1}", so.GetName(), childH.m_Index);
         		m_Scene->m_Hierarchy.erase(childH.m_Index);
         		childH.m_Index--;
         		m_Scene->m_Hierarchy[childH.m_Index] = childH;
-        		MRG_CORE_INFO("adding {0} at index {1}", so.GetName(), childH.m_Index);
         	}
         }
 

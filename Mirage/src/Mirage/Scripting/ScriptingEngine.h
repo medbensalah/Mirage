@@ -38,18 +38,21 @@ namespace Mirage
 	class ScriptInstance
 	{
 	public :
-		ScriptInstance(Ref<ScriptClass> scriptClass);
+		ScriptInstance(Ref<ScriptClass> scriptClass, SceneObject so);
 
 		void InvokeOnCreate();
 		void InvokeOnUpdate(float deltaTime);
+		void InvokeOnPhysicsUpdate(float deltaTime);
 
 	private:
 		Ref<ScriptClass> m_ScriptClass;
 
 		MonoObject* m_Instance = nullptr;
 
+		MonoMethod* m_Constructor = nullptr;
 		MonoMethod* m_OnCreateMethod = nullptr;
 		MonoMethod* m_OnUpdateMethod = nullptr;
+		MonoMethod* m_OnPhysicsUpdateMethod = nullptr;
 	};
 
 	class ScriptingEngine
@@ -65,6 +68,9 @@ namespace Mirage
 		static bool ClassExists(const std::string& fullname);
 		static void OnCreateBehavior(SceneObject so);
 		static void OnUpdateBehavior(SceneObject so, float deltaTime);
+		static void OnPhysicsUpdateBehavior(SceneObject so, float deltaTime);
+
+		static Scene* GetSceneContext();
 
 		static std::unordered_map<std::string, Ref<ScriptClass>> GetBehaviorClasses();
 

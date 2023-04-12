@@ -56,8 +56,10 @@
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Dist|x64' ">
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Input.cs" />
+    <Compile Include="KeyCode.cs" />
     <Compile Include="Source\Player.cs" />
-    <Compile Include="Source\SceneObject.cs" />
+    <Compile Include="Source\Behavior.cs" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

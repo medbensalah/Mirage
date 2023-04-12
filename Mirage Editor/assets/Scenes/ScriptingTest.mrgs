@@ -46,8 +46,8 @@ Entities:
     TagComponent:
       Tag: Player
     TransformComponent:
-      Position: [-10.5, 9.5, 0]
-      Rotation: [0, 0, 41.0999985]
+      Position: [-3.107831, 2.02757096, 0]
+      Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     ScriptComponent:
       Name: Sandbox.Player
@@ -56,10 +56,6 @@ Entities:
       Texture: Assets\textures\Default.png
       Tiling: [1, 1]
       Offset: [0, 0]
-    RigidBody2DComponent:
-      Body type: Dynamic
-      Gravity scale: 1
-      Fixed rotation: false
     BoxCollider2DComponent:
       Size: [0.5, 0.5]
       Offset: [0, 0]
@@ -90,53 +86,11 @@ Entities:
       Friction: 0.100000001
       Bounciness: 1
       BouncinessThreshold: 0.5
-  - Entity: 2810850241011801650
-    TagComponent:
-      Tag: Circle
-    TransformComponent:
-      Position: [3.95261598, 6.17064571, 0]
-      Rotation: [0, 0, 0]
-      Scale: [3, 3, 1]
-    CircleRendererComponent:
-      Thickness: 0.215000004
-      Fade: 0.319999993
-      Color: [0.971541107, 0.872674823, 1, 1]
-      Texture: Assets\textures\Default.png
-      Tiling: [1, 1]
-      Offset: [0, 0]
-  - Entity: 7917569280810956
-    TagComponent:
-      Tag: Circle
-    TransformComponent:
-      Position: [-1.08807981, 7.98523378, 0]
-      Rotation: [0, 0, 0]
-      Scale: [3, 3, 1]
-    CircleRendererComponent:
-      Thickness: 0.215000004
-      Fade: 0
-      Color: [0.544001997, 0.911758065, 1, 1]
-      Texture: Assets\textures\Default.png
-      Tiling: [1, 1]
-      Offset: [0, 0]
-  - Entity: 9243041504260256427
-    TagComponent:
-      Tag: Circle
-    TransformComponent:
-      Position: [2.80327702, 5.74213219, -3.5]
-      Rotation: [0, 0, 0]
-      Scale: [3, 3, 1]
-    CircleRendererComponent:
-      Thickness: 1
-      Fade: 0.439999998
-      Color: [1, 0.565926075, 0.31316644, 1]
-      Texture: Assets\textures\Default.png
-      Tiling: [1, 1]
-      Offset: [0, 0]
   - Entity: 2314324778588416902
     TagComponent:
       Tag: Circle
     TransformComponent:
-      Position: [3.46132755, 1.05728245, 0]
+      Position: [3.86921883, 3.93245411, 0]
       Rotation: [0, 0, 54.2999992]
       Scale: [3, 3, 1]
     CircleRendererComponent:

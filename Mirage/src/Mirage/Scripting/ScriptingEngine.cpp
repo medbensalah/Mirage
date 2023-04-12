@@ -116,9 +116,8 @@ namespace Mirage
 		ScriptGlue::RegisterFunctions();
 
 
-#if 0
 		s_Data->BehaviorClass = ScriptClass("Mirage", "Behavior");
-
+#if 0
 		// 1. Create object
 		MonoObject* instance = s_Data->BehaviorClass.Instantiate();
 
@@ -210,7 +209,7 @@ namespace Mirage
 		const auto& script = so.GetComponent<ScriptComponent>();
 		if (ClassExists(script.ClassName))
 		{
-			Ref<ScriptInstance> instance = CreateRef<ScriptInstance>(s_Data->BehaviorClasses[script.ClassName]);
+			Ref<ScriptInstance> instance = CreateRef<ScriptInstance>(s_Data->BehaviorClasses[script.ClassName], so);
 			s_Data->BehaviorInstances[so.GetUUID()] = instance;
 
 			instance->InvokeOnCreate();
@@ -224,6 +223,20 @@ namespace Mirage
 
 		Ref<ScriptInstance> instance = s_Data->BehaviorInstances[uuid];
 		instance->InvokeOnUpdate(deltaTime);
+	}
+
+	void ScriptingEngine::OnPhysicsUpdateBehavior(SceneObject so, float deltaTime)
+	{
+		UUID uuid = so.GetUUID();
+		MRG_CORE_ASSERT(s_Data->BehaviorInstances.find(uuid) != s_Data->BehaviorInstances.end(), "Behavior instance not found");
+
+		Ref<ScriptInstance> instance = s_Data->BehaviorInstances[uuid];
+		instance->InvokeOnPhysicsUpdate(deltaTime);
+	}
+
+	Scene* ScriptingEngine::GetSceneContext()
+	{
+		return s_Data->SceneContext;
 	}
 
 	std::unordered_map<std::string, Ref<ScriptClass>> ScriptingEngine::GetBehaviorClasses()
@@ -271,7 +284,7 @@ namespace Mirage
 	MonoObject* ScriptingEngine::InstantiateClass(MonoClass* monoClass)
 	{
 		MonoObject* instance = mono_object_new(s_Data->AppDomain, monoClass);
-		mono_runtime_object_init(instance);
+		mono_runtime_object_init(instance);	
 		return instance;
 	}
 
@@ -299,12 +312,21 @@ namespace Mirage
 #pragma endregion
 
 #pragma region ScriptClass
-	ScriptInstance::ScriptInstance(Ref<ScriptClass> scriptClass)
+	ScriptInstance::ScriptInstance(Ref<ScriptClass> scriptClass, SceneObject so)
 		:m_ScriptClass(scriptClass)
 	{
 		m_Instance = m_ScriptClass->Instantiate();
+		m_Constructor = s_Data->BehaviorClass.GetMethod(".ctor", 1);
 		m_OnCreateMethod = m_ScriptClass->GetMethod("OnCreate", 0);
 		m_OnUpdateMethod = m_ScriptClass->GetMethod("OnUpdate", 1);
+		m_OnPhysicsUpdateMethod = m_ScriptClass->GetMethod("OnPhysicsUpdate", 1);
+
+		// Call behavior constructor
+		{
+			UUID uuid = so.GetUUID();
+			void* idParam = &uuid;
+			scriptClass->InvokeMethod(m_Instance, m_Constructor, &idParam);
+		}
 	}
 
 	void ScriptInstance::InvokeOnCreate()
@@ -316,6 +338,11 @@ namespace Mirage
 	{
 		void* param = &deltaTime;
 		m_ScriptClass->InvokeMethod(m_Instance, m_OnUpdateMethod, &param);
+	}
+	void ScriptInstance::InvokeOnPhysicsUpdate(float deltaTime)
+	{
+		void* param = &deltaTime;
+		m_ScriptClass->InvokeMethod(m_Instance, m_OnPhysicsUpdateMethod, &param);
 	}
 #pragma endregion
 }

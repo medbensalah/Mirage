@@ -45,6 +45,7 @@ namespace Mirage
 
         SceneObject GetMainCameraSO();
         SceneObject GetSceneObject(entt::entity entity);
+        SceneObject GetSceneObjectByUUID(UUID uuid);
 
     	template<typename... Components>
     	auto GetSceneObjectsWith()
@@ -69,6 +70,8 @@ namespace Mirage
 
 		b2World* m_PhysicsWorld = nullptr;
     	Timer m_PhysicsTimer;
+    	
+    	std::unordered_map<UUID, entt::entity> m_entt_uuid_map;
     	
         // std::unordered_map<entt::entity, Relationship> m_Hierarchy;
         
