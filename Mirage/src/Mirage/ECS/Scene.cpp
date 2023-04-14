@@ -5,7 +5,7 @@
 #include "ScriptableSceneObject.h"
 #include "Components/Base/TransformComponent.h"
 #include "Components/Base/TagComponent.h"
-#include "Components/Physics/RigidBody2DComponent.h"
+#include "Components/Physics/Rigidbody2DComponent.h"
 #include "Components/Physics/BoxCollider2DComponent.h"
 #include "Components/Physics/CircleCollider2DComponent.h"
 #include "Components/Rendering/SpriteRendererComponent.h"
@@ -26,13 +26,13 @@
 
 namespace Mirage
 {
-	static b2BodyType MrgToB2DBodyType(RigidBody2DComponent::BodyType type)
+	static b2BodyType MrgToB2DBodyType(Rigidbody2DComponent::BodyType type)
 	{
 		switch (type)
 		{
-		case RigidBody2DComponent::BodyType::Static: return b2_staticBody;
-		case RigidBody2DComponent::BodyType::Kinematic: return b2_kinematicBody;
-		case RigidBody2DComponent::BodyType::Dynamic: return b2_dynamicBody;
+		case Rigidbody2DComponent::BodyType::Static: return b2_staticBody;
+		case Rigidbody2DComponent::BodyType::Kinematic: return b2_kinematicBody;
+		case Rigidbody2DComponent::BodyType::Dynamic: return b2_dynamicBody;
 		}
 
 		MRG_CORE_ASSERT(false, "Unknown body type!!!");
@@ -340,14 +340,14 @@ namespace Mirage
 	        {
 		        m_PhysicsWorld->Step(DeltaTime, Physics2D::VelocityIterations, Physics2D::PositionIterations);
 		        // update transform component from physics
-		        auto view = m_Registry.view<RigidBody2DComponent>();
+		        auto view = m_Registry.view<Rigidbody2DComponent>();
 		        for (auto e : view)
 		        {
 			        SceneObject so = {e, this};
 			        auto& transform = so.GetComponent<TransformComponent>();
-			        auto& rb = so.GetComponent<RigidBody2DComponent>();
+			        auto& rb = so.GetComponent<Rigidbody2DComponent>();
 
-			        if (rb.Type == RigidBody2DComponent::BodyType::Static) continue;
+			        if (rb.Type == Rigidbody2DComponent::BodyType::Static) continue;
 			        const auto& position = rb.RuntimeBody->GetPosition();
 			        transform.SetPosition({position.x, position.y, transform.Position().z});
 			        transform.SetRotation({
@@ -369,14 +369,14 @@ namespace Mirage
 			        m_PhysicsWorld->Step(m_PhysicsTimer.Elapsed(), Physics2D::VelocityIterations,
 			                             Physics2D::PositionIterations);
 			        // update transform component from physics
-			        auto view = m_Registry.view<RigidBody2DComponent>();
+			        auto view = m_Registry.view<Rigidbody2DComponent>();
 			        for (auto e : view)
 			        {
 				        SceneObject so = {e, this};
 				        auto& transform = so.GetComponent<TransformComponent>();
-				        auto& rb = so.GetComponent<RigidBody2DComponent>();
+				        auto& rb = so.GetComponent<Rigidbody2DComponent>();
 
-				        if (rb.Type == RigidBody2DComponent::BodyType::Static) continue;
+				        if (rb.Type == Rigidbody2DComponent::BodyType::Static) continue;
 				        const auto& position = rb.RuntimeBody->GetPosition();
 				        transform.SetPosition({position.x, position.y, transform.Position().z});
 				        transform.SetRotation({
@@ -451,14 +451,14 @@ namespace Mirage
 			{
 				m_PhysicsWorld->Step(DeltaTime, Physics2D::VelocityIterations, Physics2D::PositionIterations);
 				// update transform component from physics
-				auto view = m_Registry.view<RigidBody2DComponent>();
+				auto view = m_Registry.view<Rigidbody2DComponent>();
 				for (auto e : view)
 				{
 					SceneObject so = {e, this};
 					auto& transform = so.GetComponent<TransformComponent>();
-					auto& rb = so.GetComponent<RigidBody2DComponent>();
+					auto& rb = so.GetComponent<Rigidbody2DComponent>();
 
-					if (rb.Type == RigidBody2DComponent::BodyType::Static) continue;
+					if (rb.Type == Rigidbody2DComponent::BodyType::Static) continue;
 					const auto& position = rb.RuntimeBody->GetPosition();
 					transform.SetPosition({position.x, position.y, transform.Position().z});
 					transform.SetRotation({
@@ -474,14 +474,14 @@ namespace Mirage
 					m_PhysicsWorld->Step(m_PhysicsTimer.Elapsed(), Physics2D::VelocityIterations,
 										 Physics2D::PositionIterations);
 					// update transform component from physics
-					auto view = m_Registry.view<RigidBody2DComponent>();
+					auto view = m_Registry.view<Rigidbody2DComponent>();
 					for (auto e : view)
 					{
 						SceneObject so = {e, this};
 						auto& transform = so.GetComponent<TransformComponent>();
-						auto& rb = so.GetComponent<RigidBody2DComponent>();
+						auto& rb = so.GetComponent<Rigidbody2DComponent>();
 
-						if (rb.Type == RigidBody2DComponent::BodyType::Static) continue;
+						if (rb.Type == Rigidbody2DComponent::BodyType::Static) continue;
 						const auto& position = rb.RuntimeBody->GetPosition();
 						transform.SetPosition({position.x, position.y, transform.Position().z});
 						transform.SetRotation({
@@ -551,12 +551,12 @@ namespace Mirage
     {
 		m_PhysicsWorld = new b2World(b2Vec2(0.0f, Physics2D::Gravity));
 		MRG_CORE_INFO("gravity {0}", Physics2D::Gravity);
-		auto view = m_Registry.view<RigidBody2DComponent>();
+		auto view = m_Registry.view<Rigidbody2DComponent>();
 		for (auto e : view)
 		{
 			SceneObject so = {e, this};
 			auto& transform = so.GetComponent<TransformComponent>();
-			auto& rb = so.GetComponent<RigidBody2DComponent>();
+			auto& rb = so.GetComponent<Rigidbody2DComponent>();
 
 			b2BodyDef bodyDef;
 			bodyDef.position.Set(transform.Position().x, transform.Position().y);
@@ -686,7 +686,7 @@ namespace Mirage
     }
     
     template <>
-    void Scene::OnComponentAdded(SceneObject& entity, RigidBody2DComponent& component)
+    void Scene::OnComponentAdded(SceneObject& entity, Rigidbody2DComponent& component)
     {
     }
     template <>

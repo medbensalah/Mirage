@@ -42,6 +42,8 @@ Entities:
       Primary: true
       FixedAspectRatio: false
       ClearColor: [0.300000012, 0.300000012, 0.300000012, 1]
+    ScriptComponent:
+      Name: Sandbox.Camera
   - Entity: 15505606494138313452
     TagComponent:
       Tag: Player
@@ -57,7 +59,7 @@ Entities:
       Tiling: [1, 1]
       Offset: [0, 0]
     RigidBody2DComponent:
-      Body type: Static
+      Body type: Dynamic
       Gravity scale: 1
       Fixed rotation: false
     BoxCollider2DComponent:

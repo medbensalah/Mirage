@@ -16,7 +16,7 @@
 #include "Mirage/ECS/Components/ScriptComponent.h"
 #include "Mirage/ECS/Components/Physics/BoxCollider2DComponent.h"
 #include "Mirage/ECS/Components/Physics/CircleCollider2DComponent.h"
-#include "Mirage/ECS/Components/Physics/RigidBody2DComponent.h"
+#include "Mirage/ECS/Components/Physics/Rigidbody2DComponent.h"
 #include "Mirage/ECS/Components/Rendering/CircleRendererComponent.h"
 #include "Mirage/Scripting/ScriptingEngine.h"
 
@@ -289,16 +289,18 @@ namespace Mirage
             	// Script entry always visible
             	// might cause problems check later
             	// if(!m_SelectionContext.HasComponent<ScriptComponent>())
-            	{
-            		if(ImGui::MenuItem("Script"))
-            		{
-            			m_SelectionContext.AddComponent<ScriptComponent>();
-            			ImGui::CloseCurrentPopup();
-            		}
-            	}
+            	// {
+            	// 	if(ImGui::MenuItem("Script"))
+            	// 	{
+            	// 		m_SelectionContext.AddComponent<ScriptComponent>();
+            	// 		ImGui::CloseCurrentPopup();
+            	// 	}
+            	// }
+            	// THAT WAS A BAD IDEA
+            	DisplayAddComponentEntry<ScriptComponent>("Script");
             	DisplayAddComponentEntry<SpriteRendererComponent>("Sprite Renderer");
             	DisplayAddComponentEntry<CircleRendererComponent>("Circle Renderer");
-            	DisplayAddComponentEntry<RigidBody2DComponent>("Rigidbody 2D");
+            	DisplayAddComponentEntry<Rigidbody2DComponent>("Rigidbody 2D");
             	DisplayAddComponentEntry<BoxCollider2DComponent>("Box Collider 2D");
             	DisplayAddComponentEntry<CircleCollider2DComponent>("Circle Collider 2D");
             	
@@ -583,7 +585,7 @@ namespace Mirage
 			}
         );
     	
-        DrawComponent<RigidBody2DComponent>("Rigidbody 2D", so, [&so](auto& component)
+        DrawComponent<Rigidbody2DComponent>("Rigidbody 2D", so, [&so](auto& component)
 			{
 				const char* bodyTypeStrings[] = {"Static", "Kinematic", "Dynamic"};
 				const char* bodyTypeString = bodyTypeStrings[(int)component.Type];
@@ -592,20 +594,20 @@ namespace Mirage
 				if (DrawSplitUIItem("Body type", [&]()-> bool
 				{
 					return DrawComboBox("##BodyType", bodyTypeStrings, 3,bodyTypeString, &out);
-				}, typeid(RigidBody2DComponent).name()))
+				}, typeid(Rigidbody2DComponent).name()))
 				{
-					component.Type = (RigidBody2DComponent::BodyType)out;
+					component.Type = (Rigidbody2DComponent::BodyType)out;
 				}
         	        		
 				DrawSplitUIItem("Gravity scale", [&component]()-> bool
 				{
 					return ImGui::DragFloat("##GravityScale", &component.GravityScale, 0.1f, 0.0f, 0.0f, "%.3g");
-		        }, typeid(RigidBody2DComponent).name());
+		        }, typeid(Rigidbody2DComponent).name());
         	
 				DrawSplitUIItem("Fixed rotation Z", [&component]()-> bool
 				{
 					return ImGui::Checkbox("##FixedRotationZ", &component.FixedRotation);
-				}, typeid(RigidBody2DComponent).name());
+				}, typeid(Rigidbody2DComponent).name());
 			}
         );
     	

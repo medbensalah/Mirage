@@ -3,6 +3,7 @@
 #include "ScriptGlue.h"
 
 #include "ScriptingEngine.h"
+#include "box2d/b2_body.h"
 #include "Mirage/Core/Input.h"
 #include "Mirage/Core/UUID.h"
 #include "Mirage/ECS/Scene.h"
@@ -42,15 +43,47 @@ namespace Mirage
 	static void Transform_GetPosition(UUID uuid, Vec3* outVec)
 	{
 		Scene* scene =ScriptingEngine::GetSceneContext();
+		MRG_CORE_ASSERT(scene, "Scene is null");
 		SceneObject so = scene->GetSceneObjectByUUID(uuid);
+		MRG_CORE_ASSERT(so, "SceneObject is null");
+		
 		*outVec = so.GetComponent<TransformComponent>().Position();
 	}
 	static void Transform_SetPosition(UUID uuid, Vec3* outVec)
 	{
 		Scene* scene =ScriptingEngine::GetSceneContext();
+		MRG_CORE_ASSERT(scene, "Scene is null");
 		SceneObject so = scene->GetSceneObjectByUUID(uuid);
+		MRG_CORE_ASSERT(so, "SceneObject is null");
+		
 		so.GetComponent<TransformComponent>().SetPosition(*outVec);
 	}
+
+	static void Rigidbody2D_ApplyLinearImpulse(UUID uuid, Vec2* impulse, Vec2* point, bool wake)
+	{
+		Scene* scene =ScriptingEngine::GetSceneContext();
+		MRG_CORE_ASSERT(scene, "Scene is null");
+		SceneObject so = scene->GetSceneObjectByUUID(uuid);
+		MRG_CORE_ASSERT(so, "SceneObject is null");
+
+		auto& rb2d = so.GetComponent<Rigidbody2DComponent>();
+		b2Body* body = rb2d.RuntimeBody;
+		body->ApplyLinearImpulse(b2Vec2(impulse->x, impulse->y), b2Vec2(point->x, point->y), wake);
+	}
+	
+	static void Rigidbody2D_ApplyLinearImpulseToCenter(UUID uuid, Vec2* impulse, Vec2* point, bool wake)
+	{
+		Scene* scene =ScriptingEngine::GetSceneContext();
+		MRG_CORE_ASSERT(scene, "Scene is null");
+		SceneObject so = scene->GetSceneObjectByUUID(uuid);
+		MRG_CORE_ASSERT(so, "SceneObject is null");
+
+		auto& rb2d = so.GetComponent<Rigidbody2DComponent>();
+		b2Body* body = rb2d.RuntimeBody;
+		body->ApplyLinearImpulseToCenter(b2Vec2(impulse->x, impulse->y), wake);
+	}
+	
+	
 	static bool Input_IsKeyDown(KeyCode keyCode)
 	{
 		return Input::IsKeyPressed(keyCode);
@@ -96,5 +129,7 @@ namespace Mirage
 		MRG_ADD_INTERRAL_CALL(Transform_GetPosition);
 		MRG_ADD_INTERRAL_CALL(Transform_SetPosition);
 		
+		MRG_ADD_INTERRAL_CALL(Rigidbody2D_ApplyLinearImpulse);
+		MRG_ADD_INTERRAL_CALL(Rigidbody2D_ApplyLinearImpulseToCenter);
 	}
 }

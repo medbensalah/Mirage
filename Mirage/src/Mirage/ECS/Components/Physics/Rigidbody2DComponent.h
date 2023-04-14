@@ -4,10 +4,10 @@ class b2Body;
 
 namespace Mirage
 {
-	struct RigidBody2DComponent
+	struct Rigidbody2DComponent
 	{
-		RigidBody2DComponent() = default;
-		RigidBody2DComponent(const RigidBody2DComponent&) = default;
+		Rigidbody2DComponent() = default;
+		Rigidbody2DComponent(const Rigidbody2DComponent&) = default;
 	
 		enum class BodyType
 		{

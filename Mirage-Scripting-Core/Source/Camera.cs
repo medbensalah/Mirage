@@ -3,20 +3,15 @@ using Mirage;
 
 namespace Sandbox
 {
-	public class Player : Behavior
+	public class Camera : Behavior
 	{
-		public float Speed = 50.0f;
-		
-		private Rigidbody2D _rigidBody;
-		
+		public float Speed = 5.0f;
+
 		void OnCreate()
 		{
-			_rigidBody = GetComponent<Rigidbody2D>();
 		}
+
 		void OnUpdate(float deltaTime)
-		{
-		}
-		void OnPhysicsUpdate(float pDeltaTime)
 		{
 			Vector3 Velocity = Vector3.Zero;
 			Vector2 a = new Vector2(1, 2);
@@ -25,15 +20,21 @@ namespace Sandbox
 				Velocity.y = 1.0f;
 			else if (Input.IsKeyDown(KeyCode.S))
 				Velocity.y = -1.0f;
-			
+
 			if (Input.IsKeyDown(KeyCode.A))
 				Velocity.x = -1.0f;
 			else if (Input.IsKeyDown(KeyCode.D))
 				Velocity.x = 1.0f;
 
-			Velocity *= Speed * pDeltaTime;
-			
-			_rigidBody.ApplyLinearImpulse(Velocity);
+			if (Velocity != Vector3.Zero)
+			{
+				Velocity *= Speed * deltaTime;
+				transform.Position += Velocity;
+			}
+		}
+
+		void OnPhysicsUpdate(float pDeltaTime)
+		{
 		}
 	}
 }

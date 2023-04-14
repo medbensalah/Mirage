@@ -3,7 +3,7 @@
 #include "Mirage/ECS/Components/Base/TransformComponent.h"
 #include "Mirage/ECS/Components/Physics/BoxCollider2DComponent.h"
 #include "Mirage/ECS/Components/Physics/CircleCollider2DComponent.h"
-#include "Mirage/ECS/Components/Physics/RigidBody2DComponent.h"
+#include "Mirage/ECS/Components/Physics/Rigidbody2DComponent.h"
 #include "Mirage/ECS/Components/Rendering/CameraComponent.h"
 #include "Mirage/ECS/Components/Rendering/CircleRendererComponent.h"
 #include "Mirage/ECS/Components/Rendering/SpriteRendererComponent.h"
@@ -21,5 +21,5 @@ namespace Mirage
 	ComponentGroup<TransformComponent,
 				   SpriteRendererComponent, CircleRendererComponent, CameraComponent,
 				   ScriptComponent, NativeScriptComponent,
-	               RigidBody2DComponent, BoxCollider2DComponent, CircleCollider2DComponent>;
+	               Rigidbody2DComponent, BoxCollider2DComponent, CircleCollider2DComponent>;
 }
