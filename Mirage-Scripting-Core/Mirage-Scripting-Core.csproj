@@ -56,10 +56,13 @@
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Dist|x64' ">
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Input.cs" />
-    <Compile Include="KeyCode.cs" />
+    <Compile Include="Source\Mirage\ECS\Behavior.cs" />
+    <Compile Include="Source\Mirage\ECS\Components.cs" />
+    <Compile Include="Source\Mirage\Input.cs" />
+    <Compile Include="Source\Mirage\Internals.cs" />
+    <Compile Include="Source\Mirage\KeyCode.cs" />
+    <Compile Include="Source\Mirage\Vector3.cs" />
     <Compile Include="Source\Player.cs" />
-    <Compile Include="Source\Behavior.cs" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

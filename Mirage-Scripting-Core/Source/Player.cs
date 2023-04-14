@@ -6,21 +6,18 @@ namespace Sandbox
 	public class Player : Behavior
 	{
 		float Speed = 2.0f;
-		private Vector3 Velocity = Vector3.Zero;
 		
 		void OnCreate()
 		{
 			Console.WriteLine("Player created");
 		}
-		
 		void OnUpdate(float deltaTime)
 		{
 		}
-		
 		void OnPhysicsUpdate(float pDeltaTime)
 		{
-			Vector3 position = Position;
-
+			Vector3 Velocity = Vector3.Zero;
+			
 			if (Input.IsKeyDown(KeyCode.W))
 				Velocity.y = 1.0f;
 			else if (Input.IsKeyDown(KeyCode.S))
@@ -31,11 +28,7 @@ namespace Sandbox
 			else if (Input.IsKeyDown(KeyCode.D))
 				Velocity.x = 1.0f;
 			
-			position += Velocity * pDeltaTime;
-
-			Console.WriteLine("new position is {0}", position);
-			
-			Position = position;
+			transform.Position += Velocity * pDeltaTime;
 		}
 	}
 }

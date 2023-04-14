@@ -198,6 +198,9 @@
     <ClInclude Include="src\Mirage\ECS\Components\Rendering\SpriteRendererComponent.h">
       <Filter>src\Mirage\ECS\Components\Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\Components\ScriptComponent.h">
+      <Filter>src\Mirage\ECS\Components</Filter>
+    </ClInclude>
     <ClInclude Include="src\Mirage\ECS\Scene.h">
       <Filter>src\Mirage\ECS</Filter>
     </ClInclude>
@@ -299,6 +302,9 @@
     </ClInclude>
     <ClInclude Include="src\Mirage\Renderer\VertexArray.h">
       <Filter>src\Mirage\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Scripting\ScriptGlue.h">
+      <Filter>src\Mirage\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\Scripting\ScriptingEngine.h">
       <Filter>src\Mirage\Scripting</Filter>
@@ -1675,6 +1681,9 @@
     </ClCompile>
     <ClCompile Include="src\Mirage\Renderer\VertexArray.cpp">
       <Filter>src\Mirage\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\Scripting\ScriptGlue.cpp">
+      <Filter>src\Mirage\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="src\Mirage\Scripting\ScriptingEngine.cpp">
       <Filter>src\Mirage\Scripting</Filter>

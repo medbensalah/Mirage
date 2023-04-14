@@ -1,17 +1,17 @@
 ﻿#pragma once
 
+#include "Mirage/ECS/Components/Base/TransformComponent.h"
+#include "Mirage/ECS/Components/Physics/BoxCollider2DComponent.h"
+#include "Mirage/ECS/Components/Physics/CircleCollider2DComponent.h"
+#include "Mirage/ECS/Components/Physics/RigidBody2DComponent.h"
+#include "Mirage/ECS/Components/Rendering/CameraComponent.h"
+#include "Mirage/ECS/Components/Rendering/CircleRendererComponent.h"
+#include "Mirage/ECS/Components/Rendering/SpriteRendererComponent.h"
+#include "Mirage/ECS/Components/NativeScriptComponent.h"
+#include "Mirage/ECS/Components/ScriptComponent.h"
+
 namespace Mirage
 {
-	struct TransformComponent;
-	struct SpriteRendererComponent;
-	struct CircleRendererComponent;
-	struct CameraComponent;
-	struct NativeScriptComponent;
-	struct RigidBody2DComponent;
-	struct BoxCollider2DComponent;
-	struct CircleCollider2DComponent;
-	struct ScriptComponent;
-
 	template <typename... Component>
 	struct ComponentGroup
 	{

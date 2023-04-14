@@ -71,6 +71,7 @@ namespace Mirage
 		static void OnPhysicsUpdateBehavior(SceneObject so, float deltaTime);
 
 		static Scene* GetSceneContext();
+		static MonoImage* GetCoreAssemblyImage();
 
 		static std::unordered_map<std::string, Ref<ScriptClass>> GetBehaviorClasses();
 
@@ -82,6 +83,8 @@ namespace Mirage
 
 		static void LoadAssemblyClasses(MonoAssembly* assembly);
 
+		
 		friend class ScriptClass;
+		friend class ScriptGlue;
 	};
 }

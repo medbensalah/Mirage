@@ -56,6 +56,10 @@ Entities:
       Texture: Assets\textures\Default.png
       Tiling: [1, 1]
       Offset: [0, 0]
+    RigidBody2DComponent:
+      Body type: Static
+      Gravity scale: 1
+      Fixed rotation: false
     BoxCollider2DComponent:
       Size: [0.5, 0.5]
       Offset: [0, 0]

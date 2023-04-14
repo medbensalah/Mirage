@@ -286,7 +286,16 @@ namespace Mirage
             if (ImGui::BeginPopup("AddComponent"))
             {
             	DisplayAddComponentEntry<CameraComponent>("Camera");
-            	DisplayAddComponentEntry<ScriptComponent>("Script");
+            	// Script entry always visible
+            	// might cause problems check later
+            	// if(!m_SelectionContext.HasComponent<ScriptComponent>())
+            	{
+            		if(ImGui::MenuItem("Script"))
+            		{
+            			m_SelectionContext.AddComponent<ScriptComponent>();
+            			ImGui::CloseCurrentPopup();
+            		}
+            	}
             	DisplayAddComponentEntry<SpriteRendererComponent>("Sprite Renderer");
             	DisplayAddComponentEntry<CircleRendererComponent>("Circle Renderer");
             	DisplayAddComponentEntry<RigidBody2DComponent>("Rigidbody 2D");

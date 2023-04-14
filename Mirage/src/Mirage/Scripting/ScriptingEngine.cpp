@@ -111,8 +111,8 @@ namespace Mirage
 
 		LoadAssembly("Resources/Scripts/Mirage-Scripting-Core.dll");
 		LoadAssemblyClasses(s_Data->CoreAssembly);
-		//DEBUG ONLY	
-		// auto& classes = s_Data->BehaviorClasses;
+		
+		ScriptGlue::RegisterComponents();
 		ScriptGlue::RegisterFunctions();
 
 
@@ -279,6 +279,11 @@ namespace Mirage
 				s_Data->BehaviorClasses[fullname] = CreateRef<ScriptClass>(nameSpace, name);
 			}
 		}
+	}
+
+	MonoImage* ScriptingEngine::GetCoreAssemblyImage()
+	{
+		return s_Data->CoreAssemblyImage;
 	}
 
 	MonoObject* ScriptingEngine::InstantiateClass(MonoClass* monoClass)
