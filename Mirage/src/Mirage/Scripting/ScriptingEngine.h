@@ -21,7 +21,7 @@ namespace Mirage
 	public:
 		ScriptClass() = default;
 
-		ScriptClass(const std::string& nameSpace, const std::string& name);
+		ScriptClass(const std::string& nameSpace, const std::string& name, bool isCore = false);
 
 		MonoObject* Instantiate();
 		MonoMethod* GetMethod(const std::string& name, int numParams);
@@ -62,6 +62,7 @@ namespace Mirage
 		static void Shutdown();
 
 		static void LoadAssembly(const std::filesystem::path& filepath);
+		static void LoadAppAssembly(const std::filesystem::path& filepath);
 		static void OnRuntimeStart(class Scene* scene);
 		static void OnRuntimeStop();
 
@@ -81,8 +82,7 @@ namespace Mirage
 
 		static MonoObject* InstantiateClass(MonoClass* monoClass);
 
-		static void LoadAssemblyClasses(MonoAssembly* assembly);
-
+		static void LoadAssemblyClasses();
 		
 		friend class ScriptClass;
 		friend class ScriptGlue;

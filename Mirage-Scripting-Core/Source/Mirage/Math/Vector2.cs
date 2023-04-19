@@ -4,6 +4,19 @@ namespace Mirage
 {
 	public struct Vector2
 	{
+		public override bool Equals(object obj)
+		{
+			return obj is Vector2 other && Equals(other);
+		}
+
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				return (x.GetHashCode() * 397) ^ y.GetHashCode();
+			}
+		}
+
 		public float x;
 		public float y;
 

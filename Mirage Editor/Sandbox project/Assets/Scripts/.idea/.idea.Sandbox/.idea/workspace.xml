@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c696c258-0635-4eda-ac01-7292d12c98b7" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.Sandbox/.idea/.name" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.Sandbox/.idea/indexLayout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.Sandbox/.idea/projectSettingsUpdater.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.Sandbox/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.Sandbox/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Binaries/Mirage-Scripting-Core.dll" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Binaries/Mirage-Scripting-Core.pdb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Binaries/Sandbox.dll" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Binaries/Sandbox.pdb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/Camera.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Source/Player.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Win - GenerateProjects.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/premake5.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Resources/Scripts/Mirage-Scripting-Core.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Resources/Scripts/Mirage-Scripting-Core.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Resources/Scripts/Mirage-Scripting-Core.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Resources/Scripts/Mirage-Scripting-Core.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Resources/Scripts/intermediates/Release/Mirage-Scripting-Core.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Resources/Scripts/intermediates/Release/Mirage-Scripting-Core.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Resources/Scripts/intermediates/Release/Mirage-Scripting-Core.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Resources/Scripts/intermediates/Release/Mirage-Scripting-Core.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Resources/Scripts/intermediates/Release/Mirage-Scripting-Core.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Resources/Scripts/intermediates/Release/Mirage-Scripting-Core.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Resources/Scripts/intermediates/Release/Mirage-Scripting-Core.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Resources/Scripts/intermediates/Release/Mirage-Scripting-Core.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../Temp/editorSceneBackup.mrgs" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Temp/editorSceneBackup.mrgs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../assets/Scenes/ScriptingTest.mrgs" beforeDir="false" afterPath="$PROJECT_DIR$/../../../assets/Scenes/ScriptingTest.mrgs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../src/Panels/HierarchyPanel.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../src/Panels/HierarchyPanel.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Mirage-Scripting-Core/Mirage-Scripting-Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../Mirage-Scripting-Core/Mirage-Scripting-Core.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Mirage-Scripting-Core/Source/Camera.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Mirage-Scripting-Core/Source/Mirage/Math/Vector2.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../Mirage-Scripting-Core/Source/Mirage/Math/Vector2.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Mirage-Scripting-Core/Source/Player.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Mirage-Scripting-Core/premake5.lua" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../Mirage-Scripting-Core/premake5.lua" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Mirage/src/Mirage/Scripting/ScriptingEngine.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../Mirage/src/Mirage/Scripting/ScriptingEngine.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Mirage/src/Mirage/Scripting/ScriptingEngine.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../Mirage/src/Mirage/Scripting/ScriptingEngine.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Mirage/vendor/Box2D" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/Box2D" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Mirage/vendor/GLAD/bin-int/Release-windows-x86_64/Glad/glad.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/GLAD/bin-int/Release-windows-x86_64/Glad/glad.obj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Mirage/vendor/GLAD/bin/Release-windows-x86_64/Glad/Glad.lib" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/GLAD/bin/Release-windows-x86_64/Glad/Glad.lib" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Mirage/vendor/GLAD/bin/Release-windows-x86_64/Glad/Glad.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/GLAD/bin/Release-windows-x86_64/Glad/Glad.pdb" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectId" id="2OdwJP7F3k1cQY6uBiMMdV3XYq9" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "rider.external.source.directories": [
+      "C:\\Users\\Mohamed\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\DecompilerCache",
+      "C:\\Users\\Mohamed\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\SourcesCache",
+      "C:\\Users\\Mohamed\\AppData\\Local\\Symbols\\src"
+    ]
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c696c258-0635-4eda-ac01-7292d12c98b7" name="Changes" comment="" />
+      <created>1681903694525</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1681903694525</updated>
+      <workItem from="1681903695705" duration="1333000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+</project>

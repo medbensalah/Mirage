@@ -20,8 +20,8 @@ Entities:
       Size: [0.5, 0.5]
       Offset: [0, 0]
       Density: 0
-      Friction: 0.100000001
-      Bounciness: 1
+      Friction: 0
+      Bounciness: 0
       BouncinessThreshold: 0.5
   - Entity: 6790398966473303929
     TagComponent:
@@ -63,7 +63,7 @@ Entities:
     BoxCollider2DComponent:
       Size: [0.5, 0.5]
       Offset: [0, 0]
-      Density: 10
+      Density: 1
       Friction: 0
       Bounciness: 0
       BouncinessThreshold: 0.5
@@ -87,8 +87,8 @@ Entities:
       Size: [0.5, 0.5]
       Offset: [0, 0]
       Density: 0
-      Friction: 0.100000001
-      Bounciness: 1
+      Friction: 0
+      Bounciness: 0
       BouncinessThreshold: 0.5
   - Entity: 2314324778588416902
     TagComponent:

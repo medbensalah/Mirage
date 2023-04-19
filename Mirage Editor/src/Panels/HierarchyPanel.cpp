@@ -625,19 +625,19 @@ namespace Mirage
         	
 				DrawSplitUIItem("Density", [&component]()-> bool
 				{
-					return ImGui::DragFloat("##Density", &component.Density, 0.05f, 0, 0, "%.5g");
+					return ImGui::DragFloat("##Density", &component.Density, 0.05f, 0, 1000000, "%.5g");
 		        }, typeid(BoxCollider2DComponent).name());
 				DrawSplitUIItem("Friction", [&component]()-> bool
 				{
-					return ImGui::DragFloat("##Friction", &component.Friction, 0.05f, 0.0f, 0.0f, "%.5g");
+					return ImGui::DragFloat("##Friction", &component.Friction, 0.05f, 0.0f, 1000000.0f, "%.5g");
 		        }, typeid(BoxCollider2DComponent).name());
 				DrawSplitUIItem("Bounciness", [&component]()-> bool
 				{
-					return ImGui::DragFloat("##Bounciness", &component.Bounciness, 0.05f, 0.0f, 0.0f, "%.5g");
+					return ImGui::DragFloat("##Bounciness", &component.Bounciness, 0.05f, 0.0f, 1000000.0f, "%.5g");
 		        }, typeid(BoxCollider2DComponent).name());
 				DrawSplitUIItem("BouncinessThreshold", [&component]()-> bool
 				{
-					return ImGui::DragFloat("##BouncinessThreshold", &component.BouncinessThreshold, 0.05f, 0.0f, 0.0f, "%.4g");
+					return ImGui::DragFloat("##BouncinessThreshold", &component.BouncinessThreshold, 0.05f, 0.0f, 1000000.0f, "%.4g");
 		        }, typeid(BoxCollider2DComponent).name());
 			}
         );

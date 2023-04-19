@@ -91,6 +91,9 @@ namespace Mirage
 
 		MonoAssembly* CoreAssembly = nullptr;
 		MonoImage* CoreAssemblyImage = nullptr;
+		
+		MonoAssembly* AppAssembly = nullptr;
+		MonoImage* AppAssemblyImage = nullptr;
 
 		ScriptClass BehaviorClass;
 
@@ -110,13 +113,14 @@ namespace Mirage
 		InitMono();
 
 		LoadAssembly("Resources/Scripts/Mirage-Scripting-Core.dll");
-		LoadAssemblyClasses(s_Data->CoreAssembly);
+		LoadAppAssembly("Sandbox project/Assets/Scripts/Binaries/Sandbox.dll");
+		LoadAssemblyClasses();
 		
 		ScriptGlue::RegisterComponents();
 		ScriptGlue::RegisterFunctions();
 
 
-		s_Data->BehaviorClass = ScriptClass("Mirage", "Behavior");
+		s_Data->BehaviorClass = ScriptClass("Mirage", "Behavior", true);
 #if 0
 		// 1. Create object
 		MonoObject* instance = s_Data->BehaviorClass.Instantiate();
@@ -188,6 +192,14 @@ namespace Mirage
 		// Utils::PrintAssemblyTypes(s_Data->CoreAssembly);
 	}
 
+	void ScriptingEngine::LoadAppAssembly(const std::filesystem::path& filepath)
+	{
+		s_Data->AppAssembly = Utils::LoadMonoAssembly(filepath.string());
+		MonoImage* assemblyImage = mono_assembly_get_image(s_Data->AppAssembly);
+		s_Data->AppAssemblyImage = assemblyImage;
+		// Utils::PrintAssemblyTypes(s_Data-AppAssembly);
+	}
+
 	void ScriptingEngine::OnRuntimeStart(Scene* scene)
 	{
 		s_Data->SceneContext = scene;
@@ -245,25 +257,24 @@ namespace Mirage
 	}
 
 
-	void ScriptingEngine::LoadAssemblyClasses(MonoAssembly* assembly)
+	void ScriptingEngine::LoadAssemblyClasses()
 	{
 		s_Data->BehaviorClasses.clear();
 		
-		MonoImage* image = mono_assembly_get_image(assembly);
-		const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
+		const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(s_Data->AppAssemblyImage, MONO_TABLE_TYPEDEF);
 		int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
 		
-		MonoClass* soKlass = mono_class_from_name(image, "Mirage", "Behavior");
+		MonoClass* soKlass = mono_class_from_name(s_Data->CoreAssemblyImage, "Mirage", "Behavior");
 
 		for (int32_t i = 0; i < numTypes; i++)
 		{
 			uint32_t cols[MONO_TYPEDEF_SIZE];
 			mono_metadata_decode_row(typeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE);
 			
-			const char* nameSpace = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
-			const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
+			const char* nameSpace = mono_metadata_string_heap(s_Data->AppAssemblyImage, cols[MONO_TYPEDEF_NAMESPACE]);
+			const char* name = mono_metadata_string_heap(s_Data->AppAssemblyImage, cols[MONO_TYPEDEF_NAME]);
 
-			MonoClass* klass = mono_class_from_name(image, nameSpace, name);
+			MonoClass* klass = mono_class_from_name(s_Data->AppAssemblyImage, nameSpace, name);
 			if (klass == soKlass)
 			{
 				continue;
@@ -294,10 +305,18 @@ namespace Mirage
 	}
 
 #pragma region ScriptClass
-	ScriptClass::ScriptClass(const std::string& nameSpace, const std::string& name)
+	ScriptClass::ScriptClass(const std::string& nameSpace, const std::string& name, bool isCore)
 		: m_NameSpace(nameSpace), m_Name(name)
 	{
-		m_Class = mono_class_from_name(s_Data->CoreAssemblyImage, m_NameSpace.c_str(), m_Name.c_str());
+		if (isCore)
+		{
+			m_Class = mono_class_from_name(s_Data->CoreAssemblyImage, m_NameSpace.c_str(), m_Name.c_str());
+		}
+		else
+		{
+			m_Class = mono_class_from_name(s_Data->AppAssemblyImage, m_NameSpace.c_str(), m_Name.c_str());
+			
+		}
 	}
 	
 	MonoObject* ScriptClass::Instantiate()

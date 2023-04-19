@@ -3,8 +3,8 @@ project "Mirage-Scripting-Core"
     language "C#"
     dotnetframework "4.8"
 
-    targetdir ("%{wks.location}/Mirage Editor/Resources/Scripts")
-    objdir ("%{wks.location}/Mirage Editor/Resources/Scripts/intermediates")
+    targetdir ("../Mirage Editor/Resources/Scripts")
+    objdir ("../Mirage Editor/Resources/Scripts/intermediates")
 
     files
     {

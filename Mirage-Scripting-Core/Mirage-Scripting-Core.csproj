@@ -56,7 +56,6 @@
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Dist|x64' ">
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Source\Camera.cs" />
     <Compile Include="Source\Mirage\ECS\Behavior.cs" />
     <Compile Include="Source\Mirage\ECS\Components.cs" />
     <Compile Include="Source\Mirage\Input.cs" />
@@ -66,7 +65,6 @@
     <Compile Include="Source\Mirage\Math\Vector2.cs" />
     <Compile Include="Source\Mirage\Math\Vector3.cs" />
     <Compile Include="Source\Mirage\Math\Vector4.cs" />
-    <Compile Include="Source\Player.cs" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>
