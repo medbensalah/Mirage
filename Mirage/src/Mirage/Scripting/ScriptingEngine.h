@@ -16,6 +16,16 @@ typedef struct _MonoImage MonoImage;
 
 namespace Mirage
 {
+	enum class ScriptFieldType
+	{
+		Invalid = 0,
+		Float, Double,
+		Char, Short, Int, Long, Bool,
+		Byte, Ushort, Uint, Ulong,
+		Vector2, Vector3, Vector4,
+		Behavior,
+	};
+	
 	class ScriptClass
 	{
 	public:

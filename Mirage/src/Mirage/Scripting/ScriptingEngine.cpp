@@ -5,12 +5,36 @@
 #include "Mirage/ECS/SceneObject.h"
 #include "Mirage/ECS/Components/ScriptComponent.h"
 
-#include "Mirage/Math/glmTypes.h"
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
+#include "mono/metadata/tabledefs.h"
 
 namespace Mirage
 {
+	static std::unordered_map<std::string, ScriptFieldType> s_ScriptFieldTypeMap =
+	{
+		{"System.Single"	,		ScriptFieldType::Float},
+		{"System.Double"	,		ScriptFieldType::Double},
+		
+		{"System.Boolean"	,		ScriptFieldType::Bool},
+		{"System.Byte"		,		ScriptFieldType::Byte},
+		{"System.Int16"		,		ScriptFieldType::Short},
+		{"System.Int32"		,		ScriptFieldType::Int},
+		{"System.Int64"		,		ScriptFieldType::Long},
+		
+		{"System.Char"		,		ScriptFieldType::Char},
+		{"System.UInt16"	,		ScriptFieldType::Ushort},
+		{"System.UInt32"	,		ScriptFieldType::Uint},
+		{"System.UInt64"	,		ScriptFieldType::Ulong},
+		
+		{"Mirage.Vector2"	, 		ScriptFieldType::Vector2},
+		{"Mirage.Vector3"	, 		ScriptFieldType::Vector3},
+		{"Mirage.Vector4"	, 		ScriptFieldType::Vector4},
+		
+		{"Mirage.Nehavior"	, 		ScriptFieldType::Behavior},
+	};
+	
+	
 	namespace Utils
 	{
 		static char* ReadBytes(const std::filesystem::path& filepath, uint32_t* outSize)
@@ -42,25 +66,6 @@ namespace Mirage
 			return buffer;
 		}
 
-		void PrintAssemblyTypes(MonoAssembly* assembly)
-		{
-			MonoImage* image = mono_assembly_get_image(assembly);
-			const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
-			int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
-
-			for (int32_t i = 0; i < numTypes; i++)
-			{
-				uint32_t cols[MONO_TYPEDEF_SIZE];
-				mono_metadata_decode_row(typeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE);
-
-
-				const char* nameSpace = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
-				const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
-
-				MRG_CORE_TRACE("{}.{}", nameSpace, name);
-			}
-		}
-
 		static MonoAssembly* LoadMonoAssembly(const std::filesystem::path& assemblyPath)
 		{
 			uint32_t fileSize = 0;
@@ -80,6 +85,63 @@ namespace Mirage
 			delete[] fileData;
 
 			return assembly;
+		}
+
+		void PrintAssemblyTypes(MonoAssembly* assembly)
+		{
+			MonoImage* image = mono_assembly_get_image(assembly);
+			const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
+			int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
+
+			for (int32_t i = 0; i < numTypes; i++)
+			{
+				uint32_t cols[MONO_TYPEDEF_SIZE];
+				mono_metadata_decode_row(typeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE);
+
+
+				const char* nameSpace = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
+				const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
+
+				MRG_CORE_TRACE("{}.{}", nameSpace, name);
+			}
+		}
+
+		ScriptFieldType MonoTypeToScriptFieldType(MonoType* monoType)
+		{
+			const std::string typeName = mono_type_get_name(monoType);
+
+			const auto it = s_ScriptFieldTypeMap.find(typeName);
+			if(it == s_ScriptFieldTypeMap.end())
+				return ScriptFieldType::Invalid;
+			return it->second;
+		}
+
+		const char* FieldTypeToString(ScriptFieldType type)
+		{
+			switch (type)
+			{
+				case ScriptFieldType::Float:	return "float";
+				case ScriptFieldType::Double:	return "double";
+				
+				case ScriptFieldType::Bool:		return "bool";
+				case ScriptFieldType::Char:		return "char";
+				case ScriptFieldType::Short:	return "short";
+				case ScriptFieldType::Int:		return "int";
+				case ScriptFieldType::Long:		return "long";
+
+				case ScriptFieldType::Byte:		return "byte";
+				case ScriptFieldType::Ushort:	return "ushort";
+				case ScriptFieldType::Uint:		return "uint";
+				case ScriptFieldType::Ulong:	return "uint";
+				
+				case ScriptFieldType::Vector2:	return "Vector2";
+				case ScriptFieldType::Vector3:	return "Vector3";
+				case ScriptFieldType::Vector4:	return "Vector4";
+
+				case ScriptFieldType::Behavior:	return "Behavior";
+			}
+
+			return "<Invalid>";
 		}
 	}
 
@@ -105,8 +167,7 @@ namespace Mirage
 	};
 
 	static ScriptEngineData* s_Data = nullptr;
-
-
+	
 	void ScriptingEngine::Init()
 	{
 		s_Data = new ScriptEngineData();
@@ -159,7 +220,6 @@ namespace Mirage
 		ShutdownMono();
 		delete s_Data;
 	}
-
 
 	void ScriptingEngine::InitMono()
 	{
@@ -255,8 +315,7 @@ namespace Mirage
 	{
 		return s_Data->BehaviorClasses;
 	}
-
-
+	
 	void ScriptingEngine::LoadAssemblyClasses()
 	{
 		s_Data->BehaviorClasses.clear();
@@ -264,7 +323,7 @@ namespace Mirage
 		const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(s_Data->AppAssemblyImage, MONO_TABLE_TYPEDEF);
 		int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
 		
-		MonoClass* soKlass = mono_class_from_name(s_Data->CoreAssemblyImage, "Mirage", "Behavior");
+		MonoClass* BehaviorKlass = mono_class_from_name(s_Data->CoreAssemblyImage, "Mirage", "Behavior");
 
 		for (int32_t i = 0; i < numTypes; i++)
 		{
@@ -275,19 +334,36 @@ namespace Mirage
 			const char* name = mono_metadata_string_heap(s_Data->AppAssemblyImage, cols[MONO_TYPEDEF_NAME]);
 
 			MonoClass* klass = mono_class_from_name(s_Data->AppAssemblyImage, nameSpace, name);
-			if (klass == soKlass)
+			if (klass == BehaviorKlass)
 			{
 				continue;
 			}
-			if (mono_class_is_subclass_of(klass, soKlass, 0))
+
+			bool isBehavior = mono_class_is_subclass_of(klass, BehaviorKlass, 0);
+			if (!isBehavior)
+				continue;
+		
+			std::string classFullname;
+			if (strlen(nameSpace) != 0)
+				classFullname = fmt::format("{}.{}", nameSpace, name);
+			else
+				classFullname = name;
+			s_Data->BehaviorClasses[classFullname] = CreateRef<ScriptClass>(nameSpace, name);
+
+			// getting fields
+			// mono_class_num_fields(klass);
+			void* it = nullptr;
+			MRG_CORE_TRACE("{}",classFullname);
+			while (MonoClassField* field = mono_class_get_fields(klass, &it))
 			{
-				std::string fullname;
-				if (strlen(nameSpace) != 0)
-					fullname = fmt::format("{}.{}", nameSpace, name);
-				else
-					fullname = name;
-				MRG_CORE_TRACE(fullname);
-				s_Data->BehaviorClasses[fullname] = CreateRef<ScriptClass>(nameSpace, name);
+				const char* fieldName = mono_field_get_name(field);
+				uint32_t fieldFlags = mono_field_get_flags(field);
+				// if (fieldFlags & FIELD_ATTRIBUTE_PUBLIC)
+				// {
+					MonoType* type = mono_field_get_type(field);
+					ScriptFieldType fieldType = Utils::MonoTypeToScriptFieldType(type);
+					MRG_CORE_TRACE("    {} of type {}", fieldName, Utils::FieldTypeToString(fieldType));
+				// }
 			}
 		}
 	}
@@ -315,7 +391,6 @@ namespace Mirage
 		else
 		{
 			m_Class = mono_class_from_name(s_Data->AppAssemblyImage, m_NameSpace.c_str(), m_Name.c_str());
-			
 		}
 	}
 	

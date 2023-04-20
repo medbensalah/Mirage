@@ -6,6 +6,23 @@ namespace Sandbox
 	public class Player : Behavior
 	{
 		public float Speed = 50.0f;
+		public bool Bool;
+		public byte Byte;
+		public short Short;
+		public int Int;
+		public long Long;
+		public float Float;
+		public double Double;
+		public char Char;
+		public ushort UShort;
+		public uint UInt;
+		public ulong ULong;
+		public Vector2 Vector2;
+		public Vector3 Vector3;
+		public Vector4 Vector4;
+		public Behavior Behavior;
+		public Camera Camera;
+		
 		
 		private Rigidbody2D _rigidBody;
 		

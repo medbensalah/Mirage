@@ -5,70 +5,299 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c696c258-0635-4eda-ac01-7292d12c98b7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Sandbox/.idea/.name" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Sandbox/.idea/indexLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Sandbox/.idea/projectSettingsUpdater.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Sandbox/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.Sandbox/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Binaries/Mirage-Scripting-Core.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Binaries/Mirage-Scripting-Core.pdb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Binaries/Sandbox.dll" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Binaries/Sandbox.pdb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Camera.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Source/Player.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Win - GenerateProjects.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/premake5.lua" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Resources/Scripts/Mirage-Scripting-Core.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Resources/Scripts/Mirage-Scripting-Core.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Resources/Scripts/Mirage-Scripting-Core.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Resources/Scripts/Mirage-Scripting-Core.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Resources/Scripts/intermediates/Release/Mirage-Scripting-Core.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Resources/Scripts/intermediates/Release/Mirage-Scripting-Core.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Resources/Scripts/intermediates/Release/Mirage-Scripting-Core.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Resources/Scripts/intermediates/Release/Mirage-Scripting-Core.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Resources/Scripts/intermediates/Release/Mirage-Scripting-Core.dll" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Resources/Scripts/intermediates/Release/Mirage-Scripting-Core.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Resources/Scripts/intermediates/Release/Mirage-Scripting-Core.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Resources/Scripts/intermediates/Release/Mirage-Scripting-Core.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Temp/editorSceneBackup.mrgs" beforeDir="false" afterPath="$PROJECT_DIR$/../../../Temp/editorSceneBackup.mrgs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../assets/Scenes/ScriptingTest.mrgs" beforeDir="false" afterPath="$PROJECT_DIR$/../../../assets/Scenes/ScriptingTest.mrgs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../src/Panels/HierarchyPanel.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../src/Panels/HierarchyPanel.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../Mirage-Scripting-Core/Mirage-Scripting-Core.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../Mirage-Scripting-Core/Mirage-Scripting-Core.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../Mirage-Scripting-Core/Source/Camera.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../Mirage-Scripting-Core/Source/Mirage/Math/Vector2.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../Mirage-Scripting-Core/Source/Mirage/Math/Vector2.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../Mirage-Scripting-Core/Source/Player.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../Mirage-Scripting-Core/premake5.lua" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../Mirage-Scripting-Core/premake5.lua" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/.gitattributes" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/Makefile.am" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/abi-details.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/abi.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/appdomain-icalls.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/appdomain.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/assembly-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/assembly-load-context.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/assembly.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/attach.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/attach.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/boehm-gc.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/callspec.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/callspec.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/cil-coff.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/class-abi-details.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/class-accessors.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/class-getters.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/class-init-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/class-init.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/class-init.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/class-inlines.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/class-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/class-private-definition.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/class-setup-vtable.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/class.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/cominterop.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/cominterop.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/console-io.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/console-null.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/console-unix.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/console-win32.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/coree-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/coree.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/coree.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/custom-attrs-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/custom-attrs.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/debug-helpers.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/debug-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/debug-mono-ppdb.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/debug-mono-ppdb.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/debug-mono-symfile.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/domain-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/domain.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/dynamic-image-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/dynamic-image.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/dynamic-stream-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/dynamic-stream.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/environment-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/environment.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/exception-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/exception.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/external-only.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/external-only.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/fdhandle.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/fdhandle.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/file-mmap-posix.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/file-mmap-windows.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/file-mmap.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/filewatcher.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/filewatcher.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/gc-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/gc-stats.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/gc.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/handle-decl.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/handle.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/handle.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/icall-decl.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/icall-def-netcore.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/icall-def.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/icall-eventpipe.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/icall-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/icall-signatures.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/icall-table.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/icall-table.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/icall-windows.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/icall.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/icalls.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/image-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/image.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/jit-icall-reg.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/jit-info.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/loaded-images-global.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/loaded-images-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/loaded-images.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/loader-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/loader.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/locales.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/lock-tracer.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/lock-tracer.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/marshal-ilgen.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/marshal-ilgen.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/marshal-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/marshal-noilgen.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/marshal-windows.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/marshal.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/marshal.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/memory-manager.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mempool-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mempool.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mempool.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/metadata-cross-helpers.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/metadata-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/metadata-update.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/metadata-update.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/metadata-verify.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/metadata.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/method-builder-ilgen-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/method-builder-ilgen.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/method-builder-ilgen.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/method-builder-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/method-builder.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/method-builder.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/monitor.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/monitor.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-basic-block.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-basic-block.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-conc-hash.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-conc-hash.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-config-dirs.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-config-dirs.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-config-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-config.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-debug.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-endian.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-endian.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-hash-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-hash.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-hash.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-mlist.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-mlist.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-perfcounters-def.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-perfcounters.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-perfcounters.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-ptr-array.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-route.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-security-windows.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/mono-security.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/native-library-qcall.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/native-library.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/native-library.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/normalization-tables.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/null-gc-handles.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/null-gc-handles.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/null-gc.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/number-formatter.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/number-ms.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/object-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/object-offsets.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/object.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/opcodes.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/pal-ios.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/pal-ios.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/profiler-legacy.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/profiler-private.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/profiler.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/property-bag.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/property-bag.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/qcall-def.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/rand.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/rand.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/reflection-cache.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/reflection-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/reflection.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/remoting.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/remoting.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/runtime.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/runtime.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/security-core-clr.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/security-core-clr.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/security-manager.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/security-manager.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/security.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/seq-points-data.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/seq-points-data.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/sgen-bridge-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/sgen-bridge.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/sgen-client-mono.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/sgen-dynarray.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/sgen-mono-ilgen.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/sgen-mono-ilgen.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/sgen-mono.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/sgen-mono.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/sgen-new-bridge.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/sgen-old-bridge.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/sgen-stw.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/sgen-tarjan-bridge.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/sgen-toggleref.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/sgen-toggleref.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/sre-encode.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/sre-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/sre-save.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/sre.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/string-icalls.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/string-icalls.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/support.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/sysmath.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/system_net_security_native_empty.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/tabledefs.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/threadpool-io-epoll.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/threadpool-io-kqueue.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/threadpool-io-poll.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/threadpool-io.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/threadpool-io.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/threadpool-worker-default.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/threadpool-worker-wasm.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/threadpool-worker.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/threadpool.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/threadpool.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/threads-types.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/threads.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/verify-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/verify.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32error-unix.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32error-win32.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32error.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32event-unix.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32event-win32.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32event.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32file-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32file-unix-glob.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32file-unix-glob.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32file-unix.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32file-win32.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32file.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32file.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32handle-namespace.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32handle-namespace.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32handle.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32handle.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32mutex-unix.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32mutex-win32.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32mutex.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32process-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32process-unix-bsd.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32process-unix-default.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32process-unix-haiku.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32process-unix-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32process-unix-osx.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32process-unix.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32process-win32.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32process.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32process.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32semaphore-unix.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32semaphore-win32.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32semaphore.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32socket-internals.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32socket-unix.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32socket-win32.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32socket.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/w32socket.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/mono/include/mono/metadata/wrapper-types.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Sandbox/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Sandbox/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Binaries/Sandbox.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Sandbox.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Binaries/Sandbox.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Binaries/Sandbox.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Source/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Source/Player.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../../Mirage/src/Mirage/Scripting/ScriptingEngine.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../Mirage/src/Mirage/Scripting/ScriptingEngine.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../../../Mirage/src/Mirage/Scripting/ScriptingEngine.h" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../Mirage/src/Mirage/Scripting/ScriptingEngine.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../Mirage/vendor/Box2D" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/Box2D" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../Mirage/vendor/GLAD/bin-int/Release-windows-x86_64/Glad/glad.obj" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/GLAD/bin-int/Release-windows-x86_64/Glad/glad.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../Mirage/vendor/GLAD/bin/Release-windows-x86_64/Glad/Glad.lib" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/GLAD/bin/Release-windows-x86_64/Glad/Glad.lib" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../../Mirage/vendor/GLAD/bin/Release-windows-x86_64/Glad/Glad.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/../../../../Mirage/vendor/GLAD/bin/Release-windows-x86_64/Glad/Glad.pdb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/4b76c3e709534801a173f34a1d6b3dfc522790/64/413d416b/Int64.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
   <component name="ProjectId" id="2OdwJP7F3k1cQY6uBiMMdV3XYq9" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "settings.editor.selected.configurable": "preferences.pluginManager",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "C:\\Users\\Mohamed\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\DecompilerCache",
-      "C:\\Users\\Mohamed\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\SourcesCache",
-      "C:\\Users\\Mohamed\\AppData\\Local\\Symbols\\src"
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;C:\\Users\\Mohamed\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\DecompilerCache&quot;,
+      &quot;C:\\Users\\Mohamed\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\SourcesCache&quot;,
+      &quot;C:\\Users\\Mohamed\\AppData\\Local\\Symbols\\src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -77,7 +306,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1681903694525</updated>
-      <workItem from="1681903695705" duration="1333000" />
+      <workItem from="1681903695705" duration="1363000" />
+      <workItem from="1681992725728" duration="992000" />
     </task>
     <servers />
   </component>
