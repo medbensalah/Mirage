@@ -348,7 +348,9 @@ namespace Mirage
 				classFullname = fmt::format("{}.{}", nameSpace, name);
 			else
 				classFullname = name;
-			s_Data->BehaviorClasses[classFullname] = CreateRef<ScriptClass>(nameSpace, name);
+
+			Ref<ScriptClass> scriptClass = CreateRef<ScriptClass>(nameSpace, name);
+			s_Data->BehaviorClasses[classFullname] = scriptClass;
 
 			// getting fields
 			// mono_class_num_fields(klass);
@@ -358,12 +360,22 @@ namespace Mirage
 			{
 				const char* fieldName = mono_field_get_name(field);
 				uint32_t fieldFlags = mono_field_get_flags(field);
-				// if (fieldFlags & FIELD_ATTRIBUTE_PUBLIC)
-				// {
+				if (fieldFlags & FIELD_ATTRIBUTE_PUBLIC)
+				{
 					MonoType* type = mono_field_get_type(field);
 					ScriptFieldType fieldType = Utils::MonoTypeToScriptFieldType(type);
 					MRG_CORE_TRACE("    {} of type {}", fieldName, Utils::FieldTypeToString(fieldType));
-				// }
+
+					scriptClass->m_PublicFields[fieldName] = {fieldName, fieldType};
+				}
+				else if (fieldFlags & FIELD_ATTRIBUTE_PRIVATE)
+				{					
+					MonoType* type = mono_field_get_type(field);
+					ScriptFieldType fieldType = Utils::MonoTypeToScriptFieldType(type);
+					MRG_CORE_WARN("    {} of type {}", fieldName, Utils::FieldTypeToString(fieldType));
+
+					scriptClass->m_PrivateFields[fieldName] = {fieldName, fieldType};
+				}
 			}
 		}
 	}

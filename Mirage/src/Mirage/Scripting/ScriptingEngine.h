@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <map>
 
 namespace Mirage
 {
@@ -25,6 +26,12 @@ namespace Mirage
 		Vector2, Vector3, Vector4,
 		Behavior,
 	};
+
+	struct ScriptField
+	{
+		std::string Name;
+		ScriptFieldType Type;
+	};
 	
 	class ScriptClass
 	{
@@ -43,6 +50,11 @@ namespace Mirage
 
 		std::string m_NameSpace;
 		std::string m_Name;
+
+		std::map<std::string, ScriptField> m_PublicFields;
+		std::map<std::string, ScriptField> m_PrivateFields;
+
+		friend class ScriptingEngine;
 	};
 
 	class ScriptInstance

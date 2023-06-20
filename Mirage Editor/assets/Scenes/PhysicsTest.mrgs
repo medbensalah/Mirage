@@ -47,8 +47,8 @@ Entities:
       Tag: Player
     TransformComponent:
       Position: [-3.55337596, 5.33202505, 0]
-      Rotation: [0, 0, 41.0999985]
-      Scale: [1, 1, 1]
+      Rotation: [0, 0, 0]
+      Scale: [2, 2, 2]
     SpriteRendererComponent:
       Color: [1, 1, 1, 1]
       Texture: Assets\textures\Default.png
@@ -56,7 +56,7 @@ Entities:
       Offset: [0, 0]
     RigidBody2DComponent:
       Body type: Dynamic
-      Gravity scale: 1
+      Gravity scale: 2
       Fixed rotation: false
     BoxCollider2DComponent:
       Size: [0.5, 0.5]
@@ -86,7 +86,7 @@ Entities:
       Offset: [0, 0]
       Density: 0
       Friction: 0.100000001
-      Bounciness: 1
+      Bounciness: 0.5
       BouncinessThreshold: 0.5
   - Entity: 2314324778588416902
     TagComponent:
@@ -94,17 +94,17 @@ Entities:
     TransformComponent:
       Position: [6.61674261, 8.2393856, 0]
       Rotation: [0, 0, 54.2999992]
-      Scale: [3, 3, 1]
+      Scale: [5, 5, 5]
     CircleRendererComponent:
       Thickness: 1
       Fade: 0.00499999989
-      Color: [0.99999994, 0.196236297, 0.223394439, 1]
+      Color: [1, 0.832161069, 0.256941676, 1]
       Texture: Assets\textures\Default.png
       Tiling: [1, 1]
       Offset: [0, 0]
     RigidBody2DComponent:
       Body type: Dynamic
-      Gravity scale: 1
+      Gravity scale: 2
       Fixed rotation: false
     CircleCollider2DComponent:
       Radius: 0.50999999

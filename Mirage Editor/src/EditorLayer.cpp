@@ -131,7 +131,7 @@ namespace Mirage
 
 		Renderer2D::ResetStats();
 
-		
+
 		if (m_ViewportVisible)
 		{
 			m_Framebuffer->Bind();
@@ -265,7 +265,7 @@ namespace Mirage
 			{
 				if (ImGui::MenuItem("Stats"))
 					m_ShowStats = true;
-				
+
 				if (ImGui::MenuItem("Graph Editor"))
 					m_ShowGraphEditor = true;
 
@@ -282,7 +282,7 @@ namespace Mirage
 		ImGui::SetNextWindowClass(&s_ViewportWindowClass);
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
-					
+
 		if (ImGui::Begin("Viewport"))
 		{
 			auto viewportMinRegion = ImGui::GetCursorPos();
@@ -297,7 +297,7 @@ namespace Mirage
 			m_ViewportFocused = ImGui::IsWindowFocused();
 			m_ViewportHovered = ImGui::IsWindowHovered();
 			bool IsAnyImGuiActive = ImGui::IsAnyItemActive();
-			
+
 			if (m_SceneState == SceneState::Edit)
 			{
 				Application::Get().GetImGuiLayer()->AllowKbEvents(!IsAnyImGuiActive);
@@ -305,10 +305,11 @@ namespace Mirage
 			}
 			else
 			{
-				Application::Get().GetImGuiLayer()->AllowKbEvents(m_ViewportFocused && m_ViewportHovered && !IsAnyImGuiActive);
+				Application::Get().GetImGuiLayer()->AllowKbEvents(
+					m_ViewportFocused && m_ViewportHovered && !IsAnyImGuiActive);
 				Application::Get().GetImGuiLayer()->AllowMouseEvents(m_ViewportFocused || m_ViewportHovered);
 			}
-			
+
 			// Application::Get().GetImGuiLayer()->AllowKbEvents(
 			// 	(m_ViewportFocused || m_ViewportHovered) && !IsAnyImGuiActive);
 			// Application::Get().GetImGuiLayer()->AllowMouseEvents(m_ViewportFocused || m_ViewportHovered);
@@ -363,13 +364,13 @@ namespace Mirage
 			}
 
 			// ----------------------------- Gizmos ------------------------------
-			
+
 			ImGuizmo::SetOrthographic(m_EditorCamera.IsOrthographic());
 			ImGuizmo::SetDrawlist();
 
 			ImGuizmo::SetRect(m_ViewportBounds[0].x, m_ViewportBounds[0].y,
-							  m_ViewportBounds[1].x - m_ViewportBounds[0].x,
-							  m_ViewportBounds[1].y - m_ViewportBounds[0].y);
+			                  m_ViewportBounds[1].x - m_ViewportBounds[0].x,
+			                  m_ViewportBounds[1].y - m_ViewportBounds[0].y);
 
 			ImGuizmo::AllowAxisFlip(false);
 
@@ -377,16 +378,16 @@ namespace Mirage
 			{
 				MRG_PROFILE_SCOPE("Render grid");
 				Mat4 matrix = glm::rotate(Mat4(1.0f), glm::radians(-90.0f), Vec3(1, 0, 0));
-			
+
 				ImGuizmo::DrawGrid(glm::value_ptr(m_EditorCamera.GetView()),
-								   glm::value_ptr(m_EditorCamera.GetProjection()),
-								   glm::value_ptr(matrix),
-								   m_GridSize, m_GridAlpha);
+				                   glm::value_ptr(m_EditorCamera.GetProjection()),
+				                   glm::value_ptr(matrix),
+				                   m_GridSize, m_GridAlpha);
 			}
 
-			
+
 			SceneObject selectedSO = m_HierarchyPanel.GetSelectedSO();
-			
+
 			if (selectedSO)
 			{
 				// Runitme Camera
@@ -467,7 +468,7 @@ namespace Mirage
 					}
 				}
 			}
-			
+
 			// ----------------------------- Toolbar -----------------------------
 			ImGui::SetItemAllowOverlap();
 			ImVec2 curPos(ImGui::GetWindowContentRegionMin());
@@ -479,6 +480,7 @@ namespace Mirage
 		ImGui::End();
 		ImGui::PopStyleVar();
 	}
+
 	void EditorLayer::CreateGamePreview()
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
@@ -510,10 +512,10 @@ namespace Mirage
 			else
 			{
 				ImGui::Image((ImTextureID)m_PlayButtonIcon->GetRendererID(),
-							 ImVec2{m_PlayButtonIconSize, m_PlayButtonIconSize},
-							 {0, 1}, {1, 0}, {0.7f, 0.7f, 0.7, 1}, {1, 1, 1, 0.0f});
+				             ImVec2{m_PlayButtonIconSize, m_PlayButtonIconSize},
+				             {0, 1}, {1, 0}, {0.7f, 0.7f, 0.7, 1}, {1, 1, 1, 0.0f});
 			}
-			
+
 			// Simulate button
 			ImGui::SetCursorPos({btnPosX + btnSizeX, btnPosY});
 			bool simulateStopBtnPressed = ImGui::GradientButton("##SimulateButton", ImVec2{btnSizeX, btnSizeY});
@@ -522,22 +524,21 @@ namespace Mirage
 			if (m_SceneState == SceneState::Edit)
 			{
 				ImGui::Image((ImTextureID)m_SimulateButtonIcon->GetRendererID(),
-							 ImVec2{m_PlayButtonIconSize, m_PlayButtonIconSize},
-							 {0, 1}, {1, 0}, {0.03f, 0.7f, 0, 1}, {1, 1, 1, 0.0f});
+				             ImVec2{m_PlayButtonIconSize, m_PlayButtonIconSize},
+				             {0, 1}, {1, 0}, {0.03f, 0.7f, 0, 1}, {1, 1, 1, 0.0f});
 			}
 			else if (m_SceneState == SceneState::Simulate)
 			{
 				ImGui::Image((ImTextureID)m_StopButtonIcon->GetRendererID(),
-							 ImVec2{m_PlayButtonIconSize, m_PlayButtonIconSize},
-							 {0, 1}, {1, 0}, {0.7f, 0.03f, 0, 1}, {1, 1, 1, 0.0f});
+				             ImVec2{m_PlayButtonIconSize, m_PlayButtonIconSize},
+				             {0, 1}, {1, 0}, {0.7f, 0.03f, 0, 1}, {1, 1, 1, 0.0f});
 			}
 			else
 			{
 				ImGui::Image((ImTextureID)m_SimulateButtonIcon->GetRendererID(),
-							 ImVec2{m_PlayButtonIconSize, m_PlayButtonIconSize},
-							 {0, 1}, {1, 0}, {0.7f, 0.7f, 0.7, 1}, {1, 1, 1, 0.0f});
+				             ImVec2{m_PlayButtonIconSize, m_PlayButtonIconSize},
+				             {0, 1}, {1, 0}, {0.7f, 0.7f, 0.7, 1}, {1, 1, 1, 0.0f});
 			}
-
 
 
 			if (playStopBtnHovered)
@@ -564,7 +565,7 @@ namespace Mirage
 					OnSceneStop();
 				}
 			}
-			
+
 			if (simulateStopBtnHovered)
 			{
 				ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{8, 2});
@@ -590,7 +591,7 @@ namespace Mirage
 				}
 			}
 
-			ImGui::SetCursorPosY(btnPosY + btnSizeY +  style.FramePadding.y);
+			ImGui::SetCursorPosY(btnPosY + btnSizeY + style.FramePadding.y);
 
 			uint32_t previewTexId = m_PreviewFramebuffer->GetColorAttachmentRendererID();
 			float sizeY = ImGui::GetContentRegionAvail().y;
@@ -602,8 +603,8 @@ namespace Mirage
 		}
 		ImGui::End();
 		ImGui::PopStyleVar();
-		
 	}
+
 	void EditorLayer::CreateToolBar()
 	{
 		MRG_PROFILE_FUNCTION();
@@ -626,7 +627,7 @@ namespace Mirage
 			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
 			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
 		}
-		
+
 		change = ImGui::ImageButton((ImTextureID)m_WorldSpaceIcon->GetRendererID(),
 		                            ImVec2{m_IconSizeS, m_IconSizeS},
 		                            {0, 1}, {1, 0}, -1);
@@ -700,12 +701,11 @@ namespace Mirage
 				m_GizmoType = (ImGuizmo::OPERATION)-1;
 			else
 				m_GizmoType = ImGuizmo::OPERATION::ROTATE;
-			
 		}
 		if (isRotating)
 			ImGui::PopStyleColor(3);
-		
-		
+
+
 		ImGui::SameLine();
 
 		// ------------------- Scale -------------------
@@ -716,7 +716,7 @@ namespace Mirage
 			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
 		}
 		if (ImGui::ImageButton((ImTextureID)m_ScaleIcon->GetRendererID(), ImVec2{m_IconSizeS, m_IconSizeS},
-								   {0, 1}, {1, 0}, -1))
+		                       {0, 1}, {1, 0}, -1))
 		{
 			if (isScaling)
 				m_GizmoType = (ImGuizmo::OPERATION)-1;
@@ -858,7 +858,7 @@ namespace Mirage
 		{
 			ImGui::PushStyleColor(ImGuiCol_Separator, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
 			bool is3D = !m_EditorCamera.IsOrthographic();
-			
+
 			ImGui::AlignTextToFramePadding();
 			ImGui::SetCursorPos(ImVec2{ImGui::GetCursorPosX() + 10, ImGui::GetCursorPosY() + 3});
 			ImGui::Text("Mode: ");
@@ -871,15 +871,17 @@ namespace Mirage
 			if (ImGui::ToggleButton("##CameraMode", &is3D))
 			{
 				// is 3D after click
-				m_EditorCamera.SetProjectionType(is3D? Camera::ProjectionType::Perspective : Camera::ProjectionType::Orthographic);
+				m_EditorCamera.SetProjectionType(is3D
+					                                 ? Camera::ProjectionType::Perspective
+					                                 : Camera::ProjectionType::Orthographic);
 			}
 			ImGui::PopItemWidth();
 			ImGui::SameLine();
 			ImGui::Text("3D");
-			
+
 			ImGui::Separator();
 			ImGui::Spacing();
-			
+
 			ImGui::AlignTextToFramePadding();
 			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
 			ImGui::Text("Speed: ");
@@ -903,35 +905,37 @@ namespace Mirage
 					m_EditorCamera.UpdateProjection();
 				}
 				ImGui::PopItemWidth();
-				
+
 				ImGui::Separator();
 				ImGui::Spacing();
-			
+
 				ImGui::AlignTextToFramePadding();
 				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
 				ImGui::Text("Near plane: ");
 				ImGui::SameLine();
 				ImGui::SetCursorPosX(curPos - 5);
 				ImGui::PushItemWidth(100);
-				if (ImGui::DragFloat("##EditorCameraNearClippingPlane", &m_EditorCamera.m_OrthographicData.m_OrthographicNear, 0.01f,0.01, 0.0f, "%.5g"))
+				if (ImGui::DragFloat("##EditorCameraNearClippingPlane",
+				                     &m_EditorCamera.m_OrthographicData.m_OrthographicNear, 0.01f, 0.01, 0.0f, "%.5g"))
 				{
 					m_EditorCamera.UpdateProjection();
 				}
 				ImGui::PopItemWidth();
-			
+
 				ImGui::AlignTextToFramePadding();
 				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
 				ImGui::Text("Far plane: ");
 				ImGui::SameLine();
 				ImGui::SetCursorPosX(curPos - 5);
 				ImGui::PushItemWidth(100);
-				if (ImGui::DragFloat("##EditorCameraFarClippingPlane", &m_EditorCamera.m_OrthographicData.m_OrthographicFar, 10.0f, 0.01f, 0.0f, "%.5g"))
+				if (ImGui::DragFloat("##EditorCameraFarClippingPlane",
+				                     &m_EditorCamera.m_OrthographicData.m_OrthographicFar, 10.0f, 0.01f, 0.0f, "%.5g"))
 				{
 					m_EditorCamera.UpdateProjection();
 				}
 			}
 			else
-			{				
+			{
 				ImGui::AlignTextToFramePadding();
 				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
 				ImGui::Text("FOV: ");
@@ -944,29 +948,31 @@ namespace Mirage
 					m_EditorCamera.UpdateProjection();
 				}
 				ImGui::PopItemWidth();
-				
+
 				ImGui::Separator();
 				ImGui::Spacing();
-			
+
 				ImGui::AlignTextToFramePadding();
 				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
 				ImGui::Text("Near plane: ");
 				ImGui::SameLine();
 				ImGui::SetCursorPosX(curPos + 5);
 				ImGui::PushItemWidth(100);
-				if (ImGui::DragFloat("##EditorCameraNearClippingPlane", &m_EditorCamera.m_PerspectiveData.m_NearClip, 0.01f,0.01, 0.0f, "%.5g"))
+				if (ImGui::DragFloat("##EditorCameraNearClippingPlane", &m_EditorCamera.m_PerspectiveData.m_NearClip,
+				                     0.01f, 0.01, 0.0f, "%.5g"))
 				{
 					m_EditorCamera.UpdateProjection();
 				}
 				ImGui::PopItemWidth();
-			
+
 				ImGui::AlignTextToFramePadding();
 				ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
 				ImGui::Text("Far plane: ");
 				ImGui::SameLine();
 				ImGui::SetCursorPosX(curPos - 5);
 				ImGui::PushItemWidth(100);
-				if (ImGui::DragFloat("##EditorCameraFarClippingPlane", &m_EditorCamera.m_PerspectiveData.m_FarClip, 0.1f, 0.01f, 0.0f, "%.5g"))
+				if (ImGui::DragFloat("##EditorCameraFarClippingPlane", &m_EditorCamera.m_PerspectiveData.m_FarClip,
+				                     0.1f, 0.01f, 0.0f, "%.5g"))
 				{
 					m_EditorCamera.UpdateProjection();
 				}
@@ -974,10 +980,10 @@ namespace Mirage
 			}
 
 			ImGui::Spacing();
-			
+
 			ImGui::Separator();
 			ImGui::Spacing();
-			
+
 			ImGui::AlignTextToFramePadding();
 			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
 			ImGui::Text("Physics Overlay: ");
@@ -988,16 +994,15 @@ namespace Mirage
 			ImGui::PopItemWidth();
 
 
-			
 			ImGui::Spacing();
-			
+
 			ImGui::PopStyleColor();
-			
+
 			ImGui::EndPopup();
 		}
 
 #pragma endregion
-		
+
 		ImGui::PopStyleColor(2);
 		ImGui::PopStyleVar();
 	}
@@ -1030,7 +1035,6 @@ namespace Mirage
 		}
 
 
-		
 		if (m_ContentBrowserPanel.m_IsSceneRequested)
 		{
 			MRG_CORE_INFO("changing scene");
@@ -1038,7 +1042,7 @@ namespace Mirage
 			m_ContentBrowserPanel.m_IsSceneRequested = false;
 		}
 
-		if(m_ShowStats)
+		if (m_ShowStats)
 		{
 			ImGui::Begin("Stats", &m_ShowStats);
 
@@ -1069,7 +1073,7 @@ namespace Mirage
 			}
 		}
 	}
-	
+
 	void EditorLayer::OnEvent(Event& e)
 	{
 		m_EditorCamera.OnEvent(e);
@@ -1094,7 +1098,7 @@ namespace Mirage
 
 		if (ctrl)
 		{
-		// --------------------------------- Menu ---------------------------------
+			// --------------------------------- Menu ---------------------------------
 			switch (e.GetKeyCode())
 			{
 			case Key::N:
@@ -1113,7 +1117,7 @@ namespace Mirage
 				}
 				Save();
 				break;
-		// ------------------------------- Commands -------------------------------
+			// ------------------------------- Commands -------------------------------
 			case Key::D:
 				DuplicateSelected();
 				return true;
@@ -1247,9 +1251,9 @@ namespace Mirage
 		glDisable(GL_DEPTH_TEST);
 		// TODO: refactor after adding render passes to make them show on top
 		// TODO: and the selection outline ttopmost
-		
+
 		Renderer2D::BeginScene(m_EditorCamera);
-		
+
 		if (m_ShowPhysicsColliders)
 		{
 			//Rendering circle colliders
@@ -1260,10 +1264,10 @@ namespace Mirage
 					auto [t, cc2d] = view.get<TransformComponent, CircleCollider2DComponent>(entity);
 					Vec3 position = t.Position() + Vec3(cc2d.Offset, 0.0f);
 					Vec3 scale = t.Scale() * cc2d.Radius * 2.0f;
-					
+
 					Mat4 transform = glm::translate(glm::mat4(1.0f), t.WorldPosition())
 						* glm::rotate(glm::mat4(1.0f), Radians(t.WorldRotation().z), glm::vec3(0.0f, 0.0f, 1.0f))
-						* glm::translate(glm::mat4(1.0f),  Vec3(cc2d.Offset, 0.0f))
+						* glm::translate(glm::mat4(1.0f), Vec3(cc2d.Offset, 0.0f))
 						* glm::scale(glm::mat4(1.0f), scale);
 					float thickness = 0.05f / scale.x * Renderer2D::Draw::GetLineWidth();
 					Renderer2D::Draw::Circle(transform, {0.77f, 1.0f, 0.27f, 1.0f}, thickness, 0.0f, -1);
@@ -1277,10 +1281,10 @@ namespace Mirage
 					auto [t, bc2d] = view.get<TransformComponent, BoxCollider2DComponent>(entity);
 
 					Vec3 scale = t.WorldScale() * Vec3(bc2d.Size * 2.0f, 1.0f);
-					
+
 					Mat4 transform = glm::translate(glm::mat4(1.0f), t.WorldPosition())
 						* glm::rotate(glm::mat4(1.0f), Radians(t.WorldRotation().z), glm::vec3(0.0f, 0.0f, 1.0f))
-						* glm::translate(glm::mat4(1.0f),  Vec3(bc2d.Offset, 0.0f))
+						* glm::translate(glm::mat4(1.0f), Vec3(bc2d.Offset, 0.0f))
 						* glm::scale(glm::mat4(1.0f), scale);
 					Renderer2D::Draw::Rect(transform, {0.77f, 1.0f, 0.27f, 1.0f}, -1);
 				}
@@ -1289,12 +1293,13 @@ namespace Mirage
 
 		// Draw selected sceneObject outline
 		SceneObject so = m_HierarchyPanel.GetSelectedSO();
-		if (so) {
+		if (so)
+		{
 			TransformComponent transform = so.GetComponent<TransformComponent>();
 			Renderer2D::Draw::Rect(transform.GetTransform(), {1.0f, 0.6f, 0.23f, 1.0f});
 		}
-		
-		
+
+
 		Renderer2D::EndScene();
 		glEnable(GL_DEPTH_TEST);
 	}
@@ -1308,10 +1313,10 @@ namespace Mirage
 			m_HierarchyPanel.SetSelectedSO(m_EditorScene->DuplicateSceneObject(so));
 #else
 			m_HierarchyPanel.SetSelectedSO(m_ActiveScene->DuplicateSceneObject(so));
-#endif			
+#endif
 		}
 	}
-	
+
 
 #if COPY_RUNTIME_SCENE
 	void EditorLayer::NewScene()
@@ -1459,7 +1464,7 @@ namespace Mirage
 			m_ActiveScenePath = "";
 			m_ActiveScene = CreateRef<Scene>();
 			// m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-			
+
 			m_HierarchyPanel.SetContext(m_ActiveScene);
 		}
 		else
@@ -1493,10 +1498,10 @@ namespace Mirage
 			if (serializer.DeserializeText(path))
 			{
 				m_ActiveScene = newScene;
-				
+
 				m_ActiveScenePath = path;
 				// m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-				
+
 				m_HierarchyPanel.SetContext(m_ActiveScene);
 			}
 		}
@@ -1557,23 +1562,29 @@ namespace Mirage
 	void EditorLayer::OnScenePlay()
 	{
 		// m_ActiveScene = Scene::Copy(m_EditorScene);
-		
+
 		// const char* filter = "Mirage scene (*.mrgs)\0*.mrgs\0";
 		SceneSerializer serializer(m_ActiveScene);
 		serializer.SerializeText(Paths::TempScene);
 
-		
+
 		m_HierarchyPanel.SetSelectedSO({});
-		
+
 		m_SceneState = SceneState::Play;
 		m_HierarchyPanel.SetContext(m_ActiveScene);
 		m_ActiveScene->OnRuntimeStart();
+
+		// for (int i = 0; i < 100000; ++i)
+		// {
+		// 	SceneObject so = m_ActiveScene->CreateSceneObject();
+		// 	so.AddComponent<SpriteRendererComponent>();
+		// }
 	}
 
 	void EditorLayer::OnSceneStop()
 	{
 		MRG_CORE_ASSERT(m_SceneState == SceneState::Play || m_SceneState == SceneState::Simulate, "Scene state Unknown")
-		
+
 		if (m_SceneState == SceneState::Play)
 		{
 			m_ActiveScene->OnRuntimeStop();
@@ -1588,7 +1599,7 @@ namespace Mirage
 		if (serializer.DeserializeText(Paths::TempScene))
 		{
 			m_ActiveScene = newScene;
-			
+
 			m_HierarchyPanel.SetSelectedSO({});
 
 			m_SceneState = SceneState::Edit;
@@ -1599,14 +1610,14 @@ namespace Mirage
 	void EditorLayer::OnSceneSimulate()
 	{
 		// m_ActiveScene = Scene::Copy(m_EditorScene);
-		
+
 		// const char* filter = "Mirage scene (*.mrgs)\0*.mrgs\0";
 		SceneSerializer serializer(m_ActiveScene);
 		serializer.SerializeText(Paths::TempScene);
 
-		
+
 		m_HierarchyPanel.SetSelectedSO({});
-		
+
 		m_SceneState = SceneState::Simulate;
 		m_HierarchyPanel.SetContext(m_ActiveScene);
 		m_ActiveScene->OnSimulationStart();
