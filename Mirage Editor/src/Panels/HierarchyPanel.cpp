@@ -451,7 +451,6 @@ namespace Mirage
     	DrawComponent<ScriptComponent>("Script", so, [&so](auto& component)
 			{
     			bool scriptClassExists =  ScriptingEngine::ClassExists(component.ClassName);
-				const auto& behaviorClasses = ScriptingEngine::GetBehaviorClasses();
     			
     			static char buffer[64];
     			strcpy_s(buffer, 64, component.ClassName.c_str());
@@ -460,13 +459,40 @@ namespace Mirage
                 {
 	                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{0.9f, 0.2f, 0.3f, 1.0f});
                 }
-				if(DrawSplitUIItem("Class", [&component]()-> bool
-				{
-					return ImGui::InputText("##ScriptClassName", buffer, 64, ImGuiInputTextFlags_EnterReturnsTrue);
-				}, typeid(ScriptComponent).name()))
-				{
-					component.ClassName = buffer;
-				}
+
+                if (DrawSplitUIItem("Class", [&component]()-> bool
+                {
+	                return ImGui::InputText("##ScriptClassName", buffer, 64, ImGuiInputTextFlags_EnterReturnsTrue);
+                }, typeid(ScriptComponent).name()))
+                {
+	                component.ClassName = buffer;
+                }
+
+                // Fields
+                Ref<ScriptInstance> scriptInstance = ScriptingEngine::GetSOScriptInstance(so.GetUUID());
+                if (scriptInstance != nullptr)
+                {
+                	const auto& fields = scriptInstance->GetScriptClass()->GetPublicFields();
+                    for (const auto& [name, field] : fields)
+                    {
+	                    if (field.Type == ScriptFieldType::Float)
+	                    {
+			                    DrawSplitUIItem(name.c_str(), [&scriptInstance, &field, &name]()-> bool
+			                    {
+				                    float data = scriptInstance->GetFieldValue<float>(name);
+				                    bool r = ImGui::DragFloat(("##" + name).c_str(), &data, 1.0f, 0.0f,
+				                                            0.0f, "%.3g");
+				                    if (r)
+				                    {
+				                    	scriptInstance->SetFieldValue(name, data);
+				                    }
+			                    	return r;
+			                    }, typeid(ScriptComponent).name());
+	                    }
+                    }
+                }
+
+    		
                 if (!scriptClassExists)
                 {
 	                ImGui::PopStyleColor();

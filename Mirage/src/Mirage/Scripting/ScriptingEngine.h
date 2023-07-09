@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include <map>
 
+#include "Mirage/Core/UUID.h"
+
 namespace Mirage
 {
 	class Scene;
@@ -13,6 +15,7 @@ typedef struct _MonoObject MonoObject;
 typedef struct _MonoMethod MonoMethod;
 typedef struct _MonoAssembly MonoAssembly;
 typedef struct _MonoImage MonoImage;
+typedef struct _MonoClassField MonoClassField;
 }
 
 namespace Mirage
@@ -29,8 +32,9 @@ namespace Mirage
 
 	struct ScriptField
 	{
-		std::string Name;
 		ScriptFieldType Type;
+		std::string Name;
+		MonoClassField* ClassField;
 	};
 	
 	class ScriptClass
@@ -43,6 +47,9 @@ namespace Mirage
 		MonoObject* Instantiate();
 		MonoMethod* GetMethod(const std::string& name, int numParams);
 		MonoObject* InvokeMethod(MonoObject* instance, MonoMethod* method, void** params = nullptr);
+
+		const std::map<std::string, ScriptField>& GetPublicFields() { return m_PublicFields; };
+		const std::map<std::string, ScriptField>& GetPrivateFields() { return m_PrivateFields; };
 
 	private:
 		MonoClass* m_Class = nullptr;
@@ -66,6 +73,27 @@ namespace Mirage
 		void InvokeOnUpdate(float deltaTime);
 		void InvokeOnPhysicsUpdate(float deltaTime);
 
+		Ref<ScriptClass> GetScriptClass() {return m_ScriptClass;}
+		
+
+		template <typename T>
+		T GetFieldValue(const std::string& name)
+		{
+			char s_FieldValueBuffer[sizeof(T)];
+			bool success = GetFieldValueInternal(name, s_FieldValueBuffer);
+			if (!success)
+				return T();	
+			return *(T*)s_FieldValueBuffer;
+		}
+		
+		template <typename T>
+		void SetFieldValue(const std::string& name, const T& value)
+		{
+			SetFieldValueInternal(name, &value);
+		}
+	private:
+		bool GetFieldValueInternal(const std::string& name, void* buffer);
+		bool SetFieldValueInternal(const std::string& name, const void* value);
 	private:
 		Ref<ScriptClass> m_ScriptClass;
 
@@ -94,6 +122,7 @@ namespace Mirage
 		static void OnPhysicsUpdateBehavior(SceneObject so, float deltaTime);
 
 		static Scene* GetSceneContext();
+		static Ref<ScriptInstance> GetSOScriptInstance(UUID id);
 		static MonoImage* GetCoreAssemblyImage();
 
 		static std::unordered_map<std::string, Ref<ScriptClass>> GetBehaviorClasses();

@@ -31,7 +31,7 @@ namespace Mirage
 		{"Mirage.Vector3"	, 		ScriptFieldType::Vector3},
 		{"Mirage.Vector4"	, 		ScriptFieldType::Vector4},
 		
-		{"Mirage.Nehavior"	, 		ScriptFieldType::Behavior},
+		{"Mirage.Behavior"	, 		ScriptFieldType::Behavior},
 	};
 	
 	
@@ -92,13 +92,14 @@ namespace Mirage
 			MonoImage* image = mono_assembly_get_image(assembly);
 			const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
 			int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
-
+			MonoAssemblyName* assemblyName = mono_assembly_get_name(assembly);
+			std::string name = mono_assembly_name_get_name(assemblyName);
+			MRG_CORE_INFO("Assembly: {}", name);
 			for (int32_t i = 0; i < numTypes; i++)
 			{
 				uint32_t cols[MONO_TYPEDEF_SIZE];
 				mono_metadata_decode_row(typeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE);
-
-
+				
 				const char* nameSpace = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAMESPACE]);
 				const char* name = mono_metadata_string_heap(image, cols[MONO_TYPEDEF_NAME]);
 
@@ -249,7 +250,7 @@ namespace Mirage
 		s_Data->CoreAssembly = Utils::LoadMonoAssembly(filepath.string());
 		MonoImage* assemblyImage = mono_assembly_get_image(s_Data->CoreAssembly);
 		s_Data->CoreAssemblyImage = assemblyImage;
-		// Utils::PrintAssemblyTypes(s_Data->CoreAssembly);
+		Utils::PrintAssemblyTypes(s_Data->CoreAssembly);
 	}
 
 	void ScriptingEngine::LoadAppAssembly(const std::filesystem::path& filepath)
@@ -257,7 +258,7 @@ namespace Mirage
 		s_Data->AppAssembly = Utils::LoadMonoAssembly(filepath.string());
 		MonoImage* assemblyImage = mono_assembly_get_image(s_Data->AppAssembly);
 		s_Data->AppAssemblyImage = assemblyImage;
-		// Utils::PrintAssemblyTypes(s_Data-AppAssembly);
+		Utils::PrintAssemblyTypes(s_Data->AppAssembly);
 	}
 
 	void ScriptingEngine::OnRuntimeStart(Scene* scene)
@@ -309,6 +310,15 @@ namespace Mirage
 	Scene* ScriptingEngine::GetSceneContext()
 	{
 		return s_Data->SceneContext;
+	}
+
+	Ref<ScriptInstance> ScriptingEngine::GetSOScriptInstance(UUID id)
+	{
+		auto it = s_Data->BehaviorInstances.find(id);
+		if (it == s_Data->BehaviorInstances.end())
+			return nullptr;
+
+		return it->second; 
 	}
 
 	std::unordered_map<std::string, Ref<ScriptClass>> ScriptingEngine::GetBehaviorClasses()
@@ -365,19 +375,21 @@ namespace Mirage
 					MonoType* type = mono_field_get_type(field);
 					ScriptFieldType fieldType = Utils::MonoTypeToScriptFieldType(type);
 					MRG_CORE_TRACE("    {} of type {}", fieldName, Utils::FieldTypeToString(fieldType));
-
-					scriptClass->m_PublicFields[fieldName] = {fieldName, fieldType};
+					scriptClass->m_PublicFields[fieldName] = {fieldType, fieldName, field};
 				}
-				else if (fieldFlags & FIELD_ATTRIBUTE_PRIVATE)
-				{					
-					MonoType* type = mono_field_get_type(field);
-					ScriptFieldType fieldType = Utils::MonoTypeToScriptFieldType(type);
-					MRG_CORE_WARN("    {} of type {}", fieldName, Utils::FieldTypeToString(fieldType));
-
-					scriptClass->m_PrivateFields[fieldName] = {fieldName, fieldType};
-				}
+				// else if (fieldFlags & FIELD_ATTRIBUTE_PRIVATE)
+				// {					
+				// 	MonoType* type = mono_field_get_type(field);
+				// 	ScriptFieldType fieldType = Utils::MonoTypeToScriptFieldType(type);
+				// 	MRG_CORE_WARN("    {} of type {}", fieldName, Utils::FieldTypeToString(fieldType));
+				//
+				// 	scriptClass->m_PrivateFields[fieldName] = {fieldType, fieldName, field};
+				// }
 			}
 		}
+
+		auto& classes = s_Data->BehaviorClasses;
+		// mono_field_get_value()
 	}
 
 	MonoImage* ScriptingEngine::GetCoreAssemblyImage()
@@ -462,6 +474,30 @@ namespace Mirage
 			void* param = &deltaTime;
 			m_ScriptClass->InvokeMethod(m_Instance, m_OnPhysicsUpdateMethod, &param);
 		}
+	}
+
+	bool ScriptInstance::GetFieldValueInternal(const std::string& name, void* buffer)
+	{
+		auto& fields = m_ScriptClass->GetPublicFields();
+		auto it = fields.find(name);
+		if (it == fields.end())
+			return false;
+
+		const ScriptField& field = it->second;
+		mono_field_get_value(m_Instance, field.ClassField, buffer);
+		return true;
+	}
+
+	bool ScriptInstance::SetFieldValueInternal(const std::string& name, const void* value)
+	{
+		auto& fields = m_ScriptClass->GetPublicFields();
+		auto it = fields.find(name);
+		if (it == fields.end())
+			return false;
+
+		const ScriptField& field = it->second;
+		mono_field_set_value(m_Instance, field.ClassField, (void*)value);
+		return true;
 	}
 #pragma endregion
 }
