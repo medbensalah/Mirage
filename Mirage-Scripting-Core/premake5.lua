@@ -8,7 +8,7 @@ project "Mirage-Scripting-Core"
 
     files
     {
-        "Source/**.cs",
+        "src/**.cs",
         "Properties/**.cs",
     }
 	    

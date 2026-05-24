@@ -6,6 +6,7 @@ namespace Sandbox
 	public class Player : Behavior
 	{
 		public float Speed = 0.0f;
+		public Vector2 Velocity;
 		public float Time = 0.0f;
 
 		private Rigidbody2D _rigidBody;
@@ -13,7 +14,6 @@ namespace Sandbox
 		void OnCreate()
 		{
 			_rigidBody = GetComponent<Rigidbody2D>();
-			Speed = 0.25f;
 		}
 
 		void OnUpdate(float deltaTime)

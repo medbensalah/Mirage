@@ -1,4 +1,4 @@
-﻿#include "EditorLayer.h"
+#include "EditorLayer.h"
 
 #include <filesystem>
 #include <ImGui/imgui.h>
@@ -92,6 +92,14 @@ namespace Mirage
 	void EditorLayer::OnUpdate(float DeltaTime)
 	{
 		MRG_PROFILE_FUNCTION();
+		
+		// Reset focus validation if selection has changed
+		SceneObject currentSelectedSO = m_HierarchyPanel.GetSelectedSO();
+		if (currentSelectedSO != m_LastSelectedSO)
+		{
+			m_LastFocusedEntityValid = false;
+			m_LastSelectedSO = currentSelectedSO;
+		}
 		// MRG_TRACE("Frame time : {0:.3f} ms   -   FPS : {1:.1f}", DeltaTime * 1000.0f, 1.0f / DeltaTime);
 		// MRG_TRACE("Total elapsed time : {0:.3f} s", Application::GetSeconds());
 
@@ -1154,6 +1162,78 @@ namespace Mirage
 				m_GizmoMode = m_GizmoMode == ImGuizmo::MODE::LOCAL ? ImGuizmo::MODE::WORLD : ImGuizmo::MODE::LOCAL;
 				return true;
 				break;
+			case Key::F:
+			{
+				SceneObject selectedSO = m_HierarchyPanel.GetSelectedSO();
+				if (selectedSO)
+				{
+					if (selectedSO.HasComponent<TransformComponent>())
+					{
+						auto& tc = selectedSO.GetComponent<TransformComponent>();
+						uint32_t entityID = selectedSO.GetEntity();
+
+						// If we select a new object or don't have a valid previous one, start with Centered focus
+						if (!m_LastFocusedEntityValid || m_LastFocusedEntityID != entityID)
+						{
+							m_LastFocusedEntityID = entityID;
+							m_LastFocusedEntityValid = true;
+							m_LastFocusMode = FocusMode::Centered;
+							m_SavedCameraDistance = m_EditorCamera.IsOrthographic()
+								? m_EditorCamera.m_OrthographicData.m_OrthographicSize
+								: m_EditorCamera.m_PerspectiveData.m_Zooming;
+
+							m_EditorCamera.Focus(tc.WorldPosition());
+						}
+						else
+						{
+							// We are pressing F again on the same object. Alternate behavior!
+							if (m_LastFocusMode == FocusMode::Centered)
+							{
+								m_LastFocusMode = FocusMode::Fitted;
+
+								Vec3 scale = tc.WorldScale();
+								float maxScale = glm::max(scale.x, glm::max(scale.y, scale.z));
+
+								if (m_EditorCamera.IsOrthographic())
+								{
+									// In orthographic mode, adjust m_OrthographicSize
+									float sizeToFit = glm::max(scale.y, scale.x / m_EditorCamera.m_AspectRatio) * 1.5f;
+									sizeToFit = glm::max(sizeToFit, 1.0f); // Prevent too small zoom
+									m_EditorCamera.m_OrthographicData.m_OrthographicSize = sizeToFit;
+									m_EditorCamera.UpdateProjection();
+								}
+								else
+								{
+									// In perspective mode, calculate distance to fit the object
+									float fov = glm::radians(m_EditorCamera.m_PerspectiveData.m_FOV);
+									float objectRadius = maxScale * 0.5f;
+									float distance = (objectRadius * 1.5f) / glm::sin(fov * 0.5f);
+									distance = glm::max(distance, 1.0f); // Prevent too small distance
+									m_EditorCamera.SetDistance(distance);
+								}
+								m_EditorCamera.Focus(tc.WorldPosition());
+							}
+							else
+							{
+								m_LastFocusMode = FocusMode::Centered;
+
+								if (m_EditorCamera.IsOrthographic())
+								{
+									m_EditorCamera.m_OrthographicData.m_OrthographicSize = m_SavedCameraDistance;
+									m_EditorCamera.UpdateProjection();
+								}
+								else
+								{
+									m_EditorCamera.SetDistance(m_SavedCameraDistance);
+								}
+								m_EditorCamera.Focus(tc.WorldPosition());
+							}
+						}
+					}
+				}
+				return true;
+				break;
+			}
 			default:
 				break;
 			}

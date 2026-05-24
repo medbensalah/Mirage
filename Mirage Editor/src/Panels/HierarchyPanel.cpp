@@ -475,24 +475,190 @@ namespace Mirage
                 	const auto& fields = scriptInstance->GetScriptClass()->GetPublicFields();
                     for (const auto& [name, field] : fields)
                     {
-	                    if (field.Type == ScriptFieldType::Float)
+	                    if (field.Type == ScriptFieldType::Float || field.Type == ScriptFieldType::Double)
 	                    {
-			                    DrawSplitUIItem(name.c_str(), [&scriptInstance, &field, &name]()-> bool
+		                    DrawSplitUIItem(name.c_str(), [&scriptInstance, &field, &name]()-> bool
+		                    {
+			                    float data = scriptInstance->GetFieldValue<float>(name);
+			                    bool r = ImGui::DragFloat(("##" + name).c_str(), &data, 1.0f, 0.0f,
+			                                            0.0f, "%.3g");
+			                    if (r)
 			                    {
-				                    float data = scriptInstance->GetFieldValue<float>(name);
-				                    bool r = ImGui::DragFloat(("##" + name).c_str(), &data, 1.0f, 0.0f,
-				                                            0.0f, "%.3g");
-				                    if (r)
-				                    {
-				                    	scriptInstance->SetFieldValue(name, data);
-				                    }
-			                    	return r;
-			                    }, typeid(ScriptComponent).name());
+				                    scriptInstance->SetFieldValue(name, data);
+			                    }
+			                    return r;
+		                    }, typeid(ScriptComponent).name());
 	                    }
+	                    if (field.Type == ScriptFieldType::Vector2)
+	                    {
+		                    DrawSplitUIItem(name.c_str(), [&scriptInstance, &field, &name]()-> bool
+		                    {
+			                    Vec2 data = scriptInstance->GetFieldValue<Vec2>(name);
+			                    bool r = ImGui::DragFloat2(("##" + name).c_str(), &data.x, 1.0f, 0.0f,
+			                                            0.0f, "%.3g");
+			                    if (r)
+			                    {
+				                    scriptInstance->SetFieldValue(name, data);
+			                    }
+			                    return r;
+		                    }, typeid(ScriptComponent).name());
+	                    }
+	                    if (field.Type == ScriptFieldType::Vector3)
+	                    {
+		                    DrawSplitUIItem(name.c_str(), [&scriptInstance, &field, &name]()-> bool
+		                    {
+			                    Vec3 data = scriptInstance->GetFieldValue<Vec3>(name);
+			                    bool r = ImGui::DragFloat3(("##" + name).c_str(), &data.x, 1.0f, 0.0f,
+			                                            0.0f, "%.3g");
+			                    if (r)
+			                    {
+				                    scriptInstance->SetFieldValue(name, data);
+			                    }
+			                    return r;
+		                    }, typeid(ScriptComponent).name());
+	                    }
+	                    if (field.Type == ScriptFieldType::Vector4)
+	                    {
+		                    DrawSplitUIItem(name.c_str(), [&scriptInstance, &field, &name]()-> bool
+		                    {
+			                    Vec4 data = scriptInstance->GetFieldValue<Vec4>(name);
+			                    bool r = ImGui::DragFloat4(("##" + name).c_str(), &data.x, 1.0f, 0.0f,
+			                                            0.0f, "%.3g");
+			                    if (r)
+			                    {
+				                    scriptInstance->SetFieldValue(name, data);
+			                    }
+			                    return r;
+		                    }, typeid(ScriptComponent).name());
+	                    }
+	                    if (field.Type == ScriptFieldType::Bool)
+	                    {
+		                    DrawSplitUIItem(name.c_str(), [&scriptInstance, &field, &name]()-> bool
+		                    {
+			                    bool data = scriptInstance->GetFieldValue<bool>(name);
+			                    bool r = ImGui::Checkbox(("##" + name).c_str(), &data);
+			                    if (r)
+			                    {
+				                    scriptInstance->SetFieldValue(name, data);
+			                    }
+			                    return r;
+		                    }, typeid(ScriptComponent).name());
+	                    }
+						if (field.Type == ScriptFieldType::Byte)
+						{
+							DrawSplitUIItem(name.c_str(), [&scriptInstance, &field, &name]()-> bool
+							{
+								int data = scriptInstance->GetFieldValue<int>(name);
+								bool r = ImGui::DragInt(("##" + name).c_str(), &data, 1.0f, SCHAR_MIN,
+														SCHAR_MAX);
+								if (r)
+								{
+									scriptInstance->SetFieldValue(name, data);
+								}
+								return r;
+							}, typeid(ScriptComponent).name());
+						}
+						if (field.Type == ScriptFieldType::Short)
+						{
+							DrawSplitUIItem(name.c_str(), [&scriptInstance, &field, &name]()-> bool
+							{
+								int data = scriptInstance->GetFieldValue<int>(name);
+								bool r = ImGui::DragInt(("##" + name).c_str(), &data, 1.0f, SHRT_MIN,
+														SHRT_MAX);
+								if (r)
+								{
+									scriptInstance->SetFieldValue(name, data);
+								}
+								return r;
+							}, typeid(ScriptComponent).name());
+						}
+						if (field.Type == ScriptFieldType::Int)
+						{
+							DrawSplitUIItem(name.c_str(), [&scriptInstance, &field, &name]()-> bool
+							{
+								int data = scriptInstance->GetFieldValue<int>(name);
+								bool r = ImGui::DragInt(("##" + name).c_str(), &data, 1.0f, INT_MIN,
+														INT_MAX);
+								if (r)
+								{
+									scriptInstance->SetFieldValue(name, data);
+								}
+								return r;
+							}, typeid(ScriptComponent).name());
+						}
+						if (field.Type == ScriptFieldType::Long)
+						{
+							DrawSplitUIItem(name.c_str(), [&scriptInstance, &field, &name]()-> bool
+							{
+								int data = scriptInstance->GetFieldValue<int>(name);
+								bool r = ImGui::DragInt(("##" + name).c_str(), &data, 1.0f, LLONG_MIN,
+														LLONG_MAX);
+								if (r)
+								{
+									scriptInstance->SetFieldValue(name, data);
+								}
+								return r;
+							}, typeid(ScriptComponent).name());
+						}
+                    	//TODO: unsigned types
+						if (field.Type == ScriptFieldType::Ushort)
+						{
+							DrawSplitUIItem(name.c_str(), [&scriptInstance, &field, &name]()-> bool
+							{
+								int data = scriptInstance->GetFieldValue<int>(name);
+								bool r = ImGui::DragInt(("##" + name).c_str(), &data, 1.0f, 0.0f,
+														USHRT_MAX, "%d", ImGuiSliderFlags_AlwaysClamp);
+								if (r)
+								{
+									scriptInstance->SetFieldValue(name, data);
+								}
+								return r;
+							}, typeid(ScriptComponent).name());
+						}
+						if (field.Type == ScriptFieldType::Uint)
+						{
+							DrawSplitUIItem(name.c_str(), [&scriptInstance, &field, &name]()-> bool
+							{
+								int data = scriptInstance->GetFieldValue<int>(name);
+								bool r = ImGui::DragInt(("##" + name).c_str(), &data, 1.0f, 0.0f,
+														UINT_MAX, "%d", ImGuiSliderFlags_AlwaysClamp);
+								if (r)
+								{
+									scriptInstance->SetFieldValue(name, data);
+								}
+								return r;
+							}, typeid(ScriptComponent).name());
+						}
+						if (field.Type == ScriptFieldType::Ulong)
+						{
+							DrawSplitUIItem(name.c_str(), [&scriptInstance, &field, &name]()-> bool
+							{
+								int data = scriptInstance->GetFieldValue<int>(name);
+								bool r = ImGui::DragInt(("##" + name).c_str(), &data, 1.0f, 0.0f,
+														ULLONG_MAX, "%d", ImGuiSliderFlags_AlwaysClamp);
+								if (r)
+								{
+									scriptInstance->SetFieldValue(name, data);
+								}
+								return r;
+							}, typeid(ScriptComponent).name());
+						}
+						if (field.Type == ScriptFieldType::Char)
+						{
+							DrawSplitUIItem(name.c_str(), [&scriptInstance, &field, &name]()-> bool
+							{
+								char data = scriptInstance->GetFieldValue<char>(name);
+								bool r = ImGui::InputText(("##" + name).c_str(), &data, 1,
+														 ImGuiInputTextFlags_CharsDecimal);
+								if (r)
+								{
+									scriptInstance->SetFieldValue(name, data);
+								}
+								return r;
+							}, typeid(ScriptComponent).name()	);
+						}
                     }
-                }
-
-    		
+                }    		
                 if (!scriptClassExists)
                 {
 	                ImGui::PopStyleColor();

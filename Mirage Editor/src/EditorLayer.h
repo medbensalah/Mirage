@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Mirage.h"
 #include "ImGui/imgui_internal.h"
@@ -134,6 +134,13 @@ namespace Mirage
 			Play,
     		Simulate
 		};
+
+		enum class FocusMode { Centered, Fitted };
+		SceneObject m_LastSelectedSO;
+		uint32_t m_LastFocusedEntityID = 0;
+		bool m_LastFocusedEntityValid = false;
+		FocusMode m_LastFocusMode = FocusMode::Centered;
+		float m_SavedCameraDistance = 10.0f;
 
     	SceneState m_SceneState = SceneState::Edit;
     	

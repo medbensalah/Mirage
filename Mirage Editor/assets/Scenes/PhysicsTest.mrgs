@@ -36,7 +36,7 @@ Entities:
         PerspectiveFOV: 1.39626336
         PerspectiveNear: 0.00999999978
         PerspectiveFar: 1000
-        OrthographicSize: 28.7000008
+        OrthographicSize: 33.5
         OrthographicNear: -1
         OrthographicFar: 1
       Primary: true
