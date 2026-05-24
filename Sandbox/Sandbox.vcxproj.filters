@@ -15,10 +15,14 @@
     <ClCompile Include="src\SandBoxApplication.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\ExampleLayer.cpp" />
+    <ClCompile Include="src\Sandbox2D.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="vendor\glm\glm">
-      <Filter>vendor\glm</Filter>
-    </None>
+    <ClInclude Include="src\ExampleLayer.h" />
+    <ClInclude Include="src\Sandbox2D.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
 </Project>

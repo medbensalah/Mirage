@@ -5,6 +5,7 @@
 #include "Mirage/Core/Time.h"
 #include "GLFW/glfw3.h"
 #include "Mirage/Renderer/Renderer.h"
+#include "Mirage/Scripting/ScriptingEngine.h"
 #include "Mirage/utils/PlatformUtils.h"
 
 namespace Mirage
@@ -30,6 +31,7 @@ namespace Mirage
 
         m_Window->SetVSync(false);
         Renderer::Init();
+    	ScriptingEngine::Init();
 
         m_ImGuiLayer = new ImGuiLayer();
         PushOverlay(m_ImGuiLayer);
@@ -39,6 +41,7 @@ namespace Mirage
     {
         MRG_PROFILE_FUNCTION();
         
+    	ScriptingEngine::Shutdown();
         Renderer::Shutdown();
     }
 

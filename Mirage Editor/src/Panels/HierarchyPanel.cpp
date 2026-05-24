@@ -13,10 +13,12 @@
 #include "Mirage/ImGui/Extensions/DrawingAPI.h"
 #include "Mirage/ImGui/Extensions/ButtonExtensions.h"
 #include "Mirage/Definitions/DragnDropPayloads.h"
+#include "Mirage/ECS/Components/ScriptComponent.h"
 #include "Mirage/ECS/Components/Physics/BoxCollider2DComponent.h"
 #include "Mirage/ECS/Components/Physics/CircleCollider2DComponent.h"
-#include "Mirage/ECS/Components/Physics/RigidBody2DComponent.h"
+#include "Mirage/ECS/Components/Physics/Rigidbody2DComponent.h"
 #include "Mirage/ECS/Components/Rendering/CircleRendererComponent.h"
+#include "Mirage/Scripting/ScriptingEngine.h"
 
 namespace Mirage
 {
@@ -50,6 +52,7 @@ namespace Mirage
 
     void HierarchyPanel::OnImGuiRender()
     {
+		m_IsOdd = true;
     	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
         if (ImGui::Begin("Outliner"))
         {
@@ -73,8 +76,6 @@ namespace Mirage
 
 	        	ImGui::Separator();
 	        }
-        	
-        	
 	        for (auto& h : m_Context->m_Hierarchy)
 			{
 				SceneObject so {h.second.m_entity, m_Context.get()};
@@ -92,7 +93,7 @@ namespace Mirage
         	{
         		if(ImGui::MenuItem("Create empty SceneObject"))
         		{
-        			m_Context->CreateSceneObject("new SceneObject");
+        			SceneObject so = m_Context->CreateSceneObject("new SceneObject");
         		}
                 else if (ImGui::MenuItem("Create Camera"))
                 {
@@ -134,11 +135,24 @@ namespace Mirage
         auto& tag = so.GetComponent<TagComponent>().Tag;
 
         ImGuiTreeNodeFlags flags =
-            ImGuiTreeNodeFlags_SpanFullWidth |
+            ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_Framed |
             (so.GetChildCount() ? ImGuiTreeNodeFlags_OpenOnArrow : ImGuiTreeNodeFlags_Leaf) |
             ((m_SelectionContext == so) ? ImGuiTreeNodeFlags_Selected : 0);
 
+        // change color of odd and even rows
+        if (m_SelectionContext != so)
+        {
+	        ImGui::PushStyleColor(ImGuiCol_Header,
+	                              m_IsOdd ? ImVec4(0.2f, 0.2f, 0.2f, 1.0f) : ImVec4(0.125f, 0.125f, 0.125f, 1.0f));
+        }
+
         bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)so, flags, tag.c_str());
+        if (m_SelectionContext != so)
+        {
+	        ImGui::PopStyleColor();
+        }
+        m_IsOdd = !m_IsOdd;
+
 
         if (ImGui::IsItemClicked())
         {
@@ -146,8 +160,7 @@ namespace Mirage
         }
 
         bool entityDeleted = false;
-        
-        
+    	
         if(ImGui::BeginPopupContextItem())
         {
             if(ImGui::MenuItem("Delete SceneObject"))
@@ -171,11 +184,13 @@ namespace Mirage
         
         if (opened)
         {
+        	ImGui::Indent(45.0f);
 	        auto v = &so.GetComponent<HierarchyComponent>().m_ChildrenSet;
 	        for (auto child : *v)
 	        {
 		        DrawEntityNode({child.m_entity, m_Context.get()});
 	        }
+        		        ImGui::Unindent(45.0f);
 
 	        ImGui::TreePop();
         }
@@ -271,9 +286,21 @@ namespace Mirage
             if (ImGui::BeginPopup("AddComponent"))
             {
             	DisplayAddComponentEntry<CameraComponent>("Camera");
+            	// Script entry always visible
+            	// might cause problems check later
+            	// if(!m_SelectionContext.HasComponent<ScriptComponent>())
+            	// {
+            	// 	if(ImGui::MenuItem("Script"))
+            	// 	{
+            	// 		m_SelectionContext.AddComponent<ScriptComponent>();
+            	// 		ImGui::CloseCurrentPopup();
+            	// 	}
+            	// }
+            	// THAT WAS A BAD IDEA
+            	DisplayAddComponentEntry<ScriptComponent>("Script");
             	DisplayAddComponentEntry<SpriteRendererComponent>("Sprite Renderer");
             	DisplayAddComponentEntry<CircleRendererComponent>("Circle Renderer");
-            	DisplayAddComponentEntry<RigidBody2DComponent>("Rigidbody 2D");
+            	DisplayAddComponentEntry<Rigidbody2DComponent>("Rigidbody 2D");
             	DisplayAddComponentEntry<BoxCollider2DComponent>("Box Collider 2D");
             	DisplayAddComponentEntry<CircleCollider2DComponent>("Circle Collider 2D");
             	
@@ -420,6 +447,59 @@ namespace Mirage
 			}
         );
 
+
+    	DrawComponent<ScriptComponent>("Script", so, [&so](auto& component)
+			{
+    			bool scriptClassExists =  ScriptingEngine::ClassExists(component.ClassName);
+    			
+    			static char buffer[64];
+    			strcpy_s(buffer, 64, component.ClassName.c_str());
+
+                if (!scriptClassExists)
+                {
+	                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4{0.9f, 0.2f, 0.3f, 1.0f});
+                }
+
+                if (DrawSplitUIItem("Class", [&component]()-> bool
+                {
+	                return ImGui::InputText("##ScriptClassName", buffer, 64, ImGuiInputTextFlags_EnterReturnsTrue);
+                }, typeid(ScriptComponent).name()))
+                {
+	                component.ClassName = buffer;
+                }
+
+                // Fields
+                Ref<ScriptInstance> scriptInstance = ScriptingEngine::GetSOScriptInstance(so.GetUUID());
+                if (scriptInstance != nullptr)
+                {
+                	const auto& fields = scriptInstance->GetScriptClass()->GetPublicFields();
+                    for (const auto& [name, field] : fields)
+                    {
+	                    if (field.Type == ScriptFieldType::Float)
+	                    {
+			                    DrawSplitUIItem(name.c_str(), [&scriptInstance, &field, &name]()-> bool
+			                    {
+				                    float data = scriptInstance->GetFieldValue<float>(name);
+				                    bool r = ImGui::DragFloat(("##" + name).c_str(), &data, 1.0f, 0.0f,
+				                                            0.0f, "%.3g");
+				                    if (r)
+				                    {
+				                    	scriptInstance->SetFieldValue(name, data);
+				                    }
+			                    	return r;
+			                    }, typeid(ScriptComponent).name());
+	                    }
+                    }
+                }
+
+    		
+                if (!scriptClassExists)
+                {
+	                ImGui::PopStyleColor();
+                }
+			}
+		);
+    	
         DrawComponent<SpriteRendererComponent>("Sprite Renderer", so, [&so](auto& component)
 			{
 				DrawSplitUIItem("Color", [&component]()-> bool
@@ -531,7 +611,7 @@ namespace Mirage
 			}
         );
     	
-        DrawComponent<RigidBody2DComponent>("Rigidbody 2D", so, [&so](auto& component)
+        DrawComponent<Rigidbody2DComponent>("Rigidbody 2D", so, [&so](auto& component)
 			{
 				const char* bodyTypeStrings[] = {"Static", "Kinematic", "Dynamic"};
 				const char* bodyTypeString = bodyTypeStrings[(int)component.Type];
@@ -540,20 +620,20 @@ namespace Mirage
 				if (DrawSplitUIItem("Body type", [&]()-> bool
 				{
 					return DrawComboBox("##BodyType", bodyTypeStrings, 3,bodyTypeString, &out);
-				}, typeid(RigidBody2DComponent).name()))
+				}, typeid(Rigidbody2DComponent).name()))
 				{
-					component.Type = (RigidBody2DComponent::BodyType)out;
+					component.Type = (Rigidbody2DComponent::BodyType)out;
 				}
         	        		
 				DrawSplitUIItem("Gravity scale", [&component]()-> bool
 				{
 					return ImGui::DragFloat("##GravityScale", &component.GravityScale, 0.1f, 0.0f, 0.0f, "%.3g");
-		        }, typeid(RigidBody2DComponent).name());
+		        }, typeid(Rigidbody2DComponent).name());
         	
 				DrawSplitUIItem("Fixed rotation Z", [&component]()-> bool
 				{
 					return ImGui::Checkbox("##FixedRotationZ", &component.FixedRotation);
-				}, typeid(RigidBody2DComponent).name());
+				}, typeid(Rigidbody2DComponent).name());
 			}
         );
     	
@@ -571,19 +651,19 @@ namespace Mirage
         	
 				DrawSplitUIItem("Density", [&component]()-> bool
 				{
-					return ImGui::DragFloat("##Density", &component.Density, 0.05f, 0, 0, "%.5g");
+					return ImGui::DragFloat("##Density", &component.Density, 0.05f, 0, 1000000, "%.5g");
 		        }, typeid(BoxCollider2DComponent).name());
 				DrawSplitUIItem("Friction", [&component]()-> bool
 				{
-					return ImGui::DragFloat("##Friction", &component.Friction, 0.05f, 0.0f, 0.0f, "%.5g");
+					return ImGui::DragFloat("##Friction", &component.Friction, 0.05f, 0.0f, 1000000.0f, "%.5g");
 		        }, typeid(BoxCollider2DComponent).name());
 				DrawSplitUIItem("Bounciness", [&component]()-> bool
 				{
-					return ImGui::DragFloat("##Bounciness", &component.Bounciness, 0.05f, 0.0f, 0.0f, "%.5g");
+					return ImGui::DragFloat("##Bounciness", &component.Bounciness, 0.05f, 0.0f, 1000000.0f, "%.5g");
 		        }, typeid(BoxCollider2DComponent).name());
 				DrawSplitUIItem("BouncinessThreshold", [&component]()-> bool
 				{
-					return ImGui::DragFloat("##BouncinessThreshold", &component.BouncinessThreshold, 0.05f, 0.0f, 0.0f, "%.4g");
+					return ImGui::DragFloat("##BouncinessThreshold", &component.BouncinessThreshold, 0.05f, 0.0f, 1000000.0f, "%.4g");
 		        }, typeid(BoxCollider2DComponent).name());
 			}
         );

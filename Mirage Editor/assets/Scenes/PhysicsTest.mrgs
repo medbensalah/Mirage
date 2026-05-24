@@ -1,0 +1,113 @@
+Scene: Untitled
+Entities:
+  - Entity: 5833671816948330068
+    TagComponent:
+      Tag: Ground
+    TransformComponent:
+      Position: [-11.1912899, 3.52088618, 0]
+      Rotation: [0, 0, -25.238615]
+      Scale: [31.4095802, 1, 1]
+    SpriteRendererComponent:
+      Color: [0.339905292, 0.653772771, 0.99999994, 1]
+      Texture: ..\Mirage Editor\Resources\Defaults\Textures\White.png
+      Tiling: [1, 1]
+      Offset: [0, 0]
+    RigidBody2DComponent:
+      Body type: Static
+      Gravity scale: 1
+      Fixed rotation: false
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 0
+      Friction: 25
+      Bounciness: 0
+      BouncinessThreshold: 0
+  - Entity: 6790398966473303929
+    TagComponent:
+      Tag: Camera
+    TransformComponent:
+      Position: [0, 6.77040005, -0.899999976]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      Camera:
+        ProjectionType: 1
+        PerspectiveFOV: 1.39626336
+        PerspectiveNear: 0.00999999978
+        PerspectiveFar: 1000
+        OrthographicSize: 28.7000008
+        OrthographicNear: -1
+        OrthographicFar: 1
+      Primary: true
+      FixedAspectRatio: false
+      ClearColor: [0.300000012, 0.300000012, 0.300000012, 1]
+  - Entity: 15505606494138313452
+    TagComponent:
+      Tag: Player
+    TransformComponent:
+      Position: [-20.0142899, 9.47146225, 0]
+      Rotation: [0, 0, -25.2390003]
+      Scale: [2, 2, 2]
+    SpriteRendererComponent:
+      Color: [1, 1, 1, 1]
+      Texture: Assets\textures\Default.png
+      Tiling: [1, 1]
+      Offset: [0, 0]
+    RigidBody2DComponent:
+      Body type: Dynamic
+      Gravity scale: 2
+      Fixed rotation: false
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 10
+      Friction: 0
+      Bounciness: 0
+      BouncinessThreshold: 0.5
+  - Entity: 12358877541330568403
+    TagComponent:
+      Tag: Ground
+    TransformComponent:
+      Position: [9.55443001, -2.4955616, 0]
+      Rotation: [0, 0, 0]
+      Scale: [34, 1, 1]
+    SpriteRendererComponent:
+      Color: [0.723386705, 0.922555804, 1, 1]
+      Texture: ..\Mirage Editor\Resources\Defaults\Textures\White.png
+      Tiling: [1, 1]
+      Offset: [0, 0]
+    RigidBody2DComponent:
+      Body type: Static
+      Gravity scale: 1
+      Fixed rotation: false
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 0
+      Friction: 25
+      Bounciness: 0
+      BouncinessThreshold: 0
+  - Entity: 15872145366129074537
+    TagComponent:
+      Tag: Ground
+    TransformComponent:
+      Position: [25.5484428, -2.13288546, 0]
+      Rotation: [0, 0, 90]
+      Scale: [34, 1, 1]
+    SpriteRendererComponent:
+      Color: [0.723386705, 0.922555804, 1, 1]
+      Texture: ..\Mirage Editor\Resources\Defaults\Textures\White.png
+      Tiling: [1, 1]
+      Offset: [0, 0]
+    RigidBody2DComponent:
+      Body type: Static
+      Gravity scale: 1
+      Fixed rotation: false
+    BoxCollider2DComponent:
+      Size: [0.5, 0.5]
+      Offset: [0, 0]
+      Density: 0
+      Friction: 5
+      Bounciness: 0
+      BouncinessThreshold: 0

@@ -40,6 +40,7 @@ project "Mirage"
         "%{IncludeDir.glm}",
         "%{IncludeDir.stb_image}",
         "%{IncludeDir.enTT}",
+        "%{IncludeDir.mono}",
         "%{IncludeDir.yaml_cpp}",
         "%{IncludeDir.ImGuizmo}",
   		"%{IncludeDir.VulkanSDK}"
@@ -52,7 +53,9 @@ project "Mirage"
         "Glad",
         "ImGui",
         "yaml-cpp",
-        "opengl32.lib"
+        "opengl32.lib",
+        
+        "%{Library.mono}"
     }
 
     filter "files:vendor/ImGuizmo/**.cpp"
@@ -63,6 +66,13 @@ project "Mirage"
 
         defines
         {
+        }
+    	links
+    	{
+        	"%{Library.WinSock}",
+        	"%{Library.Winmm}",
+        	"%{Library.WinVersion}",
+        	"%{Library.BCrypt}"
         }
 
     filter "configurations:Debug"

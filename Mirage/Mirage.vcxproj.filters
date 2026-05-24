@@ -46,6 +46,9 @@
     <Filter Include="src\Mirage\Renderer">
       <UniqueIdentifier>{970FEDB8-0371-CAC6-8CDE-1079F83E0186}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Mirage\Scripting">
+      <UniqueIdentifier>{13BFE2B2-FF4D-6C7C-A86C-807794DA7C22}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Mirage\utils">
       <UniqueIdentifier>{11FB37AB-FDF3-56FD-2626-3C82127E3609}</UniqueIdentifier>
     </Filter>
@@ -183,7 +186,7 @@
     <ClInclude Include="src\Mirage\ECS\Components\Physics\CircleCollider2DComponent.h">
       <Filter>src\Mirage\ECS\Components\Physics</Filter>
     </ClInclude>
-    <ClInclude Include="src\Mirage\ECS\Components\Physics\RigidBody2DComponent.h">
+    <ClInclude Include="src\Mirage\ECS\Components\Physics\Rigidbody2DComponent.h">
       <Filter>src\Mirage\ECS\Components\Physics</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\ECS\Components\Rendering\CameraComponent.h">
@@ -194,6 +197,9 @@
     </ClInclude>
     <ClInclude Include="src\Mirage\ECS\Components\Rendering\SpriteRendererComponent.h">
       <Filter>src\Mirage\ECS\Components\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\Components\ScriptComponent.h">
+      <Filter>src\Mirage\ECS\Components</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\ECS\Scene.h">
       <Filter>src\Mirage\ECS</Filter>
@@ -296,6 +302,12 @@
     </ClInclude>
     <ClInclude Include="src\Mirage\Renderer\VertexArray.h">
       <Filter>src\Mirage\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Scripting\ScriptGlue.h">
+      <Filter>src\Mirage\Scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Scripting\ScriptingEngine.h">
+      <Filter>src\Mirage\Scripting</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\utils\PlatformUtils.h">
       <Filter>src\Mirage\utils</Filter>
@@ -1669,6 +1681,12 @@
     </ClCompile>
     <ClCompile Include="src\Mirage\Renderer\VertexArray.cpp">
       <Filter>src\Mirage\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\Scripting\ScriptGlue.cpp">
+      <Filter>src\Mirage\Scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\Scripting\ScriptingEngine.cpp">
+      <Filter>src\Mirage\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="src\MrgPch.cpp">
       <Filter>src</Filter>

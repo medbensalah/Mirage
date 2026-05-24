@@ -4,11 +4,12 @@
 #include <yaml-cpp/yaml.h>
 
 #include "SceneObject.h"
+#include "Components/ScriptComponent.h"
 #include "Components/Base/TagComponent.h"
 #include "Components/Base/TransformComponent.h"
 #include "Components/Physics/BoxCollider2DComponent.h"
 #include "Components/Physics/CircleCollider2DComponent.h"
-#include "Components/Physics/RigidBody2DComponent.h"
+#include "Components/Physics/Rigidbody2DComponent.h"
 #include "Components/Rendering/CameraComponent.h"
 #include "Components/Rendering/CircleRendererComponent.h"
 #include "Components/Rendering/SpriteRendererComponent.h"
@@ -96,36 +97,36 @@ namespace YAML
 
 namespace Mirage
 {
-	std::string RigidBody2DTypeToString(RigidBody2DComponent::BodyType type)
+	std::string RigidBody2DTypeToString(Rigidbody2DComponent::BodyType type)
 	{
 		switch (type)
 		{
-		case RigidBody2DComponent::BodyType::Static:
+		case Rigidbody2DComponent::BodyType::Static:
 			return "Static";
-		case RigidBody2DComponent::BodyType::Kinematic:
+		case Rigidbody2DComponent::BodyType::Kinematic:
 			return "Kinematic";
-		case RigidBody2DComponent::BodyType::Dynamic:
+		case Rigidbody2DComponent::BodyType::Dynamic:
 			return "Dynamic";
 		}
 		MRG_CORE_WARN("Unknown body type while serializing, falling back to static body");
 		return "Static";
 	}
-	RigidBody2DComponent::BodyType RigidBody2DTypeFromString(std::string type)
+	Rigidbody2DComponent::BodyType RigidBody2DTypeFromString(std::string type)
 	{
 		if (type == "Static")
 		{
-			return RigidBody2DComponent::BodyType::Static;
+			return Rigidbody2DComponent::BodyType::Static;
 		}
 		if (type == "Kinematic")
 		{
-			return RigidBody2DComponent::BodyType::Kinematic;
+			return Rigidbody2DComponent::BodyType::Kinematic;
 		}
 		if (type == "Dynamic")
 		{
-			return RigidBody2DComponent::BodyType::Dynamic;
+			return Rigidbody2DComponent::BodyType::Dynamic;
 		}
 		MRG_CORE_WARN("Unknown body type while deserializing, falling back to static body");
-		return RigidBody2DComponent::BodyType::Static;
+		return Rigidbody2DComponent::BodyType::Static;
 	}
 	
     YAML::Emitter& operator<<(YAML::Emitter& out, const Vec2& v)
@@ -209,6 +210,17 @@ namespace Mirage
 
             out << YAML::EndMap;
         }
+        if (so.HasComponent<ScriptComponent>())
+        {
+            out << YAML::Key << "ScriptComponent";
+            out << YAML::BeginMap;
+
+            auto& scriptComponent = so.GetComponent<ScriptComponent>();
+        	
+            out << YAML::Key << "Name" << YAML::Value << scriptComponent.ClassName;
+
+            out << YAML::EndMap;
+        }
         if (so.HasComponent<SpriteRendererComponent>())
         {
             out << YAML::Key << "SpriteRendererComponent";
@@ -237,12 +249,12 @@ namespace Mirage
 
             out << YAML::EndMap;
         }
-        if (so.HasComponent<RigidBody2DComponent>())
+        if (so.HasComponent<Rigidbody2DComponent>())
         {
             out << YAML::Key << "RigidBody2DComponent";
             out << YAML::BeginMap;
 
-            auto& rb2d = so.GetComponent<RigidBody2DComponent>();
+            auto& rb2d = so.GetComponent<Rigidbody2DComponent>();
             out << YAML::Key << "Body type" << YAML::Value << RigidBody2DTypeToString(rb2d.Type);
             out << YAML::Key << "Gravity scale" << YAML::Value << rb2d.GravityScale;
             out << YAML::Key << "Fixed rotation" << YAML::Value << rb2d.FixedRotation;
@@ -330,6 +342,12 @@ namespace Mirage
             cc.Camera.SetClearColor(cameraComponent["ClearColor"].as<Vec4>());
         }
 
+        if (auto scriptComponent = entity["ScriptComponent"])
+        {
+            auto& sc = so.AddComponent<ScriptComponent>();
+            sc.ClassName = scriptComponent["Name"].as<std::string>();
+        }
+
         if (auto spriteRendererComponent = entity["SpriteRendererComponent"])
         {
             auto& src = so.AddComponent<SpriteRendererComponent>();
@@ -352,7 +370,7 @@ namespace Mirage
 
 	    if (auto rigidBody2DComponent = entity["RigidBody2DComponent"])
         {
-            auto& rb2d = so.AddComponent<RigidBody2DComponent>();
+            auto& rb2d = so.AddComponent<Rigidbody2DComponent>();
             rb2d.Type = RigidBody2DTypeFromString(rigidBody2DComponent["Body type"].as<std::string>());
         	rb2d.GravityScale = rigidBody2DComponent["Gravity scale"].as<float>();
         	rb2d.FixedRotation = rigidBody2DComponent["Fixed rotation"].as<bool>();
@@ -395,7 +413,7 @@ namespace Mirage
                 if (tagComponent)
                     tag = tagComponent["Tag"].as<std::string>();
                 
-                SceneObject childSo = so.GetScene()->CreateChildSceneObject(so, tag);
+                SceneObject childSo = so.GetScene()->CreateChildSceneObjectWithUUID(uuid, so, tag);
                 
                 DeserializeSceneObject(child, childSo);
             }
@@ -460,7 +478,7 @@ namespace Mirage
                if (tagComponent)
                    tag = tagComponent["Tag"].as<std::string>();
     
-               SceneObject so = m_Scene->CreateSceneObject(tag);
+               SceneObject so = m_Scene->CreateSceneObjectWithUUID(uuid, tag);
                result &= DeserializeSceneObject(entity, so);
            }
         }
