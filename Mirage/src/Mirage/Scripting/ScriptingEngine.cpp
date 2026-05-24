@@ -39,12 +39,12 @@ namespace Mirage
 	{
 		static char* ReadBytes(const std::filesystem::path& filepath, uint32_t* outSize)
 		{
-			std::ifstream stream(filepath, std::ios::binary | std::ios::ate);
+			const std::filesystem::path resolvedPath = std::filesystem::absolute(filepath);
+			std::ifstream stream(resolvedPath, std::ios::binary | std::ios::ate);
 
-			MRG_CORE_ASSERT(stream, "Failed to open file");
 			if (!stream)
 			{
-				// Failed to open the file
+				MRG_CORE_ERROR("Failed to open file: {}", resolvedPath.string());
 				return nullptr;
 			}
 
@@ -70,12 +70,19 @@ namespace Mirage
 		{
 			uint32_t fileSize = 0;
 			char* fileData = ReadBytes(assemblyPath, &fileSize);
+			if (!fileData)
+				return nullptr;
 
 			// NOTE: We can't use this image for anything other than loading the assembly because this image doesn't have a reference to the assembly
 			MonoImageOpenStatus status;
 			MonoImage* image = mono_image_open_from_data_full(fileData, fileSize, 1, &status, 0);
 
-			MRG_CORE_ASSERT(status == MONO_IMAGE_OK, mono_image_strerror(status))
+			if (status != MONO_IMAGE_OK)
+			{
+				MRG_CORE_ERROR("Failed to load Mono image '{}': {}", std::filesystem::absolute(assemblyPath).string(), mono_image_strerror(status));
+				delete[] fileData;
+				return nullptr;
+			}
 
 			std::string assemblyName = assemblyPath.filename().string();
 			MonoAssembly* assembly = mono_assembly_load_from_full(image, assemblyName.c_str(), &status, 0);
@@ -84,7 +91,32 @@ namespace Mirage
 			// Don't forget to free the file data
 			delete[] fileData;
 
+			if (!assembly)
+			{
+				MRG_CORE_ERROR("Failed to load assembly '{}': {}", std::filesystem::absolute(assemblyPath).string(), mono_image_strerror(status));
+				return nullptr;
+			}
+
 			return assembly;
+		}
+
+		static std::filesystem::path ResolveAppAssemblyPath(const std::filesystem::path& preferredPath)
+		{
+			const std::filesystem::path candidates[] =
+			{
+				preferredPath,
+				"Sandbox project/Assets/Scripts/Intermediates/Debug/Sandbox.dll",
+				"Sandbox project/Assets/Scripts/Intermediates/Release/Sandbox.dll",
+				"Sandbox project/Assets/Scripts/Intermediates/Dist/Sandbox.dll"
+			};
+
+			for (const auto& candidate : candidates)
+			{
+				if (std::filesystem::exists(candidate))
+					return candidate;
+			}
+
+			return preferredPath;
 		}
 
 		void PrintAssemblyTypes(MonoAssembly* assembly)
@@ -247,7 +279,9 @@ namespace Mirage
 		s_Data->AppDomain = mono_domain_create_appdomain("MirageScriptRuntime", nullptr);
 		mono_domain_set(s_Data->AppDomain, true);
 
-		s_Data->CoreAssembly = Utils::LoadMonoAssembly(filepath.string());
+		s_Data->CoreAssembly = Utils::LoadMonoAssembly(filepath);
+		MRG_CORE_ASSERT(s_Data->CoreAssembly, fmt::format("Failed to load core assembly: {}", std::filesystem::absolute(filepath).string()));
+
 		MonoImage* assemblyImage = mono_assembly_get_image(s_Data->CoreAssembly);
 		s_Data->CoreAssemblyImage = assemblyImage;
 		Utils::PrintAssemblyTypes(s_Data->CoreAssembly);
@@ -255,7 +289,18 @@ namespace Mirage
 
 	void ScriptingEngine::LoadAppAssembly(const std::filesystem::path& filepath)
 	{
-		s_Data->AppAssembly = Utils::LoadMonoAssembly(filepath.string());
+		const std::filesystem::path resolvedPath = Utils::ResolveAppAssemblyPath(filepath);
+		if (resolvedPath != filepath)
+			MRG_CORE_WARN("Using fallback app assembly: {}", std::filesystem::absolute(resolvedPath).string());
+
+		s_Data->AppAssembly = Utils::LoadMonoAssembly(resolvedPath);
+		if (!s_Data->AppAssembly)
+		{
+			s_Data->AppAssemblyImage = nullptr;
+			MRG_CORE_WARN("App assembly was not loaded. Build the sandbox scripts to enable runtime behaviors: {}", std::filesystem::absolute(filepath).string());
+			return;
+		}
+
 		MonoImage* assemblyImage = mono_assembly_get_image(s_Data->AppAssembly);
 		s_Data->AppAssemblyImage = assemblyImage;
 		Utils::PrintAssemblyTypes(s_Data->AppAssembly);
@@ -329,6 +374,8 @@ namespace Mirage
 	void ScriptingEngine::LoadAssemblyClasses()
 	{
 		s_Data->BehaviorClasses.clear();
+		if (!s_Data->AppAssemblyImage)
+			return;
 		
 		const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(s_Data->AppAssemblyImage, MONO_TABLE_TYPEDEF);
 		int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);

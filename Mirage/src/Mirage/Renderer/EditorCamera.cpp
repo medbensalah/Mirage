@@ -1,4 +1,4 @@
-﻿#include "MrgPch.h"
+#include "MrgPch.h"
 #include "EditorCamera.h"
 
 #include "Mirage/Core/Input.h"
@@ -33,6 +33,19 @@ namespace Mirage {
 	{
 		m_ProjectionType = projectionType;
         UpdateProjection();
+		UpdateView();
+	}
+
+	void EditorCamera::Focus(const Vec3& targetPos)
+	{
+		if (m_ProjectionType == ProjectionType::Orthographic)
+		{
+			m_OrthographicData.m_Position = targetPos - GetForwardDirection() * m_OrthographicData.m_Zooming;
+		}
+		else
+		{
+			m_PerspectiveData.m_Position = targetPos - GetForwardDirection() * m_PerspectiveData.m_Zooming;
+		}
 		UpdateView();
 	}
 

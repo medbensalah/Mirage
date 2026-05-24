@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Camera.h"
 #include "Mirage/Events/Event.h"
@@ -22,6 +22,7 @@ namespace Mirage {
         
         void OnUpdate(float deltaTime);
         void OnEvent(Event& e);
+        void Focus(const Vec3& targetPos);
 
         inline float GetDistance() const
         {
