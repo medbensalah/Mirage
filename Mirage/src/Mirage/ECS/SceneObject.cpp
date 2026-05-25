@@ -14,8 +14,10 @@ namespace Mirage
     void SceneObject::Destroy()
     {
     	auto& h = GetComponent<HierarchyComponent>();
-		// reverse iterate children
-    	for (auto it = h.m_Children.rbegin(); it != h.m_Children.rend(); ++it)
+		// Iterate over a snapshot because recursive child destruction mutates
+		// the parent's children list (via UnParent), which invalidates iterators.
+		auto childrenSnapshot = h.m_Children;
+    	for (auto it = childrenSnapshot.rbegin(); it != childrenSnapshot.rend(); ++it)
     	{
     		SceneObject so { *it, m_Scene };
     		so.Destroy();
