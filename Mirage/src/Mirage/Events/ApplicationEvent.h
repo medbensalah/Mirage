@@ -2,6 +2,7 @@
 
 #include "Mirage/Events/Event.h"
 #include "Mirage/Math/glmTypes.h"
+#include <vector>
 
 namespace Mirage
 {
@@ -36,6 +37,29 @@ namespace Mirage
 
         EVENT_CLASS_TYPE(WindowClose);
         EVENT_CLASS_CATEGORY(EventCategoryApplication);
+    };
+
+    class WindowFileDropEvent : public Event
+    {
+    public:
+        WindowFileDropEvent(std::vector<std::string> paths)
+            : m_Paths(std::move(paths))
+        {
+        }
+
+        const std::vector<std::string>& GetPaths() const { return m_Paths; }
+
+        std::string ToString() const override
+        {
+            std::stringstream ss;
+            ss << "Event: (" << GetName() << ") Count: " << m_Paths.size();
+            return ss.str();
+        }
+
+        EVENT_CLASS_TYPE(WindowFileDrop);
+        EVENT_CLASS_CATEGORY(EventCategoryApplication);
+    private:
+        std::vector<std::string> m_Paths;
     };
 
     class AppTickEvent : public Event

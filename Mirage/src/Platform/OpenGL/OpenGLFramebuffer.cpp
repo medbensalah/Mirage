@@ -24,7 +24,7 @@ namespace Mirage
             glBindTexture(TextureTarget(multisample), id);
         }
 
-        static void AttachColorTexture(uint32_t id, int samples, GLenum internalFormat, GLenum format, uint32_t width, uint32_t height, int index)
+        static void AttachColorTexture(uint32_t id, int samples, GLenum internalFormat, GLenum format, GLenum type, uint32_t width, uint32_t height, int index)
         {
             bool multiSample = samples > 1;
             if (multiSample)
@@ -33,9 +33,10 @@ namespace Mirage
             }
             else
             {
-                glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr);
+                glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, nullptr);
 
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                const bool isIntegerFormat = format == GL_RED_INTEGER;
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, isIntegerFormat ? GL_NEAREST : GL_LINEAR);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
@@ -139,10 +140,10 @@ namespace Mirage
                 switch (m_ColorAttachmentSpecs[i].TextureFormat)
                 {
                 case FramebufferTextureFormat::RGBA8:
-                    Utils::AttachColorTexture(m_ColorAttachments[i], m_Specs.Samples, GL_RGBA8, GL_RGBA, m_Specs.Width, m_Specs.Height, i); 
+                    Utils::AttachColorTexture(m_ColorAttachments[i], m_Specs.Samples, GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE, m_Specs.Width, m_Specs.Height, i); 
                     break;
                 case FramebufferTextureFormat::RED_INTEGER:
-                    Utils::AttachColorTexture(m_ColorAttachments[i], m_Specs.Samples, GL_R32I, GL_RED_INTEGER, m_Specs.Width, m_Specs.Height, i);
+                    Utils::AttachColorTexture(m_ColorAttachments[i], m_Specs.Samples, GL_R32I, GL_RED_INTEGER, GL_INT, m_Specs.Width, m_Specs.Height, i);
                     break;
                 }
             }            
@@ -165,6 +166,11 @@ namespace Mirage
             MRG_CORE_ASSERT(m_ColorAttachments.size() <= 4);
             GLenum buffers[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
             glDrawBuffers(m_ColorAttachments.size(), buffers);
+        }
+        else if (m_ColorAttachments.size() == 1)
+        {
+            glDrawBuffer(GL_COLOR_ATTACHMENT0);
+            glReadBuffer(GL_COLOR_ATTACHMENT0);
         }
         else if(m_ColorAttachments.empty())
         {

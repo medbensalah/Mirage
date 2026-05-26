@@ -1,8 +1,9 @@
-#include "EditorLayer.h"
+﻿#include "EditorLayer.h"
 
 #include <filesystem>
 #include <ImGui/imgui.h>
 #include <glm/gtc/type_ptr.inl>
+#include <glm/gtc/constants.hpp>
 
 #include "Mirage/Definitions/FileExtensions.h"
 #include "Mirage/Definitions/DragnDropPayloads.h"
@@ -13,6 +14,11 @@
 #include "glm/gtx/vector_angle.inl"
 #include "Mirage/Definitions/Paths.h"
 #include "Mirage/ECS/Components/Rendering/CameraComponent.h"
+#include "Mirage/ECS/Components/Rendering/SpriteRendererComponent.h"
+#include "Mirage/ECS/Components/Rendering/CircleRendererComponent.h"
+#include "Mirage/ECS/Components/Rendering/MeshComponent.h"
+#include "Mirage/ECS/Components/Rendering/DirectionalLightComponent.h"
+#include "Mirage/ECS/Components/Rendering/PointLightComponent.h"
 #include "Mirage/ImGui/Extensions/ButtonExtensions.h"
 #include "Mirage/ImGui/Extensions/ToggleButton.h"
 
@@ -23,10 +29,21 @@
 #include "Mirage/ECS/Components/Physics/BoxCollider2DComponent.h"
 #include "Mirage/ECS/Components/Physics/CircleCollider2DComponent.h"
 #include "Mirage/Math/Math.h"
+#include "Mirage/Renderer/Renderer3D.h"
+#include "Mirage/Renderer/GizmoSystem.h"
+#include "Mirage/Definitions/EditorSettings.h"
 #include "Mirage/utils/PlatformUtils.h"
 
 namespace Mirage
 {
+	struct SelectionOutlineUBOData
+	{
+		VecI4 SelectionCountPad;
+		VecI4 SelectedEntityIDs[128];
+		Vec4 TexelSizePad;
+		Vec4 OutlineColor;
+	};
+
 	EditorLayer::EditorLayer()
 		: Layer("EditorLayer")
 	{
@@ -56,6 +73,13 @@ namespace Mirage
 		previewFbSpecs.Width = m_PreviewSize.x;
 		previewFbSpecs.Height = m_PreviewSize.y;
 		m_PreviewFramebuffer = Framebuffer::Create(previewFbSpecs);
+		FramebufferSpecs outlineFbSpecs;
+		outlineFbSpecs.Attachments = {
+			FramebufferTextureFormat::RGBA8
+		};
+		outlineFbSpecs.Width = 1280;
+		outlineFbSpecs.Height = 720;
+		m_OutlineFramebuffer = Framebuffer::Create(outlineFbSpecs);
 
 		m_ActiveScene = CreateRef<Scene>();
 
@@ -71,6 +95,29 @@ namespace Mirage
 		m_HierarchyPanel.SetContext(m_ActiveScene);
 		m_SettingsPanel.LoadSettings();
 
+		m_SelectionOutlineShader = Shader::Create("assets/shaders/SelectionOutline.glsl");
+		m_SelectionOutlineUBO = UniformBuffer::Create(sizeof(SelectionOutlineUBOData), 7);
+		RegisterDirectionalLightGizmoDrawer();
+		RegisterPointLightGizmoDrawer();
+		RegisterCameraGizmoDrawer();
+		{
+			float quadVertices[] = {
+				-1.0f, -1.0f, 0.0f, 0.0f,
+				 1.0f, -1.0f, 1.0f, 0.0f,
+				 1.0f,  1.0f, 1.0f, 1.0f,
+				-1.0f,  1.0f, 0.0f, 1.0f
+			};
+			uint32_t quadIndices[] = {0, 1, 2, 2, 3, 0};
+			m_FullscreenQuadVA = VertexArray::Create();
+			auto vb = VertexBuffer::Create(quadVertices, sizeof(quadVertices));
+			vb->SetLayout({
+				{ShaderDataType::Float2, "a_Position"},
+				{ShaderDataType::Float2, "a_TexCoord"}
+			});
+			m_FullscreenQuadVA->AddVertexBuffer(vb);
+			m_FullscreenQuadVA->SetIndexBuffer(IndexBuffer::Create(quadIndices, 6));
+		}
+
 		// ----------------------- initialize icons -----------------------
 		m_PlayButtonIcon = Texture2D::Create(Icons::PlayButton);
 		m_SimulateButtonIcon = Texture2D::Create(Icons::SimulateButton);
@@ -82,6 +129,7 @@ namespace Mirage
 		m_TranslationIcon = Texture2D::Create(Icons::TranslationIcon);
 		m_RotationIcon = Texture2D::Create(Icons::RotationIcon);
 		m_ScaleIcon = Texture2D::Create(Icons::ScaleIcon);
+		m_GizmoToggleIcon = Texture2D::Create(Icons::GizmoToggleIcon);
 	}
 
 	void EditorLayer::OnDetach()
@@ -110,6 +158,7 @@ namespace Mirage
 			((uint32_t)spec.Width != (uint32_t)m_ViewportSize.x || (uint32_t)spec.Height != (uint32_t)m_ViewportSize.y))
 		{
 			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_OutlineFramebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 			m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
 		}
 
@@ -142,6 +191,8 @@ namespace Mirage
 
 		if (m_ViewportVisible)
 		{
+			Renderer3D::SetOutlinedEntity(-1);
+
 			m_Framebuffer->Bind();
 			RenderCommand::SetClearColor(m_EditorCamera.GetClearColor());
 			RenderCommand::Clear();
@@ -149,6 +200,38 @@ namespace Mirage
 			m_ActiveScene->OnUpdateEditor(DeltaTime, m_EditorCamera);
 			OnOverlayRender();
 			m_Framebuffer->Unbind();
+
+			m_OutlineFramebuffer->Bind();
+			RenderCommand::SetClearColor({0, 0, 0, 1});
+			RenderCommand::Clear();
+			m_SelectionOutlineShader->Bind();
+			RenderCommand::BindTexture2D(0, m_Framebuffer->GetColorAttachmentRendererID(0));
+			RenderCommand::BindTexture2D(1, m_Framebuffer->GetColorAttachmentRendererID(1));
+			m_SelectionOutlineShader->SetInt("u_SceneColor", 0);
+			m_SelectionOutlineShader->SetInt("u_EntityIDTex", 1);
+			int selectedID = -1;
+			SceneObject selectedSO = m_HierarchyPanel.GetSelectedSO();
+			if (selectedSO)
+				selectedID = (int)selectedSO.GetEntity();
+			SelectionOutlineUBOData outlineData{};
+			std::vector<int> outlinedIDs;
+			if (selectedSO)
+				outlinedIDs.push_back((int)selectedSO.GetEntity());
+			outlineData.SelectionCountPad = VecI4((int)outlinedIDs.size(), 0, 0, 0);
+			for (size_t i = 0; i < outlinedIDs.size(); i++)
+				outlineData.SelectedEntityIDs[i] = VecI4(outlinedIDs[i], 0, 0, 0);
+			outlineData.TexelSizePad = Vec4(
+				1.0f / m_ViewportSize.x,
+				1.0f / m_ViewportSize.y,
+				Renderer2D::Draw::GetLineWidth(),
+				0.0f
+			);
+			outlineData.OutlineColor = Vec4(1.0f, 0.6f, 0.23f, 1.0f);
+			m_SelectionOutlineUBO->SetData(&outlineData, sizeof(outlineData));
+			RenderCommand::DrawIndexed(m_FullscreenQuadVA);
+			if (m_ShowGizmos)
+				DrawGizmosOverlay();
+			m_OutlineFramebuffer->Unbind();
 		}
 
 		if (m_ShowPreview && m_GamePreviewVisible)
@@ -325,7 +408,7 @@ namespace Mirage
 			// ------------------------- Scene Viewport -------------------------
 			ImVec2 ViewportSize = ImGui::GetContentRegionAvail();
 			m_ViewportSize = {ViewportSize.x, ViewportSize.y};
-			uint32_t texId = m_Framebuffer->GetColorAttachmentRendererID();
+			uint32_t texId = m_OutlineFramebuffer->GetColorAttachmentRendererID();
 			ImGui::Image((void*)texId, ImVec2{m_ViewportSize.x, m_ViewportSize.y}, ImVec2{0, 1}, ImVec2{1, 0});
 
 			if (ImGui::BeginDragDropTarget())
@@ -385,7 +468,22 @@ namespace Mirage
 			if (m_ShowGrid && m_GridAlpha)
 			{
 				MRG_PROFILE_SCOPE("Render grid");
-				Mat4 matrix = glm::rotate(Mat4(1.0f), glm::radians(-90.0f), Vec3(1, 0, 0));
+				Mat4 matrix(1.0f);
+				switch (m_GridAxis)
+				{
+				case 0: // XZ
+					matrix = glm::rotate(Mat4(1.0f), glm::radians(-90.0f), Vec3(1, 0, 0));
+					break;
+				case 1: // XY
+					matrix = Mat4(1.0f);
+					break;
+				case 2: // YZ
+					matrix = glm::rotate(Mat4(1.0f), glm::radians(90.0f), Vec3(0, 1, 0));
+					break;
+				default:
+					matrix = glm::rotate(Mat4(1.0f), glm::radians(-90.0f), Vec3(1, 0, 0));
+					break;
+				}
 
 				ImGuizmo::DrawGrid(glm::value_ptr(m_EditorCamera.GetView()),
 				                   glm::value_ptr(m_EditorCamera.GetProjection()),
@@ -747,7 +845,7 @@ namespace Mirage
 			ImGui::OpenPopup("Grid");
 		}
 
-		ImGui::SetNextWindowSize(ImVec2{215, 85});
+		ImGui::SetNextWindowSize(ImVec2{250, 120});
 		ImGui::SetNextWindowPos(ImVec2{
 			ImGui::GetWindowPos().x + gridPopUpPos.x, ImGui::GetWindowPos().y + gridPopUpPos.y
 		});
@@ -779,6 +877,16 @@ namespace Mirage
 			ImGui::SetCursorPosX(curPos);
 			ImGui::PushItemWidth(75);
 			ImGui::DragFloat("##GridSize", &m_GridSize, 1.0f, 10.0f, 10000.0f, "%.5g");
+			ImGui::PopItemWidth();
+
+			ImGui::AlignTextToFramePadding();
+			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+			ImGui::Text("Grid axis : ");
+			ImGui::SameLine();
+			ImGui::SetCursorPosX(curPos);
+			const char* gridAxes[] = {"XZ", "XY", "YZ"};
+			ImGui::PushItemWidth(75);
+			ImGui::Combo("##GridAxis", &m_GridAxis, gridAxes, IM_ARRAYSIZE(gridAxes));
 			ImGui::PopItemWidth();
 
 			ImGui::PopStyleColor();
@@ -848,7 +956,12 @@ namespace Mirage
 		// -------------------------- Camera -------------------------
 #pragma region Camera
 		ImGui::SameLine();
-		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetContentRegionAvail().x - 110);
+		const float cameraButtonWidth = 100.0f;
+		const float gizmoButtonWidth = m_IconSizeS;
+		const float cameraGizmoSpacing = 10.0f;
+		const float rightMargin = 32.0f;
+		const float toolbarRightBlockWidth = cameraButtonWidth + cameraGizmoSpacing + gizmoButtonWidth;
+		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetContentRegionAvail().x - toolbarRightBlockWidth - rightMargin);
 		ImVec2 cameraPopUpPos = ImGui::GetCursorPos();
 		cameraPopUpPos.x -= 100.0f;
 		cameraPopUpPos.y += 25.0f;
@@ -856,6 +969,22 @@ namespace Mirage
 		{
 			ImGui::OpenPopup("Camera");
 		}
+		ImGui::SameLine();
+		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + cameraGizmoSpacing);
+		bool gizmosToggleActive = m_ShowGizmos;
+		if (gizmosToggleActive)
+		{
+			ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
+			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.000f, 0.000f, 0.490f, 1.000f));
+		}
+		if (ImGui::ImageButton((ImTextureID)m_GizmoToggleIcon->GetRendererID(), ImVec2{m_IconSizeS, m_IconSizeS},
+		                       {0, 1}, {1, 0}, -1))
+		{
+			m_ShowGizmos = !m_ShowGizmos;
+		}
+		if (gizmosToggleActive)
+			ImGui::PopStyleColor(3);
 
 		ImGui::SetNextWindowSize(ImVec2{200, 0});
 		ImGui::SetNextWindowPos(ImVec2{
@@ -1093,6 +1222,7 @@ namespace Mirage
 
 		// MousePicking
 		dispatcher.Dispatch<MouseButtonPressedEvent>(MRG_BIND_EVENT_FN(EditorLayer::OnMouseButtonPressed));
+		dispatcher.Dispatch<WindowFileDropEvent>(MRG_BIND_EVENT_FN(EditorLayer::OnWindowFileDrop));
 	}
 
 	bool EditorLayer::OnShortcutKeyPressed(KeyPressedEvent e)
@@ -1317,11 +1447,89 @@ namespace Mirage
 
 				if (pixelData == -1)
 				{
+					entt::entity gizmoEntity = PickGizmoIconAt(mousePos);
+					if (gizmoEntity != entt::null)
+					{
+						m_HierarchyPanel.SetSelectedSO(SceneObject{gizmoEntity, m_ActiveScene.get()});
+						return false;
+					}
 					m_HierarchyPanel.SetSelectedSO({});
+					return false;
 				}
 				m_HierarchyPanel.SetSelectedSO(SceneObject{(entt::entity)pixelData, m_ActiveScene.get()});
 			}
 		}
+		return false;
+	}
+
+	bool EditorLayer::ProjectWorldToViewport(const Vec3& worldPos, Vec2& outViewportPos, float* outDepth) const
+	{
+		Vec4 clip = m_EditorCamera.GetProjection() * m_EditorCamera.GetView() * Vec4(worldPos, 1.0f);
+		if (clip.w <= 0.0001f)
+			return false;
+
+		Vec3 ndc = Vec3(clip) / clip.w;
+		if (ndc.z < -1.0f || ndc.z > 1.0f)
+			return false;
+
+		outViewportPos.x = (ndc.x * 0.5f + 0.5f) * m_ViewportSize.x;
+		outViewportPos.y = (ndc.y * 0.5f + 0.5f) * m_ViewportSize.y;
+		if (outDepth)
+			*outDepth = ndc.z;
+		return true;
+	}
+
+	entt::entity EditorLayer::PickGizmoIconAt(const Vec2& viewportPos)
+	{
+		if (!m_ShowGizmos)
+			return entt::null;
+
+		entt::entity result = entt::null;
+		float bestDepth = 10.0f;
+
+		auto testIcon = [&](entt::entity entity, const Vec3& worldPos)
+		{
+			Vec2 center;
+			float depth;
+			if (!ProjectWorldToViewport(worldPos, center, &depth))
+				return;
+
+			float size = (m_EditorCamera.IsOrthographic() ? 0.6f : glm::max(glm::distance(m_EditorCamera.GetPosition(), worldPos) * 0.06f, 0.25f))
+				* EditorSettings::GizmoIconSize;
+			Vec2 edge;
+			if (!ProjectWorldToViewport(worldPos + m_EditorCamera.GetRightDirection() * (size * 0.5f), edge))
+				return;
+
+			float radiusPixels = glm::max(glm::distance(center, edge), 6.0f);
+			if (glm::distance(center, viewportPos) <= radiusPixels && depth < bestDepth)
+			{
+				bestDepth = depth;
+				result = entity;
+			}
+		};
+
+		{
+			auto view = m_ActiveScene->GetSceneObjectsWith<TransformComponent, CameraComponent>();
+			for (auto entity : view)
+				testIcon(entity, view.get<TransformComponent>(entity).WorldPosition());
+		}
+		{
+			auto view = m_ActiveScene->GetSceneObjectsWith<TransformComponent, DirectionalLightComponent>();
+			for (auto entity : view)
+				testIcon(entity, view.get<TransformComponent>(entity).WorldPosition());
+		}
+		{
+			auto view = m_ActiveScene->GetSceneObjectsWith<TransformComponent, PointLightComponent>();
+			for (auto entity : view)
+				testIcon(entity, view.get<TransformComponent>(entity).WorldPosition());
+		}
+
+		return result;
+	}
+
+	bool EditorLayer::OnWindowFileDrop(WindowFileDropEvent& e)
+	{
+		m_ContentBrowserPanel.OnExternalFilesDropped(e.GetPaths());
 		return false;
 	}
 
@@ -1376,10 +1584,33 @@ namespace Mirage
 		if (so)
 		{
 			TransformComponent transform = so.GetComponent<TransformComponent>();
-			Renderer2D::Draw::Rect(transform.GetTransform(), {1.0f, 0.6f, 0.23f, 1.0f});
+			const bool hasRenderable = so.HasComponent<MeshComponent>()
+				|| so.HasComponent<SpriteRendererComponent>()
+				|| so.HasComponent<CircleRendererComponent>();
+			if (!hasRenderable)
+			{
+				const Vec3 c = transform.WorldPosition();
+				const float s = 0.15f;
+				const Vec4 markerColor = {1.0f, 0.6f, 0.23f, 1.0f};
+				Renderer2D::Draw::Line(c + Vec3(-s, 0.0f, 0.0f), c + Vec3(s, 0.0f, 0.0f), markerColor);
+				Renderer2D::Draw::Line(c + Vec3(0.0f, -s, 0.0f), c + Vec3(0.0f, s, 0.0f), markerColor);
+				Renderer2D::Draw::Line(c + Vec3(0.0f, 0.0f, -s), c + Vec3(0.0f, 0.0f, s), markerColor);
+			}
 		}
 
+		Renderer2D::EndScene();
+		glEnable(GL_DEPTH_TEST);
+	}
 
+	void EditorLayer::DrawGizmosOverlay()
+	{
+		glDisable(GL_DEPTH_TEST);
+		Renderer2D::BeginScene(m_EditorCamera);
+		int selectedEntityID = -1;
+		SceneObject selected = m_HierarchyPanel.GetSelectedSO();
+		if (selected)
+			selectedEntityID = (int)selected.GetEntity();
+		GizmoSystem::DrawSceneGizmos(*m_ActiveScene, m_EditorCamera, selectedEntityID);
 		Renderer2D::EndScene();
 		glEnable(GL_DEPTH_TEST);
 	}

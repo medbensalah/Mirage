@@ -5,6 +5,7 @@
 
 #include "Paths.h"
 #include "Physics.h"
+#include "EditorSettings.h"
 #include "Mirage/Core/Application.h"
 #include "Mirage/Renderer/Renderer2D.h"
 
@@ -35,6 +36,17 @@ namespace Mirage
 				out << YAML::Key << "Debug";
 				out << YAML::Value << YAML::BeginMap;
 					out << YAML::Key << "Line width" << YAML::Value << Renderer2D::Draw::GetLineWidth();
+				out << YAML::EndMap;
+
+				out << YAML::Key << "Editor";
+				out << YAML::Value << YAML::BeginMap;
+					out << YAML::Key << "GizmoIconOpacity" << YAML::Value << EditorSettings::GizmoIconOpacity;
+					out << YAML::Key << "GizmoIconSize" << YAML::Value << EditorSettings::GizmoIconSize;
+					out << YAML::Key << "CameraFrustumGizmoExtent" << YAML::Value << EditorSettings::CameraFrustumGizmoExtent;
+					out << YAML::Key << "DefaultGizmosColorR" << YAML::Value << EditorSettings::DefaultGizmosColor.r;
+					out << YAML::Key << "DefaultGizmosColorG" << YAML::Value << EditorSettings::DefaultGizmosColor.g;
+					out << YAML::Key << "DefaultGizmosColorB" << YAML::Value << EditorSettings::DefaultGizmosColor.b;
+					out << YAML::Key << "DefaultGizmosColorA" << YAML::Value << EditorSettings::DefaultGizmosColor.a;
 				out << YAML::EndMap;
 			out << YAML::EndMap;
 		out << YAML::EndMap;
@@ -89,6 +101,27 @@ namespace Mirage
 					auto lineWidth = debug["Line width"];
 					if (lineWidth)
 						Renderer2D::Draw::SetLineWidth(lineWidth.as<float>());
+				}
+				auto editor = settings["Editor"];
+				if (editor)
+				{
+					auto gizmoIconOpacity = editor["GizmoIconOpacity"];
+					if (gizmoIconOpacity)
+						EditorSettings::GizmoIconOpacity = gizmoIconOpacity.as<float>();
+					auto gizmoIconSize = editor["GizmoIconSize"];
+					if (gizmoIconSize)
+						EditorSettings::GizmoIconSize = gizmoIconSize.as<float>();
+					auto frustumExtent = editor["CameraFrustumGizmoExtent"];
+					if (frustumExtent)
+						EditorSettings::CameraFrustumGizmoExtent = frustumExtent.as<float>();
+					auto cR = editor["DefaultGizmosColorR"];
+					auto cG = editor["DefaultGizmosColorG"];
+					auto cB = editor["DefaultGizmosColorB"];
+					auto cA = editor["DefaultGizmosColorA"];
+					if (cR) EditorSettings::DefaultGizmosColor.r = cR.as<float>();
+					if (cG) EditorSettings::DefaultGizmosColor.g = cG.as<float>();
+					if (cB) EditorSettings::DefaultGizmosColor.b = cB.as<float>();
+					if (cA) EditorSettings::DefaultGizmosColor.a = cA.as<float>();
 				}
 			}
 		}

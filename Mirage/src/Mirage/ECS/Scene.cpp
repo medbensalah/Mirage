@@ -10,9 +10,14 @@
 #include "Components/Physics/CircleCollider2DComponent.h"
 #include "Components/Rendering/SpriteRendererComponent.h"
 #include "Components/Rendering/CameraComponent.h"
+#include "Components/Rendering/MeshComponent.h"
+#include "Components/Rendering/MeshRendererComponent.h"
+#include "Components/Rendering/DirectionalLightComponent.h"
+#include "Components/Rendering/PointLightComponent.h"
 #include "Components/NativeScriptComponent.h"
 #include "Components/ScriptComponent.h"
 #include "Mirage/Renderer/Renderer2D.h"
+#include "Mirage/Renderer/Renderer3D.h"
 
 #include "box2d/b2_world.h"
 #include "box2d/b2_body.h"
@@ -154,7 +159,94 @@ namespace Mirage
 	SceneObject Scene::DuplicateSceneObject(SceneObject entity)
 	{
 		SceneObject newEntity = CreateSceneObject(entity.GetName());
-		CopyComponentIfExists(AllComponents{}, newEntity, entity);
+		newEntity.GetComponent<TransformComponent>().Copy(entity.GetComponent<TransformComponent>());
+
+		CopyComponentIfExists<SpriteRendererComponent>(newEntity, entity);
+		CopyComponentIfExists<CircleRendererComponent>(newEntity, entity);
+		CopyComponentIfExists<CameraComponent>(newEntity, entity);
+		CopyComponentIfExists<MeshComponent>(newEntity, entity);
+		CopyComponentIfExists<MeshRendererComponent>(newEntity, entity);
+		CopyComponentIfExists<DirectionalLightComponent>(newEntity, entity);
+		CopyComponentIfExists<PointLightComponent>(newEntity, entity);
+		CopyComponentIfExists<ScriptComponent>(newEntity, entity);
+		CopyComponentIfExists<Rigidbody2DComponent>(newEntity, entity);
+		CopyComponentIfExists<BoxCollider2DComponent>(newEntity, entity);
+		CopyComponentIfExists<CircleCollider2DComponent>(newEntity, entity);
+
+		if (newEntity.HasComponent<Rigidbody2DComponent>())
+			newEntity.GetComponent<Rigidbody2DComponent>().RuntimeBody = nullptr;
+
+		if (entity.HasComponent<NativeScriptComponent>())
+		{
+			auto& src = entity.GetComponent<NativeScriptComponent>();
+			auto& dst = newEntity.AddComponent<NativeScriptComponent>();
+			dst.InstantiateScript = src.InstantiateScript;
+			dst.DestroyScript = src.DestroyScript;
+			dst.Instance = nullptr;
+
+			// Create a fresh runtime instance (never share native script pointers between entities).
+			if (src.Instance && dst.InstantiateScript)
+			{
+				dst.Instance = dst.InstantiateScript();
+				dst.Instance->m_SceneObject = newEntity;
+				dst.Instance->OnCreate();
+			}
+		}
+
+		// Create a new managed-script runtime instance for the duplicate if runtime is active.
+		if (newEntity.HasComponent<ScriptComponent>() && ScriptingEngine::GetSceneContext() == this)
+		{
+			ScriptingEngine::OnCreateBehavior(newEntity);
+		}
+
+		// If physics is running, create a fresh Box2D body/fixtures for the duplicate.
+		if (m_PhysicsWorld && newEntity.HasComponent<Rigidbody2DComponent>())
+		{
+			auto& transform = newEntity.GetComponent<TransformComponent>();
+			auto& rb = newEntity.GetComponent<Rigidbody2DComponent>();
+
+			b2BodyDef bodyDef;
+			bodyDef.position.Set(transform.Position().x, transform.Position().y);
+			bodyDef.angle = Radians(transform.Rotation().z);
+			bodyDef.type = MrgToB2DBodyType(rb.Type);
+			bodyDef.gravityScale = rb.GravityScale;
+			bodyDef.fixedRotation = rb.FixedRotation;
+
+			b2Body* body = m_PhysicsWorld->CreateBody(&bodyDef);
+			rb.RuntimeBody = body;
+
+			if (newEntity.HasComponent<BoxCollider2DComponent>())
+			{
+				auto& boxCollider2D = newEntity.GetComponent<BoxCollider2DComponent>();
+				b2PolygonShape shape;
+				shape.SetAsBox(boxCollider2D.Size.x * transform.Scale().x, boxCollider2D.Size.y * transform.Scale().y,
+				               {boxCollider2D.Offset.x, boxCollider2D.Offset.y}, 0);
+
+				b2FixtureDef fixtureDef;
+				fixtureDef.shape = &shape;
+				fixtureDef.density = boxCollider2D.Density;
+				fixtureDef.friction = boxCollider2D.Friction;
+				fixtureDef.restitution = boxCollider2D.Bounciness;
+				fixtureDef.restitutionThreshold = boxCollider2D.BouncinessThreshold;
+				body->CreateFixture(&fixtureDef);
+			}
+
+			if (newEntity.HasComponent<CircleCollider2DComponent>())
+			{
+				auto& circleCollider2D = newEntity.GetComponent<CircleCollider2DComponent>();
+				b2CircleShape shape;
+				shape.m_p.Set(circleCollider2D.Offset.x, circleCollider2D.Offset.y);
+				shape.m_radius = transform.Scale().x * circleCollider2D.Radius;
+
+				b2FixtureDef fixtureDef;
+				fixtureDef.shape = &shape;
+				fixtureDef.density = circleCollider2D.Density;
+				fixtureDef.friction = circleCollider2D.Friction;
+				fixtureDef.restitution = circleCollider2D.Bounciness;
+				fixtureDef.restitutionThreshold = circleCollider2D.BouncinessThreshold;
+				body->CreateFixture(&fixtureDef);
+			}
+		}
 		return newEntity;
 	}
 	
@@ -417,6 +509,48 @@ namespace Mirage
 	    }
 	    if (mainCamera)
 	    {
+		    Renderer3D::BeginScene(*mainCamera, cameraTransform);
+		    {
+			    Renderer3D::DirectionalLightData mainLight;
+			    auto lightView = m_Registry.view<DirectionalLightComponent>();
+			    for (auto entity : lightView)
+			    {
+				    SceneObject lightSO{entity, this};
+				    auto& ltx = lightSO.GetComponent<TransformComponent>();
+				    auto& light = lightView.get<DirectionalLightComponent>(entity);
+				    Vec3 worldDir = ltx.WorldRotationQ() * Vec3(0.0f, -1.0f, 0.0f);
+				    if (glm::length(worldDir) > 0.0001f)
+					    mainLight.Direction = glm::normalize(worldDir);
+				    mainLight.Color = light.Color;
+				    mainLight.Intensity = light.Intensity;
+				    break;
+			    }
+			    Renderer3D::SetDirectionalLight(mainLight);
+		    }
+		    {
+			    auto view3D = m_Registry.view<TransformComponent, MeshComponent, MeshRendererComponent>();
+			    std::vector<Renderer3D::PointLightData> pointLights;
+			    auto pointView = m_Registry.view<TransformComponent, PointLightComponent>();
+			    for (auto plEntity : pointView)
+			    {
+				    auto [plTransform, pl] = pointView.get<TransformComponent, PointLightComponent>(plEntity);
+				    Renderer3D::PointLightData data;
+				    data.Position = plTransform.WorldPosition();
+				    data.Color = pl.Color;
+				    data.Intensity = pl.Intensity;
+				    data.Radius = pl.Radius;
+				    pointLights.push_back(data);
+			    }
+			    Renderer3D::SetPointLights(pointLights);
+			    
+			    for (auto entity : view3D)
+			    {
+				    auto [transform, mesh, material] = view3D.get<TransformComponent, MeshComponent, MeshRendererComponent>(entity);
+				    Renderer3D::DrawMesh(mesh, transform.GetTransform(), material, (int)entity);
+			    }
+		    }
+		    Renderer3D::EndScene();
+		    
 		    Renderer2D::BeginScene(*mainCamera, cameraTransform);
 
 		    {
@@ -618,6 +752,48 @@ namespace Mirage
 
     void Scene::RenderScene(EditorCamera& camera)
     {
+	    Renderer3D::BeginScene(camera);
+	    {
+		    Renderer3D::DirectionalLightData mainLight;
+		    auto lightView = m_Registry.view<DirectionalLightComponent>();
+		    for (auto entity : lightView)
+		    {
+			    SceneObject lightSO{entity, this};
+			    auto& ltx = lightSO.GetComponent<TransformComponent>();
+			    auto& light = lightView.get<DirectionalLightComponent>(entity);
+			    Vec3 worldDir = ltx.WorldRotationQ() * Vec3(0.0f, -1.0f, 0.0f);
+			    if (glm::length(worldDir) > 0.0001f)
+				    mainLight.Direction = glm::normalize(worldDir);
+			    mainLight.Color = light.Color;
+			    mainLight.Intensity = light.Intensity;
+			    break;
+		    }
+		    Renderer3D::SetDirectionalLight(mainLight);
+	    }
+	    {
+		    auto view3D = m_Registry.view<TransformComponent, MeshComponent, MeshRendererComponent>();
+		    std::vector<Renderer3D::PointLightData> pointLights;
+		    auto pointView = m_Registry.view<TransformComponent, PointLightComponent>();
+		    for (auto plEntity : pointView)
+		    {
+			    auto [plTransform, pl] = pointView.get<TransformComponent, PointLightComponent>(plEntity);
+			    Renderer3D::PointLightData data;
+			    data.Position = plTransform.WorldPosition();
+			    data.Color = pl.Color;
+			    data.Intensity = pl.Intensity;
+			    data.Radius = pl.Radius;
+			    pointLights.push_back(data);
+		    }
+		    Renderer3D::SetPointLights(pointLights);
+		    
+		    for (auto entity : view3D)
+		    {
+			    auto [transform, mesh, material] = view3D.get<TransformComponent, MeshComponent, MeshRendererComponent>(entity);
+			    Renderer3D::DrawMesh(mesh, transform.GetTransform(), material, (int)entity);
+		    }
+	    }
+	    Renderer3D::EndScene();
+	    
 	    Renderer2D::BeginScene(camera);
 	    {
 		    auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
@@ -677,6 +853,26 @@ namespace Mirage
     
     template <>
     void Scene::OnComponentAdded(SceneObject& entity, SpriteRendererComponent& component)
+    {
+    }
+
+    template <>
+    void Scene::OnComponentAdded(SceneObject& entity, MeshComponent& component)
+    {
+    }
+
+    template <>
+    void Scene::OnComponentAdded(SceneObject& entity, MeshRendererComponent& component)
+    {
+    }
+
+    template <>
+    void Scene::OnComponentAdded(SceneObject& entity, DirectionalLightComponent& component)
+    {
+    }
+
+    template <>
+    void Scene::OnComponentAdded(SceneObject& entity, PointLightComponent& component)
     {
     }
 	

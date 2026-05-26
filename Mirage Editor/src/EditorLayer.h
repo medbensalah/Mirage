@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Mirage.h"
+#include "Mirage/Events/ApplicationEvent.h"
 #include "ImGui/imgui_internal.h"
 #include "Mirage/Events/KeyEvent.h"
 #include "Panels/HierarchyPanel.h"
@@ -9,6 +10,7 @@
 #include "Mirage/ECS/SceneCamera.h"
 #include "Panels/Extras/SettingsPanel.h"
 #include "Panels/Extras/GraphEditor/GraphEditor.h"
+#include "Mirage/Renderer/UniformBuffer.h"
 
 namespace Mirage
 {	
@@ -27,6 +29,7 @@ namespace Mirage
 
     private:    	
         bool OnShortcutKeyPressed(KeyPressedEvent e);
+        bool OnWindowFileDrop(WindowFileDropEvent& e);
         
 		bool CanPick();
     	bool IsInViewportSpace(Vec2 pos);
@@ -34,8 +37,11 @@ namespace Mirage
     	Vec3 GetMouseWorldSpace();
     	int GetIDat(Vec2 MousePos);
         bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
+        entt::entity PickGizmoIconAt(const Vec2& viewportPos);
+        bool ProjectWorldToViewport(const Vec3& worldPos, Vec2& outViewportPos, float* outDepth = nullptr) const;
 
     	void OnOverlayRender();
+        void DrawGizmosOverlay();
         
         void CreateDockspace();
         void CreateMenuBar();
@@ -61,7 +67,11 @@ namespace Mirage
     	
     private:
         Ref<Framebuffer> m_Framebuffer;
+        Ref<Framebuffer> m_OutlineFramebuffer;
         Ref<Framebuffer> m_PreviewFramebuffer;
+        Ref<Shader> m_SelectionOutlineShader;
+        Ref<VertexArray> m_FullscreenQuadVA;
+        Ref<UniformBuffer> m_SelectionOutlineUBO;
 
     	bool m_ShowStats = false;
     	bool m_ShowPreview = false;
@@ -98,6 +108,7 @@ namespace Mirage
     	bool m_ShowGrid = true;
     	float m_GridSize = 100.0f;
     	float m_GridAlpha = 1.0f;
+		int m_GridAxis = 0; // 0: XZ, 1: XY, 2: YZ
         
         // ----------------------- Snapping -----------------------
         bool m_TranslationSnap = false;
@@ -127,6 +138,8 @@ namespace Mirage
     	Ref<Texture2D> m_TranslationIcon;
     	Ref<Texture2D> m_RotationIcon;
     	Ref<Texture2D> m_ScaleIcon;
+    	Ref<Texture2D> m_GizmoToggleIcon;
+		bool m_ShowGizmos = true;
     	
     	enum class SceneState
     	{

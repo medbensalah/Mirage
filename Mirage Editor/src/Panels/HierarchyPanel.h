@@ -31,5 +31,6 @@ namespace Mirage
         Ref<Scene> m_Context;
 
         SceneObject m_SelectionContext;
+        entt::entity m_PendingDeleteEntity = entt::null;
     };
 }

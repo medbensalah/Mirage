@@ -35,6 +35,8 @@ namespace Mirage
         glDebugMessageCallback(OpenGLMessageCallback, nullptr);
 
         glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
+        glDebugMessageControl(GL_DONT_CARE, GL_DEBUG_TYPE_PERFORMANCE, GL_DEBUG_SEVERITY_LOW, 0, NULL, GL_FALSE);
+        glDebugMessageControl(GL_DONT_CARE, GL_DEBUG_TYPE_PERFORMANCE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, NULL, GL_FALSE);
 #endif
 
         glEnable(GL_DEPTH_TEST);
@@ -74,5 +76,10 @@ namespace Mirage
     void OpenGLRenderAPI::SetineWidth(float width)
     {
     	glLineWidth(width);
+    }
+
+    void OpenGLRenderAPI::BindTexture2D(uint32_t slot, uint32_t rendererID)
+    {
+        glBindTextureUnit(slot, rendererID);
     }
 }

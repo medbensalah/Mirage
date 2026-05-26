@@ -17,6 +17,7 @@ namespace Mirage
 		static const std::string TranslationIcon = "Resources/Icons/General/Translation.png";
 		static const std::string RotationIcon = "Resources/Icons/General/Rotation.png";
 		static const std::string ScaleIcon = "Resources/Icons/General/Scale.png";
+		static const std::string GizmoToggleIcon = "Resources/Icons/General/gizmoToggle.png";
 		
 		static const std::string Folder = "Resources/Icons/ContentBrowser/DirectoryIcon.png";
 		static const std::string File = "Resources/Icons/ContentBrowser/FileIcon.png";

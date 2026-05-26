@@ -1,0 +1,70 @@
+Scene: Untitled
+Entities:
+  - Entity: 16826211237222427331
+    TagComponent:
+      Tag: PBR Mesh
+    TransformComponent:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    MeshComponent:
+      Primitive: 0
+      SourcePath: C:\Users\bensa\OneDrive\Bureau\fdx54mtvuz28-FinalBaseMesh\FinalBaseMesh.obj
+      OptimizeOnLoad: true
+    MeshRendererComponent:
+      AlbedoColor: [1, 1, 1, 1]
+      Metallic: 0.100000001
+      Roughness: 0.600000024
+      AO: 1
+  - Entity: 12216639589163440657
+    TagComponent:
+      Tag: Camera
+    TransformComponent:
+      Position: [-1.51107931, 16.9763012, 11.1407595]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    CameraComponent:
+      Camera:
+        ProjectionType: 0
+        PerspectiveFOV: 1.04719758
+        PerspectiveNear: 0.00999999978
+        PerspectiveFar: 1000
+        OrthographicSize: 10
+        OrthographicNear: -1
+        OrthographicFar: 100
+      Primary: true
+      FixedAspectRatio: false
+      ClearColor: [0.0602959394, 0.0602899082, 0.0602899082, 1]
+  - Entity: 15923756500020692468
+    TagComponent:
+      Tag: Point Light
+    TransformComponent:
+      Position: [-9.87323284, 10.3646574, 1.85321581]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLightComponent:
+      Color: [1, 0, 0]
+      Intensity: 20
+      Radius: 200
+  - Entity: 14448595119240144820
+    TagComponent:
+      Tag: Point Light
+    TransformComponent:
+      Position: [10.6309299, 16.2738972, 5.98898554]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PointLightComponent:
+      Color: [0, 0.0462164879, 1]
+      Intensity: 43.2999992
+      Radius: 48.5
+  - Entity: 13155684197060094679
+    TagComponent:
+      Tag: Directional Light
+    TransformComponent:
+      Position: [0, 21.5541191, -2.98023224e-08]
+      Rotation: [224.855026, -10.9127274, 180]
+      Scale: [1, 1, 1]
+    DirectionalLightComponent:
+      Direction: [-0.400000006, -1, -0.300000012]
+      Color: [0.36046505, 0, 1]
+      Intensity: 5

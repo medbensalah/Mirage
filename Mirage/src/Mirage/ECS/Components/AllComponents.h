@@ -6,6 +6,10 @@
 #include "Mirage/ECS/Components/Physics/Rigidbody2DComponent.h"
 #include "Mirage/ECS/Components/Rendering/CameraComponent.h"
 #include "Mirage/ECS/Components/Rendering/CircleRendererComponent.h"
+#include "Mirage/ECS/Components/Rendering/DirectionalLightComponent.h"
+#include "Mirage/ECS/Components/Rendering/MeshComponent.h"
+#include "Mirage/ECS/Components/Rendering/MeshRendererComponent.h"
+#include "Mirage/ECS/Components/Rendering/PointLightComponent.h"
 #include "Mirage/ECS/Components/Rendering/SpriteRendererComponent.h"
 #include "Mirage/ECS/Components/NativeScriptComponent.h"
 #include "Mirage/ECS/Components/ScriptComponent.h"
@@ -20,6 +24,7 @@ namespace Mirage
 	using AllComponents =
 	ComponentGroup<TransformComponent,
 				   SpriteRendererComponent, CircleRendererComponent, CameraComponent,
+				   MeshComponent, MeshRendererComponent, DirectionalLightComponent, PointLightComponent,
 				   ScriptComponent, NativeScriptComponent,
 	               Rigidbody2DComponent, BoxCollider2DComponent, CircleCollider2DComponent>;
 }

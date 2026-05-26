@@ -18,6 +18,10 @@
 #include "Mirage/ECS/Components/Physics/CircleCollider2DComponent.h"
 #include "Mirage/ECS/Components/Physics/Rigidbody2DComponent.h"
 #include "Mirage/ECS/Components/Rendering/CircleRendererComponent.h"
+#include "Mirage/ECS/Components/Rendering/DirectionalLightComponent.h"
+#include "Mirage/ECS/Components/Rendering/MeshComponent.h"
+#include "Mirage/ECS/Components/Rendering/MeshRendererComponent.h"
+#include "Mirage/ECS/Components/Rendering/PointLightComponent.h"
 #include "Mirage/Scripting/ScriptingEngine.h"
 
 namespace Mirage
@@ -53,6 +57,7 @@ namespace Mirage
     void HierarchyPanel::OnImGuiRender()
     {
 		m_IsOdd = true;
+        m_PendingDeleteEntity = entt::null;
     	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
         if (ImGui::Begin("Outliner"))
         {
@@ -85,6 +90,18 @@ namespace Mirage
 				}
 			};
 
+            if (m_PendingDeleteEntity != entt::null)
+            {
+                SceneObject toDelete{m_PendingDeleteEntity, m_Context.get()};
+                if (toDelete)
+                {
+                    m_Context->DestroySceneObject(toDelete);
+                    if (m_SelectionContext == toDelete)
+                        m_SelectionContext = {};
+                }
+                m_PendingDeleteEntity = entt::null;
+            }
+
         	if (ImGui::IsMouseClicked(0) && ImGui::IsWindowHovered())
         		m_SelectionContext = {};
         
@@ -111,6 +128,22 @@ namespace Mirage
                 	SceneObject so = m_Context->CreateSceneObject("Circle");
                 	so.AddComponent<CircleRendererComponent>();
                 	so.AddComponent<CircleCollider2DComponent>();
+                }
+                else if (ImGui::MenuItem("Create PBR Mesh"))
+                {
+                    SceneObject so = m_Context->CreateSceneObject("PBR Mesh");
+                    so.AddComponent<MeshComponent>();
+                    so.AddComponent<MeshRendererComponent>();
+                }
+                else if (ImGui::MenuItem("Create Directional Light"))
+                {
+                    SceneObject so = m_Context->CreateSceneObject("Directional Light");
+                    so.AddComponent<DirectionalLightComponent>();
+                }
+                else if (ImGui::MenuItem("Create Point Light"))
+                {
+                    SceneObject so = m_Context->CreateSceneObject("Point Light");
+                    so.AddComponent<PointLightComponent>();
                 }
 
         		ImGui::EndPopup();
@@ -176,7 +209,8 @@ namespace Mirage
     	// TODO: Drag and drop
     	// ImGui::InvisibleButton("##drag", ImVec2(ImGui::GetContentRegionAvail().x, 3.0f));
 
-        if(ImGui::IsKeyPressed(ImGuiKey_Delete))
+        const ImGuiIO& io = ImGui::GetIO();
+        if (ImGui::IsKeyPressed(ImGuiKey_Delete) && !io.WantTextInput && !ImGui::IsAnyItemActive())
         {
             if(m_SelectionContext == so)
                 entityDeleted = true;
@@ -195,12 +229,8 @@ namespace Mirage
 	        ImGui::TreePop();
         }
 
-        if(entityDeleted)
-        {
-            m_Context->DestroySceneObject(so);
-            if(m_SelectionContext == so)
-                m_SelectionContext = {};
-        }
+        if (entityDeleted && m_PendingDeleteEntity == entt::null)
+            m_PendingDeleteEntity = (entt::entity)so.GetEntity();
     }
 
     template <typename T, typename UIFUNCTION>
@@ -300,6 +330,10 @@ namespace Mirage
             	DisplayAddComponentEntry<ScriptComponent>("Script");
             	DisplayAddComponentEntry<SpriteRendererComponent>("Sprite Renderer");
             	DisplayAddComponentEntry<CircleRendererComponent>("Circle Renderer");
+                DisplayAddComponentEntry<MeshComponent>("Mesh");
+                DisplayAddComponentEntry<MeshRendererComponent>("Mesh Renderer");
+                DisplayAddComponentEntry<DirectionalLightComponent>("Directional Light");
+                DisplayAddComponentEntry<PointLightComponent>("Point Light");
             	DisplayAddComponentEntry<Rigidbody2DComponent>("Rigidbody 2D");
             	DisplayAddComponentEntry<BoxCollider2DComponent>("Box Collider 2D");
             	DisplayAddComponentEntry<CircleCollider2DComponent>("Circle Collider 2D");
@@ -776,6 +810,91 @@ namespace Mirage
 				}, typeid(CircleRendererComponent).name());
 			}
         );
+
+        DrawComponent<MeshComponent>("Mesh", so, [](auto& component)
+            {
+                const char* primitiveStrings[] = {"Cube", "Sphere"};
+                const char* primitiveString = primitiveStrings[(int)component.PrimitiveType];
+                int out = (int)component.PrimitiveType;
+                if (DrawSplitUIItem("Primitive", [&]()-> bool
+                {
+                    return DrawComboBox("##Primitive", primitiveStrings, 2, primitiveString, &out);
+                }, typeid(MeshComponent).name()))
+                {
+                    component.PrimitiveType = (MeshComponent::Primitive)out;
+                }
+
+                DrawSplitUIItem("Optimize On Load", [&component]()-> bool
+                {
+                    return ImGui::Checkbox("##OptimizeOnLoad", &component.OptimizeOnLoad);
+                }, typeid(MeshComponent).name());
+
+                char pathBuffer[512] = {};
+                strcpy_s(pathBuffer, sizeof(pathBuffer), component.SourcePath.c_str());
+                if (DrawSplitUIItem("Source Path", [&]()-> bool
+                {
+                    return ImGui::InputText("##MeshSourcePath", pathBuffer, sizeof(pathBuffer));
+                }, typeid(MeshComponent).name()))
+                {
+                    component.SourcePath = pathBuffer;
+                }
+            });
+
+        DrawComponent<MeshRendererComponent>("Mesh Renderer", so, [](auto& component)
+            {
+                DrawSplitUIItem("Albedo", [&component]()-> bool
+                {
+                    return ImGui::ColorEdit4("##MeshAlbedo", glm::value_ptr(component.AlbedoColor));
+                }, typeid(MeshRendererComponent).name());
+
+                DrawSplitUIItem("Metallic", [&component]()-> bool
+                {
+                    return ImGui::SliderFloat("##Metallic", &component.Metallic, 0.0f, 1.0f);
+                }, typeid(MeshRendererComponent).name());
+
+                DrawSplitUIItem("Roughness", [&component]()-> bool
+                {
+                    return ImGui::SliderFloat("##Roughness", &component.Roughness, 0.02f, 1.0f);
+                }, typeid(MeshRendererComponent).name());
+
+                DrawSplitUIItem("AO", [&component]()-> bool
+                {
+                    return ImGui::SliderFloat("##AO", &component.AO, 0.0f, 1.0f);
+                }, typeid(MeshRendererComponent).name());
+            });
+
+        DrawComponent<DirectionalLightComponent>("Directional Light", so, [](auto& component)
+            {
+                DrawSplitUIItem("Direction", []()-> bool
+                {
+                    ImGui::TextDisabled("Driven by Transform rotation");
+                    return false;
+                }, typeid(DirectionalLightComponent).name());
+                DrawSplitUIItem("Color", [&component]()-> bool
+                {
+                    return ImGui::ColorEdit3("##LightColor", glm::value_ptr(component.Color));
+                }, typeid(DirectionalLightComponent).name());
+                DrawSplitUIItem("Intensity", [&component]()-> bool
+                {
+                    return ImGui::DragFloat("##LightIntensity", &component.Intensity, 0.1f, 0.0f, 1000.0f);
+                }, typeid(DirectionalLightComponent).name());
+            });
+
+        DrawComponent<PointLightComponent>("Point Light", so, [](auto& component)
+            {
+                DrawSplitUIItem("Color", [&component]()-> bool
+                {
+                    return ImGui::ColorEdit3("##PointLightColor", glm::value_ptr(component.Color));
+                }, typeid(PointLightComponent).name());
+                DrawSplitUIItem("Intensity", [&component]()-> bool
+                {
+                    return ImGui::DragFloat("##PointLightIntensity", &component.Intensity, 0.1f, 0.0f, 1000.0f);
+                }, typeid(PointLightComponent).name());
+                DrawSplitUIItem("Radius", [&component]()-> bool
+                {
+                    return ImGui::DragFloat("##PointLightRadius", &component.Radius, 0.1f, 0.01f, 1000.0f);
+                }, typeid(PointLightComponent).name());
+            });
     	
         DrawComponent<Rigidbody2DComponent>("Rigidbody 2D", so, [&so](auto& component)
 			{

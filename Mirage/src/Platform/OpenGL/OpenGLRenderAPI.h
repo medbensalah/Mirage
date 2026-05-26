@@ -17,5 +17,6 @@ namespace Mirage
         virtual void DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t count = 0) override;
         virtual void DrawLines(const Ref<VertexArray>& vertexArray, uint32_t vertexCount) override;
         virtual void SetineWidth(float width) override;
+        virtual void BindTexture2D(uint32_t slot, uint32_t rendererID) override;
     };
 }

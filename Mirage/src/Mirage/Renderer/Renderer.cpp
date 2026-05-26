@@ -3,6 +3,7 @@
 #include "Mirage/Renderer/Renderer.h"
 
 #include "Mirage/Renderer/Renderer2D.h"
+#include "Mirage/Renderer/Renderer3D.h"
 
 namespace Mirage
 {
@@ -14,11 +15,13 @@ namespace Mirage
 
         RenderCommand::Init();
         Renderer2D::Init();
+        Renderer3D::Init();
     }
 
     void Renderer::Shutdown()
     {
         Renderer2D::Shutdown();
+        Renderer3D::Shutdown();
     }
     
     void Renderer::OnWindowResize(Vec2 size)

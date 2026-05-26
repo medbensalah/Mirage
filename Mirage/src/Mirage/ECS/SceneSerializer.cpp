@@ -12,6 +12,10 @@
 #include "Components/Physics/Rigidbody2DComponent.h"
 #include "Components/Rendering/CameraComponent.h"
 #include "Components/Rendering/CircleRendererComponent.h"
+#include "Components/Rendering/DirectionalLightComponent.h"
+#include "Components/Rendering/MeshComponent.h"
+#include "Components/Rendering/MeshRendererComponent.h"
+#include "Components/Rendering/PointLightComponent.h"
 #include "Components/Rendering/SpriteRendererComponent.h"
 
 namespace YAML
@@ -249,6 +253,47 @@ namespace Mirage
 
             out << YAML::EndMap;
         }
+        if (so.HasComponent<MeshComponent>())
+        {
+            out << YAML::Key << "MeshComponent";
+            out << YAML::BeginMap;
+            auto& mc = so.GetComponent<MeshComponent>();
+            out << YAML::Key << "Primitive" << YAML::Value << (int)mc.PrimitiveType;
+            out << YAML::Key << "SourcePath" << YAML::Value << mc.SourcePath;
+            out << YAML::Key << "OptimizeOnLoad" << YAML::Value << mc.OptimizeOnLoad;
+            out << YAML::EndMap;
+        }
+        if (so.HasComponent<MeshRendererComponent>())
+        {
+            out << YAML::Key << "MeshRendererComponent";
+            out << YAML::BeginMap;
+            auto& mr = so.GetComponent<MeshRendererComponent>();
+            out << YAML::Key << "AlbedoColor" << YAML::Value << mr.AlbedoColor;
+            out << YAML::Key << "Metallic" << YAML::Value << mr.Metallic;
+            out << YAML::Key << "Roughness" << YAML::Value << mr.Roughness;
+            out << YAML::Key << "AO" << YAML::Value << mr.AO;
+            out << YAML::EndMap;
+        }
+        if (so.HasComponent<DirectionalLightComponent>())
+        {
+            out << YAML::Key << "DirectionalLightComponent";
+            out << YAML::BeginMap;
+            auto& dl = so.GetComponent<DirectionalLightComponent>();
+            out << YAML::Key << "Direction" << YAML::Value << dl.Direction;
+            out << YAML::Key << "Color" << YAML::Value << dl.Color;
+            out << YAML::Key << "Intensity" << YAML::Value << dl.Intensity;
+            out << YAML::EndMap;
+        }
+        if (so.HasComponent<PointLightComponent>())
+        {
+            out << YAML::Key << "PointLightComponent";
+            out << YAML::BeginMap;
+            auto& pl = so.GetComponent<PointLightComponent>();
+            out << YAML::Key << "Color" << YAML::Value << pl.Color;
+            out << YAML::Key << "Intensity" << YAML::Value << pl.Intensity;
+            out << YAML::Key << "Radius" << YAML::Value << pl.Radius;
+            out << YAML::EndMap;
+        }
         if (so.HasComponent<Rigidbody2DComponent>())
         {
             out << YAML::Key << "RigidBody2DComponent";
@@ -366,6 +411,37 @@ namespace Mirage
 		    crc.Texture = Texture2D::Create(circleRendererComponent["Texture"].as<std::string>());
         	crc.Tiling = circleRendererComponent["Tiling"].as<Vec2>();
         	crc.Offset = circleRendererComponent["Offset"].as<Vec2>();
+        }
+        if (auto meshComponent = entity["MeshComponent"])
+        {
+            auto& mc = so.AddComponent<MeshComponent>();
+            mc.PrimitiveType = (MeshComponent::Primitive)meshComponent["Primitive"].as<int>();
+            if (meshComponent["SourcePath"])
+                mc.SourcePath = meshComponent["SourcePath"].as<std::string>();
+            if (meshComponent["OptimizeOnLoad"])
+                mc.OptimizeOnLoad = meshComponent["OptimizeOnLoad"].as<bool>();
+        }
+        if (auto meshRendererComponent = entity["MeshRendererComponent"])
+        {
+            auto& mr = so.AddComponent<MeshRendererComponent>();
+            mr.AlbedoColor = meshRendererComponent["AlbedoColor"].as<Vec4>();
+            mr.Metallic = meshRendererComponent["Metallic"].as<float>();
+            mr.Roughness = meshRendererComponent["Roughness"].as<float>();
+            mr.AO = meshRendererComponent["AO"].as<float>();
+        }
+        if (auto directionalLightComponent = entity["DirectionalLightComponent"])
+        {
+            auto& dl = so.AddComponent<DirectionalLightComponent>();
+            dl.Direction = directionalLightComponent["Direction"].as<Vec3>();
+            dl.Color = directionalLightComponent["Color"].as<Vec3>();
+            dl.Intensity = directionalLightComponent["Intensity"].as<float>();
+        }
+        if (auto pointLightComponent = entity["PointLightComponent"])
+        {
+            auto& pl = so.AddComponent<PointLightComponent>();
+            pl.Color = pointLightComponent["Color"].as<Vec3>();
+            pl.Intensity = pointLightComponent["Intensity"].as<float>();
+            pl.Radius = pointLightComponent["Radius"].as<float>();
         }
 
 	    if (auto rigidBody2DComponent = entity["RigidBody2DComponent"])

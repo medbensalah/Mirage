@@ -165,6 +165,7 @@
     <ClInclude Include="src\Mirage\Debug\Instrumentor.h" />
     <ClInclude Include="src\Mirage\Definitions\Debug.h" />
     <ClInclude Include="src\Mirage\Definitions\DragnDropPayloads.h" />
+    <ClInclude Include="src\Mirage\Definitions\EditorSettings.h" />
     <ClInclude Include="src\Mirage\Definitions\FileExtensions.h" />
     <ClInclude Include="src\Mirage\Definitions\Icons.h" />
     <ClInclude Include="src\Mirage\Definitions\Paths.h" />
@@ -182,6 +183,10 @@
     <ClInclude Include="src\Mirage\ECS\Components\Physics\Rigidbody2DComponent.h" />
     <ClInclude Include="src\Mirage\ECS\Components\Rendering\CameraComponent.h" />
     <ClInclude Include="src\Mirage\ECS\Components\Rendering\CircleRendererComponent.h" />
+    <ClInclude Include="src\Mirage\ECS\Components\Rendering\DirectionalLightComponent.h" />
+    <ClInclude Include="src\Mirage\ECS\Components\Rendering\MeshComponent.h" />
+    <ClInclude Include="src\Mirage\ECS\Components\Rendering\MeshRendererComponent.h" />
+    <ClInclude Include="src\Mirage\ECS\Components\Rendering\PointLightComponent.h" />
     <ClInclude Include="src\Mirage\ECS\Components\Rendering\SpriteRendererComponent.h" />
     <ClInclude Include="src\Mirage\ECS\Components\ScriptComponent.h" />
     <ClInclude Include="src\Mirage\ECS\Scene.h" />
@@ -206,7 +211,11 @@
     <ClInclude Include="src\Mirage\Renderer\Camera.h" />
     <ClInclude Include="src\Mirage\Renderer\EditorCamera.h" />
     <ClInclude Include="src\Mirage\Renderer\Framebuffer.h" />
+    <ClInclude Include="src\Mirage\Renderer\GLTFImporter.h" />
+    <ClInclude Include="src\Mirage\Renderer\GizmoSystem.h" />
     <ClInclude Include="src\Mirage\Renderer\Graphicscontext.h" />
+    <ClInclude Include="src\Mirage\Renderer\MeshOptimizer.h" />
+    <ClInclude Include="src\Mirage\Renderer\ModelImporter.h" />
     <ClInclude Include="src\Mirage\Renderer\OrthographicCamera.h" />
     <ClInclude Include="src\Mirage\Renderer\OrthographicCameraController.h" />
     <ClInclude Include="src\Mirage\Renderer\Primitives.h" />
@@ -214,6 +223,7 @@
     <ClInclude Include="src\Mirage\Renderer\RenderCommand.h" />
     <ClInclude Include="src\Mirage\Renderer\Renderer.h" />
     <ClInclude Include="src\Mirage\Renderer\Renderer2D.h" />
+    <ClInclude Include="src\Mirage\Renderer\Renderer3D.h" />
     <ClInclude Include="src\Mirage\Renderer\Shader.h" />
     <ClInclude Include="src\Mirage\Renderer\Texture.h" />
     <ClInclude Include="src\Mirage\Renderer\UniformBuffer.h" />
@@ -658,6 +668,9 @@
     <ClCompile Include="src\Mirage\Core\Window.cpp" />
     <ClCompile Include="src\Mirage\Definitions\SettingsSerializer.cpp" />
     <ClCompile Include="src\Mirage\ECS\Components\Base\TransformComponent.cpp" />
+    <ClCompile Include="src\Mirage\ECS\Components\Rendering\CameraComponent.cpp" />
+    <ClCompile Include="src\Mirage\ECS\Components\Rendering\DirectionalLightComponent.cpp" />
+    <ClCompile Include="src\Mirage\ECS\Components\Rendering\PointLightComponent.cpp" />
     <ClCompile Include="src\Mirage\ECS\Scene.cpp" />
     <ClCompile Include="src\Mirage\ECS\SceneCamera.cpp" />
     <ClCompile Include="src\Mirage\ECS\SceneObject.cpp" />
@@ -668,13 +681,18 @@
     <ClCompile Include="src\Mirage\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Mirage\Renderer\EditorCamera.cpp" />
     <ClCompile Include="src\Mirage\Renderer\Framebuffer.cpp" />
+    <ClCompile Include="src\Mirage\Renderer\GLTFImporter.cpp" />
+    <ClCompile Include="src\Mirage\Renderer\GizmoSystem.cpp" />
     <ClCompile Include="src\Mirage\Renderer\GraphicsContext.cpp" />
+    <ClCompile Include="src\Mirage\Renderer\MeshOptimizer.cpp" />
+    <ClCompile Include="src\Mirage\Renderer\ModelImporter.cpp" />
     <ClCompile Include="src\Mirage\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Mirage\Renderer\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Mirage\Renderer\RenderAPI.cpp" />
     <ClCompile Include="src\Mirage\Renderer\RenderCommand.cpp" />
     <ClCompile Include="src\Mirage\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Mirage\Renderer\Renderer2D.cpp" />
+    <ClCompile Include="src\Mirage\Renderer\Renderer3D.cpp" />
     <ClCompile Include="src\Mirage\Renderer\Shader.cpp" />
     <ClCompile Include="src\Mirage\Renderer\Texture.cpp" />
     <ClCompile Include="src\Mirage\Renderer\UniformBuffer.cpp" />

@@ -12,6 +12,7 @@ namespace Mirage
         : m_Width(width), m_Height(height)
     {
         MRG_PROFILE_FUNCTION();
+        m_IsLoaded = true;
 
         m_InternalFormat = GL_RGB8, m_DataFormat = GL_RGB;
         

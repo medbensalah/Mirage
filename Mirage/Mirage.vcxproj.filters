@@ -144,6 +144,9 @@
     <ClInclude Include="src\Mirage\Definitions\DragnDropPayloads.h">
       <Filter>src\Mirage\Definitions</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\Definitions\EditorSettings.h">
+      <Filter>src\Mirage\Definitions</Filter>
+    </ClInclude>
     <ClInclude Include="src\Mirage\Definitions\FileExtensions.h">
       <Filter>src\Mirage\Definitions</Filter>
     </ClInclude>
@@ -193,6 +196,18 @@
       <Filter>src\Mirage\ECS\Components\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\ECS\Components\Rendering\CircleRendererComponent.h">
+      <Filter>src\Mirage\ECS\Components\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\Components\Rendering\DirectionalLightComponent.h">
+      <Filter>src\Mirage\ECS\Components\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\Components\Rendering\MeshComponent.h">
+      <Filter>src\Mirage\ECS\Components\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\Components\Rendering\MeshRendererComponent.h">
+      <Filter>src\Mirage\ECS\Components\Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\ECS\Components\Rendering\PointLightComponent.h">
       <Filter>src\Mirage\ECS\Components\Rendering</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\ECS\Components\Rendering\SpriteRendererComponent.h">
@@ -267,7 +282,19 @@
     <ClInclude Include="src\Mirage\Renderer\Framebuffer.h">
       <Filter>src\Mirage\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Mirage\Renderer\GLTFImporter.h">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Renderer\GizmoSystem.h">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Mirage\Renderer\Graphicscontext.h">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Renderer\MeshOptimizer.h">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Renderer\ModelImporter.h">
       <Filter>src\Mirage\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\Renderer\OrthographicCamera.h">
@@ -289,6 +316,9 @@
       <Filter>src\Mirage\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\Renderer\Renderer2D.h">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mirage\Renderer\Renderer3D.h">
       <Filter>src\Mirage\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Mirage\Renderer\Shader.h">
@@ -1619,6 +1649,15 @@
     <ClCompile Include="src\Mirage\ECS\Components\Base\TransformComponent.cpp">
       <Filter>src\Mirage\ECS\Components\Base</Filter>
     </ClCompile>
+    <ClCompile Include="src\Mirage\ECS\Components\Rendering\CameraComponent.cpp">
+      <Filter>src\Mirage\ECS\Components\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\ECS\Components\Rendering\DirectionalLightComponent.cpp">
+      <Filter>src\Mirage\ECS\Components\Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\ECS\Components\Rendering\PointLightComponent.cpp">
+      <Filter>src\Mirage\ECS\Components\Rendering</Filter>
+    </ClCompile>
     <ClCompile Include="src\Mirage\ECS\Scene.cpp">
       <Filter>src\Mirage\ECS</Filter>
     </ClCompile>
@@ -1649,7 +1688,19 @@
     <ClCompile Include="src\Mirage\Renderer\Framebuffer.cpp">
       <Filter>src\Mirage\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Mirage\Renderer\GLTFImporter.cpp">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\Renderer\GizmoSystem.cpp">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Mirage\Renderer\GraphicsContext.cpp">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\Renderer\MeshOptimizer.cpp">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\Renderer\ModelImporter.cpp">
       <Filter>src\Mirage\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Mirage\Renderer\OrthographicCamera.cpp">
@@ -1668,6 +1719,9 @@
       <Filter>src\Mirage\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Mirage\Renderer\Renderer2D.cpp">
+      <Filter>src\Mirage\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mirage\Renderer\Renderer3D.cpp">
       <Filter>src\Mirage\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Mirage\Renderer\Shader.cpp">

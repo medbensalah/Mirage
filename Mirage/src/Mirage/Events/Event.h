@@ -20,6 +20,7 @@ namespace Mirage
         WindowFocus,
         WindowLostFocus,
         WindowMoved,
+        WindowFileDrop,
 
         AppTick,
         AppUpdate,

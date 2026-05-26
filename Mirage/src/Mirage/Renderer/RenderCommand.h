@@ -39,6 +39,10 @@ namespace Mirage
         {
             s_RenderAPI->SetineWidth(width);
         }
+        inline static void BindTexture2D(uint32_t slot, uint32_t rendererID)
+        {
+            s_RenderAPI->BindTexture2D(slot, rendererID);
+        }
 
     private:
         static Scope<RenderAPI> s_RenderAPI;

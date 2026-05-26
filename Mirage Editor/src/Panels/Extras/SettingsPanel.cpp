@@ -5,10 +5,12 @@
 #include "Mirage/Definitions/Debug.h"
 #include "Mirage/Definitions/Paths.h"
 #include "Mirage/Definitions/Physics.h"
+#include "Mirage/Definitions/EditorSettings.h"
 #include "Mirage/Definitions/SettingsSerializer.h"
 #include "Mirage/ImGui/Extensions/Splitter.h"
 #include "Mirage/ImGui/Extensions/DrawingAPI.h"
 #include "Mirage/Renderer/Renderer2D.h"
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Mirage
 {
@@ -114,6 +116,23 @@ namespace Mirage
 				{
 					Renderer2D::Draw::SetLineWidth(m_lineWidth);
 				}
+			}
+			break;
+		case 6:
+			{
+				DrawSplitUIItem("Gizmo icon opacity", [](){
+					return ImGui::SliderFloat("##GizmoIconOpacity", &EditorSettings::GizmoIconOpacity, 0.1f, 1.0f, "%.2f");
+				});
+				DrawSplitUIItem("Gizmo icon size", [](){
+					return ImGui::SliderFloat("##GizmoIconSize", &EditorSettings::GizmoIconSize, 0.5f, 2.5f, "%.2f");
+				});
+				DrawSplitUIItem("Frustum gizmo extent", [](){
+					return ImGui::SliderFloat("##CameraFrustumGizmoExtent", &EditorSettings::CameraFrustumGizmoExtent, 1.0f, 100.0f, "%.2f");
+				});
+				DrawSplitUIItem("Default gizmos color", [](){
+					return ImGui::ColorEdit4("##DefaultGizmosColor", glm::value_ptr(EditorSettings::DefaultGizmosColor),
+						ImGuiColorEditFlags_NoInputs);
+				});
 			}
 			break;
 		}

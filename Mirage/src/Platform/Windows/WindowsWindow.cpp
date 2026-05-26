@@ -168,6 +168,17 @@ namespace Mirage
             data.EventCallback(event);
         });
 
+        glfwSetDropCallback(m_Window, [](GLFWwindow* window, int count, const char** paths)
+        {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            std::vector<std::string> dropped;
+            dropped.reserve((size_t)count);
+            for (int i = 0; i < count; i++)
+                dropped.emplace_back(paths[i]);
+            WindowFileDropEvent event(std::move(dropped));
+            data.EventCallback(event);
+        });
+
     	GLFWimage images[1];
     	images[0].pixels = stbi_load("Resources/Icons/Mirage.png", &images[0].width, &images[0].height, 0, 4); //rgba channels 
     	glfwSetWindowIcon(m_Window, 1, images); 
