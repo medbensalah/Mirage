@@ -19,3 +19,6 @@
 [submodule "Mirage/vendor/Box2D"]
 	path = Mirage/vendor/Box2D
 	url = https://github.com/medbensalah/box2d.git
+[submodule "Mirage/vendor/imgui-node-editor"]
+	path = Mirage/vendor/imgui-node-editor
+	url = https://github.com/thedmd/imgui-node-editor.git

@@ -30,6 +30,7 @@ group "Dependencies"
     include "Mirage/vendor/GLFW"
     include "Mirage/vendor/Glad"
     include "Mirage/vendor/ImGui"
+    include "Mirage/vendor/imgui-node-editor"
     include "Mirage/vendor/yaml-cpp"
 group ""
 

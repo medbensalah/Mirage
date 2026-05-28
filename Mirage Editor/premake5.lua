@@ -19,12 +19,15 @@ project "Mirage Editor"
         "%{wks.location}/Mirage/vendor/spdlog/include",
         "%{wks.location}/Mirage/vendor",
         "%{IncludeDir.glm}",
-        "%{IncludeDir.enTT}"
+        "%{IncludeDir.enTT}",
+        "%{IncludeDir.imgui_node_editor}",
+        "%{IncludeDir.ImGui}"
     }
 
     links
     {
-        "Mirage"
+        "Mirage",
+        "imgui-node-editor"
     }
 
     filter "system:windows"
